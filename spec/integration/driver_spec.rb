@@ -12,19 +12,11 @@ describe Capybara::Poltergeist::Driver do
   it_should_behave_like "driver with cookies support"
 
   it 'should support a custom phantomjs path' do
-    path = '/tmp/poltergeist_phantomjs'
+    path = File.expand_path('../../support/custom_phantomjs', __FILE__)
 
-    begin
-      FileUtils.rm_f(path)
-      File.symlink(`which phantomjs`.chomp, path)
-      File.chmod(0755, path)
+    driver  = Capybara::Poltergeist::Driver.new(nil, :phantomjs => path)
+    driver.browser
 
-      driver  = Capybara::Poltergeist::Driver.new(nil, :phantomjs => path)
-      driver.browser
-
-      `ps -C poltergeist_phantomjs -o command=`.should include(path)
-    ensure
-      FileUtils.rm(path)
-    end
+    `ps -C custom_phantomjs -o command=`.should include(path)
   end
 end
