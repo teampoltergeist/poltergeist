@@ -1,2 +1,2 @@
 before_script:
-  - "sudo add-apt-repository ppa:jerome-etienne/neoip && sudo apt-get update && sudo apt-get install phantomjs -y"
+  - "sudo bash ci/install_phantomjs"
