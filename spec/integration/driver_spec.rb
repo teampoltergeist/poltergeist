@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'capybara/spec/driver'
 
 describe Capybara::Poltergeist::Driver do
   before do

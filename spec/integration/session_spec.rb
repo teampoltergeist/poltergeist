@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'capybara/spec/session'
 
 describe Capybara::Session do
   context 'with poltergeist driver' do

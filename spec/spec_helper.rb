@@ -13,8 +13,6 @@ RSpec.configure do |config|
   end
 end
 
-require 'capybara/spec/driver'
-require 'capybara/spec/session'
 require 'support/test_app'
 
 Capybara.default_wait_time = 0 # less timeout so tests run faster
