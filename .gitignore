@@ -1,1 +1,2 @@
 /Gemfile.lock
+/spec/support/custom_phantomjs_called

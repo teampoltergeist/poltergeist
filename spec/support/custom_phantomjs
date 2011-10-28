@@ -1,2 +1,3 @@
 #!/bin/bash
+touch `dirname "$0"`/custom_phantomjs_called
 phantomjs "$@"
