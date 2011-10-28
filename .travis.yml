@@ -1,5 +1,5 @@
 before_script:
-  - "sudo bash ci/install_phantomjs"
+  - "sudo bash ci/install_phantomjs > /dev/null"
   - "sudo apt-get install xvfb -y"
   - "Xvfb :0 &"
 env: DISPLAY=:0
