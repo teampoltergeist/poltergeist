@@ -17,6 +17,6 @@ describe Capybara::Poltergeist::Driver do
     driver  = Capybara::Poltergeist::Driver.new(nil, :phantomjs => path)
     driver.browser
 
-    `ps -C custom_phantomjs -o command=`.should include(path)
+    `ps -o command=`.should include(path)
   end
 end
