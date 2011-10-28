@@ -1,10 +1,10 @@
-require 'open3'
+require 'sfl'
 
 module Capybara::Poltergeist
   class Client
     PHANTOM_SCRIPT = File.expand_path('../client/compiled/main.js', __FILE__)
 
-    attr_reader :pid, :port, :path
+    attr_reader :thread, :pid, :err, :port, :path
 
     def initialize(port, path = nil)
       @port = port
@@ -15,38 +15,30 @@ module Capybara::Poltergeist
     end
 
     def start
-      @pid = Process.fork do
-        Open3.popen3("#{path} #{PHANTOM_SCRIPT} #{port}") do |stdin, stdout, stderr|
-          loop do
-            select = IO.select([stdout, stderr])
-            stream = select.first.first
+      @err = IO.pipe
+      @pid = Kernel.spawn("#{path} #{PHANTOM_SCRIPT} #{port}", :err => err.last)
 
-            break if stream.eof?
+      @thread = Thread.new do
+        loop do
+          line = err.first.readline
 
-            if stream == stdout
-              STDOUT.puts stdout.readline
-            elsif stream == stderr
-              line = stderr.readline
-
-              # QtWebkit seems to throw this error all the time when using WebSockets, but
-              # it doesn't appear to actually stop anything working, so filter it out.
-              #
-              # This isn't the nicest solution I know :( Hopefully it will be fixed in
-              # QtWebkit (if you search for this string, you'll see it's been reported in
-              # various places).
-              unless line.include?('WebCore::SocketStreamHandlePrivate::socketSentData()')
-                STDERR.puts line
-              end
-            end
+          # QtWebkit seems to throw this error all the time when using WebSockets, but
+          # it doesn't appear to actually stop anything working, so filter it out.
+          #
+          # This isn't the nicest solution I know :( Hopefully it will be fixed in
+          # QtWebkit (if you search for this string, you'll see it's been reported in
+          # various places).
+          unless line.include?('WebCore::SocketStreamHandlePrivate::socketSentData()')
+            STDERR.puts line
           end
         end
       end
     end
 
     def stop
+      thread.kill
       Process.kill('TERM', pid)
-    rescue Errno::ESRCH
-      # Bovvered, I ain't
+      err.each { |io| io.close unless io.closed? }
     end
 
     def restart

@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.add_dependency "capybara",     "~> 1.1.0"
   s.add_dependency "em-websocket", "~> 0.3.1"
   s.add_dependency "json",         "~> 1.6"
+  s.add_dependency "sfl",          "~> 2.0"
 
   s.files        = Dir.glob("{lib}/**/*") + %w(LICENSE README.md CHANGELOG.md)
   s.require_path = 'lib'
