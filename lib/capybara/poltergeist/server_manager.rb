@@ -45,7 +45,7 @@ module Capybara::Poltergeist
     def send(port, message)
       @message = nil
 
-      Timeout.timeout(TIMEOUT, TimeoutError.new(message)) do
+      Timeout.timeout(TIMEOUT) do
         # Ensure there is a socket before trying to send a message on it.
         Thread.pass until sockets[port]
 
@@ -57,6 +57,9 @@ module Capybara::Poltergeist
       end
 
       @message
+
+    rescue Timeout::Error
+      raise TimeoutError.new(message)
     end
 
     def thread_execute(&instruction)
