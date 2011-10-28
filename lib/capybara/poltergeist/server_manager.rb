@@ -11,7 +11,11 @@ module Capybara::Poltergeist
   class ServerManager
     include Singleton
 
-    TIMEOUT = 30
+    class << self
+      attr_accessor :timeout
+    end
+
+    self.timeout = 30
 
     class TimeoutError < StandardError
       def initialize(message)
@@ -45,7 +49,7 @@ module Capybara::Poltergeist
     def send(port, message)
       @message = nil
 
-      Timeout.timeout(TIMEOUT) do
+      Timeout.timeout(self.class.timeout) do
         # Ensure there is a socket before trying to send a message on it.
         Thread.pass until sockets[port]
 
