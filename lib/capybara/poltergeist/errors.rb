@@ -22,5 +22,15 @@ module Capybara
         @node = node
       end
     end
+
+    class TimeoutError < Error
+      def initialize(message)
+        @message = message
+      end
+
+      def message
+        "Timed out waiting for response to #{@message}"
+      end
+    end
   end
 end

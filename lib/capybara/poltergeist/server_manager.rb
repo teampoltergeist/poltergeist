@@ -17,12 +17,6 @@ module Capybara::Poltergeist
 
     self.timeout = 30
 
-    class TimeoutError < StandardError
-      def initialize(message)
-        super "Server timed out waiting for response to #{@message}"
-      end
-    end
-
     attr_reader :sockets
 
     def initialize
