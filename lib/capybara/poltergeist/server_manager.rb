@@ -51,11 +51,14 @@ module Capybara::Poltergeist
         thread_execute { sockets[port].send(message) }
 
         # Wait for the response message
-        Thread.pass until @message
+        Thread.pass until @message || sockets[port].nil?
       end
 
-      @message
-
+      if sockets[port]
+        @message
+      else
+        raise DeadClient.new(message)
+      end
     rescue Timeout::Error
       raise TimeoutError.new(message)
     end
@@ -78,19 +81,19 @@ module Capybara::Poltergeist
 
     def start_websocket_server(port)
       EventMachine.start_server('127.0.0.1', port, EventMachine::WebSocket::Connection, {}) do |socket|
-        socket.onopen do
-          connection_opened(port, socket)
-        end
-
-        socket.onmessage do |message|
-          message_received(message)
-        end
+        socket.onopen    { connection_opened(port, socket)     }
+        socket.onclose   { connection_closed(port)             }
+        socket.onmessage { |message| message_received(message) }
       end
     end
 
     def connection_opened(port, socket)
       sockets[port] = socket
       await_instruction
+    end
+
+    def connection_closed(port)
+      sockets[port] = nil
     end
 
     def message_received(message)

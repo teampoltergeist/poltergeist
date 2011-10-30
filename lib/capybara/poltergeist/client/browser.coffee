@@ -123,3 +123,6 @@ class Poltergeist.Browser
   render: (path) ->
     @page.render(path)
     @owner.sendResponse(true)
+
+  exit: ->
+    phantom.exit()

@@ -32,5 +32,15 @@ module Capybara
         "Timed out waiting for response to #{@message}"
       end
     end
+
+    class DeadClient < Error
+      def initialize(message)
+        @message = message
+      end
+
+      def message
+        "The PhantomJS client died while processing #{@message}"
+      end
+    end
   end
 end

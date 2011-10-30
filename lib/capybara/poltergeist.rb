@@ -9,10 +9,7 @@ module Capybara
     autoload :Server,        'capybara/poltergeist/server'
     autoload :Client,        'capybara/poltergeist/client'
 
-    autoload :Error,        'capybara/poltergeist/errors'
-    autoload :BrowserError, 'capybara/poltergeist/errors'
-    autoload :ObsoleteNode, 'capybara/poltergeist/errors'
-    autoload :TimeoutError, 'capybara/poltergeist/errors'
+    require 'capybara/poltergeist/errors'
   end
 end
 

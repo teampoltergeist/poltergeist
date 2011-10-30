@@ -125,6 +125,10 @@ module Capybara::Poltergeist
       else
         json['response']
       end
+
+    rescue DeadClient
+      restart
+      raise
     end
   end
 end
