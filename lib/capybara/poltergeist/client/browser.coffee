@@ -88,9 +88,13 @@ class Poltergeist.Browser
     @owner.sendResponse(true)
 
   click: (id) ->
+    load_detected = false
+
     # Detect if the click event triggers a page load. If it does, don't send
     # a response here, because the response will be sent once the page has loaded.
-    @page.onLoadStarted = => @awaiting_response = true
+    @page.onLoadStarted = =>
+      @awaiting_response = true
+      load_detected      = true
 
     @page.get(id).click()
 
@@ -99,7 +103,7 @@ class Poltergeist.Browser
     setTimeout(
       =>
         @page.onLoadStarted = null
-        @owner.sendResponse(true) unless @awaiting_response
+        @owner.sendResponse(true) unless load_detected
       ,
       10
     )
