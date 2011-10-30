@@ -14,10 +14,14 @@ Gem::Specification.new do |s|
   s.summary     = "PhantomJS driver for Capybara"
   s.description = "PhantomJS driver for Capybara"
 
-  s.add_dependency "capybara",     "~> 1.1.0"
+  s.add_dependency "capybara",     "~> 1.0"
   s.add_dependency "em-websocket", "~> 0.3.1"
   s.add_dependency "json",         "~> 1.6"
   s.add_dependency "sfl",          "~> 2.0"
+
+  s.add_development_dependency 'rspec', '~> 2.7.0'
+  s.add_development_dependency 'sinatra', '~> 1.0'
+  s.add_development_dependency 'rake',    '~> 0.9.2'
 
   s.files        = Dir.glob("{lib}/**/*") + %w(LICENSE README.md CHANGELOG.md)
   s.require_path = 'lib'

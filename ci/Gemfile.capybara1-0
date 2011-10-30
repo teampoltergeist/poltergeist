@@ -1,0 +1,3 @@
+source :rubygems
+gemspec
+gem 'capybara', '~> 1.0.0'

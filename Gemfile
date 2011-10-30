@@ -1,8 +1,3 @@
 source :rubygems
-
 gemspec
-
-gem 'rspec'
-gem 'sinatra'
-gem 'json'
-gem 'rake'
+gem 'capybara', :git => 'https://github.com/jnicklas/capybara.git'
