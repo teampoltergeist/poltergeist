@@ -101,7 +101,7 @@ class Poltergeist.Browser
         @page.onLoadStarted = null
         @owner.sendResponse(true) unless @awaiting_response
       ,
-      0
+      10
     )
 
   drag: (id, other_id) ->
