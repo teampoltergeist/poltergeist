@@ -3,3 +3,7 @@ before_script:
   - "sudo apt-get install xvfb -y"
   - "Xvfb :0 &"
 env: DISPLAY=:0
+rvm:
+  - 1.9.3
+  - 1.9.2
+  - 1.8.7
