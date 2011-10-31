@@ -124,5 +124,9 @@ class Poltergeist.Browser
     @page.render(path)
     @owner.sendResponse(true)
 
+  resize: (width, height) ->
+    @page.setViewportSize(width, height)
+    @owner.sendResponse(true)
+
   exit: ->
     phantom.exit()

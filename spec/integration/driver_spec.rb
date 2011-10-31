@@ -39,5 +39,16 @@ module Capybara::Poltergeist
       @driver.visit('/')
       @driver.body.should include('Hello world')
     end
+
+    it 'should have a viewport size of 1024x768 by default' do
+      @driver.visit('/')
+      @driver.evaluate_script('[window.innerWidth, window.innerHeight]').should == [1024, 768]
+    end
+
+    it 'should allow the viewport to be resized' do
+      @driver.visit('/')
+      @driver.resize(200, 400)
+      @driver.evaluate_script('[window.innerWidth, window.innerHeight]').should == [200, 400]
+    end
   end
 end

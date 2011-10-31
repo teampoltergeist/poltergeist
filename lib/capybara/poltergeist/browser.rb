@@ -105,6 +105,10 @@ module Capybara::Poltergeist
       command 'render', path
     end
 
+    def resize(width, height)
+      command 'resize', width, height
+    end
+
     def logger
       options[:logger]
     end

@@ -68,6 +68,10 @@ module Capybara::Poltergeist
       browser.render(path)
     end
 
+    def resize(width, height)
+      browser.resize(width, height)
+    end
+
     def wait?
       true
     end

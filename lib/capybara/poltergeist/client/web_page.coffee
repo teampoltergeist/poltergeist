@@ -9,7 +9,7 @@ class Poltergeist.WebPage
     @nodes   = {}
     @_source = ""
 
-    @native.viewportSize = { width: 1024, height: 768 }
+    this.setViewportSize(1024, 768)
 
     for callback in WebPage.CALLBACKS
       this.bindCallback(callback)
@@ -54,6 +54,9 @@ class Poltergeist.WebPage
 
   viewportSize: ->
     @native.viewportSize
+
+  setViewportSize: (width, height) ->
+    @native.viewportSize = { width: width, height: height }
 
   scrollPosition: ->
     @native.scrollPosition

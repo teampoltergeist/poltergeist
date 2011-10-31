@@ -26,9 +26,18 @@ or make sure that Xvfb is running and the `DISPLAY` environment variable is set.
 Poltergeist supports basically everything that is supported by the stock Selenium driver,
 including Javascript, drag-and-drop, etc.
 
-Additionally, you can grab screenshots of the page at any point by calling
+There are some additional features:
+
+### Taking screenshots ###
+
+You can grab screenshots of the page at any point by calling
 `page.driver.render('/path/to/file.png')` (this works the same way as the PhantomJS
 render feature, so you can specify other extensions like `.pdf`, `.gif`, etc.)
+
+### Resizing the window ###
+
+Sometimes the window size is important to how things are rendered. Poltergeist sets the window
+size to 1024x768 by default, but you can set this yourself with `page.driver.resize(width, height)`.
 
 ## Customization ##
 
