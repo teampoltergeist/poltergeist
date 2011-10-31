@@ -9,6 +9,8 @@ class Poltergeist.WebPage
     @nodes   = {}
     @_source = ""
 
+    @native.viewportSize = { width: 1024, height: 768 }
+
     for callback in WebPage.CALLBACKS
       this.bindCallback(callback)
 
@@ -27,7 +29,7 @@ class Poltergeist.WebPage
   onInitializedNative: ->
     @_source = null
     this.injectAgent()
-    this.setScrollPosition({ left: 0, top: 0})
+    this.setScrollPosition({ left: 0, top: 0 })
 
   injectAgent: ->
     if this.evaluate(-> typeof __poltergeist) == "undefined"

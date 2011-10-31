@@ -45,6 +45,11 @@ describe Capybara::Session do
         @session.should have_content("Hello")
         other_session.should have_content("Hello")
       end
+
+      it 'should have a viewport size of 1024x768 by default' do
+        @session.visit('/')
+        @session.evaluate_script('[window.innerWidth, window.innerHeight]').should == [1024, 768]
+      end
     end
   end
 end
