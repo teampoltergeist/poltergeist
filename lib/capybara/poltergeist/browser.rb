@@ -101,8 +101,8 @@ module Capybara::Poltergeist
       command 'reset'
     end
 
-    def render(path)
-      command 'render', path
+    def render(path, options = {})
+      command 'render', path, !!options[:full]
     end
 
     def resize(width, height)

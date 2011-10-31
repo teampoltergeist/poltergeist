@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'capybara/spec/driver'
+require 'image_size'
 
 module Capybara::Poltergeist
   describe Driver do
@@ -14,8 +15,8 @@ module Capybara::Poltergeist
     it_should_behave_like "driver with cookies support"
 
     it 'should support a custom phantomjs path' do
-      file = File.expand_path('../../support/custom_phantomjs_called', __FILE__)
-      path = File.expand_path('../../support/custom_phantomjs',        __FILE__)
+      file = POLTERGEIST_ROOT + '/spec/support/custom_phantomjs_called'
+      path = POLTERGEIST_ROOT + '/spec/support/custom_phantomjs'
 
       FileUtils.rm_f file
 
@@ -46,9 +47,39 @@ module Capybara::Poltergeist
     end
 
     it 'should allow the viewport to be resized' do
+      begin
+        @driver.visit('/')
+        @driver.resize(200, 400)
+        @driver.evaluate_script('[window.innerWidth, window.innerHeight]').should == [200, 400]
+      ensure
+        @driver.resize(1024, 768)
+      end
+    end
+
+    it 'should support rendering the page' do
+      file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
+      FileUtils.rm_f file
       @driver.visit('/')
-      @driver.resize(200, 400)
-      @driver.evaluate_script('[window.innerWidth, window.innerHeight]').should == [200, 400]
+      @driver.render(file)
+      File.exist?(file).should == true
+    end
+
+    it 'should support rendering the whole of a page that goes outside the viewport' do
+      file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
+      @driver.visit('/poltergeist/long_page')
+      @driver.render(file)
+
+      File.open(file, 'rb') do |f|
+        ImageSize.new(f.read).size.should ==
+          @driver.evaluate_script('[window.innerWidth, window.innerHeight]')
+      end
+
+      @driver.render(file, :full => true)
+
+      File.open(file, 'rb') do |f|
+        ImageSize.new(f.read).size.should ==
+          @driver.evaluate_script('[document.documentElement.clientWidth, document.documentElement.clientHeight]')
+      end
     end
   end
 end

@@ -19,9 +19,10 @@ Gem::Specification.new do |s|
   s.add_dependency "json",         "~> 1.6"
   s.add_dependency "sfl",          "~> 2.0"
 
-  s.add_development_dependency 'rspec', '~> 2.7.0'
-  s.add_development_dependency 'sinatra', '~> 1.0'
-  s.add_development_dependency 'rake',    '~> 0.9.2'
+  s.add_development_dependency 'rspec',      '~> 2.7.0'
+  s.add_development_dependency 'sinatra',    '~> 1.0'
+  s.add_development_dependency 'rake',       '~> 0.9.2'
+  s.add_development_dependency 'image_size', '~> 1.0'
 
   s.files        = Dir.glob("{lib}/**/*") + %w(LICENSE README.md CHANGELOG.md)
   s.require_path = 'lib'

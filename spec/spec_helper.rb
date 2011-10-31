@@ -1,4 +1,5 @@
-$:.unshift(File.expand_path('../lib', File.dirname(__FILE__)))
+POLTERGEIST_ROOT = File.expand_path('../..', __FILE__)
+$:.unshift(POLTERGEIST_ROOT + '/lib')
 
 require 'bundler/setup'
 

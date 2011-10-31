@@ -64,8 +64,8 @@ module Capybara::Poltergeist
       browser.reset
     end
 
-    def render(path)
-      browser.render(path)
+    def render(path, options = {})
+      browser.render(path, options)
     end
 
     def resize(width, height)
