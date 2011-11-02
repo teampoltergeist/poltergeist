@@ -34,15 +34,12 @@ module Capybara::Poltergeist
 
     def set(value)
       if tag_name == 'input'
-        type = self[:type]
-
-        if type == 'radio'
+        case self[:type]
+        when 'radio'
           click
-        elsif type == 'checkbox'
-          if value && !checked? || !value && checked?
-            click
-          end
-        elsif type == 'file'
+        when 'checkbox'
+          click if value != checked?
+        when 'file'
           command :select_file, value
         else
           command :set, value
