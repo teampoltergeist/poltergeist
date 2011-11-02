@@ -122,17 +122,19 @@ class Poltergeist.Browser
 
   render: (path, full) ->
     if full
-      @page.setClipRect({})
-    else
+      size   = @page.documentSize()
       scroll = @page.scrollPosition()
+
+      @page.setScrollPosition(left: 0, top: 0)
+      @page.setClipRect(left: 0, top: 0, width: size.width, height: size.height)
+      @page.render(path)
+      @page.setScrollPosition(scroll)
+    else
       size   = @page.viewportSize()
 
-      @page.setClipRect(
-        left: scroll.left, top: scroll.top,
-        width: size.width, height: size.height
-      )
+      @page.setClipRect(left: 0, top: 0, width: size.width, height: size.height)
+      @page.render(path)
 
-    @page.render(path)
     @owner.sendResponse(true)
 
   resize: (width, height) ->
