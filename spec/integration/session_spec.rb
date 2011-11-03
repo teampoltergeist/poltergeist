@@ -49,10 +49,8 @@ describe Capybara::Session do
       @session.visit('/poltergeist/long_page')
       @session.find(:css, '#penultimate').click
       @session.execute_script <<-JS
-        (function() {
-          el = document.getElementById('penultimate')
-          el.parentNode.removeChild(el)
-        })()
+        el = document.getElementById('penultimate')
+        el.parentNode.removeChild(el)
       JS
       @session.click_link('Phasellus blandit velit')
       @session.should have_content("Hello")

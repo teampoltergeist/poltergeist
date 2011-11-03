@@ -76,7 +76,7 @@ class Poltergeist.Browser
     @owner.sendResponse @page.evaluate("function() { return #{script} }")
 
   execute: (script) ->
-    @page.execute("function() { return #{script} }")
+    @page.execute("function() { #{script} }")
     @owner.sendResponse(true)
 
   push_frame: (id) ->

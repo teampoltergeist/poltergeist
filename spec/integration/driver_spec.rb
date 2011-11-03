@@ -81,5 +81,14 @@ module Capybara::Poltergeist
           @driver.evaluate_script('[document.documentElement.clientWidth, document.documentElement.clientHeight]')
       end
     end
+
+    it 'should support executing multiple lines of javascript' do
+      @driver.execute_script <<-JS
+        var a = 1
+        var b = 2
+        window.result = a + b
+      JS
+      @driver.evaluate_script("result").should == 3
+    end
   end
 end
