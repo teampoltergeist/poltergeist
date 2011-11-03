@@ -70,13 +70,35 @@ class Poltergeist.WebPage
   setClipRect: (rect) ->
     @native.clipRect = rect
 
-  viewport: ->
-    scroll = this.scrollPosition()
-    size   = this.viewportSize()
+  dimensions: ->
+    scroll   = this.scrollPosition()
+    viewport = this.viewportSize()
 
-    top:    scroll.top,  bottom: scroll.top + size.height,
-    left:   scroll.left, right:  scroll.left + size.width,
-    width:  size.width,  height: size.height
+    top:    scroll.top,  bottom: scroll.top  + viewport.height,
+    left:   scroll.left, right:  scroll.left + viewport.width,
+    viewport: viewport
+    document: this.documentSize()
+
+  # A work around for http://code.google.com/p/phantomjs/issues/detail?id=277
+  validatedDimensions: ->
+    dimensions = this.dimensions()
+    document   = dimensions.document
+    changed    = false
+
+    if dimensions.right > document.width
+      dimensions.left -= dimensions.right - document.width
+      dimensions.right = document.width
+      changed = true
+
+    if dimensions.bottom > document.height
+      dimensions.top -= dimensions.bottom - document.height
+      dimensions.bottom = document.height
+      changed = true
+
+    if changed
+      this.setScrollPosition(left: dimensions.left, top: dimensions.top)
+
+    dimensions
 
   get: (id) ->
     @nodes[id] or= new Poltergeist.Node(this, id)

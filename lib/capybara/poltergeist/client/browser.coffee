@@ -121,18 +121,17 @@ class Poltergeist.Browser
     @owner.sendResponse(true)
 
   render: (path, full) ->
+    dimensions = @page.validatedDimensions()
+    document   = dimensions.document
+    viewport   = dimensions.viewport
+
     if full
-      size   = @page.documentSize()
-      scroll = @page.scrollPosition()
-
       @page.setScrollPosition(left: 0, top: 0)
-      @page.setClipRect(left: 0, top: 0, width: size.width, height: size.height)
+      @page.setClipRect(left: 0, top: 0, width: document.width, height: document.height)
       @page.render(path)
-      @page.setScrollPosition(scroll)
+      @page.setScrollPosition(left: dimensions.left, top: dimensions.top)
     else
-      size   = @page.viewportSize()
-
-      @page.setClipRect(left: 0, top: 0, width: size.width, height: size.height)
+      @page.setClipRect(left: 0, top: 0, width: viewport.width, height: viewport.height)
       @page.render(path)
 
     @owner.sendResponse(true)

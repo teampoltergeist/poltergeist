@@ -21,19 +21,20 @@ class Poltergeist.Node
           @page.nodeCall(@id, name, arguments)
 
   scrollIntoView: ->
-    viewport = @page.viewport()
-    size     = @page.documentSize()
-    pos      = this.position()
+    dimensions = @page.validatedDimensions()
+    document   = dimensions.document
+    viewport   = dimensions.viewport
+    pos        = this.position()
 
-    scroll = { left: viewport.left, top: viewport.top }
+    scroll = { left: dimensions.left, top: dimensions.top }
 
-    unless viewport.left <= pos.x < viewport.right
-      scroll.left = Math.min(pos.x, size.width - viewport.width)
+    unless dimensions.left <= pos.x < dimensions.right
+      scroll.left = Math.min(pos.x, document.width - viewport.width)
 
-    unless viewport.top <= pos.y < viewport.bottom
-      scroll.top = Math.min(pos.y, size.height - viewport.height)
+    unless dimensions.top <= pos.y < dimensions.bottom
+      scroll.top = Math.min(pos.y, document.height - viewport.height)
 
-    if scroll.left != viewport.left || scroll.top != viewport.top
+    if scroll.left != dimensions.left || scroll.top != dimensions.top
       @page.setScrollPosition(scroll)
 
     position: this.relativePosition(pos, scroll),
