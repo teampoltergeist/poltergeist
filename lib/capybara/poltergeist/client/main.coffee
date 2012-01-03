@@ -1,5 +1,7 @@
-if phantom.version.major < 1 || phantom.version.minor < 3
-  console.log "Poltergeist requires a PhantomJS version of at least 1.3"
+if phantom.version.major < 1 ||
+   phantom.version.minor < 4 ||
+   phantom.version.patch < 1
+  console.log "Poltergeist requires a PhantomJS version of at least 1.4.1"
   phantom.exit(1)
 
 class Poltergeist
