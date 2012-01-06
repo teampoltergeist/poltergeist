@@ -170,6 +170,3 @@ document.addEventListener(
   'DOMContentLoaded',
   -> console.log('__DOMContentLoaded')
 )
-
-# Important to return true here - Phantom seems to choke otherwise
-true

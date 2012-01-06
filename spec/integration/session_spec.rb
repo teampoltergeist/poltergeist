@@ -3,11 +3,6 @@ require 'capybara/spec/session'
 
 describe Capybara::Session do
   context 'with poltergeist driver' do
-    # This seems to prevent some segfaulting of PhantomJS when the tests are run all together :( :(
-    before(:all) do
-      TestSessions::Poltergeist.driver.restart
-    end
-
     before do
       @session = TestSessions::Poltergeist
     end
