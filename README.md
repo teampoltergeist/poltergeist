@@ -48,8 +48,8 @@ So, you basically have two options:
 1. **If you have Qt 4.8 on your system, and don't need to use file
    inputs**, [follow the standard PhantomJS build instructions](http://code.google.com/p/phantomjs/wiki/BuildInstructions).
 
-2. **Otherwise**, [download the PhantomJS tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.4.1-source.tar.gz&can=2&q=),
-   `cd deploy/` and run either `./build-linux.sh --qt-4.8` or `./build-mac.sh`.
+2. **Otherwise**, [download the PhantomJS tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.4.1-source.tar.gz&can=2&q=)
+   and run either `deploy/build-linux.sh --qt-4.8` or `cd deploy; ./build-mac.sh`.
    The script will
    download Qt, apply some patches, build it, and then build PhantomJS
    against the patched build of Qt. It takes quite a while, around 30
