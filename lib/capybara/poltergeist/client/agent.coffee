@@ -93,6 +93,7 @@ class PoltergeistAgent.Node
 
     results = @agent.document.evaluate('.//text()[not(ancestor::script)]', el, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
     text    = ''
+
     for i in [0...results.snapshotLength]
       text += results.snapshotItem(i).textContent
     text
@@ -136,9 +137,7 @@ class PoltergeistAgent.Node
   tagName: ->
     @element.tagName
 
-  elementVisible: (element) ->
-
-  isVisible: (id) ->
+  isVisible: ->
     visible = (element) ->
       if @window.getComputedStyle(element).display == 'none'
         false
@@ -148,7 +147,7 @@ class PoltergeistAgent.Node
         true
     visible @element
 
-  position: (id) ->
+  position: ->
     pos = (element) ->
       x = element.offsetLeft
       y = element.offsetTop
