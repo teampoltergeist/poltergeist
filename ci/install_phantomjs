@@ -1,5 +1,5 @@
 #!/bin/bash
 
 wget http://phantomjs.googlecode.com/files/phantomjs-1.4.1-linux-x86-dynamic.tar.gz
-tar xvzf phantomjs-*.tar.gz
+tar xzf phantomjs-*.tar.gz
 ln -s phantomjs/bin/phantomjs /usr/local/bin/phantomjs

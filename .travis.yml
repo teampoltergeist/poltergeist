@@ -1,6 +1,6 @@
 before_script:
   - "sudo ci/install_phantomjs"
-  - "sudo apt-get install xvfb -y"
+  - "sudo apt-get install xvfb -qy"
   - "Xvfb :0 &"
 env: DISPLAY=:0
 rvm:
