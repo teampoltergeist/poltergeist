@@ -87,9 +87,15 @@ class PoltergeistAgent.Node
 
   text: ->
     if this.insideBody()
-      @element.textContent
+      el = @element
     else
-      @agent.document.body.textContent
+      el = @agent.document.body
+
+    results = @agent.document.evaluate('.//text()[not(ancestor::script)]', el, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
+    text    = ''
+    for i in [0...results.snapshotLength]
+      text += results.snapshotItem(i).textContent
+    text
 
   getAttribute: (name) ->
     if name == 'checked' || name == 'selected'
