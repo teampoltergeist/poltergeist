@@ -81,8 +81,15 @@ class PoltergeistAgent.Node
     event.initEvent("change", true, false)
     @element.dispatchEvent(event)
 
+  insideBody: ->
+    @element == @agent.document.body ||
+    @agent.document.evaluate('ancestor::body', @element, null, XPathResult.BOOLEAN_TYPE, null).booleanValue
+
   text: ->
-    @element.textContent
+    if this.insideBody()
+      @element.textContent
+    else
+      @agent.document.body.textContent
 
   getAttribute: (name) ->
     if name == 'checked' || name == 'selected'

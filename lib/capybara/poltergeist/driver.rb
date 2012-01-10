@@ -40,7 +40,7 @@ module Capybara::Poltergeist
     end
 
     def source
-      browser.source
+      browser.source.to_s
     end
 
     def find(selector)
