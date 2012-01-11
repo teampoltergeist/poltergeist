@@ -86,6 +86,8 @@ class PoltergeistAgent.Node
     @agent.document.evaluate('ancestor::body', @element, null, XPathResult.BOOLEAN_TYPE, null).booleanValue
 
   text: ->
+    return '' unless this.isVisible()
+
     if this.insideBody()
       el = @element
     else
@@ -95,7 +97,8 @@ class PoltergeistAgent.Node
     text    = ''
 
     for i in [0...results.snapshotLength]
-      text += results.snapshotItem(i).textContent
+      node = results.snapshotItem(i)
+      text += node.textContent if this.isVisible(node.parentNode)
     text
 
   getAttribute: (name) ->
@@ -137,15 +140,15 @@ class PoltergeistAgent.Node
   tagName: ->
     @element.tagName
 
-  isVisible: ->
-    visible = (element) ->
-      if @window.getComputedStyle(element).display == 'none'
-        false
-      else if element.parentElement
-        visible element.parentElement
-      else
-        true
-    visible @element
+  isVisible: (element) ->
+    element = @element unless element
+
+    if @agent.window.getComputedStyle(element).display == 'none'
+      false
+    else if element.parentElement
+      this.isVisible element.parentElement
+    else
+      true
 
   position: ->
     pos = (element) ->
