@@ -6,7 +6,7 @@ tar xzf phantomjs-*.tar.gz
 # ln -s `pwd`/phantomjs/bin/phantomjs ~/bin/phantomjs
 Xvfb :0 &
 
-version=`phantomjs/bin/phantomjs --version`
+version=`LD_TRACE_LOADED_OBJECTS=1 phantomjs/bin/phantomjs --version`
 if [ "$?" = "0" ]; then
   echo "PhantomJS $version installed successfully"
 else
