@@ -11,5 +11,7 @@ if [ "$?" = "0" ]; then
   echo "PhantomJS $version installed successfully"
 else
   echo "Something went wrong with PhantomJS setup"
+  ls -la ~/bin/phantomjs
+  env
   exit 1
 fi
