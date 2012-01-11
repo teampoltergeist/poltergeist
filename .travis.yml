@@ -1,8 +1,7 @@
 before_script:
-  - "sudo ci/install_phantomjs"
-  - "sudo apt-get install xvfb -qy"
-  - "Xvfb :0 &"
-env: DISPLAY=:0
+  - "export DISPLAY=:0"
+  - "export PATH=~/bin:$PATH"
+  - "ci/install_phantomjs"
 rvm:
   - 1.9.3
   - 1.9.2
