@@ -4,14 +4,15 @@ wget http://phantomjs.googlecode.com/files/phantomjs-1.4.1-linux-x86-dynamic.tar
 tar xzf phantomjs-*.tar.gz
 # mkdir ~/bin
 # ln -s `pwd`/phantomjs/bin/phantomjs ~/bin/phantomjs
-Xvfb :0 2>/dev/null &
+Xvfb :0 &
 
 version=`phantomjs/bin/phantomjs --version`
 if [ "$?" = "0" ]; then
   echo "PhantomJS $version installed successfully"
 else
   echo "Something went wrong with PhantomJS setup"
-  echo "Output: #{$version}"
+  echo "Output: $version"
+  ps aux | grep Xvfb
   ls -la ~/bin/phantomjs
   env
   exit 1
