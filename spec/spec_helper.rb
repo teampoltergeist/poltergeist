@@ -16,9 +16,7 @@ alias :running :lambda
 logger = SpecLogger.new
 
 Capybara.register_driver :poltergeist do |app|
-  opts = { :logger => logger }
-  opts[:phantomjs] = "/home/vagrant/builds/jonleighton/poltergeist/phantomjs/bin/phantomjs" if ENV['TRAVIS']
-  Capybara::Poltergeist::Driver.new(app, opts)
+  Capybara::Poltergeist::Driver.new(app, :logger => logger)
 end
 
 module TestSessions
