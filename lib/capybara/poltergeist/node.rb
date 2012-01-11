@@ -21,7 +21,7 @@ module Capybara::Poltergeist
     end
 
     def text
-      command :text
+      command(:text).strip.gsub(/\s+/, ' ')
     end
 
     def [](name)
