@@ -140,6 +140,23 @@ makes debugging easier). Running `rake autocompile` will watch the
 `.coffee` files for changes, and compile them into
 `lib/capybara/client/compiled`.
 
+## Changes ##
+
+### 0.3 (unreleased) ###
+
+* There was a bad bug to do with clicking elements in a page where the
+  page is smaller than the window. The incorrect position would be
+  calculated, and so the click would happen in the wrong place. This is
+  fixed. [Issue #8]
+
+### 0.2 ###
+
+* First version considered 'ready', hopefully fewer problems.
+
+### 0.1 ###
+
+* First version, various problems.
+
 ## License ##
 
 Copyright (c) 2011 Jonathan Leighton

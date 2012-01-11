@@ -24,6 +24,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake',       '~> 0.9.2'
   s.add_development_dependency 'image_size', '~> 1.0'
 
-  s.files        = Dir.glob("{lib}/**/*") + %w(LICENSE README.md CHANGELOG.md)
+  s.files        = Dir.glob("{lib}/**/*") + %w(LICENSE README.md)
   s.require_path = 'lib'
 end

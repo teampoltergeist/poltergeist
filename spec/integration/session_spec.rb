@@ -50,5 +50,11 @@ describe Capybara::Session do
       @session.click_link('Phasellus blandit velit')
       @session.should have_content("Hello")
     end
+
+    it 'should handle clicks where the target is in view, but the document is smaller than the viewport' do
+      @session.visit '/poltergeist/simple'
+      @session.click_link 'Link'
+      @session.should have_content('Hello world')
+    end
   end
 end
