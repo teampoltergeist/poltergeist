@@ -5,7 +5,7 @@ tar xzf phantomjs-*.tar.gz
 mkdir ~/bin
 ln -s `pwd`/phantomjs/bin/phantomjs ~/bin/phantomjs
 Xvfb :0 &
-sleep 1
+sleep 5
 
 version=`phantomjs --version`
 if [ "$?" = "0" ]; then
@@ -13,6 +13,7 @@ if [ "$?" = "0" ]; then
 else
   echo "Something went wrong with PhantomJS setup"
   ps aux | grep Xvfb
+  xset -q
   ls -la ~/bin/phantomjs
   env
   exit 1
