@@ -1,6 +1,7 @@
 before_script:
-  - "export DISPLAY=:0"
+  - "export DISPLAY=:99.0"
   - "export PATH=~/bin:$PATH"
+  - "sh -e /etc/init.d/xvfb start"
   - "ci/install_phantomjs"
 rvm:
   - 1.9.3
