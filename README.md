@@ -15,54 +15,61 @@ Add `poltergeist` to your Gemfile, and add in your test setup add:
     require 'capybara/poltergeist'
     Capybara.javascript_driver = :poltergeist
 
-Currently PhantomJS is not 'truly headless', so to run it on a continuous integration
-server you will need to use [Xvfb](http://en.wikipedia.org/wiki/Xvfb). You can either use the
-[headless gem](https://github.com/leonid-shevtsov/headless) for this,
-or make sure that Xvfb is running and the `DISPLAY` environment variable is set.
-
 ## Installing PhantomJS ##
 
 You need PhantomJS 1.4.1+, built against Qt 4.8, on your system.
 
-### Mac users ##
+### Pre-built binaries ##
 
-By far the easiest, most reliable thing to do is to [install the
-pre-built static binary](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.4.1-macosx-static-x86.zip&can=2&q=).
-Try this first.
+There are [pre-built
+binaries](http://code.google.com/p/phantomjs/downloads/list) of
+PhantomJS for Linux, Mac and Windows. This is the easiest and best way
+to install it.
 
-### Linux users, or if the pre-built Mac binary doesn't work ###
+Note that if you have a 'dynamic' package, it's important to maintain
+the relationship between `bin/phantomjs` and `lib/`. This is because the
+`bin/phantomjs` binary looks in `../lib/` for its library files. So the
+best thing to do is to link it into place:
 
-You need to build PhantomJS manually. Unfortunately, this not
-currently straightforward, for two reasons:
+```
+ln -s /path/to/phantomjs/bin/phantomjs /usr/local/bin/phantomjs
+```
 
-1. Using Poltergeist with PhantomJS built against Qt 4.7 causes
-   segfaults in WebKit's Javascript engine. Fortunately, this problem
-   doesn't occur under the recently released Qt 4.8. But if you don't
-   have Qt 4.8 on your system (check with `qmake --version`), you'll
-   need to build it.
+### Compiling PhantomJS ###
 
-2. A change in the version of WebKit bundled with Qt 4.8 means that in order
-   to be able to attach files to file `<input>` elements, we must apply
-   a patch to the Qt source tree that PhantomJS is built against.
+If you're having trouble with a pre-built binary package, you can
+compile PhantomJS yourself. PhantomJS must be built against Qt 4.8, and
+some patches must be applied, so note that you cannot built it against
+your system install of Qt.
 
-So, you basically have two options:
+[Download the tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.4.1-source.tar.gz&can=2&q=)
+and run either `deploy/build-linux.sh --qt-4.8` or `cd deploy; ./build-mac.sh`.
+The script will
+download Qt, apply some patches, build it, and then build PhantomJS
+against the patched build of Qt. It takes quite a while, around 30
+minutes on a modern computer with two hyperthreaded cores. Afterwards,
+you should copy (or link) the `bin/phantomjs` binary into your `PATH`.
 
-1. **If you have Qt 4.8 on your system, and don't need to use file
-   inputs**, [follow the standard PhantomJS build instructions](http://code.google.com/p/phantomjs/wiki/BuildInstructions).
+## Running on a CI ##
 
-2. **Otherwise**, [download the PhantomJS tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.4.1-source.tar.gz&can=2&q=)
-   and run either `deploy/build-linux.sh --qt-4.8` or `cd deploy; ./build-mac.sh`.
-   The script will
-   download Qt, apply some patches, build it, and then build PhantomJS
-   against the patched build of Qt. It takes quite a while, around 30
-   minutes on a modern computer with two hyperthreaded cores. Afterwards,
-   you should copy the `bin/phantomjs` binary into your `PATH`.
+Currently PhantomJS is not 'truly headless', so to run it on a continuous integration
+server you will need to install [Xvfb](http://en.wikipedia.org/wiki/Xvfb).
 
-PhantomJS 1.5 plans to bundle a stripped-down version of Qt, which will
-reduce the build time a bit (although most of the time is spent building
-WebKit) and make it easier to apply patches. When it is possible to make
-static builds for Linux, those may be provided too, so most users will
-avoid having to build it themselves.
+### On any generic server ###
+
+Install PhantomJS and invoke your tests with `xvfb-run`, (e.g. `xvfb-run
+rake`).
+
+### Using [Travis CI](http://travis-ci.org/) ###
+
+Travis CI has PhantomJS installed already! So all you need to do is add
+the following to your `.travis.yml`:
+
+``` yaml
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+```
 
 ## What's supported? ##
 
