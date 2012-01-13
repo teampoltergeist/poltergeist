@@ -142,3 +142,6 @@ class Poltergeist.Browser
 
   exit: ->
     phantom.exit()
+
+  noop: ->
+    # NOOOOOOP!

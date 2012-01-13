@@ -4,10 +4,20 @@ module Capybara::Poltergeist
   class Browser
     attr_reader :options, :server, :client
 
+    DEFAULT_TIMEOUT = 10
+
     def initialize(options = {})
       @options = options
-      @server  = Server.new
+      @server  = Server.new(options.fetch(:timeout, DEFAULT_TIMEOUT))
       @client  = Client.new(server.port, options[:phantomjs])
+    end
+
+    def timeout
+      server.timeout
+    end
+
+    def timeout=(sec)
+      server.timeout = sec
     end
 
     def restart

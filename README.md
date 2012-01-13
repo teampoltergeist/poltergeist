@@ -97,6 +97,9 @@ test setup:
   * `:phantomjs` (String) - A custom path to the phantomjs executable
   * `:debug` (Boolean) - When true, debug output is logged to `STDERR`
   * `:logger` (Object responding to `puts`) - When present, debug output is written to this object
+  * `:timeout` (Numeric) - The number of seconds we'll wait for a response
+    when communicating with PhantomJS. `nil` means wait forever. Default
+    is 10.
 
 ## Bugs ##
 
@@ -148,6 +151,19 @@ makes debugging easier). Running `rake autocompile` will watch the
   page is smaller than the window. The incorrect position would be
   calculated, and so the click would happen in the wrong place. This is
   fixed. [Issue #8]
+
+* Poltergeist didn't work in conjunction with the Thin web server,
+  because that server uses Event Machine, and Poltergeist was assuming
+  that it was the only thing in the process using EventMachine.
+
+  To solve this, EventMachine usage has been completely removed, which
+  has the welcome side-effect of being more efficient because we
+  no longer have the overhead of running a mostly-idle event loop.
+
+  [Issue #6]
+
+* Added the `:timeout` option to configure the timeout when talking to
+  PhantomJS.
 
 ### 0.2 ###
 

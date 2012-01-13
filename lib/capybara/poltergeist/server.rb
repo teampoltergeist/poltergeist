@@ -1,29 +1,31 @@
 module Capybara::Poltergeist
   class Server
-    attr_reader :port
+    attr_reader :port, :socket, :timeout
 
-    def initialize
-      @port = find_available_port
+    def initialize(timeout = nil)
+      @port    = find_available_port
+      @timeout = timeout
       start
     end
 
+    def timeout=(sec)
+      @timeout = @socket.timeout = sec
+    end
+
     def start
-      server_manager.start(port)
+      @socket = WebSocketServer.new(port, timeout)
     end
 
     def restart
-      server_manager.restart(port)
+      @socket.close
+      @socket = WebSocketServer.new(port, timeout)
     end
 
     def send(message)
-      server_manager.send(port, message)
+      @socket.send(message) or raise DeadClient.new(message)
     end
 
     private
-
-    def server_manager
-      ServerManager.instance
-    end
 
     def find_available_port
       server = TCPServer.new('127.0.0.1', 0)
