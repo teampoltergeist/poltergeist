@@ -99,7 +99,7 @@ test setup:
   * `:logger` (Object responding to `puts`) - When present, debug output is written to this object
   * `:timeout` (Numeric) - The number of seconds we'll wait for a response
     when communicating with PhantomJS. `nil` means wait forever. Default
-    is 10.
+    is 30.
 
 ## Bugs ##
 

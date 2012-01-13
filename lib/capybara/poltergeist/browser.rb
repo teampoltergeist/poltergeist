@@ -4,7 +4,7 @@ module Capybara::Poltergeist
   class Browser
     attr_reader :options, :server, :client
 
-    DEFAULT_TIMEOUT = 10
+    DEFAULT_TIMEOUT = 30
 
     def initialize(options = {})
       @options = options
