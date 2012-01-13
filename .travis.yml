@@ -5,6 +5,7 @@ rvm:
   - 1.9.3
   - 1.9.2
   - 1.8.7
+  - rbx-18mode
 gemfile:
   - Gemfile
   - ci/Gemfile.capybara1-0
