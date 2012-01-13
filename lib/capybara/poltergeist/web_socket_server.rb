@@ -121,13 +121,15 @@ module Capybara::Poltergeist
       accept unless connected?
       socket.write handler.encode(message)
       receive
-    rescue IO::WaitReadable
+    rescue Errno::EAGAIN, Errno::EWOULDBLOCK
       raise TimeoutError.new(message)
     end
 
     def close
-      server.close
-      socket.close
+      [server, socket].each do |s|
+        s.close_read
+        s.close_write
+      end
     end
   end
 end
