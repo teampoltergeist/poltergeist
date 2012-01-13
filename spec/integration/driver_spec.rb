@@ -24,10 +24,10 @@ module Capybara::Poltergeist
       driver.browser
 
       # If the correct custom path is called, it will touch the file. We allow at
-      # least 1 sec for this to happen before failing.
+      # least 10 secs for this to happen before failing.
 
       tries = 0
-      until File.exist?(file) || tries == 10
+      until File.exist?(file) || tries == 100
         sleep 0.1
         tries += 1
       end
