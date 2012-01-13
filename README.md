@@ -24,12 +24,13 @@ You need PhantomJS 1.4.1+, built against Qt 4.8, on your system.
 There are [pre-built
 binaries](http://code.google.com/p/phantomjs/downloads/list) of
 PhantomJS for Linux, Mac and Windows. This is the easiest and best way
-to install it.
+to install it. The binaries including a patched version of Qt 4.8 so you
+don't need to install that separately.
 
 Note that if you have a 'dynamic' package, it's important to maintain
 the relationship between `bin/phantomjs` and `lib/`. This is because the
 `bin/phantomjs` binary looks in `../lib/` for its library files. So the
-best thing to do is to link it into place:
+best thing to do is to link (rather than copy) it into your `PATH`:
 
 ```
 ln -s /path/to/phantomjs/bin/phantomjs /usr/local/bin/phantomjs
@@ -39,7 +40,7 @@ ln -s /path/to/phantomjs/bin/phantomjs /usr/local/bin/phantomjs
 
 If you're having trouble with a pre-built binary package, you can
 compile PhantomJS yourself. PhantomJS must be built against Qt 4.8, and
-some patches must be applied, so note that you cannot built it against
+some patches must be applied, so note that you cannot build it against
 your system install of Qt.
 
 [Download the tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.4.1-source.tar.gz&can=2&q=)
@@ -156,31 +157,31 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 ### 0.3 (unreleased) ###
 
-* There was a bad bug to do with clicking elements in a page where the
-  page is smaller than the window. The incorrect position would be
-  calculated, and so the click would happen in the wrong place. This is
-  fixed. [Issue #8]
+*   There was a bad bug to do with clicking elements in a page where the
+    page is smaller than the window. The incorrect position would be
+    calculated, and so the click would happen in the wrong place. This is
+    fixed. [Issue #8]
 
-* Poltergeist didn't work in conjunction with the Thin web server,
-  because that server uses Event Machine, and Poltergeist was assuming
-  that it was the only thing in the process using EventMachine.
+*   Poltergeist didn't work in conjunction with the Thin web server,
+    because that server uses Event Machine, and Poltergeist was assuming
+    that it was the only thing in the process using EventMachine.
 
-  To solve this, EventMachine usage has been completely removed, which
-  has the welcome side-effect of being more efficient because we
-  no longer have the overhead of running a mostly-idle event loop.
+    To solve this, EventMachine usage has been completely removed, which
+    has the welcome side-effect of being more efficient because we
+    no longer have the overhead of running a mostly-idle event loop.
 
-  [Issue #6]
+    [Issue #6]
 
-* Added the `:timeout` option to configure the timeout when talking to
-  PhantomJS.
+*   Added the `:timeout` option to configure the timeout when talking to
+    PhantomJS.
 
 ### 0.2 ###
 
-* First version considered 'ready', hopefully fewer problems.
+*   First version considered 'ready', hopefully fewer problems.
 
 ### 0.1 ###
 
-* First version, various problems.
+*   First version, various problems.
 
 ## License ##
 
