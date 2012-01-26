@@ -74,5 +74,12 @@ describe Capybara::Session do
         log.text.should == instruction
       end
     end
+
+    it 'should fill in text fields', :focus => true do
+      @session.visit '/poltergeist/form'
+      @session.fill_in 'name', :with => "Poltergeist"
+      @session.click_button 'Submit'
+      @session.should have_content('Poltergeist')
+    end
   end
 end
