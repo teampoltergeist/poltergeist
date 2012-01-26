@@ -56,5 +56,12 @@ describe Capybara::Session do
       @session.click_link 'Link'
       @session.should have_content('Hello world')
     end
+
+    it 'should handle clicks in tables' do
+      @session.visit '/poltergeist/table'
+      @session.click_link 'Link'
+      @session.should have_content('Hello world')
+    end
+
   end
 end
