@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency "http_parser.rb", "~> 0.5.3"
   s.add_dependency "faye-websocket", "~> 0.2.0"
 
-  s.add_development_dependency 'rspec',      '~> 2.7.0'
+  s.add_development_dependency 'rspec',      '~> 2.8.0'
   s.add_development_dependency 'sinatra',    '~> 1.0'
   s.add_development_dependency 'rake',       '~> 0.9.2'
   s.add_development_dependency 'image_size', '~> 1.0'
