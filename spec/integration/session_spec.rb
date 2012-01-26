@@ -56,5 +56,23 @@ describe Capybara::Session do
       @session.click_link 'Link'
       @session.should have_content('Hello world')
     end
+
+    it 'should handle clicks where a parent element has a border' do
+      @session.visit '/poltergeist/table'
+      @session.click_link 'Link'
+      @session.should have_content('Hello world')
+    end
+
+    it 'should scroll around so that elements can be clicked' do
+      @session.driver.resize(200, 200)
+      @session.visit '/poltergeist/click_test'
+      log = @session.find(:css, '#log')
+
+      instructions = %w(one four one two three)
+      instructions.each do |instruction, i|
+        @session.find(:css, "##{instruction}").click
+        log.text.should == instruction
+      end
+    end
   end
 end

@@ -155,7 +155,13 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 ## Changes ##
 
-### 0.3 ###
+### 0.4.0 (unreleased) #
+
+*   Element click position is now calculated using the native
+    `getBoundingClientRect()` method, which will be faster and less
+    buggy.
+
+### 0.3.0 ###
 
 *   There was a bad bug to do with clicking elements in a page where the
     page is smaller than the window. The incorrect position would be
@@ -175,11 +181,11 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Added the `:timeout` option to configure the timeout when talking to
     PhantomJS.
 
-### 0.2 ###
+### 0.2.0 ###
 
 *   First version considered 'ready', hopefully fewer problems.
 
-### 0.1 ###
+### 0.1.0 ###
 
 *   First version, various problems.
 

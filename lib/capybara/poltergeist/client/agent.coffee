@@ -151,18 +151,8 @@ class PoltergeistAgent.Node
       true
 
   position: ->
-    pos = (element) ->
-      x = element.offsetLeft
-      y = element.offsetTop
-
-      if element.offsetParent
-        parentPos = pos(element.offsetParent)
-
-        x += parentPos.x
-        y += parentPos.y
-
-      { x: x, y: y }
-    pos @element
+    rect = @element.getBoundingClientRect()
+    { top: rect.top, left: rect.left }
 
   trigger: (name) ->
     if Node.EVENTS.MOUSE.indexOf(name) != -1

@@ -83,7 +83,6 @@ class Poltergeist.WebPage
   validatedDimensions: ->
     dimensions = this.dimensions()
     document   = dimensions.document
-    changed    = false
 
     orig_left = dimensions.left
     orig_top  = dimensions.top

@@ -28,30 +28,36 @@ class Poltergeist.Node
 
     scroll = { left: dimensions.left, top: dimensions.top }
 
-    unless dimensions.left <= pos.x < dimensions.right
-      scroll.left = Math.min(pos.x, document.width - viewport.width)
+    adjust = (coord, measurement) ->
+      if pos[coord] < 0
+        scroll[coord] = Math.max(
+          0,
+          scroll[coord] + pos[coord] - (viewport[measurement] / 2)
+        )
 
-    unless dimensions.top <= pos.y < dimensions.bottom
-      scroll.top = Math.min(pos.y, document.height - viewport.height)
+      else if pos[coord] >= viewport[measurement]
+        scroll[coord] = Math.min(
+          document[measurement] - viewport[measurement],
+          scroll[coord] + pos[coord] - viewport[measurement] + (viewport[measurement] / 2)
+        )
+
+    adjust('left', 'width')
+    adjust('top',  'height')
 
     if scroll.left != dimensions.left || scroll.top != dimensions.top
       @page.setScrollPosition(scroll)
+      pos = this.position()
 
-    position: this.relativePosition(pos, scroll),
-    scroll:   scroll
-
-  relativePosition: (position, scroll) ->
-    x: position.x - scroll.left
-    y: position.y - scroll.top
+    pos
 
   click: ->
-    position = this.scrollIntoView().position
-    @page.sendEvent('click', position.x, position.y)
+    position = this.scrollIntoView()
+    @page.sendEvent('click', position.left, position.top)
 
   dragTo: (other) ->
-    { position, scroll } = this.scrollIntoView()
-    otherPosition        = this.relativePosition(other.position(), scroll)
+    position      = this.scrollIntoView()
+    otherPosition = other.position()
 
-    @page.sendEvent('mousedown', position.x,      position.y)
-    @page.sendEvent('mousemove', otherPosition.x, otherPosition.y)
-    @page.sendEvent('mouseup',   otherPosition.x, otherPosition.y)
+    @page.sendEvent('mousedown', position.left,      position.top)
+    @page.sendEvent('mousemove', otherPosition.left, otherPosition.top)
+    @page.sendEvent('mouseup',   otherPosition.left, otherPosition.top)
