@@ -11,4 +11,8 @@ class TestApp
   get '/poltergeist/:view' do |view|
     erb File.read("#{POLTERGEIST_VIEWS}/#{view}.erb")
   end
+
+  post '/poltergeist' do
+    params[:name]
+  end
 end
