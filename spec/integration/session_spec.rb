@@ -78,7 +78,6 @@ describe Capybara::Session do
     it 'should fill in text fields', :focus => true do
       @session.visit '/poltergeist/form'
       @session.fill_in 'name', :with => "Poltergeist"
-      @session.driver.render('/Users/fabian/file.png', :full => true)
       @session.click_button 'Submit'
       @session.should have_content('Poltergeist')
     end
