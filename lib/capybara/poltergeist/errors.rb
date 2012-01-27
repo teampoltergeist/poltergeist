@@ -42,5 +42,17 @@ module Capybara
         "The PhantomJS client died while processing #{@message}"
       end
     end
+
+    class PhantomJSTooOld < Error
+      attr_reader :version
+
+      def initialize(version)
+        @version = version
+      end
+
+      def message
+        "PhantomJS version #{version} is too old. You must use at least version #{Client::PHANTOMJS_VERSION}"
+      end
+    end
   end
 end

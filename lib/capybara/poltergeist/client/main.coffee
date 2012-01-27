@@ -1,7 +1,3 @@
-if "#{phantom.version.major}.#{phantom.version.minor}.#{phantom.version.patch}" < "1.4.1"
-  console.log "Poltergeist requires a PhantomJS version of at least 1.4.1"
-  phantom.exit(1)
-
 class Poltergeist
   constructor: (port) ->
     @browser    = new Poltergeist.Browser(this)

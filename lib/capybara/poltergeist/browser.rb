@@ -9,7 +9,7 @@ module Capybara::Poltergeist
     def initialize(options = {})
       @options = options
       @server  = Server.new(options.fetch(:timeout, DEFAULT_TIMEOUT))
-      @client  = Client.new(server.port, options[:phantomjs])
+      @client  = Client.start(server.port, options[:phantomjs])
     end
 
     def timeout
