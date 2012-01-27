@@ -73,7 +73,7 @@ class Poltergeist.Browser
     @owner.sendResponse @page.get(id).isVisible()
 
   evaluate: (script) ->
-    @owner.sendResponse @page.evaluate("function() { return #{script} }")
+    @owner.sendResponse JSON.parse(@page.evaluate("function() { return JSON.stringify(#{script}) }"))
 
   execute: (script) ->
     @page.execute("function() { #{script} }")

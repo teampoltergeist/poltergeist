@@ -85,5 +85,12 @@ describe Capybara::Session do
       @session.evaluate_script("window.prompt()").should == nil
       @session.evaluate_script("window.prompt('foo', 'default')").should == 'default'
     end
+
+    it 'should handle evaluate_script values properly' do
+      @session.evaluate_script('null').should == nil
+      @session.evaluate_script('false').should == false
+      @session.evaluate_script('true').should == true
+      @session.evaluate_script("{foo: 'bar'}").should == {"foo" => "bar"}
+    end
   end
 end
