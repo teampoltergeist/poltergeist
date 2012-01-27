@@ -175,3 +175,5 @@ document.addEventListener(
   'DOMContentLoaded',
   -> console.log('__DOMContentLoaded')
 )
+
+window.confirm = (message) -> true

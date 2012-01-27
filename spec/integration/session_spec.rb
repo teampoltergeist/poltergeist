@@ -74,5 +74,10 @@ describe Capybara::Session do
         log.text.should == instruction
       end
     end
+
+    it 'should handle window.confirm() - returning true unconditionally' do
+      @session.visit '/'
+      @session.evaluate_script("window.confirm('foo')").should == true
+    end
   end
 end
