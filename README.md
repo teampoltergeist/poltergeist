@@ -161,8 +161,11 @@ makes debugging easier). Running `rake autocompile` will watch the
     `getBoundingClientRect()` method, which will be faster and less
     buggy.
 
-*   Handle `window.confirm()`. (Always returns true, which is the same
-    as capybara-webkit.) [Issue #10]
+*   Handle `window.confirm()`. Always returns true, which is the same
+    as capybara-webkit. [Issue #10]
+
+*   Handle `window.prompt()`. Returns the default value, if present, or
+    null.
 
 ### 0.3.0 ###
 

@@ -75,9 +75,15 @@ describe Capybara::Session do
       end
     end
 
-    it 'should handle window.confirm() - returning true unconditionally' do
+    it 'should handle window.confirm(), returning true unconditionally' do
       @session.visit '/'
       @session.evaluate_script("window.confirm('foo')").should == true
+    end
+
+    it 'should handle window.prompt(), returning the default value or null' do
+      @session.visit '/'
+      @session.evaluate_script("window.prompt()").should == nil
+      @session.evaluate_script("window.prompt('foo', 'default')").should == 'default'
     end
   end
 end
