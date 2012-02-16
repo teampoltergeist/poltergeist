@@ -1,19 +1,23 @@
 class Poltergeist.Browser
   constructor: (@owner) ->
-    @awaiting_response = false
+    @state = 'default'
     this.resetPage()
 
   resetPage: ->
     @page.release() if @page?
 
     @page = new Poltergeist.WebPage
+
+    @page.onLoadStarted = =>
+      @state = 'loading' if @state == 'clicked'
+
     @page.onLoadFinished = (status) =>
-      if @awaiting_response
+      if @state == 'loading'
         @owner.sendResponse(status)
-        @awaiting_response = false
+        @state = 'default'
 
   visit: (url) ->
-    @awaiting_response = true
+    @state = 'loading'
     @page.open(url)
 
   current_url: ->
@@ -88,14 +92,9 @@ class Poltergeist.Browser
     @owner.sendResponse(true)
 
   click: (id) ->
-    load_detected = false
-
-    # Detect if the click event triggers a page load. If it does, don't send
-    # a response here, because the response will be sent once the page has loaded.
-    @page.onLoadStarted = =>
-      return if load_detected
-      @awaiting_response = true
-      load_detected      = true
+    # If the click event triggers onLoadStarted, we will transition to the 'loading'
+    # state and wait for onLoadFinished before sending a response.
+    @state = 'clicked'
 
     @page.get(id).click()
 
@@ -103,8 +102,9 @@ class Poltergeist.Browser
     # callback can (possibly) fire, before we decide whether to send a response.
     setTimeout(
       =>
-        @page.onLoadStarted = null
-        @owner.sendResponse(true) unless load_detected
+        if @state == 'clicked'
+          @state = 'default'
+          @owner.sendResponse(true)
       ,
       10
     )
