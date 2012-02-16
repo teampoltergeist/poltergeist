@@ -167,6 +167,9 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Handle `window.prompt()`. Returns the default value, if present, or
     null.
 
+*   Fix bug with page Javascript page loading causing problems. [Issue
+    #19]
+
 ### 0.3.0 ###
 
 *   There was a bad bug to do with clicking elements in a page where the

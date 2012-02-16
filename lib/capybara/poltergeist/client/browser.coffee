@@ -93,6 +93,7 @@ class Poltergeist.Browser
     # Detect if the click event triggers a page load. If it does, don't send
     # a response here, because the response will be sent once the page has loaded.
     @page.onLoadStarted = =>
+      return if load_detected
       @awaiting_response = true
       load_detected      = true
 

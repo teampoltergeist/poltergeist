@@ -92,5 +92,12 @@ describe Capybara::Session do
       @session.evaluate_script('true').should == true
       @session.evaluate_script("{foo: 'bar'}").should == {"foo" => "bar"}
     end
+
+    it "synchronises page loads properly" do
+      @session.visit '/poltergeist/index'
+      @session.click_link "JS redirect"
+      sleep 0.1
+      @session.body.should include("Hello world")
+    end
   end
 end
