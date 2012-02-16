@@ -7,10 +7,13 @@ class Poltergeist
     try
       @browser[command.name].apply(@browser, command.args)
     catch error
-      @connection.send({ error: error.toString() })
+      this.sendError(error.toString())
 
   sendResponse: (response) ->
     @connection.send({ response: response })
+
+  sendError: (message) ->
+    @connection.send({ error: message })
 
 class Poltergeist.ObsoleteNode
   toString: -> "Poltergeist.ObsoleteNode"

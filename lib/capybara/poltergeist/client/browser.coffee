@@ -13,7 +13,11 @@ class Poltergeist.Browser
 
     @page.onLoadFinished = (status) =>
       if @state == 'loading'
-        @owner.sendResponse(status)
+        if status == 'success'
+          @owner.sendResponse(true)
+        else
+          @owner.sendError('URL failed to load')
+
         @state = 'default'
 
   visit: (url) ->

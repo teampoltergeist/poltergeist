@@ -99,5 +99,9 @@ describe Capybara::Session do
       sleep 0.1
       @session.body.should include("Hello world")
     end
+
+    it "raises an error if a load fails" do
+      expect { @session.visit 'omgwtfbbq12345632' }.to raise_error(Capybara::Poltergeist::BrowserError)
+    end
   end
 end
