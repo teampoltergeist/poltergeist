@@ -169,9 +169,6 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 *   Fix bug with page Javascript page loading causing problems. [Issue #19]
 
-*   Raise an error if a URL fails to load in response to `#visit` or
-    `#click`.
-
 ### 0.3.0 ###
 
 *   There was a bad bug to do with clicking elements in a page where the
