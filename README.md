@@ -12,8 +12,32 @@ provided by [PhantomJS](http://www.phantomjs.org/).
 
 Add `poltergeist` to your Gemfile, and add in your test setup add:
 
-    require 'capybara/poltergeist'
-    Capybara.javascript_driver = :poltergeist
+``` ruby
+require 'capybara/poltergeist'
+Capybara.javascript_driver = :poltergeist
+```
+
+## Important note about Rack versions < 1.3.0 ##
+
+Prior to version 1.3.0, the Rack handlers for Mongrel and Thin wrap your
+app in the `Rack::Chunked` middleware so that it uses
+`Transfer-Encoding: chunked`
+([commit](https://github.com/rack/rack/commit/50cdd0bf000a9ffb3eb3760fda2ff3e1ad18f3a7)).
+This has been observed to cause problems,
+probably due to race conditions in Qt's HTTP handling code, so you are
+recommended to avoid this by specifying your own server setup for
+Capybara:
+
+``` ruby
+Capybara.server do |app, port|
+  require 'rack/handler/thin'
+  Thin::Logging.silent = true
+  Thin::Server.new('0.0.0.0', port, app).start
+end
+```
+
+If you're using Rails 3.0, this affects you. If you're using Rails 3.1+,
+this doesn't affect you.
 
 ## Installing PhantomJS ##
 
@@ -32,9 +56,7 @@ the relationship between `bin/phantomjs` and `lib/`. This is because the
 `bin/phantomjs` binary looks in `../lib/` for its library files. So the
 best thing to do is to link (rather than copy) it into your `PATH`:
 
-```
-ln -s /path/to/phantomjs/bin/phantomjs /usr/local/bin/phantomjs
-```
+    ln -s /path/to/phantomjs/bin/phantomjs /usr/local/bin/phantomjs
 
 ### Compiling PhantomJS ###
 
@@ -53,7 +75,8 @@ you should copy (or link) the `bin/phantomjs` binary into your `PATH`.
 
 ## Running on a CI ##
 
-Currently PhantomJS is not 'truly headless', so to run it on a continuous integration
+Currently PhantomJS is not yet 'truly headless' (but that's planned for the future),
+so to run it on a continuous integration
 server you will need to install [Xvfb](http://en.wikipedia.org/wiki/Xvfb).
 
 ### On any generic server ###
@@ -98,16 +121,18 @@ size to 1024x768 by default, but you can set this yourself with `page.driver.res
 You can customize the way that Capybara sets up Poltegeist via the following code in your
 test setup:
 
-    Capybara.register_driver :poltergeist do |app|
-      Capybara::Poltergeist::Driver.new(app, options)
-    end
+``` ruby
+Capybara.register_driver :poltergeist do |app|
+  Capybara::Poltergeist::Driver.new(app, options)
+end
+```
 
 `options` is a hash of options. The following options are supported:
 
-  * `:phantomjs` (String) - A custom path to the phantomjs executable
-  * `:debug` (Boolean) - When true, debug output is logged to `STDERR`
-  * `:logger` (Object responding to `puts`) - When present, debug output is written to this object
-  * `:timeout` (Numeric) - The number of seconds we'll wait for a response
+*   `:phantomjs` (String) - A custom path to the phantomjs executable
+*   `:debug` (Boolean) - When true, debug output is logged to `STDERR`
+*   `:logger` (Object responding to `puts`) - When present, debug output is written to this object
+*   `:timeout` (Numeric) - The number of seconds we'll wait for a response
     when communicating with PhantomJS. `nil` means wait forever. Default
     is 30.
 
@@ -117,22 +142,19 @@ Please file bug reports on Github and include example code to reproduce the prob
 possible. (Tests are even better.) Please also provide the output with
 `:debug` turned on, and screenshots if you think it's relevant.
 
-## Why not use [capybara-webkit](https://github.com/thoughtbot/capybara-webkit)? ##
+## Differences from [capybara-webkit](https://github.com/thoughtbot/capybara-webkit) ##
 
-If capybara-webkit works for you, then by all means carry on using it.
+Poltergeist is similar to capybara-webkit, but here are the key
+differences:
 
-However, I have had some trouble with it, and Poltergeist basically started
-as an experiment to see whether a PhantomJS driver was possible. (It turned out it
-was, but only thanks to some new features since the 1.3 release.)
+*   It's more hackable. Poltergeist is written in Ruby + CoffeeScript.
+    We only have to worry about C++ when dealing with issues in
+    PhantomJS itself. In contrast, the majority of capybara-webkit is
+    written in C++.
 
-In the long term, I think having a PhantomJS driver makes sense, because that allows
-PhantomJS to concentrate on being an awesome headless browser, while the capybara driver
-(Poltergeist) is able to be the minimal amount of glue code necessary to drive the
-browser.
-
-I also find it more pleasant to hack in CoffeeScript than C++,
-particularly as my C++ experience only goes as far as trying to make
-PhantomJS/Qt/WebKit work with Poltergeist :)
+*   We're able to tap into the PhantomJS community. When PhantomJS
+    improves, Poltergeist improves. User's don't have to install Qt
+    because self-contained PhantomJS binary packages are available.
 
 ## Hacking ##
 
@@ -141,11 +163,6 @@ anyone who does a few good pull requests.
 
 To get setup, run `bundle install`. You can run the full test suite with
 `rspec spec/` or `rake`.
-
-I previously set up the repository on [Travis CI](http://travis-ci.org/)
-but unfortunately given they need a custom-built Qt+PhantomJS in order
-to pass, it can't be used for now. When static Linux PhantomJS builds
-are working this can be revisited.
 
 While PhantomJS is capable of compiling and running CoffeeScript code
 directly, I prefer to compile the code myself and distribute that (it
