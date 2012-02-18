@@ -1,6 +1,6 @@
 # Poltergeist - A PhantomJS driver for Capybara #
 
-Version: 0.3.0
+Version: 0.4.0
 
 [![Build Status](https://secure.travis-ci.org/jonleighton/poltergeist.png)](http://travis-ci.org/jonleighton/poltergeist)
 
@@ -172,7 +172,7 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 ## Changes ##
 
-### 0.4.0 (unreleased) #
+### 0.4.0 ###
 
 *   Element click position is now calculated using the native
     `getBoundingClientRect()` method, which will be faster and less
