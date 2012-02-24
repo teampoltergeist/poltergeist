@@ -15,7 +15,7 @@ class Poltergeist.Node
       this.prototype[name] = (arguments...) ->
         @page.nodeCall(@id, name, arguments)
 
-  scrollIntoView: ->
+  clickPosition: (scrollIntoView = true) ->
     dimensions = @page.validatedDimensions()
     document   = dimensions.document
     viewport   = dimensions.viewport
@@ -36,28 +36,35 @@ class Poltergeist.Node
           scroll[coord] + pos[coord] - viewport[measurement] + (viewport[measurement] / 2)
         )
 
-    adjust('left', 'width')
-    adjust('top',  'height')
+    if scrollIntoView
+      adjust('left', 'width')
+      adjust('top',  'height')
 
-    if scroll.left != dimensions.left || scroll.top != dimensions.top
-      @page.setScrollPosition(scroll)
-      pos = this.position()
+      if scroll.left != dimensions.left || scroll.top != dimensions.top
+        @page.setScrollPosition(scroll)
+        pos = this.position()
 
-    pos
+    middle = (start, end, size) ->
+      start + ((Math.min(end, size) - start) / 2)
+
+    {
+      x: middle(pos.left, pos.right,  viewport.width),
+      y: middle(pos.top,  pos.bottom, viewport.height)
+    }
 
   click: ->
-    position = this.scrollIntoView()
-    test     = this.clickTest(position.left, position.top)
+    pos  = this.clickPosition()
+    test = this.clickTest(pos.x, pos.y)
 
     if test.status == 'success'
-      @page.sendEvent('click', position.left, position.top)
+      @page.sendEvent('click', pos.x, pos.y)
     else
-      throw new Poltergeist.ClickFailed(test.selector, position)
+      throw new Poltergeist.ClickFailed(test.selector, pos)
 
   dragTo: (other) ->
-    position      = this.scrollIntoView()
-    otherPosition = other.position()
+    position      = this.clickPosition()
+    otherPosition = other.clickPosition(false)
 
-    @page.sendEvent('mousedown', position.left,      position.top)
-    @page.sendEvent('mousemove', otherPosition.left, otherPosition.top)
-    @page.sendEvent('mouseup',   otherPosition.left, otherPosition.top)
+    @page.sendEvent('mousedown', position.x,      position.y)
+    @page.sendEvent('mousemove', otherPosition.x, otherPosition.y)
+    @page.sendEvent('mouseup',   otherPosition.x, otherPosition.y)

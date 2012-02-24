@@ -63,18 +63,6 @@ describe Capybara::Session do
       @session.should have_content('Hello world')
     end
 
-    it 'should scroll around so that elements can be clicked' do
-      @session.driver.resize(200, 200)
-      @session.visit '/poltergeist/click_test'
-      log = @session.find(:css, '#log')
-
-      instructions = %w(one four one two three)
-      instructions.each do |instruction, i|
-        @session.find(:css, "##{instruction}").click
-        log.text.should == instruction
-      end
-    end
-
     it 'should handle window.confirm(), returning true unconditionally' do
       @session.visit '/'
       @session.evaluate_script("window.confirm('foo')").should == true
@@ -100,23 +88,65 @@ describe Capybara::Session do
       @session.body.should include("Hello world")
     end
 
-    it 'detects if an element is obscured when clicking' do
-      @session.visit '/poltergeist/click_test'
-      @session.execute_script <<-JS
-        var two = document.getElementById('two')
-        two.style.position = 'absolute'
-        two.style.left     = '0px'
-        two.style.top      = '0px'
-      JS
-      expect {
-        @session.find(:css, '#one').click
-      }.to raise_error(Capybara::Poltergeist::ClickFailed)
+    context 'click tests' do
+      before do
+        @session.visit '/poltergeist/click_test'
+      end
 
-      begin
-        @session.find(:css, '#one').click
-      rescue => error
-        error.selector.should == "html body div#two.box"
-        error.position.should == [100, 100]
+      after do
+        @session.driver.resize(1024, 768)
+      end
+
+      it 'should scroll around so that elements can be clicked' do
+        @session.driver.resize(200, 200)
+        log = @session.find(:css, '#log')
+
+        instructions = %w(one four one two three)
+        instructions.each do |instruction, i|
+          @session.find(:css, "##{instruction}").click
+          log.text.should == instruction
+        end
+      end
+
+      context 'with #two overlapping #one' do
+        before do
+          @session.execute_script <<-JS
+            var two = document.getElementById('two')
+            two.style.position = 'absolute'
+            two.style.left     = '0px'
+            two.style.top      = '0px'
+          JS
+        end
+
+        it 'detects if an element is obscured when clicking' do
+          expect {
+            @session.find(:css, '#one').click
+          }.to raise_error(Capybara::Poltergeist::ClickFailed)
+
+          begin
+            @session.find(:css, '#one').click
+          rescue => error
+            error.selector.should == "html body div#two.box"
+          end
+        end
+
+        it 'clicks in the centre of an element' do
+          begin
+            @session.find(:css, '#one').click
+          rescue => error
+            error.position.should == [200, 200]
+          end
+        end
+
+        it 'clicks in the centre of an element within the viewport, if part is outside the viewport' do
+          @session.driver.resize(200, 200)
+
+          begin
+            @session.find(:css, '#one').click
+          rescue => error
+            error.position.should == [150, 150]
+          end
+        end
       end
     end
   end

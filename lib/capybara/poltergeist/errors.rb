@@ -41,7 +41,7 @@ module Capybara
       end
 
       def position
-        [response['args'][1]['left'], response['args'][1]['top']]
+        [response['args'][1]['x'], response['args'][1]['y']]
       end
 
       def message

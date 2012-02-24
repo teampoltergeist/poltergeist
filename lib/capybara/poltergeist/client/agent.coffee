@@ -162,7 +162,15 @@ class PoltergeistAgent.Node
 
   position: ->
     rect = @element.getBoundingClientRect()
-    { top: rect.top, left: rect.left }
+
+    {
+      top:    rect.top,
+      right:  rect.right,
+      left:   rect.left,
+      bottom: rect.bottom,
+      width:  rect.width,
+      height: rect.height
+    }
 
   trigger: (name) ->
     if Node.EVENTS.MOUSE.indexOf(name) != -1
@@ -188,7 +196,7 @@ class PoltergeistAgent.Node
       else
         el = el.parentNode
 
-    { status: 'failure', selector: this.getSelector(origEl) }
+    { status: 'failure', selector: origEl && this.getSelector(origEl) }
 
   getSelector: (el) ->
     selector = if el.tagName != 'HTML' then this.getSelector(el.parentNode) + ' ' else ''
