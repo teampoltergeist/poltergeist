@@ -129,7 +129,16 @@ class Poltergeist.WebPage
         that[name].apply(that, arguments)
 
   runCommand: (name, arguments) ->
-    this.evaluate(
-      (name, arguments) -> __poltergeist[name].apply(__poltergeist, arguments),
+    result = this.evaluate(
+      (name, arguments) -> __poltergeist.externalCall(name, arguments),
       name, arguments
     )
+
+    if result.error
+      switch result.error
+        when "PoltergeistAgent.ObsoleteNode"
+          throw new Poltergeist.ObsoleteNode
+        else
+          throw result.error
+    else
+      result.value

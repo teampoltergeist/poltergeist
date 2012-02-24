@@ -9,16 +9,10 @@ class Poltergeist.Node
   parent: ->
     new Poltergeist.Node(@page, this.parentId())
 
-  isObsolete: ->
-    @page.nodeCall(@id, 'isObsolete')
-
   for name in @DELEGATES
     do (name) =>
       this.prototype[name] = (arguments...) ->
-        if this.isObsolete()
-          throw new Poltergeist.ObsoleteNode
-        else
-          @page.nodeCall(@id, name, arguments)
+        @page.nodeCall(@id, name, arguments)
 
   scrollIntoView: ->
     dimensions = @page.validatedDimensions()

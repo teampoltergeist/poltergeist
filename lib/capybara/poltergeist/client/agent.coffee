@@ -7,6 +7,12 @@ class PoltergeistAgent
     @windows  = []
     this.pushWindow(window)
 
+  externalCall: (name, arguments) ->
+    try
+      { value: this[name].apply(this, arguments) }
+    catch error
+      { error: error.toString() }
+
   pushWindow: (new_window) ->
     @windows.push(new_window)
 
@@ -51,7 +57,11 @@ class PoltergeistAgent
 
   nodeCall: (id, name, arguments) ->
     node = this.get(id)
+    throw new PoltergeistAgent.ObsoleteNode if node.isObsolete()
     node[name].apply(node, arguments)
+
+class PoltergeistAgent.ObsoleteNode
+  toString: -> "PoltergeistAgent.ObsoleteNode"
 
 class PoltergeistAgent.Node
   @EVENTS = {
