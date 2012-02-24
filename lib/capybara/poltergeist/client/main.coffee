@@ -7,13 +7,26 @@ class Poltergeist
     try
       @browser[command.name].apply(@browser, command.args)
     catch error
-      @connection.send({ error: error.toString() })
+      @connection.send(
+        error:
+          name: error.name && error.name() || 'Generic',
+          args: error.args && error.args() || [error.toString()]
+      )
 
   sendResponse: (response) ->
-    @connection.send({ response: response })
+    @connection.send(response: response)
 
 class Poltergeist.ObsoleteNode
-  toString: -> "Poltergeist.ObsoleteNode"
+  name: -> "Poltergeist.ObsoleteNode"
+  args: -> []
+
+class Poltergeist.ClickFailed
+  constructor: (selector, position) ->
+    @selector = selector
+    @position = position
+
+  name: -> "Poltergeist.ClickFailed"
+  args: -> [@selector, @position]
 
 phantom.injectJs('web_page.js')
 phantom.injectJs('node.js')

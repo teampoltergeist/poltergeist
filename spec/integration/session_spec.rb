@@ -99,5 +99,25 @@ describe Capybara::Session do
       sleep 0.1
       @session.body.should include("Hello world")
     end
+
+    it 'detects if an element is obscured when clicking' do
+      @session.visit '/poltergeist/click_test'
+      @session.execute_script <<-JS
+        var two = document.getElementById('two')
+        two.style.position = 'absolute'
+        two.style.left     = '0px'
+        two.style.top      = '0px'
+      JS
+      expect {
+        @session.find(:css, '#one').click
+      }.to raise_error(Capybara::Poltergeist::ClickFailed)
+
+      begin
+        @session.find(:css, '#one').click
+      rescue => error
+        error.selector.should == "html body div#two.box"
+        error.position.should == [100, 100]
+      end
+    end
   end
 end

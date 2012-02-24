@@ -9,10 +9,13 @@ module Capybara::Poltergeist
     def command(name, *args)
       browser.send(name, id, *args)
     rescue BrowserError => error
-      if error.text == 'Poltergeist.ObsoleteNode'
-        raise ObsoleteNode.new(self)
+      case error.name
+      when 'Poltergeist.ObsoleteNode'
+        raise ObsoleteNode.new(self, error.response)
+      when 'Poltergeist.ClickFailed'
+        raise ClickFailed.new(self, error.response)
       else
-        raise error
+        raise
       end
     end
 

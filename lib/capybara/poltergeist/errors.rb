@@ -4,10 +4,18 @@ module Capybara
     end
 
     class BrowserError < Error
-      attr_reader :text
+      attr_reader :response
 
-      def initialize(text)
-        @text = text
+      def initialize(response)
+        @response = response
+      end
+
+      def name
+        response['name']
+      end
+
+      def text
+        response['args'].first
       end
 
       def message
@@ -15,11 +23,31 @@ module Capybara
       end
     end
 
-    class ObsoleteNode < Error
-      attr_reader :node
+    class NodeError < Error
+      attr_reader :node, :response
 
-      def initialize(node)
-        @node = node
+      def initialize(node, response)
+        @node     = node
+        @response = response
+      end
+    end
+
+    class ObsoleteNode < NodeError
+    end
+
+    class ClickFailed < NodeError
+      def selector
+        response['args'][0]
+      end
+
+      def position
+        [response['args'][1]['left'], response['args'][1]['top']]
+      end
+
+      def message
+        "Click at co-ordinates #{position} failed. Poltergeist detected " \
+          "another element with CSS selector '#{selector}' at this position. " \
+          "It may be overlapping the element you are trying to click."
       end
     end
 

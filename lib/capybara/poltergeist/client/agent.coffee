@@ -179,6 +179,25 @@ class PoltergeistAgent.Node
 
     @element.dispatchEvent(event)
 
+  clickTest: (x, y) ->
+    el = origEl = document.elementFromPoint(x, y)
+
+    while el
+      if el == @element
+        return { status: 'success' }
+      else
+        el = el.parentNode
+
+    { status: 'failure', selector: this.getSelector(origEl) }
+
+  getSelector: (el) ->
+    selector = if el.tagName != 'HTML' then this.getSelector(el.parentNode) + ' ' else ''
+    selector += el.tagName.toLowerCase()
+    selector += "##{el.id}" if el.id
+    for className in el.classList
+      selector += ".#{className}"
+    selector
+
 window.__poltergeist = new PoltergeistAgent
 
 document.addEventListener(
