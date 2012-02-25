@@ -3,7 +3,8 @@ require 'sfl'
 module Capybara::Poltergeist
   class Client
     PHANTOMJS_SCRIPT  = File.expand_path('../client/compiled/main.js', __FILE__)
-    PHANTOMJS_VERSION = "1.4.1"
+    PHANTOMJS_VERSION = '1.4.1'
+    PHANTOMJS_NAME    = 'phantomjs'
 
     attr_reader :pid, :port, :path
 
@@ -15,7 +16,7 @@ module Capybara::Poltergeist
 
     def initialize(port, path = nil)
       @port = port
-      @path = path || 'phantomjs'
+      @path = path || PHANTOMJS_NAME
       at_exit { stop }
     end
 
