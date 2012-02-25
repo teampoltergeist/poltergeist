@@ -9,6 +9,7 @@ module Capybara
     autoload :Server,          'capybara/poltergeist/server'
     autoload :WebSocketServer, 'capybara/poltergeist/web_socket_server'
     autoload :Client,          'capybara/poltergeist/client'
+    autoload :Util,            'capybara/poltergeist/util'
 
     require 'capybara/poltergeist/errors'
   end

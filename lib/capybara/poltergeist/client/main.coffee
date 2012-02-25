@@ -16,6 +16,11 @@ class Poltergeist
   sendResponse: (response) ->
     @connection.send(response: response)
 
+# This is necessary because the remote debugger will wrap the
+# script in a function, causing the Poltergeist variable to
+# become local.
+window.Poltergeist = Poltergeist
+
 class Poltergeist.ObsoleteNode
   name: -> "Poltergeist.ObsoleteNode"
   args: -> []

@@ -14,7 +14,8 @@ module Capybara::Poltergeist
     def browser
       @browser ||= Browser.new(
         :logger    => logger,
-        :phantomjs => options[:phantomjs]
+        :phantomjs => options[:phantomjs],
+        :inspector => options[:inspector]
       )
     end
 

@@ -16,7 +16,11 @@ alias :running :lambda
 logger = SpecLogger.new
 
 Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app, :logger => logger)
+  Capybara::Poltergeist::Driver.new(
+    app,
+    :logger    => logger,
+    :inspector => (ENV['DEBUG'] != nil)
+  )
 end
 
 module TestSessions
