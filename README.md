@@ -11,7 +11,7 @@ provided by [PhantomJS](http://www.phantomjs.org/).
 
 ## Installation ##
 
-Add `poltergeist` to your Gemfile, and add in your test setup add:
+Add `poltergeist` to your Gemfile, and in your test setup add:
 
 ``` ruby
 require 'capybara/poltergeist'
