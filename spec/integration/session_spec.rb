@@ -127,6 +127,7 @@ describe Capybara::Session do
             @session.find(:css, '#one').click
           rescue => error
             error.selector.should == "html body div#two.box"
+            error.message.should include('[200, 200]')
           end
         end
 

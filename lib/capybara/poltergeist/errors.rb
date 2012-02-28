@@ -45,7 +45,7 @@ module Capybara
       end
 
       def message
-        "Click at co-ordinates #{position} failed. Poltergeist detected " \
+        "Click at co-ordinates [#{position.join(', ')}] failed. Poltergeist detected " \
           "another element with CSS selector '#{selector}' at this position. " \
           "It may be overlapping the element you are trying to click."
       end
