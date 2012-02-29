@@ -173,6 +173,29 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 ## Changes ##
 
+### 0.5.0 (unreleased) ###
+
+#### Features ####
+
+*   Detect if clicking an element will fail. If the click will actually
+    hit another element (because that element is in front of the one we
+    want to click), the user will now see an exception explaining what
+    happened and which element would actually be targeted by the click. This
+    should aid debugging. [Issue #25]
+
+*   Click elements at their middle position rather than the top-left.
+    This is presumed to be more likely to succeed because the top-left
+    may be obscured by overlapping elements, negative margins, etc. [Issue #26]
+
+*   Add experimental support for using the remote WebKit web inspector.
+    This will only work with PhantomJS 1.5, which is not yet released,
+    so it won't be officially supported by Poltergeist until 1.5 is
+    released. [Issue #31]
+
+#### Bug fixes ####
+
+*   Fix bug where we could end up interacting with an obsolete element. [Issue #30]
+
 ### 0.4.0 ###
 
 *   Element click position is now calculated using the native
