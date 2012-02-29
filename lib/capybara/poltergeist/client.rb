@@ -28,8 +28,13 @@ module Capybara::Poltergeist
 
     def stop
       if pid
-        Process.kill('TERM', pid)
-        Process.wait(pid)
+        begin
+          Process.kill('TERM', pid)
+          Process.wait(pid)
+        rescue Errno::ESRCH, Errno::ECHILD
+          # Zed's dead, baby
+        end
+
         @pid = nil
       end
     end
