@@ -1,13 +1,16 @@
 class Poltergeist.WebPage
   @CALLBACKS = ['onAlert', 'onConsoleMessage', 'onLoadFinished', 'onInitialized',
                 'onLoadStarted', 'onResourceRequested', 'onResourceReceived']
+
   @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'release', 'render']
+
   @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'pushFrame', 'popFrame', 'documentSize']
 
   constructor: ->
     @native  = require('webpage').create()
     @nodes   = {}
     @_source = ""
+    @_errors = []
 
     this.setViewportSize(width: 1024, height: 768)
 
@@ -43,14 +46,26 @@ class Poltergeist.WebPage
   onLoadFinishedNative: ->
     @_source or= @native.content
 
-  onConsoleMessage: (message) ->
-    console.log(message)
+  onConsoleMessage: (message, line, file) ->
+    if line == 0 && file == "undefined"
+      # file:line will always be "undefined:0" in current release of
+      # PhantomJS ;(
+      @_errors.push(message)
+    else
+      # here line == 1 && file == "". don't ask me why!
+      console.log(message)
 
   content: ->
     @native.content
 
   source: ->
     @_source
+
+  errors: ->
+    @_errors
+
+  clearErrors: ->
+    @_errors = []
 
   viewportSize: ->
     @native.viewportSize

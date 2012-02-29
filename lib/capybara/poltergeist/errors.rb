@@ -3,13 +3,15 @@ module Capybara
     class Error < StandardError
     end
 
-    class BrowserError < Error
+    class ClientError < Error
       attr_reader :response
 
       def initialize(response)
         @response = response
       end
+    end
 
+    class BrowserError < ClientError
       def name
         response['name']
       end
@@ -23,12 +25,25 @@ module Capybara
       end
     end
 
-    class NodeError < Error
-      attr_reader :node, :response
+    class JavascriptError < ClientError
+      def javascript_messages
+        response['args'].first
+      end
+
+      def message
+        "One or more errors were raised in the Javascript code on the page: #{javascript_messages.inspect} " \
+          "Unfortunately, it is not currently possible to provide a stack trace, or even the line/file where " \
+          "the error occurred. (This is due to lack of support within QtWebKit.) Fixing this is a high " \
+          "priority, but we're not there yet."
+      end
+    end
+
+    class NodeError < ClientError
+      attr_reader :node
 
       def initialize(node, response)
-        @node     = node
-        @response = response
+        @node = node
+        super(response)
       end
     end
 

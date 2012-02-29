@@ -115,5 +115,28 @@ module Capybara::Poltergeist
         raise "process is still alive"
       end
     end
+
+    context 'javascript errors' do
+      it 'propagates an error on the page to a ruby exception' do
+        expect { @driver.execute_script "omg" }.to raise_error(JavascriptError)
+
+        begin
+          @driver.execute_script "omg"
+        rescue JavascriptError => e
+          e.message.should include("omg")
+          e.message.should include("ReferenceError")
+        end
+      end
+
+      it "doesn't re-raise a Javascript error if it's rescued" do
+        begin
+          @driver.execute_script("omg")
+        rescue JavascriptError
+        end
+
+        # should not raise again
+        @driver.evaluate_script("1+1").should == 2
+      end
+    end
   end
 end

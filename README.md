@@ -196,6 +196,9 @@ makes debugging easier). Running `rake autocompile` will watch the
     sessions, you might want to use this to reap the child phantomjs
     process. [Issue #24]
 
+*   Errors produced by Javascript on the page will now generate an
+    exception within Ruby. [Issue #27]
+
 #### Bug fixes ####
 
 *   Fix bug where we could end up interacting with an obsolete element. [Issue #30]

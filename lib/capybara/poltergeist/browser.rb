@@ -113,7 +113,11 @@ module Capybara::Poltergeist
       log json.inspect
 
       if json['error']
-        raise BrowserError.new(json['error'])
+        if json['error']['name'] == 'Poltergeist.JavascriptError'
+          raise JavascriptError.new(json['error'])
+        else
+          raise BrowserError.new(json['error'])
+        end
       else
         json['response']
       end

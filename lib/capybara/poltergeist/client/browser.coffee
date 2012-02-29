@@ -13,37 +13,46 @@ class Poltergeist.Browser
 
     @page.onLoadFinished = (status) =>
       if @state == 'loading'
-        @owner.sendResponse(status)
+        this.sendResponse(status)
         @state = 'default'
+
+  sendResponse: (response) ->
+    errors = @page.errors()
+
+    if errors.length > 0
+      @page.clearErrors()
+      @owner.sendError(new Poltergeist.JavascriptError(errors))
+    else
+      @owner.sendResponse(response)
 
   visit: (url) ->
     @state = 'loading'
     @page.open(url)
 
   current_url: ->
-    @owner.sendResponse @page.currentUrl()
+    this.sendResponse @page.currentUrl()
 
   body: ->
-    @owner.sendResponse @page.content()
+    this.sendResponse @page.content()
 
   source: ->
-    @owner.sendResponse @page.source()
+    this.sendResponse @page.source()
 
   find: (selector, id) ->
-    @owner.sendResponse @page.find(selector, id)
+    this.sendResponse @page.find(selector, id)
 
   text: (id) ->
-    @owner.sendResponse @page.get(id).text()
+    this.sendResponse @page.get(id).text()
 
   attribute: (id, name) ->
-    @owner.sendResponse @page.get(id).getAttribute(name)
+    this.sendResponse @page.get(id).getAttribute(name)
 
   value: (id) ->
-    @owner.sendResponse @page.get(id).value()
+    this.sendResponse @page.get(id).value()
 
   set: (id, value) ->
     @page.get(id).set(value)
-    @owner.sendResponse(true)
+    this.sendResponse(true)
 
   # PhantomJS only allows us to reference the element by CSS selector, not XPath,
   # so we have to add an attribute to the element to identify it, then remove it
@@ -65,31 +74,31 @@ class Poltergeist.Browser
     element.removeAttribute('_poltergeist_selected')
     element.setAttribute('multiple', 'multiple') if multiple
 
-    @owner.sendResponse(true)
+    this.sendResponse(true)
 
   select: (id, value) ->
-    @owner.sendResponse @page.get(id).select(value)
+    this.sendResponse @page.get(id).select(value)
 
   tag_name: (id) ->
-    @owner.sendResponse @page.get(id).tagName()
+    this.sendResponse @page.get(id).tagName()
 
   visible: (id) ->
-    @owner.sendResponse @page.get(id).isVisible()
+    this.sendResponse @page.get(id).isVisible()
 
   evaluate: (script) ->
-    @owner.sendResponse JSON.parse(@page.evaluate("function() { return JSON.stringify(#{script}) }"))
+    this.sendResponse JSON.parse(@page.evaluate("function() { return JSON.stringify(#{script}) }"))
 
   execute: (script) ->
     @page.execute("function() { #{script} }")
-    @owner.sendResponse(true)
+    this.sendResponse(true)
 
   push_frame: (id) ->
     @page.pushFrame(id)
-    @owner.sendResponse(true)
+    this.sendResponse(true)
 
   pop_frame: ->
     @page.popFrame()
-    @owner.sendResponse(true)
+    this.sendResponse(true)
 
   click: (id) ->
     # If the click event triggers onLoadStarted, we will transition to the 'loading'
@@ -104,22 +113,22 @@ class Poltergeist.Browser
       =>
         if @state == 'clicked'
           @state = 'default'
-          @owner.sendResponse(true)
+          this.sendResponse(true)
       ,
       10
     )
 
   drag: (id, other_id) ->
     @page.get(id).dragTo(@page.get(other_id))
-    @owner.sendResponse(true)
+    this.sendResponse(true)
 
   trigger: (id, event) ->
     @page.get(id).trigger(event)
-    @owner.sendResponse(event)
+    this.sendResponse(event)
 
   reset: ->
     this.resetPage()
-    @owner.sendResponse(true)
+    this.sendResponse(true)
 
   render: (path, full) ->
     dimensions = @page.validatedDimensions()
@@ -135,11 +144,11 @@ class Poltergeist.Browser
       @page.setClipRect(left: 0, top: 0, width: viewport.width, height: viewport.height)
       @page.render(path)
 
-    @owner.sendResponse(true)
+    this.sendResponse(true)
 
   resize: (width, height) ->
     @page.setViewportSize(width: width, height: height)
-    @owner.sendResponse(true)
+    this.sendResponse(true)
 
   exit: ->
     phantom.exit()
