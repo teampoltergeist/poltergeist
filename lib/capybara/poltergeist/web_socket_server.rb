@@ -104,11 +104,12 @@ module Capybara::Poltergeist
       end
     end
 
-    # Block until the next message is available from the Web Socket
+    # Block until the next message is available from the Web Socket.
+    # Raises Errno::EWOULDBLOCK if timeout is reached.
     def receive
       until handler.message?
-        IO.select([socket], [], [], timeout)
-        data = socket.recv_nonblock(RECV_SIZE)
+        IO.select([socket], [], [], timeout) or raise Errno::EWOULDBLOCK
+        data = socket.recv(RECV_SIZE)
         break if data.empty?
         handler.parse(data)
       end
@@ -121,7 +122,7 @@ module Capybara::Poltergeist
       accept unless connected?
       socket.write handler.encode(message)
       receive
-    rescue Errno::EAGAIN, Errno::EWOULDBLOCK
+    rescue Errno::EWOULDBLOCK
       raise TimeoutError.new(message)
     end
 
