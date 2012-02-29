@@ -18,6 +18,7 @@ module Capybara::Poltergeist
       @port      = port
       @inspector = inspector
       @path      = path || PHANTOMJS_NAME
+      at_exit { stop }
     end
 
     def start
