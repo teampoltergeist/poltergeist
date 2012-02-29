@@ -82,5 +82,19 @@ module Capybara
         "PhantomJS version #{version} is too old. You must use at least version #{Client::PHANTOMJS_VERSION}"
       end
     end
+
+    class PhantomJSFailed < Error
+      attr_reader :status
+
+      def initialize(status)
+        @status = status
+      end
+
+      def message
+        "PhantomJS returned non-zero exit status #{status.exitstatus}. Ensure there is an X display available and " \
+          "that DISPLAY is set. (See the Poltergeist README for details.) Make sure 'phantomjs --version' " \
+          "runs successfully on your system."
+      end
+    end
   end
 end

@@ -196,6 +196,10 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 *   Fix bug where we could end up interacting with an obsolete element. [Issue #30]
 
+*   Raise an suitable error if PhantomJS returns a non-zero exit status.
+    Previously a version error would be raised, indicating that the
+    PhantomJS version was too old when in fact it did not start at all. [Issue #23]
+
 ### 0.4.0 ###
 
 *   Element click position is now calculated using the native

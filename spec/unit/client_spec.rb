@@ -17,5 +17,16 @@ module Capybara::Poltergeist
         e.message.should include('1.3.0')
       end
     end
+
+    it 'raises an error if phantomjs returns a non-zero exit code' do
+      subject = Client.new(6000, nil, 'exit 42 && ')
+      expect { subject.start }.to raise_error(Error)
+
+      begin
+        subject.start
+      rescue PhantomJSFailed => e
+        e.message.should include('42')
+      end
+    end
   end
 end

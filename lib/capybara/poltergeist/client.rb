@@ -56,9 +56,13 @@ module Capybara::Poltergeist
       return if @phantomjs_version_checked
 
       version = `#{path} --version`.chomp
-      if version < PHANTOMJS_VERSION
+
+      if $? != 0
+        raise PhantomJSFailed.new($?)
+      elsif version < PHANTOMJS_VERSION
         raise PhantomJSTooOld.new(version)
       end
+
       @phantomjs_version_checked = true
     end
   end
