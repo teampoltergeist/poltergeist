@@ -1,26 +1,43 @@
 module Capybara::Poltergeist
   class Driver < Capybara::Driver::Base
-    attr_reader :app, :server, :browser, :options
+    DEFAULT_TIMEOUT = 30
+
+    attr_reader :app, :app_server, :server, :client, :browser, :options
 
     def initialize(app, options = {})
-      @app     = app
-      @options = options
-      @server  = Capybara::Server.new(app)
-      @browser = nil
+      @app       = app
+      @options   = options
+      @browser   = nil
+      @inspector = nil
+      @server    = nil
+      @client    = nil
 
-      @server.boot if Capybara.run_server
+      @app_server = Capybara::Server.new(app)
+      @app_server.boot if Capybara.run_server
     end
 
     def browser
-      @browser ||= Browser.new(
-        :logger    => logger,
-        :phantomjs => options[:phantomjs],
-        :inspector => inspector
-      )
+      @browser ||= Browser.new(server, client, logger)
     end
 
     def inspector
       @inspector ||= options[:inspector] && Inspector.new(options[:inspector])
+    end
+
+    def server
+      @server ||= Server.new(options.fetch(:timeout, DEFAULT_TIMEOUT))
+    end
+
+    def client
+      @client ||= Client.start(server.port, inspector, options[:phantomjs])
+    end
+
+    def timeout
+      server.timeout
+    end
+
+    def timeout=(sec)
+      server.timeout = sec
     end
 
     def restart
@@ -32,8 +49,8 @@ module Capybara::Poltergeist
       options[:logger] || (options[:debug] && STDERR)
     end
 
-    def visit(path, attributes = {})
-      browser.visit(url(path), attributes)
+    def visit(path)
+      browser.visit app_server.url(path)
     end
 
     def current_url
@@ -93,12 +110,6 @@ module Capybara::Poltergeist
 
     def invalid_element_errors
       [Capybara::Poltergeist::ObsoleteNode]
-    end
-
-    private
-
-    def url(path)
-      server.url(path)
     end
   end
 end

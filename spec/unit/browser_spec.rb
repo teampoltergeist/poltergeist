@@ -6,14 +6,9 @@ module Capybara::Poltergeist
     let(:server) { double("server").as_null_object }
     let(:client) { double("client").as_null_object }
 
-    before do
-      Server.stub(:new).and_return(server)
-      Client.stub(:new).and_return(client)
-    end
-
     context 'with a logger' do
       let(:logger) { StringIO.new }
-      subject      { Browser.new(:logger => logger) }
+      subject      { Browser.new(server, client, logger) }
 
       it 'should log requests and responses to the client' do
         request  = { 'name' => 'where is', 'args' => ["the love?"] }

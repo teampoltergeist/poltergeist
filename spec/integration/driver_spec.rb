@@ -93,11 +93,11 @@ module Capybara::Poltergeist
 
     it 'should operate a timeout when communicating with phantomjs' do
       begin
-        prev_timeout = @driver.browser.timeout
-        @driver.browser.timeout = 0.001
+        prev_timeout = @driver.timeout
+        @driver.timeout = 0.001
         lambda { @driver.browser.command 'noop' }.should raise_error(TimeoutError)
       ensure
-        @driver.browser.timeout = prev_timeout
+        @driver.timeout = prev_timeout
       end
     end
   end

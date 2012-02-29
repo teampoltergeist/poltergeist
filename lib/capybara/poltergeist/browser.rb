@@ -2,22 +2,12 @@ require 'json'
 
 module Capybara::Poltergeist
   class Browser
-    attr_reader :options, :server, :client
+    attr_reader :server, :client, :logger
 
-    DEFAULT_TIMEOUT = 30
-
-    def initialize(options = {})
-      @options = options
-      @server  = Server.new(options.fetch(:timeout, DEFAULT_TIMEOUT))
-      @client  = Client.start(server.port, options[:inspector], options[:phantomjs])
-    end
-
-    def timeout
-      server.timeout
-    end
-
-    def timeout=(sec)
-      server.timeout = sec
+    def initialize(server, client, logger = nil)
+      @server = server
+      @client = client
+      @logger = logger
     end
 
     def restart
@@ -25,7 +15,7 @@ module Capybara::Poltergeist
       client.restart
     end
 
-    def visit(url, attributes = {})
+    def visit(url)
       command 'visit', url
     end
 
@@ -115,14 +105,6 @@ module Capybara::Poltergeist
       command 'resize', width, height
     end
 
-    def logger
-      options[:logger]
-    end
-
-    def log(message)
-      logger.puts message if logger
-    end
-
     def command(name, *args)
       message = { 'name' => name, 'args' => args }
       log message.inspect
@@ -139,6 +121,12 @@ module Capybara::Poltergeist
     rescue DeadClient
       restart
       raise
+    end
+
+    private
+
+    def log(message)
+      logger.puts message if logger
     end
   end
 end
