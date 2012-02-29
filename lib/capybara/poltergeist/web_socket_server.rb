@@ -54,14 +54,28 @@ module Capybara::Poltergeist
     # just keep reading until we've received a full frame)
     RECV_SIZE = 1024
 
+    # How many seconds to try to bind to the port for before failing
+    BIND_TIMEOUT = 5
+
     attr_reader :port, :parser, :socket, :handler, :server
     attr_accessor :timeout
 
     def initialize(port, timeout = nil)
       @port    = port
       @parser  = Http::Parser.new
-      @server  = TCPServer.open(port)
+      @server  = start_server
       @timeout = timeout
+    end
+
+    def start_server
+      time = Time.now
+      TCPServer.open(port)
+    rescue Errno::EADDRINUSE
+      if (Time.now - time) < BIND_TIMEOUT
+        retry
+      else
+        raise
+      end
     end
 
     def connected?
@@ -127,10 +141,7 @@ module Capybara::Poltergeist
     end
 
     def close
-      [server, socket].compact.each do |s|
-        s.close_read
-        s.close_write
-      end
+      [server, socket].compact.each { |s| s.close }
     end
   end
 end
