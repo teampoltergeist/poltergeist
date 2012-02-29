@@ -8,6 +8,10 @@ module Capybara::Poltergeist
       it 'should not log' do
         subject.logger.should == nil
       end
+
+      it 'has no inspector' do
+        subject.inspector.should be_nil
+      end
     end
 
     context 'with a :logger option' do
@@ -23,6 +27,16 @@ module Capybara::Poltergeist
 
       it 'should log to STDERR' do
         subject.logger.should == STDERR
+      end
+    end
+
+    context 'with an :inspector option' do
+      subject { Driver.new(nil, :inspector => 'foo') }
+
+      it 'has an inspector' do
+        subject.inspector.should_not be_nil
+        subject.inspector.should be_a(Inspector)
+        subject.inspector.browser.should == 'foo'
       end
     end
   end

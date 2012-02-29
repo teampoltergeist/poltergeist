@@ -15,8 +15,12 @@ module Capybara::Poltergeist
       @browser ||= Browser.new(
         :logger    => logger,
         :phantomjs => options[:phantomjs],
-        :inspector => options[:inspector]
+        :inspector => inspector
       )
+    end
+
+    def inspector
+      @inspector ||= options[:inspector] && Inspector.new(options[:inspector])
     end
 
     def restart
@@ -71,6 +75,16 @@ module Capybara::Poltergeist
 
     def resize(width, height)
       browser.resize(width, height)
+    end
+
+    def debug
+      inspector.open
+      pause
+    end
+
+    def pause
+      STDERR.puts "Poltergeist execution paused. Press enter to continue."
+      STDIN.gets
     end
 
     def wait?
