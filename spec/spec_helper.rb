@@ -13,17 +13,20 @@ Capybara.default_wait_time = 0 # less timeout so tests run faster
 
 alias :running :lambda
 
-logger = SpecLogger.new
 
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(
     app,
-    :logger    => logger,
+    :logger    => TestSessions.logger,
     :inspector => (ENV['DEBUG'] != nil)
   )
 end
 
 module TestSessions
+  def self.logger
+    @logger ||= SpecLogger.new
+  end
+
   Poltergeist = Capybara::Session.new(:poltergeist, TestApp)
 end
 
@@ -35,14 +38,14 @@ RSpec.configure do |config|
   end
 
   config.before do
-    logger.reset
+    TestSessions.logger.reset
   end
 
   config.after do |*args|
     if ENV['DEBUG']
-      puts logger.messages
+      puts TestSessions.logger.messages
     elsif ENV['TRAVIS'] && example.exception
-      example.exception.message << "\n\nDebug info:\n" + logger.messages.join("\n")
+      example.exception.message << "\n\nDebug info:\n" + TestSessions.logger.messages.join("\n")
     end
   end
 end
