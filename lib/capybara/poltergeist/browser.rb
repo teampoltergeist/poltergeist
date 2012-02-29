@@ -87,10 +87,6 @@ module Capybara::Poltergeist
       command 'pop_frame'
     end
 
-    def reset
-      visit('about:blank')
-    end
-
     def click(id)
       command 'click', id
     end
