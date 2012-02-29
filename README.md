@@ -192,6 +192,10 @@ makes debugging easier). Running `rake autocompile` will watch the
     so it won't be officially supported by Poltergeist until 1.5 is
     released. [Issue #31]
 
+*   Add `page.driver.quit` method. If you spawn additional Capybara
+    sessions, you might want to use this to reap the child phantomjs
+    process. [Issue #24]
+
 #### Bug fixes ####
 
 *   Fix bug where we could end up interacting with an obsolete element. [Issue #30]

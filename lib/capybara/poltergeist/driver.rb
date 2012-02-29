@@ -32,6 +32,10 @@ module Capybara::Poltergeist
       @client ||= Client.start(server.port, inspector, options[:phantomjs])
     end
 
+    def client_pid
+      client.pid
+    end
+
     def timeout
       server.timeout
     end
@@ -42,6 +46,11 @@ module Capybara::Poltergeist
 
     def restart
       browser.restart
+    end
+
+    def quit
+      server.stop
+      client.stop
     end
 
     # logger should be an object that responds to puts, or nil

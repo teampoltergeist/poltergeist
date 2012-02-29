@@ -100,5 +100,20 @@ module Capybara::Poltergeist
         @driver.timeout = prev_timeout
       end
     end
+
+    it 'supports quitting the session' do
+      driver = Capybara::Poltergeist::Driver.new(nil)
+      pid    = driver.client_pid
+
+      Process.kill(0, pid).should == 1
+      driver.quit
+
+      begin
+        Process.kill(0, pid)
+      rescue Errno::ESRCH
+      else
+        raise "process is still alive"
+      end
+    end
   end
 end

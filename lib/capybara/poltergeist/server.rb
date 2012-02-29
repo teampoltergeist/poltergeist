@@ -16,9 +16,13 @@ module Capybara::Poltergeist
       @socket = WebSocketServer.new(port, timeout)
     end
 
-    def restart
+    def stop
       @socket.close
-      @socket = WebSocketServer.new(port, timeout)
+    end
+
+    def restart
+      stop
+      start
     end
 
     def send(message)
