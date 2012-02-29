@@ -1,4 +1,4 @@
-require 'sfl'
+require 'posix/spawn'
 
 module Capybara::Poltergeist
   class Client
@@ -22,7 +22,7 @@ module Capybara::Poltergeist
 
     def start
       check_phantomjs_version
-      @pid = Kernel.spawn(command)
+      @pid = POSIX::Spawn.spawn(command)
     end
 
     def stop

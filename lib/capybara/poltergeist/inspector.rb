@@ -1,3 +1,5 @@
+require 'posix/spawn'
+
 module Capybara::Poltergeist
   class Inspector
     BROWSERS = %w(chromium chromium-browser google-chrome safari)
@@ -24,7 +26,7 @@ module Capybara::Poltergeist
 
     def open
       if browser
-        Kernel.spawn("#{browser} #{url}")
+        POSIX::Spawn.spawn("#{browser} #{url}")
       else
         raise Error, "Could not find a browser executable to open #{url}. " \
                      "You can specify one manually using e.g. `:inspector => 'chromium'` " \

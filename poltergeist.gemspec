@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "capybara",       "~> 1.0"
   s.add_dependency "json",           "~> 1.6"
-  s.add_dependency "sfl",            "~> 2.0"
+  s.add_dependency "posix-spawn",    "~> 0.3"
   s.add_dependency "http_parser.rb", "~> 0.5.3"
   s.add_dependency "faye-websocket", "~> 0.2"
 
