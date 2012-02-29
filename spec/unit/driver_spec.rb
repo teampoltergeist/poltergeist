@@ -39,5 +39,15 @@ module Capybara::Poltergeist
         subject.inspector.browser.should == 'foo'
       end
     end
+
+    context 'with a :timeout option' do
+      subject { Driver.new(nil, :timeout => 3) }
+
+      it 'starts the server with the provided timeout' do
+        server = stub
+        Server.should_receive(:new).with(3).and_return(server)
+        subject.server.should == server
+      end
+    end
   end
 end

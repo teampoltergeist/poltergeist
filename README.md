@@ -200,6 +200,8 @@ makes debugging easier). Running `rake autocompile` will watch the
     Previously a version error would be raised, indicating that the
     PhantomJS version was too old when in fact it did not start at all. [Issue #23]
 
+*   Ensure the `:timeout` option is actually used. [Issue #36]
+
 ### 0.4.0 ###
 
 *   Element click position is now calculated using the native
