@@ -145,7 +145,10 @@ module Capybara::Poltergeist
     end
 
     def close
-      [server, socket].compact.each { |s| s.close }
+      [server, socket].compact.each do |s|
+        s.close_read
+        s.close_write
+      end
     end
   end
 end
