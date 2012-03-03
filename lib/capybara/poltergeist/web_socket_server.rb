@@ -69,12 +69,16 @@ module Capybara::Poltergeist
 
     def start_server
       time = Time.now
-      TCPServer.open(port)
-    rescue Errno::EADDRINUSE
-      if (Time.now - time) < BIND_TIMEOUT
-        retry
-      else
-        raise
+
+      begin
+        TCPServer.open(port)
+      rescue Errno::EADDRINUSE
+        if (Time.now - time) < BIND_TIMEOUT
+          sleep(0.01)
+          retry
+        else
+          raise
+        end
       end
     end
 
