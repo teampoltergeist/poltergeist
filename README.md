@@ -213,6 +213,11 @@ makes debugging easier). Running `rake autocompile` will watch the
     if Javascript caused a new page to load, existing node references
     would be wrong, but wouldn't raise an ObsoleteNode error. [Issue #39]
 
+*   In some circumstances, we could end up missing an inline element
+    when attempting to click it. This is due to the use of
+    `getBoundingClientRect()`. We're now using `getClientRects()` to
+    address this.
+
 ### 0.4.0 ###
 
 *   Element click position is now calculated using the native
