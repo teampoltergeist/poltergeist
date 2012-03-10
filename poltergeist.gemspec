@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.add_dependency "json",           "~> 1.6"
   s.add_dependency "posix-spawn",    "~> 0.3"
   s.add_dependency "http_parser.rb", "~> 0.5.3"
-  s.add_dependency "faye-websocket", "~> 0.2"
+  s.add_dependency "faye-websocket", "~> 0.4", ">= 0.4.2"
 
   s.add_development_dependency 'rspec',      '~> 2.8.0'
   s.add_development_dependency 'sinatra',    '~> 1.0'
