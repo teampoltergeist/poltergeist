@@ -38,9 +38,8 @@ class PoltergeistAgent
   currentUrl: ->
     window.location.toString()
 
-  find: (selector, id) ->
-    context = if id? then @elements[id] else @document
-    results = @document.evaluate(selector, context, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
+  find: (selector, within = @document) ->
+    results = @document.evaluate(selector, within, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
     ids     = []
 
     for i in [0...results.snapshotLength]
@@ -78,6 +77,9 @@ class PoltergeistAgent.Node
 
   parentId: ->
     @agent.register(@element.parentNode)
+
+  find: (selector) ->
+    @agent.find(selector, @element)
 
   isObsolete: ->
     obsolete = (element) =>

@@ -15,7 +15,7 @@ class Poltergeist
   sendError: (error) ->
     @connection.send(
       error:
-        name: error.name && error.name() || 'Generic',
+        name: error.name || 'Generic',
         args: error.args && error.args() || [error.toString()]
     )
 
@@ -25,17 +25,17 @@ class Poltergeist
 window.Poltergeist = Poltergeist
 
 class Poltergeist.ObsoleteNode
-  name: -> "Poltergeist.ObsoleteNode"
+  name: "Poltergeist.ObsoleteNode"
   args: -> []
 
 class Poltergeist.ClickFailed
   constructor: (@selector, @position) ->
-  name: -> "Poltergeist.ClickFailed"
+  name: "Poltergeist.ClickFailed"
   args: -> [@selector, @position]
 
 class Poltergeist.JavascriptError
   constructor: (@errors) ->
-  name: -> "Poltergeist.JavascriptError"
+  name: "Poltergeist.JavascriptError"
   args: -> [@errors]
 
 phantom.injectJs('web_page.js')

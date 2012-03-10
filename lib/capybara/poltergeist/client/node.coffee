@@ -2,7 +2,7 @@
 
 class Poltergeist.Node
   @DELEGATES = ['text', 'getAttribute', 'value', 'set', 'setAttribute',
-                'removeAttribute', 'isMultiple', 'select', 'tagName',
+                'removeAttribute', 'isMultiple', 'select', 'tagName', 'find',
                 'isVisible', 'position', 'trigger', 'parentId', 'clickTest']
 
   constructor: (@page, @id) ->

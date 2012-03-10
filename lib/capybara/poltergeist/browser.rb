@@ -31,36 +31,41 @@ module Capybara::Poltergeist
       command 'source'
     end
 
-    def find(selector, id = nil)
-      command 'find', selector, id
+    def find(selector)
+      result = command('find', selector)
+      result['ids'].map { |id| [result['page_id'], id] }
     end
 
-    def text(id)
-      command 'text', id
+    def find_within(page_id, id, selector)
+      command 'find_within', page_id, id, selector
     end
 
-    def attribute(id, name)
-      command 'attribute', id, name
+    def text(page_id, id)
+      command 'text', page_id, id
     end
 
-    def value(id)
-      command 'value', id
+    def attribute(page_id, id, name)
+      command 'attribute', page_id, id, name
     end
 
-    def set(id, value)
-      command 'set', id, value
+    def value(page_id, id)
+      command 'value', page_id, id
     end
 
-    def select_file(id, value)
-      command 'select_file', id, value
+    def set(page_id, id, value)
+      command 'set', page_id, id, value
     end
 
-    def tag_name(id)
-      command('tag_name', id).downcase
+    def select_file(page_id, id, value)
+      command 'select_file', page_id, id, value
     end
 
-    def visible?(id)
-      command 'visible', id
+    def tag_name(page_id, id)
+      command('tag_name', page_id, id).downcase
+    end
+
+    def visible?(page_id, id)
+      command 'visible', page_id, id
     end
 
     def evaluate(script)
@@ -77,20 +82,20 @@ module Capybara::Poltergeist
       command 'pop_frame'
     end
 
-    def click(id)
-      command 'click', id
+    def click(page_id, id)
+      command 'click', page_id, id
     end
 
-    def drag(id, other_id)
-      command 'drag', id, other_id
+    def drag(page_id, id, other_id)
+      command 'drag', page_id, id, other_id
     end
 
-    def select(id, value)
-      command 'select', id, value
+    def select(page_id, id, value)
+      command 'select', page_id, id, value
     end
 
-    def trigger(id, event)
-      command 'trigger', id, event
+    def trigger(page_id, id, event)
+      command 'trigger', page_id, id, event
     end
 
     def reset

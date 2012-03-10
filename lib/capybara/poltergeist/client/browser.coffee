@@ -1,11 +1,12 @@
 class Poltergeist.Browser
   constructor: (@owner) ->
-    @state = 'default'
+    @state   = 'default'
+    @page_id = 0
+
     this.resetPage()
 
   resetPage: ->
     @page.release() if @page?
-
     @page = new Poltergeist.WebPage
 
     @page.onLoadStarted = =>
@@ -16,6 +17,9 @@ class Poltergeist.Browser
         this.sendResponse(status)
         @state = 'default'
 
+    @page.onInitialized = =>
+      @page_id += 1
+
   sendResponse: (response) ->
     errors = @page.errors()
 
@@ -24,6 +28,12 @@ class Poltergeist.Browser
       @owner.sendError(new Poltergeist.JavascriptError(errors))
     else
       @owner.sendResponse(response)
+
+  node: (page_id, id) ->
+    if page_id == @page_id
+      @page.get(id)
+    else
+      throw new Poltergeist.ObsoleteNode
 
   visit: (url) ->
     @state = 'loading'
@@ -38,20 +48,23 @@ class Poltergeist.Browser
   source: ->
     this.sendResponse @page.source()
 
-  find: (selector, id) ->
-    this.sendResponse @page.find(selector, id)
+  find: (selector) ->
+    this.sendResponse(page_id: @page_id, ids: @page.find(selector))
 
-  text: (id) ->
-    this.sendResponse @page.get(id).text()
+  find_within: (page_id, id, selector) ->
+    this.sendResponse this.node(page_id, id).find(selector)
 
-  attribute: (id, name) ->
-    this.sendResponse @page.get(id).getAttribute(name)
+  text: (page_id, id) ->
+    this.sendResponse this.node(page_id, id).text()
 
-  value: (id) ->
-    this.sendResponse @page.get(id).value()
+  attribute: (page_id, id, name) ->
+    this.sendResponse this.node(page_id, id).getAttribute(name)
 
-  set: (id, value) ->
-    @page.get(id).set(value)
+  value: (page_id, id) ->
+    this.sendResponse this.node(page_id, id).value()
+
+  set: (page_id, id, value) ->
+    this.node(page_id, id).set(value)
     this.sendResponse(true)
 
   # PhantomJS only allows us to reference the element by CSS selector, not XPath,
@@ -61,8 +74,8 @@ class Poltergeist.Browser
   # PhantomJS does not support multiple-file inputs, so we have to blatently cheat
   # by temporarily changing it to a single-file input. This obviously could break
   # things in various ways, which is not ideal, but it works in the simplest case.
-  select_file: (id, value) ->
-    element = @page.get(id)
+  select_file: (page_id, id, value) ->
+    element = this.node(page_id, id)
 
     multiple = element.isMultiple()
 
@@ -76,14 +89,14 @@ class Poltergeist.Browser
 
     this.sendResponse(true)
 
-  select: (id, value) ->
-    this.sendResponse @page.get(id).select(value)
+  select: (page_id, id, value) ->
+    this.sendResponse this.node(page_id, id).select(value)
 
-  tag_name: (id) ->
-    this.sendResponse @page.get(id).tagName()
+  tag_name: (page_id, id) ->
+    this.sendResponse this.node(page_id, id).tagName()
 
-  visible: (id) ->
-    this.sendResponse @page.get(id).isVisible()
+  visible: (page_id, id) ->
+    this.sendResponse this.node(page_id, id).isVisible()
 
   evaluate: (script) ->
     this.sendResponse JSON.parse(@page.evaluate("function() { return JSON.stringify(#{script}) }"))
@@ -100,12 +113,12 @@ class Poltergeist.Browser
     @page.popFrame()
     this.sendResponse(true)
 
-  click: (id) ->
+  click: (page_id, id) ->
     # If the click event triggers onLoadStarted, we will transition to the 'loading'
     # state and wait for onLoadFinished before sending a response.
     @state = 'clicked'
 
-    @page.get(id).click()
+    this.node(page_id, id).click()
 
     # Use a timeout in order to let the stack clear, so that the @page.onLoadStarted
     # callback can (possibly) fire, before we decide whether to send a response.
@@ -118,12 +131,12 @@ class Poltergeist.Browser
       10
     )
 
-  drag: (id, other_id) ->
-    @page.get(id).dragTo(@page.get(other_id))
+  drag: (page_id, id, other_id) ->
+    this.node(page_id, id).dragTo(@page.get(other_id))
     this.sendResponse(true)
 
-  trigger: (id, event) ->
-    @page.get(id).trigger(event)
+  trigger: (page_id, id, event) ->
+    this.node(page_id, id).trigger(event)
     this.sendResponse(event)
 
   reset: ->

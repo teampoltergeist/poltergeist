@@ -75,7 +75,7 @@ module Capybara::Poltergeist
     end
 
     def find(selector)
-      browser.find(selector).map { |node| Capybara::Poltergeist::Node.new(self, node) }
+      browser.find(selector).map { |page_id, id| Capybara::Poltergeist::Node.new(self, page_id, id) }
     end
 
     def evaluate_script(script)

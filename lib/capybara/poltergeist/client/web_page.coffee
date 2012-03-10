@@ -8,7 +8,6 @@ class Poltergeist.WebPage
 
   constructor: ->
     @native  = require('webpage').create()
-    @nodes   = {}
     @_source = ""
     @_errors = []
 
@@ -32,11 +31,12 @@ class Poltergeist.WebPage
   onInitializedNative: ->
     @_source = null
     this.injectAgent()
-    this.setScrollPosition({ left: 0, top: 0 })
+    this.setScrollPosition(left: 0, top: 0)
 
   injectAgent: ->
     if this.evaluate(-> typeof __poltergeist) == "undefined"
       @native.injectJs('agent.js')
+      @nodes = {}
 
   onConsoleMessageNative: (message) ->
     if message == '__DOMContentLoaded'

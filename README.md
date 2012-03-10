@@ -209,6 +209,10 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 *   Ensure the `:timeout` option is actually used. [Issue #36]
 
+*   Nodes need to know which page they are associated with. Before this,
+    if Javascript caused a new page to load, existing node references
+    would be wrong, but wouldn't raise an ObsoleteNode error. [Issue #39]
+
 ### 0.4.0 ###
 
 *   Element click position is now calculated using the native

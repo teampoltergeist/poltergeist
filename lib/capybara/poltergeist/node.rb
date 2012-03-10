@@ -1,5 +1,12 @@
 module Capybara::Poltergeist
   class Node < Capybara::Driver::Node
+    attr_reader :page_id
+
+    def initialize(driver, page_id, id)
+      super(driver, id)
+      @page_id = page_id
+    end
+
     alias id native
 
     def browser
@@ -7,7 +14,7 @@ module Capybara::Poltergeist
     end
 
     def command(name, *args)
-      browser.send(name, id, *args)
+      browser.send(name, page_id, id, *args)
     rescue BrowserError => error
       case error.name
       when 'Poltergeist.ObsoleteNode'
@@ -20,7 +27,7 @@ module Capybara::Poltergeist
     end
 
     def find(selector)
-      browser.find(selector, id).map { |node| self.class.new(driver, node) }
+      command(:find_within, selector).map { |id| self.class.new(driver, page_id, id) }
     end
 
     def text

@@ -20,6 +20,13 @@ describe Capybara::Session do
         @session.find(:css, '#remove').click
         lambda { node.text }.should raise_error(Capybara::Poltergeist::ObsoleteNode)
       end
+
+      it 'should raise an error if the element was on a previous page' do
+        @session.visit('/')
+        node = @session.find('.//a')
+        @session.execute_script "window.location = 'about:blank'"
+        expect { node.text }.to raise_error(Capybara::Poltergeist::ObsoleteNode)
+      end
     end
 
     describe 'Node#set' do
