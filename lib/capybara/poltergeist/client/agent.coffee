@@ -165,7 +165,7 @@ class PoltergeistAgent.Node
       true
 
   position: ->
-    rect = @element.getBoundingClientRect()
+    rect = @element.getClientRects()[0]
 
     {
       top:    rect.top,
