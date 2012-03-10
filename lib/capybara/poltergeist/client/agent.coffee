@@ -19,11 +19,15 @@ class PoltergeistAgent
     @window   = new_window
     @document = @window.document
 
+    null
+
   popWindow: ->
     @windows.pop()
 
     @window   = @windows[@windows.length - 1]
     @document = @window.document
+
+    null
 
   pushFrame: (id) ->
     this.pushWindow @document.getElementById(id).contentWindow

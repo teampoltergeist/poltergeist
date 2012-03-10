@@ -119,7 +119,7 @@ class Poltergeist.WebPage
     @nodes[id] or= new Poltergeist.Node(this, id)
 
   evaluate: (fn, args...) ->
-    @native.evaluate("function() { return #{this.stringifyCall(fn, args)} }")
+    JSON.parse @native.evaluate("function() { return JSON.stringify(#{this.stringifyCall(fn, args)}) }")
 
   execute: (fn, args...) ->
     @native.evaluate("function() { #{this.stringifyCall(fn, args)} }")
