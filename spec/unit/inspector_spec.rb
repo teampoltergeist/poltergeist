@@ -27,7 +27,7 @@ module Capybara::Poltergeist
 
     it 'can be opened' do
       subject.stub(:port => 1234, :browser => 'chromium')
-      POSIX::Spawn.should_receive(:spawn).with("chromium http://localhost:1234/")
+      Spawn.should_receive(:spawn).with("chromium", "http://localhost:1234/")
       subject.open
     end
 

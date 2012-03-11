@@ -1,5 +1,3 @@
-require 'posix/spawn'
-
 module Capybara::Poltergeist
   class Client
     PHANTOMJS_SCRIPT  = File.expand_path('../client/compiled/main.js', __FILE__)
@@ -18,12 +16,14 @@ module Capybara::Poltergeist
       @port      = port
       @inspector = inspector
       @path      = path || PHANTOMJS_NAME
-      at_exit { stop }
+
+      pid = Process.pid
+      at_exit { stop if Process.pid == pid }
     end
 
     def start
       check_phantomjs_version
-      @pid = POSIX::Spawn.spawn(command)
+      @pid = Spawn.spawn(*command)
     end
 
     def stop
@@ -55,7 +55,7 @@ module Capybara::Poltergeist
 
         parts << PHANTOMJS_SCRIPT
         parts << port
-        parts.join(" ")
+        parts
       end
     end
 

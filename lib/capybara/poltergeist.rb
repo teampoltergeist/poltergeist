@@ -11,6 +11,7 @@ module Capybara
     autoload :Client,          'capybara/poltergeist/client'
     autoload :Util,            'capybara/poltergeist/util'
     autoload :Inspector,       'capybara/poltergeist/inspector'
+    autoload :Spawn,           'capybara/poltergeist/spawn'
 
     require 'capybara/poltergeist/errors'
   end
