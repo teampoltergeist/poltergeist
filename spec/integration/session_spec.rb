@@ -22,7 +22,7 @@ describe Capybara::Session do
       end
 
       it 'should raise an error if the element was on a previous page' do
-        @session.visit('/')
+        @session.visit('/poltergeist/index')
         node = @session.find('.//a')
         @session.execute_script "window.location = 'about:blank'"
         expect { node.text }.to raise_error(Capybara::Poltergeist::ObsoleteNode)
