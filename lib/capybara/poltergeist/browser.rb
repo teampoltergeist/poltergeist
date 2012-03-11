@@ -45,7 +45,7 @@ module Capybara::Poltergeist
     end
 
     def attribute(page_id, id, name)
-      command 'attribute', page_id, id, name
+      command 'attribute', page_id, id, name.to_s
     end
 
     def value(page_id, id)
