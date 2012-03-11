@@ -95,7 +95,7 @@ module Capybara::Poltergeist
     end
 
     def trigger(page_id, id, event)
-      command 'trigger', page_id, id, event
+      command 'trigger', page_id, id, event.to_s
     end
 
     def reset
