@@ -1,4 +1,4 @@
-require 'json'
+require 'multi_json'
 
 module Capybara::Poltergeist
   class Browser
@@ -114,7 +114,7 @@ module Capybara::Poltergeist
       message = { 'name' => name, 'args' => args }
       log message.inspect
 
-      json = JSON.parse(server.send(JSON.generate(message)))
+      json = MultiJson.decode(server.send(MultiJson.encode(message)))
       log json.inspect
 
       if json['error']
