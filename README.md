@@ -199,6 +199,8 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Errors produced by Javascript on the page will now generate an
     exception within Ruby. [Issue #27]
 
+*   JRuby support. [Issue #20]
+
 #### Bug fixes ####
 
 *   Fix bug where we could end up interacting with an obsolete element. [Issue #30]
