@@ -83,7 +83,7 @@ Not supported:
 * Rubinius (due to some unknown socket related issues)
 * Windows
 
-Anyone else welcome to contribute in order to move an 'unsupported'
+Contributions are welcome in order to move 'unsupported'
 items into the 'supported' list.
 
 ## Running on a CI ##
