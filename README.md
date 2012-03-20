@@ -18,6 +18,24 @@ require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
 ```
 
+## Compatibility ##
+
+Supported:
+
+* MRI 1.8.7
+* MRI 1.9.2
+* MRI 1.9.3
+* JRuby 1.8
+* JRuby 1.9
+
+Not supported:
+
+* Rubinius (due to some unknown socket related issues)
+* Windows
+
+Anyone else welcome to contribute in order to move an 'unsupported'
+items into the 'supported' list.
+
 ## Important note about Rack versions < 1.3.0 ##
 
 Prior to version 1.3.0, the Rack handlers for Mongrel and Thin wrap your
