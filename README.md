@@ -42,37 +42,36 @@ this doesn't affect you.
 
 ## Installing PhantomJS ##
 
-You need PhantomJS 1.4.1+, built against Qt 4.8, on your system.
+You need PhantomJS 1.5.0. There are no other dependencies (you don't
+need Qt, or Xvfb, etc.)
 
-### Pre-built binaries ##
+### Mac ###
 
-There are [pre-built
-binaries](http://code.google.com/p/phantomjs/downloads/list) of
-PhantomJS for Linux, Mac and Windows. This is the easiest and best way
-to install it. The binaries including a patched version of Qt 4.8 so you
-don't need to install that separately.
+* *With homebrew*: `brew install phantomjs`
+* *Without homebrew*: [Download this](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.5.0-macosx-static.zip&can=2&q=)
 
-Note that if you have a 'dynamic' package, it's important to maintain
-the relationship between `bin/phantomjs` and `lib/`. This is because the
-`bin/phantomjs` binary looks in `../lib/` for its library files. So the
-best thing to do is to link (rather than copy) it into your `PATH`:
+### Linux ###
 
-    ln -s /path/to/phantomjs/bin/phantomjs /usr/local/bin/phantomjs
+* Download the [32
+bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.5.0-linux-x86-dynamic.tar.gz&can=2&q=)
+or [64
+bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.5.0-linux-x86_64-dynamic.tar.gz&can=2&q=)
+binary.
+* Extract it: `sudo tar xvzf phantomjs-1.5.0-linux-*-dynamic.tar.gz -C /usr/local`
+* Link it: `sudo ln -s /usr/local/phantomjs/bin/phantomjs /usr/local/bin/phantomjs`
 
-### Compiling PhantomJS ###
+(Note that you cannot copy the `/usr/local/phantomjs/bin/phantomjs`
+binary elsewhere on its own as it dynamically links with other files in
+`/usr/local/phantomjs/lib`.)
 
-If you're having trouble with a pre-built binary package, you can
-compile PhantomJS yourself. PhantomJS must be built against Qt 4.8, and
-some patches must be applied, so note that you cannot build it against
-your system install of Qt.
+### Manual compilation ###
 
-[Download the tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.4.1-source.tar.gz&can=2&q=)
-and run either `deploy/build-linux.sh --qt-4.8` or `cd deploy; ./build-mac.sh`.
-The script will
-download Qt, apply some patches, build it, and then build PhantomJS
-against the patched build of Qt. It takes quite a while, around 30
-minutes on a modern computer with two hyperthreaded cores. Afterwards,
-you should copy (or link) the `bin/phantomjs` binary into your `PATH`.
+Do this as a last resort if the binaries don't work for you. It will
+take quite a long time as it has to build WebKit.
+
+* Download [the source tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.5.0-source.tar.gz&can=2&q=)
+* Extract and cd in
+* `./build.sh`
 
 ## Compatibility ##
 
@@ -88,25 +87,14 @@ items into the 'supported' list.
 
 ## Running on a CI ##
 
-Currently PhantomJS is not yet 'truly headless' (but that's planned for the future),
-so to run it on a continuous integration
-server you will need to install [Xvfb](http://en.wikipedia.org/wiki/Xvfb).
+There are no special steps to take. You don't need Xvfb or any running X
+server at all.
 
-### On any generic server ###
+[Travis CI](http://travis-ci.org/) has PhantomJS 1.5.0 installed.
 
-Install PhantomJS and invoke your tests with `xvfb-run`, (e.g. `xvfb-run
-rake`).
-
-### Using [Travis CI](http://travis-ci.org/) ###
-
-Travis CI has PhantomJS installed already! So all you need to do is add
-the following to your `.travis.yml`:
-
-``` yaml
-before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-```
+You may like to use their [chef
+cookbook](https://github.com/travis-ci/travis-cookbooks/tree/master/ci_environment/phantomjs)
+on your own servers.
 
 ## What's supported? ##
 
@@ -129,6 +117,19 @@ the entire page, use `page.driver.render('/path/to/file.png', :full => true)`.
 Sometimes the window size is important to how things are rendered. Poltergeist sets the window
 size to 1024x768 by default, but you can set this yourself with `page.driver.resize(width, height)`.
 
+### Remote debugging (experimental) ###
+
+If you use the `:inspector => true` option (see below), remote debugging
+will be enabled.
+
+When this option is enabled, you can insert `page.driver.debug` into
+your tests to pause the test and launch a browser which gives you the
+WebKit inspector to view your test run with.
+
+(This feature is considered experimental - it needs more polish
+and [apparently will only work on
+Linux](http://code.google.com/p/phantomjs/issues/detail?id=430).)
+
 ## Customization ##
 
 You can customize the way that Capybara sets up Poltegeist via the following code in your
@@ -148,26 +149,13 @@ end
 *   `:timeout` (Numeric) - The number of seconds we'll wait for a response
     when communicating with PhantomJS. `nil` means wait forever. Default
     is 30.
+*   `:inspector` (Boolean, String) - See 'Remote Debugging', above.
 
 ## Bugs ##
 
 Please file bug reports on Github and include example code to reproduce the problem wherever
 possible. (Tests are even better.) Please also provide the output with
 `:debug` turned on, and screenshots if you think it's relevant.
-
-## Differences from [capybara-webkit](https://github.com/thoughtbot/capybara-webkit) ##
-
-Poltergeist is similar to capybara-webkit, but here are the key
-differences:
-
-*   It's more hackable. Poltergeist is written in Ruby + CoffeeScript.
-    We only have to worry about C++ when dealing with issues in
-    PhantomJS itself. In contrast, the majority of capybara-webkit is
-    written in C++.
-
-*   We're able to tap into the PhantomJS community. When PhantomJS
-    improves, Poltergeist improves. User's don't have to install Qt
-    because self-contained PhantomJS binary packages are available.
 
 ## Hacking ##
 
@@ -184,6 +172,13 @@ makes debugging easier). Running `rake autocompile` will watch the
 `lib/capybara/client/compiled`.
 
 ## Changes ##
+
+### 0.6.0 ###
+
+#### Features ####
+
+*   Updated to PhantomJS 1.5.0, giving us proper support for reporting
+    Javascript exception backtraces.
 
 ### 0.5.0 ###
 
