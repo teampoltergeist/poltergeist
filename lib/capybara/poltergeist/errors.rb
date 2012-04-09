@@ -11,30 +11,52 @@ module Capybara
       end
     end
 
+    class JSErrorItem
+      attr_reader :message, :stack
+
+      def initialize(message, stack)
+        @message = message
+        @stack   = stack
+      end
+
+      def to_s
+        message + "\n\n" + formatted_stack
+      end
+
+      private
+
+      def formatted_stack
+        stack = self.stack.map do |item|
+          s = "  #{item['file']}:#{item['line']}"
+          s << " in #{item['function']}" if item['function'] && !item['function'].empty?
+          s
+        end
+        stack.join("\n")
+      end
+    end
+
     class BrowserError < ClientError
       def name
         response['name']
       end
 
-      def text
-        response['args'].first
+      def javascript_error
+        JSErrorItem.new(*response['args'])
       end
 
       def message
-        "Received error from PhantomJS client: #{text}"
+        "There was an error inside the PhantomJS portion of Poltergeist:\n\n#{javascript_error}"
       end
     end
 
     class JavascriptError < ClientError
-      def javascript_messages
-        response['args'].first
+      def javascript_errors
+        response['args'].first.map { |data| JSErrorItem.new(data['message'], data['stack']) }
       end
 
       def message
-        "One or more errors were raised in the Javascript code on the page: #{javascript_messages.inspect} " \
-          "Unfortunately, it is not currently possible to provide a stack trace, or even the line/file where " \
-          "the error occurred. (This is due to lack of support within QtWebKit.) Fixing this is a high " \
-          "priority, but we're not there yet."
+        "One or more errors were raised in the Javascript code on the page:\n\n" +
+          javascript_errors.map(&:to_s).join("\n")
       end
     end
 

@@ -117,21 +117,44 @@ module Capybara::Poltergeist
     end
 
     context 'javascript errors' do
-      it 'propagates an error on the page to a ruby exception' do
-        expect { @driver.execute_script "omg" }.to raise_error(JavascriptError)
+      it 'propagates a Javascript error inside Poltergeist to a ruby exception' do
+        expect { @driver.execute_script "omg" }.to raise_error(BrowserError)
 
         begin
           @driver.execute_script "omg"
+        rescue BrowserError => e
+          e.message.should include("omg")
+          e.message.should include("ReferenceError")
+        else
+          raise "BrowserError expected"
+        end
+      end
+
+      it 'propagates a Javascript error on the page to a ruby exception' do
+        @driver.execute_script "setTimeout(function() { omg }, 0)"
+        sleep 0.01
+        expect { @driver.execute_script "" }.to raise_error(JavascriptError)
+
+        begin
+          @driver.execute_script "setTimeout(function() { omg }, 0)"
+          sleep 0.01
+          @driver.execute_script ""
         rescue JavascriptError => e
           e.message.should include("omg")
           e.message.should include("ReferenceError")
+        else
+          raise "expected JavascriptError"
         end
       end
 
       it "doesn't re-raise a Javascript error if it's rescued" do
         begin
-          @driver.execute_script("omg")
+          @driver.execute_script "setTimeout(function() { omg }, 0)"
+          sleep 0.01
+          @driver.execute_script ""
         rescue JavascriptError
+        else
+          raise "expected JavascriptError"
         end
 
         # should not raise again

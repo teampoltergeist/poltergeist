@@ -1,6 +1,7 @@
 class Poltergeist.WebPage
   @CALLBACKS = ['onAlert', 'onConsoleMessage', 'onLoadFinished', 'onInitialized',
-                'onLoadStarted', 'onResourceRequested', 'onResourceReceived']
+                'onLoadStarted', 'onResourceRequested', 'onResourceReceived',
+                'onError']
 
   @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'release', 'render']
 
@@ -35,7 +36,7 @@ class Poltergeist.WebPage
 
   injectAgent: ->
     if this.evaluate(-> typeof __poltergeist) == "undefined"
-      @native.injectJs('agent.js')
+      @native.injectJs("#{phantom.libraryPath}/agent.js")
       @nodes = {}
 
   onConsoleMessageNative: (message) ->
@@ -47,13 +48,15 @@ class Poltergeist.WebPage
     @_source or= @native.content
 
   onConsoleMessage: (message, line, file) ->
-    if line == 0 && file == "undefined"
-      # file:line will always be "undefined:0" in current release of
-      # PhantomJS ;(
-      @_errors.push(message)
-    else
-      # here line == 1 && file == "". don't ask me why!
+    # The conditional works around a PhantomJS bug where an error can
+    # get wrongly reported to be onError and onConsoleMessage:
+    #
+    # http://code.google.com/p/phantomjs/issues/detail?id=166#c18
+    unless @_errors.length && @_errors[@_errors.length - 1].message == message
       console.log(message)
+
+  onErrorNative: (message, stack) ->
+    @_errors.push(message: message, stack: stack)
 
   content: ->
     @native.content
@@ -143,17 +146,13 @@ class Poltergeist.WebPage
       if result != false && that[name]? # For externally set callbacks
         that[name].apply(that, arguments)
 
+  # Any error raised here or inside the evaluate will get reported to
+  # phantom.onError. If result is null, that means there was an error
+  # inside the agent.
   runCommand: (name, arguments) ->
     result = this.evaluate(
       (name, arguments) -> __poltergeist.externalCall(name, arguments),
       name, arguments
     )
 
-    if result.error
-      switch result.error
-        when "PoltergeistAgent.ObsoleteNode"
-          throw new Poltergeist.ObsoleteNode
-        else
-          throw result.error
-    else
-      result.value
+    result && result.value

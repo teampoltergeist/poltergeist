@@ -1,7 +1,7 @@
 # Proxy object for forwarding method calls to the node object inside the page.
 
 class Poltergeist.Node
-  @DELEGATES = ['text', 'getAttribute', 'value', 'set', 'setAttribute',
+  @DELEGATES = ['text', 'getAttribute', 'value', 'set', 'setAttribute', 'isObsolete',
                 'removeAttribute', 'isMultiple', 'select', 'tagName', 'find',
                 'isVisible', 'position', 'trigger', 'parentId', 'clickTest']
 
@@ -59,7 +59,7 @@ class Poltergeist.Node
     if test.status == 'success'
       @page.sendEvent('click', pos.x, pos.y)
     else
-      throw new Poltergeist.ClickFailed(test.selector, pos)
+      new Poltergeist.ClickFailed(test.selector, pos)
 
   dragTo: (other) ->
     position      = this.clickPosition()

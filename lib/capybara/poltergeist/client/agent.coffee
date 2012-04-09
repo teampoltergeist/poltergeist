@@ -8,10 +8,7 @@ class PoltergeistAgent
     this.pushWindow(window)
 
   externalCall: (name, arguments) ->
-    try
-      { value: this[name].apply(this, arguments) }
-    catch error
-      { error: error.toString() }
+    { value: this[name].apply(this, arguments) }
 
   pushWindow: (new_window) ->
     @windows.push(new_window)

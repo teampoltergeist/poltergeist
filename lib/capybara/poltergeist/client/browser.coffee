@@ -29,11 +29,25 @@ class Poltergeist.Browser
     else
       @owner.sendResponse(response)
 
-  node: (page_id, id) ->
+  getNode: (page_id, id, callback) ->
     if page_id == @page_id
-      @page.get(id)
+      callback.call this, @page.get(id)
     else
-      throw new Poltergeist.ObsoleteNode
+      @owner.sendError(new Poltergeist.ObsoleteNode)
+
+  nodeCall: (page_id, id, fn, args...) ->
+    callback = args.pop()
+
+    this.getNode(
+      page_id, id,
+      (node) ->
+        result = node[fn](args...)
+
+        if result instanceof Poltergeist.ObsoleteNode
+          @owner.sendError(result)
+        else
+          callback.call(this, result, node)
+    )
 
   visit: (url) ->
     @state = 'loading'
@@ -52,20 +66,19 @@ class Poltergeist.Browser
     this.sendResponse(page_id: @page_id, ids: @page.find(selector))
 
   find_within: (page_id, id, selector) ->
-    this.sendResponse this.node(page_id, id).find(selector)
+    this.nodeCall(page_id, id, 'find', selector, this.sendResponse)
 
   text: (page_id, id) ->
-    this.sendResponse this.node(page_id, id).text()
+    this.nodeCall(page_id, id, 'text', this.sendResponse)
 
   attribute: (page_id, id, name) ->
-    this.sendResponse this.node(page_id, id).getAttribute(name)
+    this.nodeCall(page_id, id, 'getAttribute', name, this.sendResponse)
 
   value: (page_id, id) ->
-    this.sendResponse this.node(page_id, id).value()
+    this.nodeCall(page_id, id, 'value', this.sendResponse)
 
   set: (page_id, id, value) ->
-    this.node(page_id, id).set(value)
-    this.sendResponse(true)
+    this.nodeCall(page_id, id, 'set', value, -> this.sendResponse(true))
 
   # PhantomJS only allows us to reference the element by CSS selector, not XPath,
   # so we have to add an attribute to the element to identify it, then remove it
@@ -75,28 +88,28 @@ class Poltergeist.Browser
   # by temporarily changing it to a single-file input. This obviously could break
   # things in various ways, which is not ideal, but it works in the simplest case.
   select_file: (page_id, id, value) ->
-    element = this.node(page_id, id)
+    this.nodeCall(
+      page_id, id, 'isMultiple',
+      (multiple, node) ->
+        node.removeAttribute('multiple') if multiple
+        node.setAttribute('_poltergeist_selected', '')
 
-    multiple = element.isMultiple()
+        @page.uploadFile('[_poltergeist_selected]', value)
 
-    element.removeAttribute('multiple') if multiple
-    element.setAttribute('_poltergeist_selected', '')
+        node.removeAttribute('_poltergeist_selected')
+        node.setAttribute('multiple', 'multiple') if multiple
 
-    @page.uploadFile('[_poltergeist_selected]', value)
-
-    element.removeAttribute('_poltergeist_selected')
-    element.setAttribute('multiple', 'multiple') if multiple
-
-    this.sendResponse(true)
+        this.sendResponse(true)
+    )
 
   select: (page_id, id, value) ->
-    this.sendResponse this.node(page_id, id).select(value)
+    this.nodeCall(page_id, id, 'select', value, this.sendResponse)
 
   tag_name: (page_id, id) ->
-    this.sendResponse this.node(page_id, id).tagName()
+    this.nodeCall(page_id, id, 'tagName', this.sendResponse)
 
   visible: (page_id, id) ->
-    this.sendResponse this.node(page_id, id).isVisible()
+    this.nodeCall(page_id, id, 'isVisible', this.sendResponse)
 
   evaluate: (script) ->
     this.sendResponse JSON.parse(@page.evaluate("function() { return JSON.stringify(#{script}) }"))
@@ -114,30 +127,43 @@ class Poltergeist.Browser
     this.sendResponse(true)
 
   click: (page_id, id) ->
-    # If the click event triggers onLoadStarted, we will transition to the 'loading'
-    # state and wait for onLoadFinished before sending a response.
-    @state = 'clicked'
+    # We just check the node is not obsolete before proceeding. If it is,
+    # the callback will not fire.
+    this.nodeCall(
+      page_id, id, 'isObsolete',
+      (obsolete, node) ->
+        # If the click event triggers onLoadStarted, we will transition to the 'loading'
+        # state and wait for onLoadFinished before sending a response.
+        @state = 'clicked'
 
-    this.node(page_id, id).click()
+        click = node.click()
 
-    # Use a timeout in order to let the stack clear, so that the @page.onLoadStarted
-    # callback can (possibly) fire, before we decide whether to send a response.
-    setTimeout(
-      =>
-        if @state == 'clicked'
-          @state = 'default'
-          this.sendResponse(true)
-      ,
-      10
+        # Use a timeout in order to let the stack clear, so that the @page.onLoadStarted
+        # callback can (possibly) fire, before we decide whether to send a response.
+        setTimeout(
+          =>
+            if @state == 'clicked'
+              @state = 'default'
+
+              if click instanceof Poltergeist.ClickFailed
+                @owner.sendError(click)
+              else
+                this.sendResponse(true)
+          ,
+          10
+        )
     )
 
   drag: (page_id, id, other_id) ->
-    this.node(page_id, id).dragTo(@page.get(other_id))
-    this.sendResponse(true)
+    this.nodeCall(
+      page_id, id, 'isObsolete'
+      (obsolete, node) ->
+        node.dragTo(@page.get(other_id))
+        this.sendResponse(true)
+    )
 
   trigger: (page_id, id, event) ->
-    this.node(page_id, id).trigger(event)
-    this.sendResponse(event)
+    this.nodeCall(page_id, id, 'trigger', event, -> this.sendResponse(event))
 
   reset: ->
     this.resetPage()
