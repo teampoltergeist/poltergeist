@@ -18,7 +18,7 @@ require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
 ```
 
-## Important note about Rack versions < 1.3.0 ##
+### Important note about Rack versions < 1.3.0 ###
 
 Prior to version 1.3.0, the Rack handlers for Mongrel and Thin wrap your
 app in the `Rack::Chunked` middleware so that it uses
@@ -90,10 +90,15 @@ items into the 'supported' list.
 There are no special steps to take. You don't need Xvfb or any running X
 server at all.
 
-[Travis CI](http://travis-ci.org/) has PhantomJS 1.5.0 installed.
+Depending on your tests, one thing that you may need is some fonts. If
+you're getting errors on a CI that don't occur during development then
+try taking some screenshots - it may well be missing fonts throwing
+things off kilter. Your distro will have various font packages available
+to install.
 
-You may like to use their [chef
-cookbook](https://github.com/travis-ci/travis-cookbooks/tree/master/ci_environment/phantomjs)
+[Travis CI](http://travis-ci.org/) has PhantomJS 1.5.0 installed. You may
+like to use their
+[chef cookbook](https://github.com/travis-ci/travis-cookbooks/tree/master/ci_environment/phantomjs)
 on your own servers.
 
 ## What's supported? ##
@@ -125,6 +130,9 @@ will be enabled.
 When this option is enabled, you can insert `page.driver.debug` into
 your tests to pause the test and launch a browser which gives you the
 WebKit inspector to view your test run with.
+
+[Read more
+here](http://jonathanleighton.com/articles/2012/poltergeist-0-6-0/)
 
 (This feature is considered experimental - it needs more polish
 and [apparently will only work on
