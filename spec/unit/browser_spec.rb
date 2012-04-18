@@ -13,7 +13,7 @@ module Capybara::Poltergeist
       it 'should log requests and responses to the client' do
         request  = { 'name' => 'where is', 'args' => ["the love?"] }
         response = { 'response' => '<3' }
-        server.stub(:send).with(MultiJson.encode(request)).and_return(MultiJson.encode(response))
+        server.stub(:send).with(MultiJson.dump(request)).and_return(MultiJson.dump(response))
 
         subject.command('where is', 'the love?')
 

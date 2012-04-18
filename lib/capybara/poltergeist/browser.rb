@@ -114,7 +114,7 @@ module Capybara::Poltergeist
       message = { 'name' => name, 'args' => args }
       log message.inspect
 
-      json = MultiJson.decode(server.send(MultiJson.encode(message)))
+      json = MultiJson.load(server.send(MultiJson.dump(message)))
       log json.inspect
 
       if json['error']
