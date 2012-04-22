@@ -114,7 +114,11 @@ module Capybara::Poltergeist
       message = { 'name' => name, 'args' => args }
       log message.inspect
 
-      json = MultiJson.load(server.send(MultiJson.dump(message)))
+      json = if MultiJson.respond_to?(:dump) && MultiJson.respond_to?(:load)
+        MultiJson.load(server.send(MultiJson.dump(message)))
+      else
+        MultiJson.decode(server.send(MultiJson.encode(message)))
+      end
       log json.inspect
 
       if json['error']
