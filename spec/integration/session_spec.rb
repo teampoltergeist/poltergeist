@@ -30,10 +30,33 @@ describe Capybara::Session do
     end
 
     describe 'Node#set' do
-      it 'should fire the change event' do
+      before do
         @session.visit('/poltergeist/with_js')
-        @session.find(:css, '#change_me').set("Hello!")
+        @session.find(:css, '#change_me').set("Hello!")        
+      end
+
+      it 'should fire the change event' do
         @session.find(:css, '#changes').text.should == "Hello!"
+      end
+
+      it 'should fire the keydown event' do
+        @session.find(:css, '#changes_on_keydown').text.should == "6"
+      end
+
+      it 'should fire the keyup event' do
+        @session.find(:css, '#changes_on_keyup').text.should == "6"        
+      end
+
+      it 'should fire the keypress event' do
+        @session.find(:css, '#changes_on_keypress').text.should == "6"
+      end
+
+      it 'should fire the focus event' do
+        @session.find(:css, '#changes_on_focus').text.should == "Focus"        
+      end
+
+      it 'should fire the blur event' do
+        @session.find(:css, '#changes_on_blur').text.should == "Blur"
       end
     end
 
