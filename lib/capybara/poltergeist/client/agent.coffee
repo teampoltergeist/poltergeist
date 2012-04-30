@@ -7,8 +7,8 @@ class PoltergeistAgent
     @windows  = []
     this.pushWindow(window)
 
-  externalCall: (name, arguments) ->
-    { value: this[name].apply(this, arguments) }
+  externalCall: (name, args) ->
+    { value: this[name].apply(this, args) }
 
   pushWindow: (new_window) ->
     @windows.push(new_window)
@@ -55,10 +55,10 @@ class PoltergeistAgent
   get: (id) ->
     @nodes[id] or= new PoltergeistAgent.Node(this, @elements[id])
 
-  nodeCall: (id, name, arguments) ->
+  nodeCall: (id, name, args) ->
     node = this.get(id)
     throw new PoltergeistAgent.ObsoleteNode if node.isObsolete()
-    node[name].apply(node, arguments)
+    node[name].apply(node, args)
 
 class PoltergeistAgent.ObsoleteNode
   toString: -> "PoltergeistAgent.ObsoleteNode"
@@ -91,7 +91,28 @@ class PoltergeistAgent.Node
 
   changed: ->
     event = document.createEvent('HTMLEvents')
-    event.initEvent("change", true, false)
+    event.initEvent('change', true, false)
+    @element.dispatchEvent(event)
+
+  keyupdowned: (eventName, keyCode) ->
+    event = document.createEvent('UIEvents')
+    event.initEvent(eventName, true, true)
+    event.keyCode  = keyCode
+    event.which    = keyCode
+    event.charCode = 0
+    @element.dispatchEvent(event)    
+
+  keypressed: (altKey, ctrlKey, shiftKey, metaKey, keyCode, charCode) ->
+    event = document.createEvent('UIEvents')
+    event.initEvent('keypress', true, true)
+    event.window   = @agent.window
+    event.altKey   = altKey
+    event.ctrlKey  = ctrlKey
+    event.shiftKey = shiftKey
+    event.metaKey  = metaKey
+    event.keyCode  = keyCode
+    event.charCode = charCode
+    event.which    = keyCode
     @element.dispatchEvent(event)
 
   insideBody: ->
@@ -130,8 +151,19 @@ class PoltergeistAgent.Node
     if (@element.maxLength >= 0)
       value = value.substr(0, @element.maxLength)
 
-    @element.value = value
+    @element.value = ''
+    this.trigger('focus')    
+
+    for char in value
+      @element.value += char
+
+      keyCode = this.characterToKeyCode(char)
+      this.keyupdowned('keydown', keyCode)
+      this.keypressed(false, false, false, false, char.charCodeAt(0), char.charCodeAt(0))      
+      this.keyupdowned('keyup', keyCode)
+
     this.changed()
+    this.trigger('blur')
 
   isMultiple: ->
     @element.multiple
@@ -208,6 +240,45 @@ class PoltergeistAgent.Node
     for className in el.classList
       selector += ".#{className}"
     selector
+
+  characterToKeyCode: (character) ->
+    code = character.toUpperCase().charCodeAt(0)
+    specialKeys = 
+      96: 192  #`
+      45: 189  #-
+      61: 187  #=
+      91: 219  #[
+      93: 221  #]
+      92: 220  #\
+      59: 186  #;
+      39: 222  #'
+      44: 188  #,
+      46: 190  #.
+      47: 191  #/
+      127: 46  #delete
+      126: 192 #~
+      33: 49   #!
+      64: 50   #@
+      35: 51   ##
+      36: 52   #$
+      37: 53   #%
+      94: 54   #^
+      38: 55   #&
+      42: 56   #*
+      40: 57   #(
+      41: 48   #)
+      95: 189  #_
+      43: 187  #+
+      123: 219 #{
+      125: 221 #}
+      124: 220 #|
+      58: 186  #:
+      34: 222  #"
+      60: 188  #<
+      62: 190  #>
+      63: 191 #?
+
+    specialKeys[code] || code
 
 window.__poltergeist = new PoltergeistAgent
 
