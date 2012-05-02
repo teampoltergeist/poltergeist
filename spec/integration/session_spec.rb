@@ -41,7 +41,8 @@ describe Capybara::Session do
 
       it 'should accept numbers in a maxlength field' do
         element = @session.find(:css, '#change_me_maxlength')
-        lambda { element.set 100 }.should_not raise_error(Capybara::Poltergeist::BrowserError)
+        element.set 100
+        element.value.should == '100'
       end
 
       it 'should fire the keydown event' do
