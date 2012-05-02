@@ -32,11 +32,16 @@ describe Capybara::Session do
     describe 'Node#set' do
       before do
         @session.visit('/poltergeist/with_js')
-        @session.find(:css, '#change_me').set("Hello!")        
+        @session.find(:css, '#change_me').set("Hello!")
       end
 
       it 'should fire the change event' do
         @session.find(:css, '#changes').text.should == "Hello!"
+      end
+
+      it 'should accept numbers in a maxlength field' do
+        element = @session.find(:css, '#change_me_maxlength')
+        lambda { element.set 100 }.should_not raise_error(Capybara::Poltergeist::BrowserError)
       end
 
       it 'should fire the keydown event' do
@@ -44,7 +49,7 @@ describe Capybara::Session do
       end
 
       it 'should fire the keyup event' do
-        @session.find(:css, '#changes_on_keyup').text.should == "6"        
+        @session.find(:css, '#changes_on_keyup').text.should == "6"
       end
 
       it 'should fire the keypress event' do
@@ -52,7 +57,7 @@ describe Capybara::Session do
       end
 
       it 'should fire the focus event' do
-        @session.find(:css, '#changes_on_focus').text.should == "Focus"        
+        @session.find(:css, '#changes_on_focus').text.should == "Focus"
       end
 
       it 'should fire the blur event' do
