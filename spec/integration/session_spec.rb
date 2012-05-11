@@ -144,6 +144,14 @@ describe Capybara::Session do
         end
       end
 
+      it 'should works with datepicker - #60' do
+        @session.visit '/poltergeist/datepicker'
+
+        @session.find(:css, '#datepicker').set('2012-05-11')
+
+        expect { @session.click_link 'some link' }.to_not raise_error(Capybara::Poltergeist::ClickFailed)
+      end
+
       context 'with #two overlapping #one' do
         before do
           @session.execute_script <<-JS
