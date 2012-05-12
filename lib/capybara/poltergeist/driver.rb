@@ -17,7 +17,7 @@ module Capybara::Poltergeist
     end
 
     def browser
-      @browser ||= Browser.new(server, client, logger)
+      @browser ||= Browser.new(server, client, logger, raise_errors)
     end
 
     def inspector
@@ -56,6 +56,10 @@ module Capybara::Poltergeist
     # logger should be an object that responds to puts, or nil
     def logger
       options[:logger] || (options[:debug] && STDERR)
+    end
+
+    def raise_errors
+      options.fetch(:raise_errors, true)
     end
 
     def visit(path)

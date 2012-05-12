@@ -158,6 +158,7 @@ end
     when communicating with PhantomJS. `nil` means wait forever. Default
     is 30.
 *   `:inspector` (Boolean, String) - See 'Remote Debugging', above.
+*   `:raise_errors` (Boolean) - When false, Javascript errors do not get re-raised in Ruby.
 
 ## Bugs ##
 
