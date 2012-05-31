@@ -182,6 +182,13 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 ## Changes ##
 
+### 0.7.0 ###
+
+#### Features ####
+
+*   Added an option ":raise_errors", allowing poltergeist to continue
+    running after JS errors. (John Griffin & Tom Stuart) [Issue #62] [Issue #69]
+
 ### 0.6.0 ###
 
 #### Features ####
