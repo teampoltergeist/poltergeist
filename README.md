@@ -189,6 +189,12 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Added an option ":js_errors", allowing poltergeist to continue
     running after JS errors. (John Griffin & Tom Stuart) [Issue #62] [Issue #69]
 
+#### Bug fixes ###
+
+*   Fix issue with `ClickFailed` exception happening with a negative
+    co-ordinate (which should be impossible). (Jon Leighton, Gabriel
+    Sobrinho, Tom Stuart) [Issue #60]
+
 ### 0.6.0 ###
 
 #### Features ####

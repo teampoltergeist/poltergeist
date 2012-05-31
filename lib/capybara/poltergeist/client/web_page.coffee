@@ -113,8 +113,7 @@ class Poltergeist.WebPage
       dimensions.top    = Math.max(0, dimensions.top - (dimensions.bottom - document.height))
       dimensions.bottom = document.height
 
-    if dimensions.left != orig_left || dimensions.top != orig_top
-      this.setScrollPosition(left: dimensions.left, top: dimensions.top)
+    this.setScrollPosition(left: dimensions.left, top: dimensions.top)
 
     dimensions
 
