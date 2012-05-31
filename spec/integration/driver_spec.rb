@@ -162,7 +162,7 @@ module Capybara::Poltergeist
       end
 
       it "doesn't propagate a Javascript error to ruby if error raising disabled" do
-        driver = Capybara::Poltergeist::Driver.new(nil, :raise_errors => false)
+        driver = Capybara::Poltergeist::Driver.new(nil, :js_errors => false)
         driver.execute_script "setTimeout(function() { omg }, 0)"
         sleep 0.01
         expect { driver.execute_script "" }.to_not raise_error(JavascriptError)

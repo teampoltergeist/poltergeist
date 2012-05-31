@@ -158,7 +158,7 @@ end
     when communicating with PhantomJS. `nil` means wait forever. Default
     is 30.
 *   `:inspector` (Boolean, String) - See 'Remote Debugging', above.
-*   `:raise_errors` (Boolean) - When false, Javascript errors do not get re-raised in Ruby.
+*   `:js_errors` (Boolean) - When false, Javascript errors do not get re-raised in Ruby.
 
 ## Bugs ##
 
@@ -186,7 +186,7 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 #### Features ####
 
-*   Added an option ":raise_errors", allowing poltergeist to continue
+*   Added an option ":js_errors", allowing poltergeist to continue
     running after JS errors. (John Griffin & Tom Stuart) [Issue #62] [Issue #69]
 
 ### 0.6.0 ###
