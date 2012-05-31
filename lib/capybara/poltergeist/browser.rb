@@ -5,10 +5,10 @@ module Capybara::Poltergeist
     attr_reader :server, :client, :logger, :js_errors
 
     def initialize(server, client, logger = nil, js_errors = true)
-      @server = server
-      @client = client
-      @logger = logger
-      @js_errors = js_errors
+      @server     = server
+      @client     = client
+      @logger     = logger
+      @js_errors  = js_errors
     end
 
     def restart
