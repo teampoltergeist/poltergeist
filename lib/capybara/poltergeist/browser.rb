@@ -2,12 +2,13 @@ require 'multi_json'
 
 module Capybara::Poltergeist
   class Browser
-    attr_reader :server, :client, :logger
+    attr_reader :server, :client, :logger, :js_errors
 
-    def initialize(server, client, logger = nil)
-      @server = server
-      @client = client
-      @logger = logger
+    def initialize(server, client, logger = nil, js_errors = true)
+      @server     = server
+      @client     = client
+      @logger     = logger
+      @js_errors  = js_errors
     end
 
     def restart
@@ -123,13 +124,17 @@ module Capybara::Poltergeist
 
       if json['error']
         if json['error']['name'] == 'Poltergeist.JavascriptError'
-          raise JavascriptError.new(json['error'])
+          error = JavascriptError.new(json['error'])
+          if js_errors
+            raise error
+          else
+            log error
+          end
         else
           raise BrowserError.new(json['error'])
         end
-      else
-        json['response']
       end
+      json['response']
 
     rescue DeadClient
       restart
@@ -137,7 +142,6 @@ module Capybara::Poltergeist
     end
 
     private
-
     def log(message)
       logger.puts message if logger
     end
