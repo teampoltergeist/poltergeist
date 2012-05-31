@@ -35,7 +35,7 @@ class Poltergeist.WebPage
     this.setScrollPosition(left: 0, top: 0)
 
   injectAgent: ->
-    if this.evaluate(-> typeof __poltergeist) == "undefined"
+    if @native.evaluate(-> typeof __poltergeist) == "undefined"
       @native.injectJs("#{phantom.libraryPath}/agent.js")
       @nodes = {}
 
@@ -121,7 +121,7 @@ class Poltergeist.WebPage
     @nodes[id] or= new Poltergeist.Node(this, id)
 
   evaluate: (fn, args...) ->
-    JSON.parse @native.evaluate("function() { return JSON.stringify(#{this.stringifyCall(fn, args)}) }")
+    JSON.parse @native.evaluate("function() { return PoltergeistAgent.stringify(#{this.stringifyCall(fn, args)}) }")
 
   execute: (fn, args...) ->
     @native.evaluate("function() { #{this.stringifyCall(fn, args)} }")

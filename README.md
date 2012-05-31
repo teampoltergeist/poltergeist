@@ -194,6 +194,9 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Fix issue with `ClickFailed` exception happening with a negative
     co-ordinate (which should be impossible). (Jon Leighton, Gabriel
     Sobrinho, Tom Stuart) [Issue #60]
+*   Fix issue with `undefined method map for "[]":String`, which
+    happened when dealing with pages that include JS rewriting
+    Array.prototype.toJSON. (Tom Stuart) [Issue #63]
 
 ### 0.6.0 ###
 
