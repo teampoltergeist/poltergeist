@@ -160,6 +160,13 @@ module Capybara::Poltergeist
         # should not raise again
         @driver.evaluate_script("1+1").should == 2
       end
+
+      it "doesn't propagate a Javascript error to ruby if error raising disabled" do
+        driver = Capybara::Poltergeist::Driver.new(nil, :js_errors => false)
+        driver.execute_script "setTimeout(function() { omg }, 0)"
+        sleep 0.01
+        expect { driver.execute_script "" }.to_not raise_error(JavascriptError)
+      end
     end
   end
 end
