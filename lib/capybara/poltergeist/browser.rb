@@ -124,9 +124,14 @@ module Capybara::Poltergeist
 
       if json['error']
         if json['error']['name'] == 'Poltergeist.JavascriptError'
-          error(JavascriptError, json['error'])
+          error = JavascriptError.new(json['error'])
+          if raise_errors
+            raise error
+          else
+            log error
+          end
         else
-          error(BrowserError, json['error'])
+          raise BrowserError.new(json['error'])
         end
       end
       json['response']
@@ -137,15 +142,6 @@ module Capybara::Poltergeist
     end
 
     private
-
-    def error(klass, message)
-      if raise_errors
-        raise klass.new(message)
-      else
-        log message
-      end
-    end
-
     def log(message)
       logger.puts message if logger
     end
