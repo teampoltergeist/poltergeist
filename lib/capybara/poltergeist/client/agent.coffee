@@ -100,7 +100,7 @@ class PoltergeistAgent.Node
     event.keyCode  = keyCode
     event.which    = keyCode
     event.charCode = 0
-    @element.dispatchEvent(event)    
+    @element.dispatchEvent(event)
 
   keypressed: (altKey, ctrlKey, shiftKey, metaKey, keyCode, charCode) ->
     event = document.createEvent('UIEvents')
@@ -152,14 +152,14 @@ class PoltergeistAgent.Node
       value = value.substr(0, @element.maxLength)
 
     @element.value = ''
-    this.trigger('focus')    
+    this.trigger('focus')
 
     for char in value
       @element.value += char
 
       keyCode = this.characterToKeyCode(char)
       this.keyupdowned('keydown', keyCode)
-      this.keypressed(false, false, false, false, char.charCodeAt(0), char.charCodeAt(0))      
+      this.keypressed(false, false, false, false, char.charCodeAt(0), char.charCodeAt(0))
       this.keyupdowned('keyup', keyCode)
 
     this.changed()
@@ -243,7 +243,7 @@ class PoltergeistAgent.Node
 
   characterToKeyCode: (character) ->
     code = character.toUpperCase().charCodeAt(0)
-    specialKeys = 
+    specialKeys =
       96: 192  #`
       45: 189  #-
       61: 187  #=
