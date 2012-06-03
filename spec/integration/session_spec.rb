@@ -27,6 +27,22 @@ describe Capybara::Session do
         @session.execute_script "window.location = 'about:blank'"
         expect { node.text }.to raise_error(Capybara::Poltergeist::ObsoleteNode)
       end
+
+      context "when someone (*cough* prototype *cough*) messes with Array#toJSON" do
+        before do
+          @session.visit("/poltergeist/index")
+          array_munge = <<-EOS
+          Array.prototype.toJSON = function() {
+            return "ohai";
+          }
+          EOS
+          @session.execute_script array_munge
+        end
+
+        it "gives a proper error" do
+          expect { @session.find(:css, "username") }.to raise_error(Capybara::ElementNotFound)
+        end
+      end
     end
 
     describe 'Node#set' do

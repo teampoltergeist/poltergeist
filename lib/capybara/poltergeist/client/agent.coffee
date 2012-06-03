@@ -10,6 +10,13 @@ class PoltergeistAgent
   externalCall: (name, args) ->
     { value: this[name].apply(this, args) }
 
+  @stringify: (object) ->
+    JSON.stringify object, (key, value) ->
+      if Array.isArray(this[key])
+        return this[key]
+      else
+        return value
+
   pushWindow: (new_window) ->
     @windows.push(new_window)
 
