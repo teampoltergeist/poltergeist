@@ -50,7 +50,7 @@ module Capybara::Poltergeist
       end
     end
 
-    context 'with a :browser_size option' do
+    context 'with a :window_size option' do
       subject { Driver.new(nil, :window_size => [800, 600]) }
 
       it "creates a client with the desired width and height settings" do
