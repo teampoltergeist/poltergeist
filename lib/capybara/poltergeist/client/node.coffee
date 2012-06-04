@@ -12,8 +12,8 @@ class Poltergeist.Node
 
   for name in @DELEGATES
     do (name) =>
-      this.prototype[name] = (arguments...) ->
-        @page.nodeCall(@id, name, arguments)
+      this.prototype[name] = (args...) ->
+        @page.nodeCall(@id, name, args)
 
   clickPosition: (scrollIntoView = true) ->
     dimensions = @page.validatedDimensions()

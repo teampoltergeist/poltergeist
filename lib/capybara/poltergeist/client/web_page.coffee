@@ -22,7 +22,7 @@ class Poltergeist.WebPage
   for command in @COMMANDS
     do (command) =>
       this.prototype[command] =
-        (arguments...) -> this.runCommand(command, arguments)
+        (args...) -> this.runCommand(command, args)
 
   for delegate in @DELEGATES
     do (delegate) =>
@@ -148,10 +148,10 @@ class Poltergeist.WebPage
   # Any error raised here or inside the evaluate will get reported to
   # phantom.onError. If result is null, that means there was an error
   # inside the agent.
-  runCommand: (name, arguments) ->
+  runCommand: (name, args) ->
     result = this.evaluate(
-      (name, arguments) -> __poltergeist.externalCall(name, arguments),
-      name, arguments
+      (name, args) -> __poltergeist.externalCall(name, args),
+      name, args
     )
 
     result && result.value
