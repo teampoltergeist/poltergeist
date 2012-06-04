@@ -1,7 +1,7 @@
 class Poltergeist.Browser
   constructor: (@owner, width, height) ->
-    @width = width || 1024
-    @height = height || 768
+    @width   = width || 1024
+    @height  = height || 768
     @state   = 'default'
     @page_id = 0
 
