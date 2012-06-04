@@ -82,6 +82,10 @@ module Capybara::Poltergeist
       browser.current_url
     end
 
+    def status_code
+      browser.status_code
+    end
+
     def body
       browser.body
     end

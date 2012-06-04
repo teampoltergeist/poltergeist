@@ -3,7 +3,7 @@ class Poltergeist.WebPage
                 'onLoadStarted', 'onResourceRequested', 'onResourceReceived',
                 'onError', 'onNavigationRequested', 'onUrlChanged']
 
-  @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'release', 'render']
+  @DELEGATES = ['sendEvent', 'uploadFile', 'release', 'render']
 
   @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'pushFrame', 'popFrame', 'documentSize']
 
@@ -29,6 +29,10 @@ class Poltergeist.WebPage
     do (delegate) =>
       this.prototype[delegate] =
         -> @native[delegate].apply(@native, arguments)
+
+  open: (args...) ->
+    @_url = args[0]
+    @native.open.apply(@native, args)
 
   onInitializedNative: ->
     @_source = null
@@ -61,16 +65,20 @@ class Poltergeist.WebPage
 
     @_errors.push(message: message, stack: stackString)
 
-  # capture any outgoing requests
   onResourceRequestedNative: (request) ->
     @_networkTraffic[request.id] = {
       request:       request,
       responseParts: []
     }
 
-  # capture request responses
   onResourceReceivedNative: (response) ->
     @_networkTraffic[response.id].responseParts.push(response)
+
+    if @_url == response.url
+      if response.redirectURL
+        @_url = response.redirectURL
+      else
+        @_statusCode = response.status
 
   networkTraffic: ->
     @_networkTraffic
@@ -86,6 +94,9 @@ class Poltergeist.WebPage
 
   clearErrors: ->
     @_errors = []
+
+  statusCode: ->
+    @_statusCode
 
   viewportSize: ->
     @native.viewportSize

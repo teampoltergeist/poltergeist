@@ -11,7 +11,7 @@ module Capybara::Poltergeist
     it_should_behave_like "driver"
     it_should_behave_like "driver with javascript support"
     it_should_behave_like "driver with frame support"
-    it_should_behave_like "driver without status code support"
+    it_should_behave_like "driver with status code support"
     it_should_behave_like "driver with cookies support"
 
     it 'supports a custom phantomjs path' do
@@ -252,6 +252,23 @@ module Capybara::Poltergeist
         @driver.visit('/poltergeist/with_js')
         @driver.network_traffic.length.should equal(4)
       end
-    end 
+    end
+
+    describe 'status code support' do
+      it 'should determine status from the simple response' do
+        @driver.visit('/poltergeist/500')
+        @driver.status_code.should == 500
+      end
+
+      it 'should determine status code when the page has a few resources' do
+        @driver.visit('/poltergeist/with_different_resources')
+        @driver.status_code.should == 200
+      end
+
+      it 'should determine status code even after redirect' do
+        @driver.visit('/poltergeist/redirect')
+        @driver.status_code.should == 200
+      end
+    end
   end
 end
