@@ -49,5 +49,17 @@ module Capybara::Poltergeist
         subject.server.should == server
       end
     end
+
+    context 'with a :window_size option' do
+      subject { Driver.new(nil, :window_size => [800, 600]) }
+
+      it "creates a client with the desired width and height settings" do
+        server = stub
+        server.stub(:port).and_return(64297)
+        Server.should_receive(:new).and_return(server)
+        Client.should_receive(:start).with(64297, nil, nil, 800, 600)
+        subject.client
+      end
+    end
   end
 end

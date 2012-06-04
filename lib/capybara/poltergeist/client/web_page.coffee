@@ -7,12 +7,12 @@ class Poltergeist.WebPage
 
   @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'pushFrame', 'popFrame', 'documentSize']
 
-  constructor: ->
+  constructor: (width, height) ->
     @native  = require('webpage').create()
     @_source = ""
     @_errors = []
 
-    this.setViewportSize(width: 1024, height: 768)
+    this.setViewportSize(width: width, height: height)
 
     for callback in WebPage.CALLBACKS
       this.bindCallback(callback)

@@ -1,5 +1,7 @@
 class Poltergeist.Browser
-  constructor: (@owner) ->
+  constructor: (@owner, width, height) ->
+    @width   = width || 1024
+    @height  = height || 768
     @state   = 'default'
     @page_id = 0
 
@@ -7,7 +9,7 @@ class Poltergeist.Browser
 
   resetPage: ->
     @page.release() if @page?
-    @page = new Poltergeist.WebPage
+    @page = new Poltergeist.WebPage(@width, @height)
 
     @page.onLoadStarted = =>
       @state = 'loading' if @state == 'clicked'
