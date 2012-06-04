@@ -11,6 +11,9 @@ module Capybara::Poltergeist
       @inspector = nil
       @server    = nil
       @client    = nil
+      if @options[:browser_size]
+        @width, @height = @options[:browser_size].split("x").map(&:to_i)
+      end
 
       @app_server = Capybara::Server.new(app)
       @app_server.boot if Capybara.run_server
@@ -63,6 +66,7 @@ module Capybara::Poltergeist
     end
 
     def visit(path)
+      resize(@width, @height) if @width && @height
       browser.visit app_server.url(path)
     end
 
