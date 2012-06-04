@@ -14,6 +14,7 @@ task :compile do
   Dir.glob("lib/capybara/poltergeist/client/*.coffee").each do |f|
     compiled = "lib/capybara/poltergeist/client/compiled/#{f.split("/").last.split(".").first}.js"
     File.open(compiled, "w") do |out|
+      puts "Compiling #{f}"
       out << CoffeeScript.compile(File.read(f), :bare => true)
     end
   end
@@ -22,7 +23,7 @@ end
 RSpec::Core::RakeTask.new('test') do
 end
 
-task :default => :test
+task :default => [:compile, :test]
 
 task :release do
   puts "Releasing #{Capybara::Poltergeist::VERSION}, y/n?"
