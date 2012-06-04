@@ -56,6 +56,9 @@ class Poltergeist.Browser
   current_url: ->
     this.sendResponse @page.currentUrl()
 
+  status_code: ->
+    this.sendResponse @page.statusCode()
+
   body: ->
     this.sendResponse @page.content()
 

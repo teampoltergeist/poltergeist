@@ -22,12 +22,12 @@ class Poltergeist.WebPage
   for command in @COMMANDS
     do (command) =>
       this.prototype[command] =
-        (arguments...) -> this.runCommand(command, arguments)
+        (args...) -> this.runCommand(command, args)
 
   for delegate in @DELEGATES
     do (delegate) =>
       this.prototype[delegate] =
-        -> @native[delegate].apply(@native, arguments)
+       (args...) -> @native[delegate].apply(@native, args)
 
   onInitializedNative: ->
     @_source = null
@@ -58,6 +58,9 @@ class Poltergeist.WebPage
   onErrorNative: (message, stack) ->
     @_errors.push(message: message, stack: stack)
 
+  onResourceReceivedNative: (request) ->
+    @_statusCode = request.status
+
   content: ->
     @native.content
 
@@ -69,6 +72,9 @@ class Poltergeist.WebPage
 
   clearErrors: ->
     @_errors = []
+
+  statusCode: ->
+    @_statusCode
 
   viewportSize: ->
     @native.viewportSize
@@ -139,20 +145,20 @@ class Poltergeist.WebPage
   # hence the 'that' closure.
   bindCallback: (name) ->
     that = this
-    @native[name] = ->
+    @native[name] = (args...) ->
       if that[name + 'Native']? # For internal callbacks
-        result = that[name + 'Native'].apply(that, arguments)
+        result = that[name + 'Native'].apply(that, args)
 
       if result != false && that[name]? # For externally set callbacks
-        that[name].apply(that, arguments)
+        that[name].apply(that, args)
 
   # Any error raised here or inside the evaluate will get reported to
   # phantom.onError. If result is null, that means there was an error
   # inside the agent.
-  runCommand: (name, arguments) ->
+  runCommand: (name, args) ->
     result = this.evaluate(
-      (name, arguments) -> __poltergeist.externalCall(name, arguments),
-      name, arguments
+      (name, args) -> __poltergeist.externalCall(name, args),
+      name, args
     )
 
     result && result.value
