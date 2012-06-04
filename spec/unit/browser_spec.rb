@@ -10,7 +10,7 @@ module Capybara::Poltergeist
       let(:logger) { StringIO.new }
       subject      { Browser.new(server, client, logger) }
 
-      it 'should log requests and responses to the client' do
+      it 'logs requests and responses to the client' do
         request  = { 'name' => 'where is', 'args' => ["the love?"] }
         response = { 'response' => '<3' }
         server.stub(:send).with(MultiJson.dump(request)).and_return(MultiJson.dump(response))
