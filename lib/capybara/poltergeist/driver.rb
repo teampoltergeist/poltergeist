@@ -32,7 +32,7 @@ module Capybara::Poltergeist
     end
 
     def client
-      @client ||= Client.start(server.port, inspector, options[:phantomjs])
+      @client ||= Client.start(server.port, inspector, options[:phantomjs], @width, @height)
     end
 
     def client_pid
@@ -66,7 +66,6 @@ module Capybara::Poltergeist
     end
 
     def visit(path)
-      resize(@width, @height) if @width && @height
       browser.visit app_server.url(path)
     end
 

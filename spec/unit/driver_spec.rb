@@ -53,15 +53,12 @@ module Capybara::Poltergeist
     context 'with a :browser_size option' do
       subject { Driver.new(nil, :window_size => [800, 600]) }
 
-      before do
-        @browser = mock
-        Browser.should_receive(:new).and_return(@browser)
-      end
-
-      it "resizes the browser window before each visit" do
-        @browser.should_receive(:resize).with(800, 600)
-        @browser.stub(:visit)
-        subject.visit "/"
+      it "creates a client with the desired width and height settings" do
+        server = stub
+        server.stub(:port).and_return(64297)
+        Server.should_receive(:new).and_return(server)
+        Client.should_receive(:start).with(64297, nil, nil, 800, 600)
+        subject.client
       end
     end
   end

@@ -191,8 +191,8 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Added an option ":js_errors", allowing poltergeist to continue
     running after JS errors. (John Griffin & Tom Stuart) [Issue #62] [Issue #69]
 *   Added an option ":window_size", allowing users to specify
-    dimensions to which the browser window will be resized each
-    visit. (Tom Stuart) [Issue #53]
+    dimensions to which the browser window will be resized.
+    (Tom Stuart) [Issue #53]
 
 #### Bug fixes ###
 
