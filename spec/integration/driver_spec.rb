@@ -57,7 +57,7 @@ module Capybara::Poltergeist
     end
 
     it 'supports specifying viewport size with an option' do
-      @driver = Capybara::Poltergeist::Driver.new(nil, :browser_size => "800x600")
+      @driver = Capybara::Poltergeist::Driver.new(nil, :window_size => [800, 600])
       @driver.visit("/")
       @driver.evaluate_script('[window.innerWidth, window.innerHeight]').should eq([800, 600])
     end

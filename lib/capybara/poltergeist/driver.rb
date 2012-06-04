@@ -11,8 +11,8 @@ module Capybara::Poltergeist
       @inspector = nil
       @server    = nil
       @client    = nil
-      if @options[:browser_size]
-        @width, @height = @options[:browser_size].split("x").map(&:to_i)
+      if @options[:window_size]
+        @width, @height = @options[:window_size]
       end
 
       @app_server = Capybara::Server.new(app)

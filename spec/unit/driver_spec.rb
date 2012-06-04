@@ -51,7 +51,7 @@ module Capybara::Poltergeist
     end
 
     context 'with a :browser_size option' do
-      subject { Driver.new(nil, :browser_size => "800x600") }
+      subject { Driver.new(nil, :window_size => [800, 600]) }
 
       before do
         @browser = mock
@@ -62,15 +62,6 @@ module Capybara::Poltergeist
         @browser.should_receive(:resize).with(800, 600)
         @browser.stub(:visit)
         subject.visit "/"
-      end
-
-      context "which is invalid" do
-        subject { Driver.new(nil, :browser_size => "x") }
-
-        it "doesn't fall over" do
-          @browser.should_receive(:visit).with("http://127.0.0.1:/")
-          subject.visit("/")
-        end
       end
     end
   end

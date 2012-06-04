@@ -159,8 +159,8 @@ end
     is 30.
 *   `:inspector` (Boolean, String) - See 'Remote Debugging', above.
 *   `:js_errors` (Boolean) - When false, Javascript errors do not get re-raised in Ruby.
-*   `:browser_size` (String) - The dimensions of the browser window in which to test, expressed
-    as "widthxheight", e.g. "1024x768"
+*   `:window_size` (Array) - The dimensions of the browser window in which to test, expressed
+    as a 2-element array, e.g. [1024, 768]
 
 ## Bugs ##
 
@@ -190,7 +190,7 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 *   Added an option ":js_errors", allowing poltergeist to continue
     running after JS errors. (John Griffin & Tom Stuart) [Issue #62] [Issue #69]
-*   Added an option ":browser_size", allowing users to specify
+*   Added an option ":window_size", allowing users to specify
     dimensions to which the browser window will be resized each
     visit. (Tom Stuart) [Issue #53]
 
