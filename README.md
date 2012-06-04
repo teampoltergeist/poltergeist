@@ -160,7 +160,7 @@ end
 *   `:inspector` (Boolean, String) - See 'Remote Debugging', above.
 *   `:js_errors` (Boolean) - When false, Javascript errors do not get re-raised in Ruby.
 *   `:window_size` (Array) - The dimensions of the browser window in which to test, expressed
-    as a 2-element array, e.g. [1024, 768]
+    as a 2-element array, e.g. [1024, 768]. Default: [1024, 768]
 
 ## Bugs ##
 
