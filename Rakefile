@@ -5,9 +5,7 @@ require base + "/lib/capybara/poltergeist/version"
 require 'coffee-script'
 
 task :autocompile do
-  system "coffee --compile --bare --watch " \
-         "--output lib/capybara/poltergeist/client/compiled " \
-         "lib/capybara/poltergeist/client/*.coffee"
+  system "guard"
 end
 
 task :compile do
