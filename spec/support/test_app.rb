@@ -8,6 +8,18 @@ class TestApp
     File.read("#{POLTERGEIST_PUBLIC}/test.js")
   end
 
+  get '/poltergeist/unexist.png' do
+    halt 404
+  end
+
+  get '/poltergeist/500' do
+    halt 500
+  end
+
+  get '/poltergeist/redirect' do
+    redirect '/poltergeist/with_different_resources'
+  end
+
   get '/poltergeist/:view' do |view|
     erb File.read("#{POLTERGEIST_VIEWS}/#{view}.erb")
   end
