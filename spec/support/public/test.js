@@ -1,4 +1,6 @@
 $(function() {
+  $("#datepicker").datepicker();
+
   $('#remove').click(function() {
     $('#remove_me').remove()
   })

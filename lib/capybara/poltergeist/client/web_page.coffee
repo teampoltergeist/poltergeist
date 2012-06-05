@@ -7,12 +7,12 @@ class Poltergeist.WebPage
 
   @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'pushFrame', 'popFrame', 'documentSize']
 
-  constructor: ->
+  constructor: (width, height) ->
     @native  = require('webpage').create()
     @_source = ""
     @_errors = []
 
-    this.setViewportSize(width: 1024, height: 768)
+    this.setViewportSize(width: width, height: height)
 
     for callback in WebPage.CALLBACKS
       this.bindCallback(callback)
@@ -40,7 +40,7 @@ class Poltergeist.WebPage
     this.setScrollPosition(left: 0, top: 0)
 
   injectAgent: ->
-    if this.evaluate(-> typeof __poltergeist) == "undefined"
+    if @native.evaluate(-> typeof __poltergeist) == "undefined"
       @native.injectJs("#{phantom.libraryPath}/agent.js")
       @nodes = {}
 
@@ -133,8 +133,7 @@ class Poltergeist.WebPage
       dimensions.top    = Math.max(0, dimensions.top - (dimensions.bottom - document.height))
       dimensions.bottom = document.height
 
-    if dimensions.left != orig_left || dimensions.top != orig_top
-      this.setScrollPosition(left: dimensions.left, top: dimensions.top)
+    this.setScrollPosition(left: dimensions.left, top: dimensions.top)
 
     dimensions
 
@@ -142,7 +141,7 @@ class Poltergeist.WebPage
     @nodes[id] or= new Poltergeist.Node(this, id)
 
   evaluate: (fn, args...) ->
-    JSON.parse @native.evaluate("function() { return JSON.stringify(#{this.stringifyCall(fn, args)}) }")
+    JSON.parse @native.evaluate("function() { return PoltergeistAgent.stringify(#{this.stringifyCall(fn, args)}) }")
 
   execute: (fn, args...) ->
     @native.evaluate("function() { #{this.stringifyCall(fn, args)} }")

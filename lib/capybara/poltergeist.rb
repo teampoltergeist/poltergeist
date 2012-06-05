@@ -12,6 +12,7 @@ module Capybara
     autoload :Util,            'capybara/poltergeist/util'
     autoload :Inspector,       'capybara/poltergeist/inspector'
     autoload :Spawn,           'capybara/poltergeist/spawn'
+    autoload :JSON,            'capybara/poltergeist/json'
 
     require 'capybara/poltergeist/errors'
   end

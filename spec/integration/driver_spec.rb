@@ -13,7 +13,7 @@ module Capybara::Poltergeist
     it_should_behave_like "driver with frame support"
     it_should_behave_like "driver with cookies support"
 
-    it 'should support a custom phantomjs path' do
+    it 'supports a custom phantomjs path' do
       file = POLTERGEIST_ROOT + '/spec/support/custom_phantomjs_called'
       path = POLTERGEIST_ROOT + '/spec/support/custom_phantomjs'
 
@@ -34,18 +34,18 @@ module Capybara::Poltergeist
       File.exist?(file).should == true
     end
 
-    it 'should raise an error and restart the client, if the client dies while executing a command' do
+    it 'raises an error and restart the client, if the client dies while executing a command' do
       lambda { @driver.browser.command('exit') }.should raise_error(DeadClient)
       @driver.visit('/')
       @driver.body.should include('Hello world')
     end
 
-    it 'should have a viewport size of 1024x768 by default' do
+    it 'has a viewport size of 1024x768 by default' do
       @driver.visit('/')
       @driver.evaluate_script('[window.innerWidth, window.innerHeight]').should == [1024, 768]
     end
 
-    it 'should allow the viewport to be resized' do
+    it 'allows the viewport to be resized' do
       begin
         @driver.visit('/')
         @driver.resize(200, 400)
@@ -55,7 +55,13 @@ module Capybara::Poltergeist
       end
     end
 
-    it 'should support rendering the page' do
+    it 'supports specifying viewport size with an option' do
+      @driver = Capybara::Poltergeist::Driver.new(nil, :window_size => [800, 600])
+      @driver.visit("/")
+      @driver.evaluate_script('[window.innerWidth, window.innerHeight]').should eq([800, 600])
+    end
+
+    it 'supports rendering the page' do
       file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
       FileUtils.rm_f file
       @driver.visit('/')
@@ -63,7 +69,7 @@ module Capybara::Poltergeist
       File.exist?(file).should == true
     end
 
-    it 'should support rendering the whole of a page that goes outside the viewport' do
+    it 'supports rendering the whole of a page that goes outside the viewport' do
       file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
       @driver.visit('/poltergeist/long_page')
       @driver.render(file)
@@ -81,7 +87,7 @@ module Capybara::Poltergeist
       end
     end
 
-    it 'should support executing multiple lines of javascript' do
+    it 'supports executing multiple lines of javascript' do
       @driver.execute_script <<-JS
         var a = 1
         var b = 2
@@ -90,7 +96,7 @@ module Capybara::Poltergeist
       @driver.evaluate_script("result").should == 3
     end
 
-    it 'should operate a timeout when communicating with phantomjs' do
+    it 'operates a timeout when communicating with phantomjs' do
       begin
         prev_timeout = @driver.timeout
         @driver.timeout = 0.001
@@ -158,6 +164,13 @@ module Capybara::Poltergeist
 
         # should not raise again
         @driver.evaluate_script("1+1").should == 2
+      end
+
+      it "doesn't propagate a Javascript error to ruby if error raising disabled" do
+        driver = Capybara::Poltergeist::Driver.new(nil, :js_errors => false)
+        driver.execute_script "setTimeout(function() { omg }, 0)"
+        sleep 0.01
+        expect { driver.execute_script "" }.to_not raise_error(JavascriptError)
       end
     end
 

@@ -52,10 +52,10 @@ module Capybara::Poltergeist
         when 'file'
           command :select_file, value
         else
-          command :set, value
+          command :set, value.to_s
         end
       elsif tag_name == 'textarea'
-        command :set, value
+        command :set, value.to_s
       end
     end
 

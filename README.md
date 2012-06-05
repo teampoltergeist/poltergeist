@@ -158,6 +158,9 @@ end
     when communicating with PhantomJS. `nil` means wait forever. Default
     is 30.
 *   `:inspector` (Boolean, String) - See 'Remote Debugging', above.
+*   `:js_errors` (Boolean) - When false, Javascript errors do not get re-raised in Ruby.
+*   `:window_size` (Array) - The dimensions of the browser window in which to test, expressed
+    as a 2-element array, e.g. [1024, 768]. Default: [1024, 768]
 
 ## Bugs ##
 
@@ -180,6 +183,27 @@ makes debugging easier). Running `rake autocompile` will watch the
 `lib/capybara/client/compiled`.
 
 ## Changes ##
+
+### 0.7.0 ###
+
+#### Features ####
+
+*   Added an option ":js_errors", allowing poltergeist to continue
+    running after JS errors. (John Griffin & Tom Stuart) [Issue #62] [Issue #69]
+*   Added an option ":window_size", allowing users to specify
+    dimensions to which the browser window will be resized.
+    (Tom Stuart) [Issue #53]
+*   Added status code support.
+    (Dmitriy Nesteryuk and Jon Leighton) [Issue #37]
+
+#### Bug fixes ###
+
+*   Fix issue with `ClickFailed` exception happening with a negative
+    co-ordinate (which should be impossible). (Jon Leighton, Gabriel
+    Sobrinho, Tom Stuart) [Issue #60]
+*   Fix issue with `undefined method map for "[]":String`, which
+    happened when dealing with pages that include JS rewriting
+    Array.prototype.toJSON. (Tom Stuart) [Issue #63]
 
 ### 0.6.0 ###
 

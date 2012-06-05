@@ -11,13 +11,16 @@ module Capybara::Poltergeist
       @inspector = nil
       @server    = nil
       @client    = nil
+      if @options[:window_size]
+        @width, @height = @options[:window_size]
+      end
 
       @app_server = Capybara::Server.new(app)
       @app_server.boot if Capybara.run_server
     end
 
     def browser
-      @browser ||= Browser.new(server, client, logger)
+      @browser ||= Browser.new(server, client, logger, js_errors)
     end
 
     def inspector
@@ -29,7 +32,7 @@ module Capybara::Poltergeist
     end
 
     def client
-      @client ||= Client.start(server.port, inspector, options[:phantomjs])
+      @client ||= Client.start(server.port, inspector, options[:phantomjs], @width, @height)
     end
 
     def client_pid
@@ -56,6 +59,10 @@ module Capybara::Poltergeist
     # logger should be an object that responds to puts, or nil
     def logger
       options[:logger] || (options[:debug] && STDERR)
+    end
+
+    def js_errors
+      options.fetch(:js_errors, true)
     end
 
     def visit(path)

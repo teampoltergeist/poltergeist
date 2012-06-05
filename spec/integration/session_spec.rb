@@ -13,7 +13,7 @@ describe Capybara::Session do
     it_should_behave_like "session without status code support"
 
     describe Capybara::Poltergeist::Node do
-      it 'should raise an error if the element has been removed from the DOM' do
+      it 'raises an error if the element has been removed from the DOM' do
         @session.visit('/poltergeist/with_js')
         node = @session.find(:css, '#remove_me')
         node.text.should == 'Remove me'
@@ -21,46 +21,68 @@ describe Capybara::Session do
         lambda { node.text }.should raise_error(Capybara::Poltergeist::ObsoleteNode)
       end
 
-      it 'should raise an error if the element was on a previous page' do
+      it 'raises an error if the element was on a previous page' do
         @session.visit('/poltergeist/index')
         node = @session.find('.//a')
         @session.execute_script "window.location = 'about:blank'"
         expect { node.text }.to raise_error(Capybara::Poltergeist::ObsoleteNode)
+      end
+
+      context "when someone (*cough* prototype *cough*) messes with Array#toJSON" do
+        before do
+          @session.visit("/poltergeist/index")
+          array_munge = <<-EOS
+          Array.prototype.toJSON = function() {
+            return "ohai";
+          }
+          EOS
+          @session.execute_script array_munge
+        end
+
+        it "gives a proper error" do
+          expect { @session.find(:css, "username") }.to raise_error(Capybara::ElementNotFound)
+        end
       end
     end
 
     describe 'Node#set' do
       before do
         @session.visit('/poltergeist/with_js')
-        @session.find(:css, '#change_me').set("Hello!")        
+        @session.find(:css, '#change_me').set("Hello!")
       end
 
-      it 'should fire the change event' do
+      it 'fires the change event' do
         @session.find(:css, '#changes').text.should == "Hello!"
       end
 
-      it 'should fire the keydown event' do
+      it 'accepts numbers in a maxlength field' do
+        element = @session.find(:css, '#change_me_maxlength')
+        element.set 100
+        element.value.should == '100'
+      end
+
+      it 'fires the keydown event' do
         @session.find(:css, '#changes_on_keydown').text.should == "6"
       end
 
-      it 'should fire the keyup event' do
-        @session.find(:css, '#changes_on_keyup').text.should == "6"        
+      it 'fires the keyup event' do
+        @session.find(:css, '#changes_on_keyup').text.should == "6"
       end
 
-      it 'should fire the keypress event' do
+      it 'fires the keypress event' do
         @session.find(:css, '#changes_on_keypress').text.should == "6"
       end
 
-      it 'should fire the focus event' do
-        @session.find(:css, '#changes_on_focus').text.should == "Focus"        
+      it 'fires the focus event' do
+        @session.find(:css, '#changes_on_focus').text.should == "Focus"
       end
 
-      it 'should fire the blur event' do
+      it 'fires the blur event' do
         @session.find(:css, '#changes_on_blur').text.should == "Blur"
       end
     end
 
-    it 'should support running multiple sessions at once' do
+    it 'supports running multiple sessions at once' do
       other_session = Capybara::Session.new(:poltergeist, TestApp)
 
       @session.visit('/')
@@ -70,7 +92,7 @@ describe Capybara::Session do
       other_session.should have_content("Hello")
     end
 
-    it 'should not have trouble clicking elements when the size of a document changes' do
+    it 'has no trouble clicking elements when the size of a document changes' do
       @session.visit('/poltergeist/long_page')
       @session.find(:css, '#penultimate').click
       @session.execute_script <<-JS
@@ -81,30 +103,30 @@ describe Capybara::Session do
       @session.should have_content("Hello")
     end
 
-    it 'should handle clicks where the target is in view, but the document is smaller than the viewport' do
+    it 'handles clicks where the target is in view, but the document is smaller than the viewport' do
       @session.visit '/poltergeist/simple'
       @session.click_link 'Link'
       @session.should have_content('Hello world')
     end
 
-    it 'should handle clicks where a parent element has a border' do
+    it 'handles clicks where a parent element has a border' do
       @session.visit '/poltergeist/table'
       @session.click_link 'Link'
       @session.should have_content('Hello world')
     end
 
-    it 'should handle window.confirm(), returning true unconditionally' do
+    it 'handles window.confirm(), returning true unconditionally' do
       @session.visit '/'
       @session.evaluate_script("window.confirm('foo')").should == true
     end
 
-    it 'should handle window.prompt(), returning the default value or null' do
+    it 'handles window.prompt(), returning the default value or null' do
       @session.visit '/'
       @session.evaluate_script("window.prompt()").should == nil
       @session.evaluate_script("window.prompt('foo', 'default')").should == 'default'
     end
 
-    it 'should handle evaluate_script values properly' do
+    it 'handles evaluate_script values properly' do
       @session.evaluate_script('null').should == nil
       @session.evaluate_script('false').should == false
       @session.evaluate_script('true').should == true
@@ -127,7 +149,7 @@ describe Capybara::Session do
         @session.driver.resize(1024, 768)
       end
 
-      it 'should scroll around so that elements can be clicked' do
+      it 'scrolls around so that elements can be clicked' do
         @session.driver.resize(200, 200)
         log = @session.find(:css, '#log')
 
@@ -136,6 +158,13 @@ describe Capybara::Session do
           @session.find(:css, "##{instruction}").click
           log.text.should == instruction
         end
+      end
+
+      # See https://github.com/jonleighton/poltergeist/issues/60
+      it "fixes some weird layout issue that we're not entirely sure about the reason for" do
+        @session.visit '/poltergeist/datepicker'
+        @session.find(:css, '#datepicker').set('2012-05-11')
+        @session.click_link 'some link'
       end
 
       context 'with #two overlapping #one' do

@@ -1,6 +1,6 @@
 class Poltergeist
-  constructor: (port) ->
-    @browser    = new Poltergeist.Browser(this)
+  constructor: (port, width, height) ->
+    @browser    = new Poltergeist.Browser(this, width, height)
     @connection = new Poltergeist.Connection(this, port)
 
     # The QtWebKit bridge doesn't seem to like Function.prototype.bind
@@ -84,4 +84,4 @@ phantom.injectJs("#{phantom.libraryPath}/node.js")
 phantom.injectJs("#{phantom.libraryPath}/connection.js")
 phantom.injectJs("#{phantom.libraryPath}/browser.js")
 
-new Poltergeist(phantom.args[0])
+new Poltergeist(phantom.args[0], phantom.args[1], phantom.args[2])

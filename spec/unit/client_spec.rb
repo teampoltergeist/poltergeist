@@ -30,5 +30,14 @@ module Capybara::Poltergeist
         e.message.should include('42')
       end
     end
+
+    context "with width and height specified" do
+      subject { Client.new(6000, nil, nil, 800, 600) }
+
+      it "starts phantomjs, passing the width and height through" do
+        Spawn.should_receive(:spawn).with("phantomjs", Client::PHANTOMJS_SCRIPT, 6000, 800, 600)
+        subject.start
+      end
+    end
   end
 end
