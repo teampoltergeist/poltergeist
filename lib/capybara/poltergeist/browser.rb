@@ -111,8 +111,8 @@ module Capybara::Poltergeist
       command 'resize', width, height
     end
 
-    def requested_resources(filter=nil)
-      command 'requestedResources', filter
+    def network_traffic(filter=nil)
+      command 'networkTraffic', filter
     end
 
     def command(name, *args)
