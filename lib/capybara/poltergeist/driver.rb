@@ -110,6 +110,10 @@ module Capybara::Poltergeist
       browser.resize(width, height)
     end
 
+    def requested_resources(filter=nil)
+      browser.requested_resources(filter)
+    end
+
     def debug
       inspector.open
       pause

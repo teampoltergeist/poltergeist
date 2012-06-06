@@ -111,6 +111,10 @@ module Capybara::Poltergeist
       command 'resize', width, height
     end
 
+    def requested_resources(filter=nil)
+      command 'requestedResources', filter
+    end
+
     def command(name, *args)
       message = { 'name' => name, 'args' => args }
       log message.inspect

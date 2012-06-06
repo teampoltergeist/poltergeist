@@ -191,6 +191,16 @@ class Poltergeist.Browser
     @page.setViewportSize(width: width, height: height)
     this.sendResponse(true)
 
+  requestedResources: (filter) ->
+    if filter
+      matches = []
+      for request in @page.requestedResources()
+        matches.push(request) if request.match(filter)
+    else
+      matches = @page.requestedResources()
+
+    this.sendResponse(matches)
+
   exit: ->
     phantom.exit()
 

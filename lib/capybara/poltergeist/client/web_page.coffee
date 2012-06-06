@@ -11,6 +11,7 @@ class Poltergeist.WebPage
     @native  = require('webpage').create()
     @_source = ""
     @_errors = []
+    @_requestedResources = []
 
     this.setViewportSize(width: width, height: height)
 
@@ -57,6 +58,13 @@ class Poltergeist.WebPage
 
   onErrorNative: (message, stack) ->
     @_errors.push(message: message, stack: stack)
+
+  # capture any outgoing requests
+  onResourceRequestedNative: (request) ->
+    @_requestedResources.push(request.url)
+
+  requestedResources: ->
+    @_requestedResources
 
   content: ->
     @native.content

@@ -174,5 +174,47 @@ module Capybara::Poltergeist
         expect { driver.execute_script "" }.to_not raise_error(JavascriptError)
       end
     end
+
+    context "requested resources" do
+      before do
+        @driver.restart
+      end
+
+      it "keeps track of outgoing resource requests" do
+        @driver.visit('/poltergeist/with_js')
+        urls = @driver.requested_resources
+
+        urls.grep(%r{/poltergeist/jquery-1.6.2.min.js$}).size.should == 1
+        urls.grep(%r{/poltergeist/jquery-ui-1.8.14.min.js$}).size.should == 1
+        urls.grep(%r{/poltergeist/test.js$}).size.should == 1
+      end
+
+      it "keeps a running list between multiple web page views" do
+        @driver.visit('/poltergeist/with_js')
+        @driver.requested_resources.length.should equal(4)
+
+        @driver.visit('/poltergeist/with_js')
+        @driver.requested_resources.length.should equal(8)
+      end
+
+      it "gets cleared on restart" do
+        @driver.visit('/poltergeist/with_js')
+        @driver.requested_resources.length.should equal(4)
+
+        @driver.restart
+
+        @driver.visit('/poltergeist/with_js')
+        @driver.requested_resources.length.should equal(4)
+      end
+
+      it "supports filtering" do
+        @driver.visit('/poltergeist/with_js')
+        urls = @driver.requested_resources('jquery')
+
+        urls.length.should equal(2)
+        urls.grep(%r{/poltergeist/jquery-1.6.2.min.js$}).size.should == 1
+        urls.grep(%r{/poltergeist/jquery-ui-1.8.14.min.js$}).size.should == 1
+      end
+    end 
   end
 end
