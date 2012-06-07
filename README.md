@@ -136,7 +136,7 @@ here](http://jonathanleighton.com/articles/2012/poltergeist-0-6-0/)
 
 (This feature is considered experimental - it needs more polish
 and [apparently will only work on
-Linux](http://code.google.com/p/phantomjs/issues/detail?id=430).)
+Linux until the next PhantomJS release](http://code.google.com/p/phantomjs/issues/detail?id=430).)
 
 ## Customization ##
 
