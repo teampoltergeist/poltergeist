@@ -189,7 +189,11 @@ module Capybara::Poltergeist
         urls.grep(%r{/poltergeist/test.js$}).size.should == 1
       end
 
-      it "captures start and end receive events" do
+      it "captures responses" do
+        @driver.visit('/poltergeist/with_js')
+        request = @driver.network_traffic.last
+
+        request.response.status.should == 200
       end
 
       it "keeps a running list between multiple web page views" do
