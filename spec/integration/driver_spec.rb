@@ -182,7 +182,7 @@ module Capybara::Poltergeist
 
       it "keeps track of network traffic" do
         @driver.visit('/poltergeist/with_js')
-        urls = @driver.network_traffic.map(&:request)
+        urls = @driver.network_traffic.map(&:url)
 
         urls.grep(%r{/poltergeist/jquery-1.6.2.min.js$}).size.should == 1
         urls.grep(%r{/poltergeist/jquery-ui-1.8.14.min.js$}).size.should == 1
@@ -212,7 +212,7 @@ module Capybara::Poltergeist
 
       it "supports filtering" do
         @driver.visit('/poltergeist/with_js')
-        urls = @driver.network_traffic('jquery').map(&:request)
+        urls = @driver.network_traffic('jquery').map(&:url)
 
         urls.length.should equal(2)
         urls.grep(%r{/poltergeist/jquery-1.6.2.min.js$}).size.should == 1

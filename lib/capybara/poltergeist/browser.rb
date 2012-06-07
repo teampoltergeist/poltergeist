@@ -112,7 +112,8 @@ module Capybara::Poltergeist
     end
 
     def network_traffic(filter=nil)
-      command 'networkTraffic', filter
+      response = command 'networkTraffic', filter
+      response.map {|event| NetworkTraffic.new(event) }
     end
 
     def command(name, *args)

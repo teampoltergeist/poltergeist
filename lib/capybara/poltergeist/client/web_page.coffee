@@ -11,7 +11,7 @@ class Poltergeist.WebPage
     @native          = require('webpage').create()
     @_source         = ""
     @_errors         = []
-    @_networkTraffic = []
+    @_networkTraffic = {}
 
     this.setViewportSize(width: width, height: height)
 

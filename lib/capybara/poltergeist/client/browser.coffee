@@ -192,12 +192,9 @@ class Poltergeist.Browser
     this.sendResponse(true)
 
   networkTraffic: (filter) ->
-    if filter
-      matches = []
-      for traffic in @page.networkTraffic()
-        matches.push(traffic) if traffic.request.match(filter)
-    else
-      matches = @page.networkTraffic()
+    matches = []
+    for id, traffic of @page.networkTraffic()
+      matches.push(traffic) if !filter || traffic.request.url.match(filter)
 
     this.sendResponse(matches)
 
