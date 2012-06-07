@@ -162,6 +162,56 @@ end
 *   `:window_size` (Array) - The dimensions of the browser window in which to test, expressed
     as a 2-element array, e.g. [1024, 768]. Default: [1024, 768]
 
+## Setup  ##
+
+Because Poltergeist runs your web app in a separate process from the tests themselves, it is
+essential that you ensure that your tests do not run inside transactions, or the data
+you create in your tests will not be available in the web app.
+
+Since you need to configure Capybara to avoid transactions, you will also need to tidy up
+the test data you create during each test run. You can do this with 
+[DatabaseCleaner](https://github.com/bmabey/database_cleaner).
+
+First, add the `database_cleaner` gem to the `:test` group of your Gemfile.
+
+Then, in your setup method in your `test_helper.rb` file, you can do the following:
+
+``` ruby
+require 'capybara/rails'
+require 'capybara/poltergeist'
+
+DatabaseCleaner.strategy = :truncation
+
+class ActionDispatch::IntegrationTest
+  # make the Capybara DSL available to all integration tests
+  include Capybara::DSL
+
+  Capybara.javascript_driver = :poltergeist
+
+  teardown do
+    Capybara.use_default_driver
+  end
+end
+
+class JavascriptTest < ActionDispatch::IntegrationTest
+  # stop ActiveRecord wrapping tests in transactions 
+  self.use_transactional_fixtures = false
+  
+  setup do
+    DatabaseCleaner.start
+    Capybara.current_driver = Capybara.javascript_driver
+  end
+
+  teardown do
+    DatabaseCleaner.clean
+  end
+end
+```
+
+Once you've got this set up correctly, you can derive your Javascript test classes from 
+`JavascriptTest` and they will automatically use Poltergeist, while other integration
+tests will remain unaffected.
+
 ## Bugs ##
 
 Please file bug reports on Github and include example code to reproduce the problem wherever
