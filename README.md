@@ -174,20 +174,23 @@ the test data you create during each test run. You can do this with
 
 First, add the `database_cleaner` gem to the `:test` group of your Gemfile.
 
-Then, in your setup method in your `test_helper.rb` file, you can do the following:
+Then, in your `test_helper.rb` file, you can do the following:
 
 ``` ruby
 require 'capybara/rails'
 require 'capybara/poltergeist'
 
+# make DatabaseCleaner truncate tables 
 DatabaseCleaner.strategy = :truncation
 
 class ActionDispatch::IntegrationTest
   # make the Capybara DSL available to all integration tests
   include Capybara::DSL
 
+  # configure Capybara to use Poltergeist for JavaScript test
   Capybara.javascript_driver = :poltergeist
 
+  # principle of least surprise: make sure the Capybara driver is reset after each test
   teardown do
     Capybara.use_default_driver
   end
@@ -198,11 +201,12 @@ class JavascriptTest < ActionDispatch::IntegrationTest
   self.use_transactional_fixtures = false
   
   setup do
-    DatabaseCleaner.start
+    # tell Capybara that this is a JavaScript test
     Capybara.current_driver = Capybara.javascript_driver
   end
 
   teardown do
+    # get rid of all the data created during the test
     DatabaseCleaner.clean
   end
 end
