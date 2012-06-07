@@ -22,6 +22,8 @@ module Capybara
         @request  = construct_from_hash Request, request_info['request']
         @response = construct_from_hash Response, request_info['endReply']
         @response.body_size = request_info['startReply']['bodySize']
+        @request.time  = Time.parse(@request.time)
+        @response.time = Time.parse(@response.time)
       end
 
       def url
