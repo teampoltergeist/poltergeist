@@ -19,8 +19,7 @@ task :compile do
   end
 end
 
-RSpec::Core::RakeTask.new('test') do
-end
+RSpec::Core::RakeTask.new('test')
 
 task :default => [:compile, :test]
 
