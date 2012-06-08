@@ -164,7 +164,7 @@ end
 
 ## Setup  ##
 
-Because Poltergeist runs your web app in a separate process from the tests themselves, it is
+Because Poltergeist runs your web app on a separate thread from the tests themselves, it is
 essential that you ensure that your tests do not run inside transactions, or the data
 you create in your tests will not be available in the web app.
 
