@@ -57,7 +57,14 @@ module Capybara::Poltergeist
     end
 
     it 'supports specifying viewport size with an option' do
-      @driver = Capybara::Poltergeist::Driver.new(nil, :window_size => [800, 600])
+      Capybara.register_driver :poltergeist_with_custom_window_size do |app|
+        Capybara::Poltergeist::Driver.new(
+          app,
+          :logger => TestSessions.logger,
+          :window_size => [800, 600]
+        )
+      end
+      @driver = Capybara::Session.new(:poltergeist_with_custom_window_size, TestApp).driver
       @driver.visit("/")
       @driver.evaluate_script('[window.innerWidth, window.innerHeight]').should eq([800, 600])
     end
