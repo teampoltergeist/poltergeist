@@ -21,9 +21,11 @@ module Capybara
       def initialize request_info
         @request  = construct_from_hash Request, request_info['request']
         @response = construct_from_hash Response, request_info['endReply']
-        @response.body_size = request_info['startReply']['bodySize']
-        @request.time  = Time.parse(@request.time)
-        @response.time = Time.parse(@response.time)
+        if request_info['startReply']
+          @response.body_size = request_info['startReply']['bodySize']
+        end
+        @request.time  = Time.parse(@request.time)  if @request.time
+        @response.time = Time.parse(@response.time) if @response.time
       end
 
       def url
@@ -34,9 +36,11 @@ module Capybara
 
       def construct_from_hash struct, hash
         object = struct.new
-        hash.each_pair do |key, value|
-          setter = "#{underscorize(key)}="
-          object.send(setter, value) if object.respond_to? setter
+        if hash
+          hash.each_pair do |key, value|
+            setter = "#{underscorize(key)}="
+            object.send(setter, value) if object.respond_to? setter
+          end
         end
         object
       end
