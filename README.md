@@ -193,6 +193,8 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Added an option ":window_size", allowing users to specify
     dimensions to which the browser window will be resized.
     (Tom Stuart) [Issue #53]
+*   Added status code support.
+    (Dmitriy Nesteryuk and Jon Leighton) [Issue #37]
 
 #### Bug fixes ###
 

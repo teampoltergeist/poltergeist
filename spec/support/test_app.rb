@@ -8,6 +8,18 @@ class TestApp
     File.read("#{POLTERGEIST_PUBLIC}/test.js")
   end
 
+  get '/poltergeist/unexist.png' do
+    halt 404
+  end
+
+  get '/poltergeist/500' do
+    halt 500
+  end
+
+  get '/poltergeist/redirect' do
+    redirect '/poltergeist/with_different_resources'
+  end
+
   get '/poltergeist/jquery-1.6.2.min.js' do
     File.read("#{POLTERGEIST_PUBLIC}/jquery-1.6.2.min.js")
   end

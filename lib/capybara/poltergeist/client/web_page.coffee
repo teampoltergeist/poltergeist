@@ -3,7 +3,7 @@ class Poltergeist.WebPage
                 'onLoadStarted', 'onResourceRequested', 'onResourceReceived',
                 'onError']
 
-  @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'release', 'render']
+  @DELEGATES = ['sendEvent', 'uploadFile', 'release', 'render']
 
   @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'pushFrame', 'popFrame', 'documentSize']
 
@@ -27,7 +27,12 @@ class Poltergeist.WebPage
   for delegate in @DELEGATES
     do (delegate) =>
       this.prototype[delegate] =
-        -> @native[delegate].apply(@native, arguments)
+       (args...) -> @native[delegate].apply(@native, args)
+
+  open: (args...) ->
+    @_url = args[0]
+
+    @native.open.apply(@native, args)
 
   onInitializedNative: ->
     @_source = null
@@ -58,6 +63,18 @@ class Poltergeist.WebPage
   onErrorNative: (message, stack) ->
     @_errors.push(message: message, stack: stack)
 
+  # It is called whenever any resource within a page is
+  # loaded (images, javascripts files etc)
+  onResourceReceivedNative: (request) ->
+    # We are interested only in a status code of a loaded page
+    if @_url is request.url
+      # If a request is forwarded to another url, we need to determine a new url
+      # to get a correct status code of a loaded page
+      if request.redirectURL
+        @_url = request.redirectURL
+      else
+        @_statusCode = request.status
+
   content: ->
     @native.content
 
@@ -69,6 +86,9 @@ class Poltergeist.WebPage
 
   clearErrors: ->
     @_errors = []
+
+  statusCode: ->
+    @_statusCode
 
   viewportSize: ->
     @native.viewportSize
@@ -138,12 +158,12 @@ class Poltergeist.WebPage
   # hence the 'that' closure.
   bindCallback: (name) ->
     that = this
-    @native[name] = ->
+    @native[name] = (args...) ->
       if that[name + 'Native']? # For internal callbacks
-        result = that[name + 'Native'].apply(that, arguments)
+        result = that[name + 'Native'].apply(that, args)
 
       if result != false && that[name]? # For externally set callbacks
-        that[name].apply(that, arguments)
+        that[name].apply(that, args)
 
   # Any error raised here or inside the evaluate will get reported to
   # phantom.onError. If result is null, that means there was an error

@@ -24,6 +24,10 @@ module Capybara::Poltergeist
       command 'current_url'
     end
 
+    def status_code
+      command 'status_code'
+    end
+
     def body
       command 'body'
     end
