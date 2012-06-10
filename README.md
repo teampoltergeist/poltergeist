@@ -184,7 +184,7 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 ## Changes ##
 
-### 0.7.0 ###
+### 0.7.0 (unreleased) ###
 
 #### Features ####
 
@@ -193,6 +193,7 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Added an option ":window_size", allowing users to specify
     dimensions to which the browser window will be resized.
     (Tom Stuart) [Issue #53]
+*   Capybara 1.0 is no longer supported. Capybara ~> 1.1 is required.
 
 #### Bug fixes ###
 

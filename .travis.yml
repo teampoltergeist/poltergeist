@@ -13,7 +13,6 @@ rvm:
   - jruby-19mode
 gemfile:
   - Gemfile
-  - ci/Gemfile.capybara1-0
   - ci/Gemfile.capybara1-1
 matrix:
   allow_failures:
