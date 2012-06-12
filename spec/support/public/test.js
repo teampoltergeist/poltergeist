@@ -13,6 +13,9 @@ $(function() {
     .change(function(event) {
       $('#changes').text($(this).val())
     })
+    .bind('input', function(event) {
+      $('#changes_on_input').text($(this).val())
+    })
     .keydown(function(event) {
       $('#changes_on_keydown').text(increment)
     })
