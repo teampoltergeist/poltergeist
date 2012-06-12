@@ -80,6 +80,10 @@ describe Capybara::Session do
         @session.find(:css, '#changes').text.should == "Hello!"
       end
 
+      it 'fires the input event' do
+        @session.find(:css, '#changes_on_input').text.should == "Hello!"
+      end
+
       it 'accepts numbers in a maxlength field' do
         element = @session.find(:css, '#change_me_maxlength')
         element.set 100
