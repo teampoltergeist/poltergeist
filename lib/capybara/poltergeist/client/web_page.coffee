@@ -62,17 +62,13 @@ class Poltergeist.WebPage
   # capture any outgoing requests
   onResourceRequestedNative: (request) ->
     @_networkTraffic[request.id] = {
-      request:    request,
-      startReply: null,
-      endReply:   null
+      request:       request,
+      responseParts: []
     }
 
   # capture request responses
   onResourceReceivedNative: (response) ->
-    if response.stage == 'start'
-      @_networkTraffic[response.id].startReply = response
-    if response.stage == 'end'
-      @_networkTraffic[response.id].endReply = response
+    @_networkTraffic[response.id].responseParts.push(response)
 
   networkTraffic: ->
     @_networkTraffic

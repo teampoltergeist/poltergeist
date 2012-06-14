@@ -193,7 +193,7 @@ module Capybara::Poltergeist
         @driver.visit('/poltergeist/with_js')
         request = @driver.network_traffic.last
 
-        request.response.status.should == 200
+        request.response_parts.last.status.should == 200
       end
 
       it "keeps a running list between multiple web page views" do
@@ -212,15 +212,6 @@ module Capybara::Poltergeist
 
         @driver.visit('/poltergeist/with_js')
         @driver.network_traffic.length.should equal(4)
-      end
-
-      it "supports filtering" do
-        @driver.visit('/poltergeist/with_js')
-        urls = @driver.network_traffic('jquery').map(&:url)
-
-        urls.length.should equal(2)
-        urls.grep(%r{/poltergeist/jquery-1.6.2.min.js$}).size.should == 1
-        urls.grep(%r{/poltergeist/jquery-ui-1.8.14.min.js$}).size.should == 1
       end
     end 
   end

@@ -191,12 +191,8 @@ class Poltergeist.Browser
     @page.setViewportSize(width: width, height: height)
     this.sendResponse(true)
 
-  networkTraffic: (filter) ->
-    matches = []
-    for id, traffic of @page.networkTraffic()
-      matches.push(traffic) if !filter || traffic.request.url.match(filter)
-
-    this.sendResponse(matches)
+  networkTraffic: ->
+    this.sendResponse(@page.networkTraffic())
 
   exit: ->
     phantom.exit()

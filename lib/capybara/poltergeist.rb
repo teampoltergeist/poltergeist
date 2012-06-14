@@ -13,7 +13,8 @@ module Capybara
     autoload :Inspector,       'capybara/poltergeist/inspector'
     autoload :Spawn,           'capybara/poltergeist/spawn'
     autoload :JSON,            'capybara/poltergeist/json'
-    autoload :NetworkTraffic,  'capybara/poltergeist/network_traffic'
+    autoload :Request,         'capybara/poltergeist/request'
+    autoload :Response,        'capybara/poltergeist/response'
 
     require 'capybara/poltergeist/errors'
   end
