@@ -95,6 +95,14 @@ module Capybara::Poltergeist
       end
     end
 
+    it 'supports rendering the page with a nonstring path' do
+      file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
+      FileUtils.rm_f file
+      @driver.visit('/')
+      @driver.render(Pathname(file))
+      File.exist?(file).should == true
+    end
+
     it 'supports executing multiple lines of javascript' do
       @driver.execute_script <<-JS
         var a = 1
