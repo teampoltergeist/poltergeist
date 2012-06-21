@@ -45,6 +45,11 @@ this doesn't affect you.
 You need PhantomJS 1.5.0. There are no other dependencies (you don't
 need Qt, or Xvfb, etc.)
 
+**Note**: Poltergeist 0.6 (the latest release) has a compatibility
+issue with PhantomJS 1.6 (the latest version, released 20th June). So use
+PhantomJS 1.5 for now. Poltergeist 0.7 will be release soon, with an
+update to support PhantomJS 1.6.
+
 ### Mac ###
 
 * *With homebrew*: `brew install phantomjs`
