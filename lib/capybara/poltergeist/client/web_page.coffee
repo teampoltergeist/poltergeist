@@ -47,13 +47,8 @@ class Poltergeist.WebPage
   onLoadFinishedNative: ->
     @_source or= @native.content
 
-  onConsoleMessage: (message, line, file) ->
-    # The conditional works around a PhantomJS bug where an error can
-    # get wrongly reported to be onError and onConsoleMessage:
-    #
-    # http://code.google.com/p/phantomjs/issues/detail?id=166#c18
-    unless @_errors.length && @_errors[@_errors.length - 1].message == message
-      console.log(message)
+  onConsoleMessage: (message) ->
+    console.log(message)
 
   onErrorNative: (message, stack) ->
     stackString = message
