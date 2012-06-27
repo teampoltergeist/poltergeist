@@ -42,7 +42,7 @@ this doesn't affect you.
 
 ## Installing PhantomJS ##
 
-You need PhantomJS 1.5.0. There are no other dependencies (you don't
+You need PhantomJS 1.6.0. There are no other dependencies (you don't
 need Qt, or Xvfb, etc.)
 
 **Note**: Poltergeist 0.6 (the latest release) has a compatibility
@@ -58,11 +58,11 @@ update to support PhantomJS 1.6.
 ### Linux ###
 
 * Download the [32
-bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.5.0-linux-x86-dynamic.tar.gz&can=2&q=)
+bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.0-linux-i686-dynamic.tar.gz&can=2&q=)
 or [64
-bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.5.0-linux-x86_64-dynamic.tar.gz&can=2&q=)
+bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.0-linux-x86_64-dynamic.tar.gz&can=2&q=)
 binary.
-* Extract it: `sudo tar xvzf phantomjs-1.5.0-linux-*-dynamic.tar.gz -C /usr/local`
+* Extract it: `sudo tar xvzf phantomjs-1.6.0-linux-*-dynamic.tar.gz -C /usr/local`
 * Link it: `sudo ln -s /usr/local/phantomjs/bin/phantomjs /usr/local/bin/phantomjs`
 
 (Note that you cannot copy the `/usr/local/phantomjs/bin/phantomjs`
@@ -74,7 +74,7 @@ binary elsewhere on its own as it dynamically links with other files in
 Do this as a last resort if the binaries don't work for you. It will
 take quite a long time as it has to build WebKit.
 
-* Download [the source tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.5.0-source.tar.gz&can=2&q=)
+* Download [the source tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.0-source.tar.gz&can=2&q=)
 * Extract and cd in
 * `./build.sh`
 
