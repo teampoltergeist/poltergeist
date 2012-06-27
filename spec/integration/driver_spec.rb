@@ -131,19 +131,19 @@ module Capybara::Poltergeist
 
     context 'javascript errors' do
       it 'propagates a Javascript error inside Poltergeist to a ruby exception' do
-        expect { @driver.execute_script "omg" }.to raise_error(BrowserError)
+        expect { @driver.browser.command 'browser_error' }.to raise_error(BrowserError)
 
         begin
-          @driver.execute_script "omg"
+          @driver.browser.command 'browser_error'
         rescue BrowserError => e
-          e.message.should include("omg")
-          e.message.should include("ReferenceError")
+          e.message.should include("Error: zomg")
+          e.message.should include("compiled/browser.js")
         else
           raise "BrowserError expected"
         end
       end
 
-      it 'propagates a Javascript error on the page to a ruby exception' do
+      it 'propagates an asynchronous Javascript error on the page to a ruby exception' do
         @driver.execute_script "setTimeout(function() { omg }, 0)"
         sleep 0.01
         expect { @driver.execute_script "" }.to raise_error(JavascriptError)
@@ -152,6 +152,19 @@ module Capybara::Poltergeist
           @driver.execute_script "setTimeout(function() { omg }, 0)"
           sleep 0.01
           @driver.execute_script ""
+        rescue JavascriptError => e
+          e.message.should include("omg")
+          e.message.should include("ReferenceError")
+        else
+          raise "expected JavascriptError"
+        end
+      end
+
+      it 'propagates a synchronous Javascript error on the page to a ruby exception' do
+        expect { @driver.execute_script "omg" }.to raise_error(JavascriptError)
+
+        begin
+          @driver.execute_script "omg"
         rescue JavascriptError => e
           e.message.should include("omg")
           e.message.should include("ReferenceError")

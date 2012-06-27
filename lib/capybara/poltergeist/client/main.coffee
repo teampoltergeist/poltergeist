@@ -11,7 +11,14 @@ class Poltergeist
 
   runCommand: (command) ->
     @running = true
-    @browser[command.name].apply(@browser, command.args)
+
+    try
+      @browser[command.name].apply(@browser, command.args)
+    catch error
+      if error instanceof Poltergeist.Error
+        this.sendError(error)
+      else
+        this.sendError(new Poltergeist.BrowserError(error.toString(), error.stack))
 
   sendResponse: (response) ->
     this.send(response: response)
@@ -22,25 +29,6 @@ class Poltergeist
         name: error.name || 'Generic',
         args: error.args && error.args() || [error.toString()]
     )
-
-  # This is a bit of a mess. We can't wrap the runCommand code in
-  # a try ... catch, because that will prevent stack traces being
-  # reported, and there is no error.stack property.
-  #
-  # And thrown errors get toString() called, which becomes the
-  # value of the message variable here. So we can basically only
-  # use strings as exceptions at the moment, which means we throw
-  # exceptions with extra data and then retrieve it here.
-  #
-  # The solution will be for PhantomJS to support an e.stack
-  # property on exceptions.
-  #
-  # See http://code.google.com/p/phantomjs/issues/detail?id=166.
-  onError: (message, stack) =>
-    if message == 'PoltergeistAgent.ObsoleteNode'
-      this.sendError(new Poltergeist.ObsoleteNode)
-    else
-      this.sendError(new Poltergeist.BrowserError(message, stack))
 
   send: (data) ->
     # Prevents more than one response being sent for a single

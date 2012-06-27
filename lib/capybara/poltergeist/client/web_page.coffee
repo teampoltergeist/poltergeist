@@ -56,7 +56,14 @@ class Poltergeist.WebPage
       console.log(message)
 
   onErrorNative: (message, stack) ->
-    @_errors.push(message: message, stack: stack)
+    stackString = message
+
+    stack.forEach (frame) ->
+      stackString += "\n"
+      stackString += "    at #{frame.file}:#{frame.line}"
+      stackString += " in #{frame.function}" if frame.function && frame.function != ''
+
+    @_errors.push(message: message, stack: stackString)
 
   content: ->
     @native.content
@@ -154,4 +161,10 @@ class Poltergeist.WebPage
       name, args
     )
 
-    result && result.value
+    if result.error?
+      if result.error.message == 'PoltergeistAgent.ObsoleteNode'
+        throw new Poltergeist.ObsoleteNode
+      else
+        throw new Poltergeist.JavascriptError([result.error])
+    else
+      result.value
