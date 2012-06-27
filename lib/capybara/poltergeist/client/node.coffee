@@ -59,7 +59,7 @@ class Poltergeist.Node
     if test.status == 'success'
       @page.sendEvent('click', pos.x, pos.y)
     else
-      new Poltergeist.ClickFailed(test.selector, pos)
+      throw new Poltergeist.ClickFailed(test.selector, pos)
 
   dragTo: (other) ->
     position      = this.clickPosition()
