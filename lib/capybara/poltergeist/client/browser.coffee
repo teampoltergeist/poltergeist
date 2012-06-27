@@ -72,21 +72,12 @@ class Poltergeist.Browser
   # PhantomJS only allows us to reference the element by CSS selector, not XPath,
   # so we have to add an attribute to the element to identify it, then remove it
   # afterwards.
-  #
-  # PhantomJS does not support multiple-file inputs, so we have to blatently cheat
-  # by temporarily changing it to a single-file input. This obviously could break
-  # things in various ways, which is not ideal, but it works in the simplest case.
   select_file: (page_id, id, value) ->
     node     = this.node(page_id, id)
-    multiple = node.isMultiple()
 
-    node.removeAttribute('multiple') if multiple
     node.setAttribute('_poltergeist_selected', '')
-
     @page.uploadFile('[_poltergeist_selected]', value)
-
     node.removeAttribute('_poltergeist_selected')
-    node.setAttribute('multiple', 'multiple') if multiple
 
     this.sendResponse(true)
 
