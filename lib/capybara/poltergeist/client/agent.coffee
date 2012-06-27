@@ -8,7 +8,10 @@ class PoltergeistAgent
     this.pushWindow(window)
 
   externalCall: (name, args) ->
-    { value: this[name].apply(this, args) }
+    try
+      { value: this[name].apply(this, args) }
+    catch error
+      { error: { message: error.toString(), stack: error.stack } }
 
   @stringify: (object) ->
     JSON.stringify object, (key, value) ->

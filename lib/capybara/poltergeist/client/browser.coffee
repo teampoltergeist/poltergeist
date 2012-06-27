@@ -196,3 +196,7 @@ class Poltergeist.Browser
 
   noop: ->
     # NOOOOOOP!
+
+  # This command is purely for testing error handling
+  browser_error: ->
+    throw new Error('zomg')

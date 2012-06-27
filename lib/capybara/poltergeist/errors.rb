@@ -20,18 +20,7 @@ module Capybara
       end
 
       def to_s
-        message + "\n\n" + formatted_stack
-      end
-
-      private
-
-      def formatted_stack
-        stack = self.stack.map do |item|
-          s = "  #{item['file']}:#{item['line']}"
-          s << " in #{item['function']}" if item['function'] && !item['function'].empty?
-          s
-        end
-        stack.join("\n")
+        stack
       end
     end
 
