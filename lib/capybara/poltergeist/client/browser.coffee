@@ -14,6 +14,9 @@ class Poltergeist.Browser
     @page.onLoadStarted = =>
       @state = 'loading' if @state == 'clicked'
 
+    @page.onNavigationRequested = (url, navigation) =>
+      @state = 'loading' if @state == 'clicked' && navigation == 'FormSubmitted'
+
     @page.onLoadFinished = (status) =>
       if @state == 'loading'
         this.sendResponse(status)
@@ -106,26 +109,18 @@ class Poltergeist.Browser
     this.sendResponse(true)
 
   click: (page_id, id) ->
-    # We just check the node is not obsolete before proceeding. If it is,
-    # the callback will not fire.
+    # Get the node before changing state, in case there is an exception
     node = this.node(page_id, id)
 
-    # If the click event triggers onLoadStarted, we will transition to the 'loading'
+    # If the click event triggers onNavigationRequested, we will transition to the 'loading'
     # state and wait for onLoadFinished before sending a response.
     @state = 'clicked'
 
     node.click()
 
-    # Use a timeout in order to let the stack clear, so that the @page.onLoadStarted
-    # callback can (possibly) fire, before we decide whether to send a response.
-    setTimeout(
-      =>
-        if @state == 'clicked'
-          @state = 'default'
-          this.sendResponse(true)
-      ,
-      10
-    )
+    if @state != 'loading'
+      @state = 'default'
+      this.sendResponse(true)
 
   drag: (page_id, id, other_id) ->
     this.node(page_id, id).dragTo this.node(page_id, other_id)
