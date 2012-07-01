@@ -1,7 +1,7 @@
 #!/bin/bash
 
-wget http://phantomjs.googlecode.com/files/phantomjs-1.6.0-linux-i686-dynamic.tar.gz
-tar xzf phantomjs-*.tar.gz
+wget http://phantomjs.googlecode.com/files/phantomjs-1.6.0-linux-i686-dynamic.tar.bz2
+tar xjf phantomjs-*.tar.bz2
 mkdir ~/bin
 ln -s `pwd`/phantomjs/bin/phantomjs ~/bin/phantomjs
 
