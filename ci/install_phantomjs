@@ -2,4 +2,4 @@
 
 wget http://phantomjs.googlecode.com/files/phantomjs-1.6.0-linux-i686-dynamic.tar.bz2
 tar xjf phantomjs-*.tar.bz2
-ln -s `pwd`/phantomjs/bin/phantomjs /usr/local/bin/phantomjs
+ln -fs `pwd`/phantomjs/bin/phantomjs /usr/local/bin/phantomjs
