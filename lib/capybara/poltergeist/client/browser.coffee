@@ -40,9 +40,9 @@ class Poltergeist.Browser
     else
       throw new Poltergeist.ObsoleteNode
 
-  visit: (url) ->
+  visit: (url, headers) ->
     @state = 'loading'
-    @page.open(url)
+    @page.open(url, operation: "get", headers: headers)
 
   current_url: ->
     this.sendResponse @page.currentUrl()

@@ -61,5 +61,16 @@ module Capybara::Poltergeist
         subject.client
       end
     end
+
+    context 'when setting request headers' do
+      subject { Driver.new(nil) }
+
+      it "resets headers to empty hash after calling reset" do
+        subject.headers.should == {}
+        subject.headers = {"foo" => "bar"}
+        subject.reset!
+        subject.headers.should == {}
+      end
+    end
   end
 end
