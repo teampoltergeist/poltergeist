@@ -2,17 +2,4 @@
 
 wget http://phantomjs.googlecode.com/files/phantomjs-1.6.0-linux-i686-dynamic.tar.bz2
 tar xjf phantomjs-*.tar.bz2
-mkdir ~/bin
-ln -s `pwd`/phantomjs/bin/phantomjs ~/bin/phantomjs
-
-version=`phantomjs --version`
-if [ "$?" = "0" ]; then
-  echo "PhantomJS $version installed successfully"
-else
-  echo "Something went wrong with PhantomJS setup"
-  ps aux | grep Xvfb
-  xset -q
-  ls -la ~/bin/phantomjs
-  env
-  exit 1
-fi
+ln -s `pwd`/phantomjs/bin/phantomjs /usr/local/bin/phantomjs
