@@ -145,6 +145,15 @@ end
 *   `:window_size` (Array) - The dimensions of the browser window in which to test, expressed
     as a 2-element array, e.g. [1024, 768]. Default: [1024, 768]
 
+## Request Headers ##
+
+Http request headers can be set with the following:
+
+page.driver.headers= {
+  "Cookie" => "foo=bar",
+  "Host" => "foo.com"
+}
+
 ## Bugs ##
 
 Please file bug reports on Github and include example code to reproduce the problem wherever
@@ -177,6 +186,7 @@ makes debugging easier). Running `rake autocompile` will watch the
     dimensions to which the browser window will be resized.
     (Tom Stuart) [Issue #53]
 *   Capybara 1.0 is no longer supported. Capybara ~> 1.1 is required.
+*   Added ability to set arbitrary http request headers
 
 #### Bug fixes ###
 

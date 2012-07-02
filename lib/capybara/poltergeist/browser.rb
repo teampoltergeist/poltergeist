@@ -16,8 +16,8 @@ module Capybara::Poltergeist
       client.restart
     end
 
-    def visit(url)
-      command 'visit', url
+    def visit(url, headers)
+      command 'visit', url, headers
     end
 
     def current_url

@@ -95,6 +95,17 @@ module Capybara::Poltergeist
       end
     end
 
+    it 'allows request headers to be set' do
+      @driver.headers = {
+        "Cookie" => "foo=bar",
+        "Host" => "foo.com"
+      }
+      @driver.visit('/poltergeist/headers')
+      @driver.body.should include('COOKIE: foo=bar')
+      @driver.body.should include('HOST: foo.com')
+      @driver.reset!
+    end
+
     it 'supports executing multiple lines of javascript' do
       @driver.execute_script <<-JS
         var a = 1
