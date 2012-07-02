@@ -3,6 +3,7 @@ module Capybara::Poltergeist
     DEFAULT_TIMEOUT = 30
 
     attr_reader :app, :app_server, :server, :client, :browser, :options
+    attr_accessor :headers
 
     def initialize(app, options = {})
       @app       = app
@@ -11,6 +12,7 @@ module Capybara::Poltergeist
       @inspector = nil
       @server    = nil
       @client    = nil
+      @headers   = {}
       if @options[:window_size]
         @width, @height = @options[:window_size]
       end
@@ -66,7 +68,7 @@ module Capybara::Poltergeist
     end
 
     def visit(path)
-      browser.visit app_server.url(path)
+      browser.visit app_server.url(path), @headers
     end
 
     def current_url
@@ -100,6 +102,7 @@ module Capybara::Poltergeist
 
     def reset!
       browser.reset
+      @headers = {}
     end
 
     def render(path, options = {})
