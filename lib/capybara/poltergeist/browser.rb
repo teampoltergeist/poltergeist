@@ -115,9 +115,9 @@ module Capybara::Poltergeist
       response = command 'networkTraffic'
 
       response.values.map do |event|
-        request = Request.new(event['request'])
+        request = NetworkTraffic::Request.new(event['request'])
         event['responseParts'].each do |response|
-          request.response_parts.push(Response.new(response))
+          request.response_parts.push(NetworkTraffic::Response.new(response))
         end
         request
       end

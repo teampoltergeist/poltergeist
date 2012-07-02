@@ -1,7 +1,5 @@
-module Capybara::Poltergeist
-
+module Capybara::Poltergeist::NetworkTraffic
   class Request
-
     attr_reader :response_parts
 
     def initialize(data)
@@ -24,7 +22,5 @@ module Capybara::Poltergeist
     def time
       @data['time'] && Time.parse(@data['time'])
     end
-
   end
-
 end

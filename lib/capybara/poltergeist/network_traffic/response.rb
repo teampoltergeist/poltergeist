@@ -1,7 +1,5 @@
-module Capybara::Poltergeist
-
+module Capybara::Poltergeist::NetworkTraffic
   class Response
-
     def initialize(data)
       @data = data
     end
@@ -37,8 +35,6 @@ module Capybara::Poltergeist
     def time
       @data['time'] && Time.parse(@data['time'])
     end
-
   end
-
 end
 
