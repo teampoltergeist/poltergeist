@@ -18,6 +18,11 @@ require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
 ```
 
+If you were previously using the `:rack_test` driver, be aware that
+your app will now run in a separate thread and this can have
+consequences for transactional tests. [See the Capybara README for more
+detail](https://github.com/jnicklas/capybara/blob/master/README.md#transactions-and-database-setup).
+
 ## Installing PhantomJS ##
 
 You need PhantomJS 1.6.0. There are no other dependencies (you don't
