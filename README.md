@@ -136,7 +136,15 @@ page.driver.headers = {
   "Host"   => "foo.com"
 }
 ```
+
 They will be cleared between tests, so you do not have to do this manually.
+
+### Inspecting network traffic ###
+
+You can inspect the network traffic (i.e. what resources have been
+loaded) on the current page by calling `page.driver.network_traffic`.
+This returns an array of request objects. A request object has a
+`response_parts` method containing data about the response chunks.
 
 ## Customization ##
 
@@ -195,6 +203,8 @@ makes debugging easier). Running `rake autocompile` will watch the
     (Tom Stuart) [Issue #53]
 *   Capybara 1.0 is no longer supported. Capybara ~> 1.1 is required.
 *   Added ability to set arbitrary http request headers
+*   Inspect network traffic on the page via
+    `page.driver.network_traffic` (Doug McInnes) [Issue #77]
 
 #### Bug fixes ###
 
