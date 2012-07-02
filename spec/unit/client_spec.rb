@@ -39,5 +39,14 @@ module Capybara::Poltergeist
         subject.start
       end
     end
+
+    context "when ssl error ignorance is specified" do
+      subject { Client.new(6000, nil, nil, nil, nil, true) }
+
+      it "starts phantomjs, passing the ignore ssl errors parameter through" do
+        Spawn.should_receive(:spawn).with("phantomjs", "--ignore-ssl-errors=yes", Client::PHANTOMJS_SCRIPT, 6000, nil, nil)
+        subject.start
+      end
+    end
   end
 end
