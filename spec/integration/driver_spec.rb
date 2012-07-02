@@ -205,5 +205,45 @@ module Capybara::Poltergeist
         expect { driver.execute_script "" }.to_not raise_error(JavascriptError)
       end
     end
+
+    context "network traffic" do
+      before do
+        @driver.restart
+      end
+
+      it "keeps track of network traffic" do
+        @driver.visit('/poltergeist/with_js')
+        urls = @driver.network_traffic.map(&:url)
+
+        urls.grep(%r{/poltergeist/jquery-1.6.2.min.js$}).size.should == 1
+        urls.grep(%r{/poltergeist/jquery-ui-1.8.14.min.js$}).size.should == 1
+        urls.grep(%r{/poltergeist/test.js$}).size.should == 1
+      end
+
+      it "captures responses" do
+        @driver.visit('/poltergeist/with_js')
+        request = @driver.network_traffic.last
+
+        request.response_parts.last.status.should == 200
+      end
+
+      it "keeps a running list between multiple web page views" do
+        @driver.visit('/poltergeist/with_js')
+        @driver.network_traffic.length.should equal(4)
+
+        @driver.visit('/poltergeist/with_js')
+        @driver.network_traffic.length.should equal(8)
+      end
+
+      it "gets cleared on restart" do
+        @driver.visit('/poltergeist/with_js')
+        @driver.network_traffic.length.should equal(4)
+
+        @driver.restart
+
+        @driver.visit('/poltergeist/with_js')
+        @driver.network_traffic.length.should equal(4)
+      end
+    end 
   end
 end

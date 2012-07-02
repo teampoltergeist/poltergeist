@@ -111,6 +111,18 @@ module Capybara::Poltergeist
       command 'resize', width, height
     end
 
+    def network_traffic
+      response = command 'networkTraffic'
+
+      response.values.map do |event|
+        request = Request.new(event['request'])
+        event['responseParts'].each do |response|
+          request.response_parts.push(Response.new(response))
+        end
+        request
+      end
+    end
+
     def command(name, *args)
       message = { 'name' => name, 'args' => args }
       log message.inspect
