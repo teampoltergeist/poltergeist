@@ -121,7 +121,7 @@ here](http://jonathanleighton.com/articles/2012/poltergeist-0-6-0/)
 and [apparently will only work on
 Linux until the next PhantomJS release](http://code.google.com/p/phantomjs/issues/detail?id=430).)
 
-## Setting request headers ##
+### Setting request headers ###
 
 Additional HTTP request headers can be set like so:
 
