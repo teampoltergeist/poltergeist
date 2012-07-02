@@ -166,6 +166,8 @@ end
 *   `:js_errors` (Boolean) - When false, Javascript errors do not get re-raised in Ruby.
 *   `:window_size` (Array) - The dimensions of the browser window in which to test, expressed
     as a 2-element array, e.g. [1024, 768]. Default: [1024, 768]
+*   `:ignore_ssl_errors` (Boolean) - When set to true, phantomjs will
+    ignore SSL errors (i.e. expired or self-signed certificate errors)
 
 ## Bugs ##
 
