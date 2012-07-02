@@ -121,6 +121,18 @@ here](http://jonathanleighton.com/articles/2012/poltergeist-0-6-0/)
 and [apparently will only work on
 Linux until the next PhantomJS release](http://code.google.com/p/phantomjs/issues/detail?id=430).)
 
+## Setting request headers ##
+
+Additional HTTP request headers can be set like so:
+
+``` ruby
+page.driver.headers = {
+  "Cookie" => "foo=bar",
+  "Host"   => "foo.com"
+}
+```
+They will be cleared between tests, so you do not have to do this manually.
+
 ## Customization ##
 
 You can customize the way that Capybara sets up Poltegeist via the following code in your
@@ -144,15 +156,6 @@ end
 *   `:js_errors` (Boolean) - When false, Javascript errors do not get re-raised in Ruby.
 *   `:window_size` (Array) - The dimensions of the browser window in which to test, expressed
     as a 2-element array, e.g. [1024, 768]. Default: [1024, 768]
-
-## Request Headers ##
-
-Http request headers can be set with the following:
-
-page.driver.headers= {
-  "Cookie" => "foo=bar",
-  "Host" => "foo.com"
-}
 
 ## Bugs ##
 
