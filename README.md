@@ -18,28 +18,6 @@ require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
 ```
 
-### Important note about Rack versions < 1.3.0 ###
-
-Prior to version 1.3.0, the Rack handlers for Mongrel and Thin wrap your
-app in the `Rack::Chunked` middleware so that it uses
-`Transfer-Encoding: chunked`
-([commit](https://github.com/rack/rack/commit/50cdd0bf000a9ffb3eb3760fda2ff3e1ad18f3a7)).
-This has been observed to cause problems,
-probably due to race conditions in Qt's HTTP handling code, so you are
-recommended to avoid this by specifying your own server setup for
-Capybara:
-
-``` ruby
-Capybara.server do |app, port|
-  require 'rack/handler/thin'
-  Thin::Logging.silent = true
-  Thin::Server.new('0.0.0.0', port, app).start
-end
-```
-
-If you're using Rails 3.0, this affects you. If you're using Rails 3.1+,
-this doesn't affect you.
-
 ## Installing PhantomJS ##
 
 You need PhantomJS 1.6.0. There are no other dependencies (you don't
