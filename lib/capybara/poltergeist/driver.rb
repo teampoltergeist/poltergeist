@@ -113,6 +113,10 @@ module Capybara::Poltergeist
       browser.resize(width, height)
     end
 
+    def network_traffic
+      browser.network_traffic
+    end
+
     def debug
       inspector.open
       pause

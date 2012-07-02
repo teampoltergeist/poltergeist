@@ -8,9 +8,10 @@ class Poltergeist.WebPage
   @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'pushFrame', 'popFrame', 'documentSize']
 
   constructor: (width, height) ->
-    @native  = require('webpage').create()
-    @_source = ""
-    @_errors = []
+    @native          = require('webpage').create()
+    @_source         = ""
+    @_errors         = []
+    @_networkTraffic = {}
 
     this.setViewportSize(width: width, height: height)
 
@@ -59,6 +60,20 @@ class Poltergeist.WebPage
       stackString += " in #{frame.function}" if frame.function && frame.function != ''
 
     @_errors.push(message: message, stack: stackString)
+
+  # capture any outgoing requests
+  onResourceRequestedNative: (request) ->
+    @_networkTraffic[request.id] = {
+      request:       request,
+      responseParts: []
+    }
+
+  # capture request responses
+  onResourceReceivedNative: (response) ->
+    @_networkTraffic[response.id].responseParts.push(response)
+
+  networkTraffic: ->
+    @_networkTraffic
 
   content: ->
     @native.content
