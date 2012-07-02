@@ -112,7 +112,7 @@ module Capybara::Poltergeist
     end
 
     def network_traffic
-      response = command 'networkTraffic'
+      response = command 'network_traffic'
 
       response.values.map do |event|
         request = NetworkTraffic::Request.new(event['request'])

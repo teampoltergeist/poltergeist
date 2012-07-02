@@ -154,7 +154,7 @@ class Poltergeist.Browser
     @page.setViewportSize(width: width, height: height)
     this.sendResponse(true)
 
-  networkTraffic: ->
+  network_traffic: ->
     this.sendResponse(@page.networkTraffic())
 
   exit: ->
