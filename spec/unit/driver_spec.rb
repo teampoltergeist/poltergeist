@@ -57,7 +57,19 @@ module Capybara::Poltergeist
         server = stub
         server.stub(:port).and_return(64297)
         Server.should_receive(:new).and_return(server)
-        Client.should_receive(:start).with(64297, nil, nil, 800, 600)
+        Client.should_receive(:start).with(64297, nil, nil, 800, 600, nil)
+        subject.client
+      end
+    end
+
+    context 'with an :ignore_ssl_errors option' do
+      subject { Driver.new(nil, :ignore_ssl_errors => true) }
+
+      it "creates a client that ignores ssl errors" do
+        server = stub
+        server.stub(:port).and_return(64297)
+        Server.should_receive(:new).and_return(server)
+        Client.should_receive(:start).with(64297, nil, nil, nil, nil, true)
         subject.client
       end
     end

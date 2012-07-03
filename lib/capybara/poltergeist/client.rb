@@ -10,14 +10,15 @@ module Capybara::Poltergeist
       client
     end
 
-    attr_reader :pid, :port, :path, :inspector, :width, :height
+    attr_reader :pid, :port, :path, :inspector, :width, :height, :ignore_ssl_errors
 
-    def initialize(port, inspector = nil, path = nil, width = 1024, height = 768)
+    def initialize(port, inspector = nil, path = nil, width = 1024, height = 768, ignore_ssl_errors = nil)
       @port      = port
       @inspector = inspector
       @path      = path || PHANTOMJS_NAME
       @width     = width
       @height    = height
+      @ignore_ssl_errors = ignore_ssl_errors
 
       pid = Process.pid
       at_exit { stop if Process.pid == pid }
@@ -53,6 +54,10 @@ module Capybara::Poltergeist
         if inspector
           parts << "--remote-debugger-port=#{inspector.port}"
           parts << "--remote-debugger-autorun=yes"
+        end
+
+        if ignore_ssl_errors
+          parts << "--ignore-ssl-errors=yes"
         end
 
         parts << PHANTOMJS_SCRIPT
