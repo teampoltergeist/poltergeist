@@ -156,6 +156,9 @@ class PoltergeistAgent.Node
     else
       @element.getAttribute(name)
 
+  scrollIntoView: () ->
+    @element.scrollIntoViewIfNeeded()
+
   value: ->
     if @element.tagName == 'SELECT' && @element.multiple
       option.value for option in @element.children when option.selected
