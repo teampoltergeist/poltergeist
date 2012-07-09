@@ -77,6 +77,7 @@ describe Capybara::Session do
 
       it "scrolls into view" do
         @session.click_link "Link outside viewport"
+        @session.current_path.should eq '/'
       end
     end
 
