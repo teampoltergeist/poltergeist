@@ -156,7 +156,7 @@ class PoltergeistAgent.Node
     else
       @element.getAttribute(name)
 
-  scrollIntoView: () ->
+  scrollIntoView: ->
     @element.scrollIntoViewIfNeeded()
 
   value: ->
