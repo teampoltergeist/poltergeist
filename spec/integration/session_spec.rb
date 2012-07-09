@@ -70,6 +70,17 @@ describe Capybara::Session do
       end
     end
 
+    context "when the element is not in the viewport of parent element" do
+      before do
+        @session.visit("/poltergeist/scroll")
+      end
+
+      it "scrolls into view" do
+        @session.click_link "Link outside viewport"
+        @session.current_path.should eq '/'
+      end
+    end
+
     describe 'Node#set' do
       before do
         @session.visit('/poltergeist/with_js')

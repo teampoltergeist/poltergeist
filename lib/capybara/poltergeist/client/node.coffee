@@ -3,7 +3,7 @@
 class Poltergeist.Node
   @DELEGATES = ['text', 'getAttribute', 'value', 'set', 'setAttribute', 'isObsolete',
                 'removeAttribute', 'isMultiple', 'select', 'tagName', 'find',
-                'isVisible', 'position', 'trigger', 'parentId', 'clickTest']
+                'isVisible', 'position', 'trigger', 'parentId', 'clickTest', 'scrollIntoView']
 
   constructor: (@page, @id) ->
 
@@ -53,6 +53,8 @@ class Poltergeist.Node
     }
 
   click: ->
+    this.scrollIntoView()
+
     pos  = this.clickPosition()
     test = this.clickTest(pos.x, pos.y)
 
