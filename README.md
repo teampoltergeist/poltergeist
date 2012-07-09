@@ -205,6 +205,8 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Added ability to set arbitrary http request headers
 *   Inspect network traffic on the page via
     `page.driver.network_traffic` (Doug McInnes) [Issue #77]
+*   Scroll element into viewport if needed on click (Gabriel Sobrinho)
+    [Issue #83]
 
 #### Bug fixes ###
 
