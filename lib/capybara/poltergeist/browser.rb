@@ -79,9 +79,9 @@ module Capybara::Poltergeist
 
     def within_frame(id, &block)
       command 'push_frame', id
-      val = yield
+      yield
+    ensure
       command 'pop_frame'
-      val
     end
 
     def click(page_id, id)
