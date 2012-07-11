@@ -31,7 +31,13 @@ module Capybara::Poltergeist
     end
 
     def client
-      @client ||= Client.start(server.port, inspector, options[:phantomjs], options[:window_size], options[:phantomjs_options])
+      @client ||= Client.start(server.port, options[:phantomjs], options[:window_size], phantomjs_options)
+    end
+
+    def phantomjs_options
+      list = options[:phantomjs_options] || []
+      list += ["--remote-debugger-port=#{inspector.port}", "--remote-debugger-autorun=yes"] if inspector
+      list
     end
 
     def client_pid

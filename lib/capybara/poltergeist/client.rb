@@ -10,14 +10,13 @@ module Capybara::Poltergeist
       client
     end
 
-    attr_reader :pid, :port, :path, :inspector, :window_size, :phantomjs_options
+    attr_reader :pid, :port, :path, :window_size, :phantomjs_options
 
-    def initialize(port, inspector = nil, path = nil, window_size = nil, phantomjs_options = nil)
+    def initialize(port, path = nil, window_size = nil, phantomjs_options = nil)
       @port              = port
-      @inspector         = inspector
-      @path              = path || PHANTOMJS_NAME
-      @window_size       = window_size || [1024, 768]
-      @phantomjs_options = phantomjs_options
+      @path              = path              || PHANTOMJS_NAME
+      @window_size       = window_size       || [1024, 768]
+      @phantomjs_options = phantomjs_options || []
 
       pid = Process.pid
       at_exit { stop if Process.pid == pid }
@@ -49,16 +48,7 @@ module Capybara::Poltergeist
     def command
       @command ||= begin
         parts = [path]
-
-        if phantomjs_options
-          parts += phantomjs_options
-        end
-
-        if inspector
-          parts << "--remote-debugger-port=#{inspector.port}"
-          parts << "--remote-debugger-autorun=yes"
-        end
-
+        parts.concat phantomjs_options
         parts << PHANTOMJS_SCRIPT
         parts << port
         parts.concat window_size
