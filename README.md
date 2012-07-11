@@ -146,26 +146,6 @@ loaded) on the current page by calling `page.driver.network_traffic`.
 This returns an array of request objects. A request object has a
 `response_parts` method containing data about the response chunks.
 
-### Command-line Options for PhantomJS ###
-
-You can pass additional [Command-line Options](http://code.google.com/p/phantomjs/wiki/Interface#Command-line_Options) to PhantomJS executable by specifying `phantomjs_options`.
-
-``` ruby
-
-Capybara.register_driver :poltergeist do |app|
-  options = {
-    phantomjs_options: %w[
-      --cookies-file=cookies.txt
-      --disk-cache=yes
-      --ignore-ssl-errors=yes
-      --load-images=no
-    ]
-  }
-  Capybara::Poltergeist::Driver.new(app, options)
-end
-
-```
-
 ## Customization ##
 
 You can customize the way that Capybara sets up Poltegeist via the following code in your
@@ -189,7 +169,8 @@ end
 *   `:js_errors` (Boolean) - When false, Javascript errors do not get re-raised in Ruby.
 *   `:window_size` (Array) - The dimensions of the browser window in which to test, expressed
     as a 2-element array, e.g. [1024, 768]. Default: [1024, 768]
-*   `:phantomjs_options` (Array) - See 'Command-line Options for PhantomJS', above.
+*   `:phantomjs_options` (Array) - Additional [command line options](http://code.google.com/p/phantomjs/wiki/Interface#Command-line_Options)
+    to be passed to PhantomJS, e.g. `['--load-images=no', '--ignore-ssl-errors=yes']`
 
 ## Bugs ##
 
