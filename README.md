@@ -229,6 +229,8 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Added an option ":phantomjs_options", allowing users to specify
     additional command-line options passed to phantomjs executable.
     (wynst) [Issue #97]
+*   Scroll element into viewport if needed on click (Gabriel Sobrinho)
+    [Issue #83]
 
 #### Bug fixes ###
 
