@@ -244,7 +244,7 @@ describe Capybara::Session do
           begin
             @session.find(:css, '#one').click
           rescue => error
-            error.position.should == [150, 150]
+            error.position.first.should == 150
           end
         end
       end

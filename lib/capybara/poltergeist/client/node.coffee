@@ -16,33 +16,11 @@ class Poltergeist.Node
         @page.nodeCall(@id, name, args)
 
   clickPosition: (scrollIntoView = true) ->
-    dimensions = @page.validatedDimensions()
-    document   = dimensions.document
-    viewport   = dimensions.viewport
-    pos        = this.position()
-
-    scroll = { left: dimensions.left, top: dimensions.top }
-
-    adjust = (coord, measurement) ->
-      if pos[coord] < 0
-        scroll[coord] = Math.max(
-          0,
-          scroll[coord] + pos[coord] - (viewport[measurement] / 2)
-        )
-
-      else if pos[coord] >= viewport[measurement]
-        scroll[coord] = Math.min(
-          document[measurement] - viewport[measurement],
-          scroll[coord] + pos[coord] - viewport[measurement] + (viewport[measurement] / 2)
-        )
-
     if scrollIntoView
-      adjust('left', 'width')
-      adjust('top',  'height')
+      this.scrollIntoView()
 
-      if scroll.left != dimensions.left || scroll.top != dimensions.top
-        @page.setScrollPosition(scroll)
-        pos = this.position()
+    viewport = @page.viewportSize()
+    pos      = this.position()
 
     middle = (start, end, size) ->
       start + ((Math.min(end, size) - start) / 2)
@@ -53,8 +31,6 @@ class Poltergeist.Node
     }
 
   click: ->
-    this.scrollIntoView()
-
     pos  = this.clickPosition()
     test = this.clickTest(pos.x, pos.y)
 

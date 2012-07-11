@@ -119,9 +119,6 @@ class Poltergeist.WebPage
     dimensions = this.dimensions()
     document   = dimensions.document
 
-    orig_left = dimensions.left
-    orig_top  = dimensions.top
-
     if dimensions.right > document.width
       dimensions.left  = Math.max(0, dimensions.left - (dimensions.right - document.width))
       dimensions.right = document.width
