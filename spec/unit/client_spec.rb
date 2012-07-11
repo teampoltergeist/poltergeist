@@ -21,7 +21,7 @@ module Capybara::Poltergeist
     end
 
     it 'raises an error if phantomjs returns a non-zero exit code' do
-      subject = Client.new(6000, 'exit 42 && ')
+      subject = Client.new(6000, :path => 'exit 42 && ')
       expect { subject.start }.to raise_error(Error)
 
       begin
@@ -32,7 +32,7 @@ module Capybara::Poltergeist
     end
 
     context "with width and height specified" do
-      subject { Client.new(6000, nil, [800, 600]) }
+      subject { Client.new(6000, :window_size => [800, 600]) }
 
       it "starts phantomjs, passing the width and height through" do
         Spawn.should_receive(:spawn).with("phantomjs", Client::PHANTOMJS_SCRIPT, 6000, 800, 600)
@@ -41,9 +41,10 @@ module Capybara::Poltergeist
     end
 
     context "with additional command-line options" do
-      subject { Client.new(6000, nil, nil, %w[--ignore-ssl-error=yes --load-images=no]) }
+      subject { Client.new(6000, :phantomjs_options => %w[--ignore-ssl-error=yes --load-images=no]) }
+
       it 'passed additional command-line options to phantomjs' do
-        Spawn.should_receive(:spawn).with("phantomjs", '--ignore-ssl-error=yes', '--load-images=no', Client::PHANTOMJS_SCRIPT, 6000, 1024, 768)
+        Spawn.should_receive(:spawn).with("phantomjs", '--ignore-ssl-error=yes', '--load-images=no', anything, anything, anything, anything)
         subject.start
       end
     end

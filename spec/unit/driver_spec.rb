@@ -57,7 +57,7 @@ module Capybara::Poltergeist
         server = stub
         server.stub(:port).and_return(64297)
         Server.should_receive(:new).and_return(server)
-        Client.should_receive(:start).with(64297, nil, [800, 600], [])
+        Client.should_receive(:start).with(64297, hash_including(:window_size => [800, 600]))
         subject.client
       end
     end

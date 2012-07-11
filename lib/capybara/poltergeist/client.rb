@@ -12,11 +12,11 @@ module Capybara::Poltergeist
 
     attr_reader :pid, :port, :path, :window_size, :phantomjs_options
 
-    def initialize(port, path = nil, window_size = nil, phantomjs_options = nil)
+    def initialize(port, options = {})
       @port              = port
-      @path              = path              || PHANTOMJS_NAME
-      @window_size       = window_size       || [1024, 768]
-      @phantomjs_options = phantomjs_options || []
+      @path              = options[:path]              || PHANTOMJS_NAME
+      @window_size       = options[:window_size]       || [1024, 768]
+      @phantomjs_options = options[:phantomjs_options] || []
 
       pid = Process.pid
       at_exit { stop if Process.pid == pid }
