@@ -19,3 +19,5 @@ matrix:
   allow_failures:
     - rvm: rbx-18mode
     - rvm: rbx-19mode
+jdk:
+  - openjdk6
