@@ -15,10 +15,7 @@ class Poltergeist.Node
       this.prototype[name] = (args...) ->
         @page.nodeCall(@id, name, args)
 
-  clickPosition: (scrollIntoView = true) ->
-    if scrollIntoView
-      this.scrollIntoView()
-
+  clickPosition: ->
     viewport = @page.viewportSize()
     pos      = this.position()
 
@@ -31,6 +28,8 @@ class Poltergeist.Node
     }
 
   click: ->
+    this.scrollIntoView()
+
     pos  = this.clickPosition()
     test = this.clickTest(pos.x, pos.y)
 
@@ -40,8 +39,10 @@ class Poltergeist.Node
       throw new Poltergeist.ClickFailed(test.selector, pos)
 
   dragTo: (other) ->
+    this.scrollIntoView()
+
     position      = this.clickPosition()
-    otherPosition = other.clickPosition(false)
+    otherPosition = other.clickPosition()
 
     @page.sendEvent('mousedown', position.x,      position.y)
     @page.sendEvent('mousemove', otherPosition.x, otherPosition.y)
