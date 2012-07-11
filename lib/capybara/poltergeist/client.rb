@@ -10,14 +10,13 @@ module Capybara::Poltergeist
       client
     end
 
-    attr_reader :pid, :port, :path, :inspector, :width, :height, :phantomjs_options
+    attr_reader :pid, :port, :path, :inspector, :window_size, :phantomjs_options
 
-    def initialize(port, inspector = nil, path = nil, width = 1024, height = 768, phantomjs_options=nil)
-      @port      = port
-      @inspector = inspector
-      @path      = path || PHANTOMJS_NAME
-      @width     = width
-      @height    = height
+    def initialize(port, inspector = nil, path = nil, window_size = nil, phantomjs_options = nil)
+      @port              = port
+      @inspector         = inspector
+      @path              = path || PHANTOMJS_NAME
+      @window_size       = window_size || [1024, 768]
       @phantomjs_options = phantomjs_options
 
       pid = Process.pid
@@ -62,8 +61,7 @@ module Capybara::Poltergeist
 
         parts << PHANTOMJS_SCRIPT
         parts << port
-        parts << width
-        parts << height
+        parts.concat window_size
         parts
       end
     end

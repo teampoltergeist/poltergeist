@@ -13,9 +13,6 @@ module Capybara::Poltergeist
       @server    = nil
       @client    = nil
       @headers   = {}
-      if @options[:window_size]
-        @width, @height = @options[:window_size]
-      end
 
       @app_server = Capybara::Server.new(app)
       @app_server.boot if Capybara.run_server
@@ -34,7 +31,7 @@ module Capybara::Poltergeist
     end
 
     def client
-      @client ||= Client.start(server.port, inspector, options[:phantomjs], @width, @height, options[:phantomjs_options])
+      @client ||= Client.start(server.port, inspector, options[:phantomjs], options[:window_size], options[:phantomjs_options])
     end
 
     def client_pid

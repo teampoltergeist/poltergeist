@@ -32,7 +32,7 @@ module Capybara::Poltergeist
     end
 
     context "with width and height specified" do
-      subject { Client.new(6000, nil, nil, 800, 600) }
+      subject { Client.new(6000, nil, nil, [800, 600]) }
 
       it "starts phantomjs, passing the width and height through" do
         Spawn.should_receive(:spawn).with("phantomjs", Client::PHANTOMJS_SCRIPT, 6000, 800, 600)
@@ -41,9 +41,9 @@ module Capybara::Poltergeist
     end
 
     context "with additional command-line options" do
-      subject { Client.new(6000, nil, nil, nil, nil, %w[--ignore-ssl-error=yes --load-images=no]) }
+      subject { Client.new(6000, nil, nil, nil, %w[--ignore-ssl-error=yes --load-images=no]) }
       it 'passed additional command-line options to phantomjs' do
-        Spawn.should_receive(:spawn).with("phantomjs", '--ignore-ssl-error=yes', '--load-images=no', Client::PHANTOMJS_SCRIPT, 6000, nil, nil)
+        Spawn.should_receive(:spawn).with("phantomjs", '--ignore-ssl-error=yes', '--load-images=no', Client::PHANTOMJS_SCRIPT, 6000, 1024, 768)
         subject.start
       end
     end
