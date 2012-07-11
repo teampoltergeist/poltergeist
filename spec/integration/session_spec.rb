@@ -248,6 +248,10 @@ describe Capybara::Session do
           end
         end
       end
+
+      it "can evaluate a statement ending with a semicolon" do
+        @session.evaluate_script("3;").should == 3
+      end
     end
   end
 end
