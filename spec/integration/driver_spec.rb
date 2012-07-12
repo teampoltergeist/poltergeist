@@ -11,6 +11,7 @@ module Capybara::Poltergeist
     it_should_behave_like "driver"
     it_should_behave_like "driver with javascript support"
     it_should_behave_like "driver with frame support"
+    it_should_behave_like "driver with status code support"
     it_should_behave_like "driver with cookies support"
 
     it 'supports a custom phantomjs path' do
@@ -56,7 +57,14 @@ module Capybara::Poltergeist
     end
 
     it 'supports specifying viewport size with an option' do
-      @driver = Capybara::Poltergeist::Driver.new(nil, :window_size => [800, 600])
+      Capybara.register_driver :poltergeist_with_custom_window_size do |app|
+        Capybara::Poltergeist::Driver.new(
+          app,
+          :logger => TestSessions.logger,
+          :window_size => [800, 600]
+        )
+      end
+      @driver = Capybara::Session.new(:poltergeist_with_custom_window_size, TestApp).driver
       @driver.visit("/")
       @driver.evaluate_script('[window.innerWidth, window.innerHeight]').should eq([800, 600])
     end
@@ -85,6 +93,25 @@ module Capybara::Poltergeist
         ImageSize.new(f.read).size.should ==
           @driver.evaluate_script('[document.documentElement.clientWidth, document.documentElement.clientHeight]')
       end
+    end
+
+    it 'allows request headers to be set' do
+      @driver.headers = {
+        "Cookie" => "foo=bar",
+        "Host" => "foo.com"
+      }
+      @driver.visit('/poltergeist/headers')
+      @driver.body.should include('COOKIE: foo=bar')
+      @driver.body.should include('HOST: foo.com')
+      @driver.reset!
+    end
+
+    it 'supports rendering the page with a nonstring path' do
+      file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
+      FileUtils.rm_f file
+      @driver.visit('/')
+      @driver.render(Pathname(file))
+      File.exist?(file).should == true
     end
 
     it 'supports executing multiple lines of javascript' do
@@ -123,19 +150,19 @@ module Capybara::Poltergeist
 
     context 'javascript errors' do
       it 'propagates a Javascript error inside Poltergeist to a ruby exception' do
-        expect { @driver.execute_script "omg" }.to raise_error(BrowserError)
+        expect { @driver.browser.command 'browser_error' }.to raise_error(BrowserError)
 
         begin
-          @driver.execute_script "omg"
+          @driver.browser.command 'browser_error'
         rescue BrowserError => e
-          e.message.should include("omg")
-          e.message.should include("ReferenceError")
+          e.message.should include("Error: zomg")
+          e.message.should include("compiled/browser.js")
         else
           raise "BrowserError expected"
         end
       end
 
-      it 'propagates a Javascript error on the page to a ruby exception' do
+      it 'propagates an asynchronous Javascript error on the page to a ruby exception' do
         @driver.execute_script "setTimeout(function() { omg }, 0)"
         sleep 0.01
         expect { @driver.execute_script "" }.to raise_error(JavascriptError)
@@ -144,6 +171,19 @@ module Capybara::Poltergeist
           @driver.execute_script "setTimeout(function() { omg }, 0)"
           sleep 0.01
           @driver.execute_script ""
+        rescue JavascriptError => e
+          e.message.should include("omg")
+          e.message.should include("ReferenceError")
+        else
+          raise "expected JavascriptError"
+        end
+      end
+
+      it 'propagates a synchronous Javascript error on the page to a ruby exception' do
+        expect { @driver.execute_script "omg" }.to raise_error(JavascriptError)
+
+        begin
+          @driver.execute_script "omg"
         rescue JavascriptError => e
           e.message.should include("omg")
           e.message.should include("ReferenceError")
@@ -174,9 +214,49 @@ module Capybara::Poltergeist
       end
     end
 
-    describe 'status code support', :status_code_support => true do
+    context "network traffic" do
+      before do
+        @driver.restart
+      end
+
+      it "keeps track of network traffic" do
+        @driver.visit('/poltergeist/with_js')
+        urls = @driver.network_traffic.map(&:url)
+
+        urls.grep(%r{/poltergeist/jquery-1.6.2.min.js$}).size.should == 1
+        urls.grep(%r{/poltergeist/jquery-ui-1.8.14.min.js$}).size.should == 1
+        urls.grep(%r{/poltergeist/test.js$}).size.should == 1
+      end
+
+      it "captures responses" do
+        @driver.visit('/poltergeist/with_js')
+        request = @driver.network_traffic.last
+
+        request.response_parts.last.status.should == 200
+      end
+
+      it "keeps a running list between multiple web page views" do
+        @driver.visit('/poltergeist/with_js')
+        @driver.network_traffic.length.should equal(4)
+
+        @driver.visit('/poltergeist/with_js')
+        @driver.network_traffic.length.should equal(8)
+      end
+
+      it "gets cleared on restart" do
+        @driver.visit('/poltergeist/with_js')
+        @driver.network_traffic.length.should equal(4)
+
+        @driver.restart
+
+        @driver.visit('/poltergeist/with_js')
+        @driver.network_traffic.length.should equal(4)
+      end
+    end
+
+    context 'status code support', :status_code_support => true do
       it 'should determine status from the simple response' do
-        @driver.visit('/poltergeist/500')
+        @driver.visit('/poltergeist/status/500')
 
         @driver.status_code.should == 500
       end

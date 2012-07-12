@@ -1,0 +1,3 @@
+<% for header in request.env.select {|k,v| k.match("^HTTP.*")} %>
+  <%=header[0].split('_',2)[1]%>: <%=header[1]%>
+<% end %>

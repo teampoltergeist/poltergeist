@@ -43,6 +43,31 @@ describe Capybara::Session do
           expect { @session.find(:css, "username") }.to raise_error(Capybara::ElementNotFound)
         end
       end
+
+      context "when the element is not in the viewport" do
+        before do
+          @session.visit("/poltergeist/with_js")
+        end
+
+        it "raises a ClickFailed error" do
+          expect { @session.click_link("O hai") }.to raise_error(Capybara::Poltergeist::ClickFailed)
+        end
+
+        context "and is then brought in" do
+          before do
+            @session.execute_script "$('#off-the-left').animate({left: '10'});"
+            Capybara.default_wait_time = 1 #we need capybara to retry until animation finished
+          end
+
+          it "clicks properly" do
+            expect { @session.click_link "O hai" }.to_not raise_error(Capybara::Poltergeist::ClickFailed)
+          end
+
+          after do
+            Capybara.default_wait_time = 0
+          end
+        end
+      end
     end
 
     describe 'Node#set' do
@@ -53,6 +78,10 @@ describe Capybara::Session do
 
       it 'fires the change event' do
         @session.find(:css, '#changes').text.should == "Hello!"
+      end
+
+      it 'fires the input event' do
+        @session.find(:css, '#changes_on_input').text.should == "Hello!"
       end
 
       it 'accepts numbers in a maxlength field' do
@@ -207,6 +236,26 @@ describe Capybara::Session do
             error.position.should == [150, 150]
           end
         end
+      end
+    end
+
+    context 'status code support', :status_code_support => true do
+      it 'should determine status code when an user goes to a page by using a link on it' do
+        @session.visit '/poltergeist/with_different_resources'
+
+        @session.click_link 'Go to 500'
+
+        @session.status_code.should == 500
+      end
+
+      it 'should determine properly status code when an user goes through a few pages' do
+        @session.visit '/poltergeist/with_different_resources'
+
+        @session.click_link 'Go to 201'
+        @session.click_link 'Do redirect'
+        @session.click_link 'Go to 402'
+
+        @session.status_code.should == 402
       end
     end
   end

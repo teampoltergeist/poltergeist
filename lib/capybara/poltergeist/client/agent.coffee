@@ -8,7 +8,10 @@ class PoltergeistAgent
     this.pushWindow(window)
 
   externalCall: (name, args) ->
-    { value: this[name].apply(this, args) }
+    try
+      { value: this[name].apply(this, args) }
+    catch error
+      { error: { message: error.toString(), stack: error.stack } }
 
   @stringify: (object) ->
     JSON.stringify object, (key, value) ->
@@ -101,6 +104,11 @@ class PoltergeistAgent.Node
     event.initEvent('change', true, false)
     @element.dispatchEvent(event)
 
+  input: ->
+    event = document.createEvent('HTMLEvents')
+    event.initEvent('input', true, false)
+    @element.dispatchEvent(event)
+
   keyupdowned: (eventName, keyCode) ->
     event = document.createEvent('UIEvents')
     event.initEvent(eventName, true, true)
@@ -170,6 +178,7 @@ class PoltergeistAgent.Node
       this.keyupdowned('keyup', keyCode)
 
     this.changed()
+    this.input()
     this.trigger('blur')
 
   isMultiple: ->

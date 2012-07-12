@@ -18,32 +18,20 @@ require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
 ```
 
-### Important note about Rack versions < 1.3.0 ###
-
-Prior to version 1.3.0, the Rack handlers for Mongrel and Thin wrap your
-app in the `Rack::Chunked` middleware so that it uses
-`Transfer-Encoding: chunked`
-([commit](https://github.com/rack/rack/commit/50cdd0bf000a9ffb3eb3760fda2ff3e1ad18f3a7)).
-This has been observed to cause problems,
-probably due to race conditions in Qt's HTTP handling code, so you are
-recommended to avoid this by specifying your own server setup for
-Capybara:
-
-``` ruby
-Capybara.server do |app, port|
-  require 'rack/handler/thin'
-  Thin::Logging.silent = true
-  Thin::Server.new('0.0.0.0', port, app).start
-end
-```
-
-If you're using Rails 3.0, this affects you. If you're using Rails 3.1+,
-this doesn't affect you.
+If you were previously using the `:rack_test` driver, be aware that
+your app will now run in a separate thread and this can have
+consequences for transactional tests. [See the Capybara README for more
+detail](https://github.com/jnicklas/capybara/blob/master/README.md#transactions-and-database-setup).
 
 ## Installing PhantomJS ##
 
-You need PhantomJS 1.5.0. There are no other dependencies (you don't
+You need PhantomJS 1.6.0. There are no other dependencies (you don't
 need Qt, or Xvfb, etc.)
+
+**Note**: Poltergeist 0.6 (the latest release) has a compatibility
+issue with PhantomJS 1.6 (the latest version, released 20th June). So use
+PhantomJS 1.5 for now. Poltergeist 0.7 will be release soon, with an
+update to support PhantomJS 1.6.
 
 ### Mac ###
 
@@ -53,11 +41,11 @@ need Qt, or Xvfb, etc.)
 ### Linux ###
 
 * Download the [32
-bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.5.0-linux-x86-dynamic.tar.gz&can=2&q=)
+bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.0-linux-i686-dynamic.tar.bz2&can=2&q=)
 or [64
-bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.5.0-linux-x86_64-dynamic.tar.gz&can=2&q=)
+bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.0-linux-x86_64-dynamic.tar.bz2&can=2&q=)
 binary.
-* Extract it: `sudo tar xvzf phantomjs-1.5.0-linux-*-dynamic.tar.gz -C /usr/local`
+* Extract it: `sudo tar xvjf phantomjs-1.6.0-linux-*-dynamic.tar.gz -C /usr/local`
 * Link it: `sudo ln -s /usr/local/phantomjs/bin/phantomjs /usr/local/bin/phantomjs`
 
 (Note that you cannot copy the `/usr/local/phantomjs/bin/phantomjs`
@@ -69,7 +57,7 @@ binary elsewhere on its own as it dynamically links with other files in
 Do this as a last resort if the binaries don't work for you. It will
 take quite a long time as it has to build WebKit.
 
-* Download [the source tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.5.0-source.tar.gz&can=2&q=)
+* Download [the source tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.0-source.zip&can=2&q=)
 * Extract and cd in
 * `./build.sh`
 
@@ -136,7 +124,27 @@ here](http://jonathanleighton.com/articles/2012/poltergeist-0-6-0/)
 
 (This feature is considered experimental - it needs more polish
 and [apparently will only work on
-Linux](http://code.google.com/p/phantomjs/issues/detail?id=430).)
+Linux until the next PhantomJS release](http://code.google.com/p/phantomjs/issues/detail?id=430).)
+
+### Setting request headers ###
+
+Additional HTTP request headers can be set like so:
+
+``` ruby
+page.driver.headers = {
+  "Cookie" => "foo=bar",
+  "Host"   => "foo.com"
+}
+```
+
+They will be cleared between tests, so you do not have to do this manually.
+
+### Inspecting network traffic ###
+
+You can inspect the network traffic (i.e. what resources have been
+loaded) on the current page by calling `page.driver.network_traffic`.
+This returns an array of request objects. A request object has a
+`response_parts` method containing data about the response chunks.
 
 ## Customization ##
 
@@ -184,7 +192,7 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 ## Changes ##
 
-### 0.7.0 ###
+### 0.7.0 (unreleased) ###
 
 #### Features ####
 
@@ -193,6 +201,10 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Added an option ":window_size", allowing users to specify
     dimensions to which the browser window will be resized.
     (Tom Stuart) [Issue #53]
+*   Capybara 1.0 is no longer supported. Capybara ~> 1.1 is required.
+*   Added ability to set arbitrary http request headers
+*   Inspect network traffic on the page via
+    `page.driver.network_traffic` (Doug McInnes) [Issue #77]
 *   Added status code support.
     (Dmitriy Nesteryuk and Jon Leighton) [Issue #37]
 

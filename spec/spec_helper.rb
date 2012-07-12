@@ -41,7 +41,7 @@ RSpec.configure do |config|
     TestSessions.logger.reset
   end
 
-  config.after do |*args|
+  config.after do
     if ENV['DEBUG']
       puts TestSessions.logger.messages
     elsif ENV['TRAVIS'] && example.exception

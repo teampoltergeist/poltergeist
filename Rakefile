@@ -1,3 +1,4 @@
+require 'bundler/setup'
 require 'rspec/core/rake_task'
 
 base = File.dirname(__FILE__)
@@ -18,8 +19,7 @@ task :compile do
   end
 end
 
-RSpec::Core::RakeTask.new('test') do
-end
+RSpec::Core::RakeTask.new('test')
 
 task :default => [:compile, :test]
 

@@ -16,8 +16,8 @@ module Capybara::Poltergeist
       client.restart
     end
 
-    def visit(url)
-      command 'visit', url
+    def visit(url, headers)
+      command 'visit', url, headers
     end
 
     def current_url
@@ -108,11 +108,20 @@ module Capybara::Poltergeist
     end
 
     def render(path, options = {})
-      command 'render', path, !!options[:full]
+      command 'render', path.to_s, !!options[:full]
     end
 
     def resize(width, height)
       command 'resize', width, height
+    end
+
+    def network_traffic
+      command('network_traffic').values.map do |event|
+        NetworkTraffic::Request.new(
+          event['request'],
+          event['responseParts'].map { |response| NetworkTraffic::Response.new(response) }
+        )
+      end
     end
 
     def command(name, *args)

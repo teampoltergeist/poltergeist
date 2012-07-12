@@ -1,16 +1,17 @@
 class Poltergeist.WebPage
   @CALLBACKS = ['onAlert', 'onConsoleMessage', 'onLoadFinished', 'onInitialized',
                 'onLoadStarted', 'onResourceRequested', 'onResourceReceived',
-                'onError']
+                'onError', 'onNavigationRequested', 'onUrlChanged']
 
-  @DELEGATES = ['sendEvent', 'uploadFile', 'release', 'render']
+  @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'release', 'render']
 
   @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'pushFrame', 'popFrame', 'documentSize']
 
   constructor: (width, height) ->
-    @native  = require('webpage').create()
-    @_source = ""
-    @_errors = []
+    @native          = require('webpage').create()
+    @_source         = ""
+    @_errors         = []
+    @_networkTraffic = {}
 
     this.setViewportSize(width: width, height: height)
 
@@ -29,11 +30,6 @@ class Poltergeist.WebPage
       this.prototype[delegate] =
        (args...) -> @native[delegate].apply(@native, args)
 
-  open: (args...) ->
-    @_url = args[0]
-
-    @native.open.apply(@native, args)
-
   onInitializedNative: ->
     @_source = null
     this.injectAgent()
@@ -49,31 +45,50 @@ class Poltergeist.WebPage
       @_source = @native.content
       false
 
+  onLoadStartedNative: ->
+    @_requestId = @_lastRequestId unless @_requestId
+
   onLoadFinishedNative: ->
     @_source or= @native.content
+    @_requestId = null
 
-  onConsoleMessage: (message, line, file) ->
-    # The conditional works around a PhantomJS bug where an error can
-    # get wrongly reported to be onError and onConsoleMessage:
-    #
-    # http://code.google.com/p/phantomjs/issues/detail?id=166#c18
-    unless @_errors.length && @_errors[@_errors.length - 1].message == message
-      console.log(message)
+  onConsoleMessage: (message) ->
+    console.log(message)
 
   onErrorNative: (message, stack) ->
-    @_errors.push(message: message, stack: stack)
+    stackString = message
 
-  # It is called whenever any resource within a page is
-  # loaded (images, javascripts files etc)
-  onResourceReceivedNative: (request) ->
+    stack.forEach (frame) ->
+      stackString += "\n"
+      stackString += "    at #{frame.file}:#{frame.line}"
+      stackString += " in #{frame.function}" if frame.function && frame.function != ''
+
+    @_errors.push(message: message, stack: stackString)
+
+  # capture any outgoing requests
+  onResourceRequestedNative: (request) ->
+    @_networkTraffic[request.id] = {
+      request:       request,
+      responseParts: []
+    }
+
+    @_lastRequestId = request.id
+
+  # capture request responses
+  onResourceReceivedNative: (response) ->
+    @_networkTraffic[response.id].responseParts.push(response)
+
     # We are interested only in a status code of a loaded page
-    if @_url is request.url
-      # If a request is forwarded to another url, we need to determine a new url
+    if @_requestId is response.id
+      # If a request is forwarded to another url, we need to determine a new id
       # to get a correct status code of a loaded page
-      if request.redirectURL
-        @_url = request.redirectURL
+      if response.redirectURL
+        @_requestId = response.id
       else
-        @_statusCode = request.status
+        @_statusCode = response.status
+
+  networkTraffic: ->
+    @_networkTraffic
 
   content: ->
     @native.content
@@ -174,4 +189,10 @@ class Poltergeist.WebPage
       name, args
     )
 
-    result && result.value
+    if result.error?
+      if result.error.message == 'PoltergeistAgent.ObsoleteNode'
+        throw new Poltergeist.ObsoleteNode
+      else
+        throw new Poltergeist.JavascriptError([result.error])
+    else
+      result.value
