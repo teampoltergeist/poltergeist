@@ -130,6 +130,9 @@ class Poltergeist.Browser
     this.node(page_id, id).trigger(event)
     this.sendResponse(event)
 
+  equals: (page_id, id, other_id) ->
+    this.sendResponse this.node(page_id, id).isEqual(this.node(page_id, other_id))
+
   reset: ->
     this.resetPage()
     this.sendResponse(true)

@@ -299,6 +299,9 @@ class PoltergeistAgent.Node
 
     specialKeys[code] || code
 
+  isDOMEqual: (other_id) ->
+    @element == @agent.get(other_id).element
+
 window.__poltergeist = new PoltergeistAgent
 
 document.addEventListener(

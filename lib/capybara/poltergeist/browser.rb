@@ -121,6 +121,10 @@ module Capybara::Poltergeist
       end
     end
 
+    def equals(page_id, id, other_id)
+      command('equals', page_id, id, other_id)
+    end
+
     def command(name, *args)
       message = { 'name' => name, 'args' => args }
       log message.inspect
@@ -148,6 +152,7 @@ module Capybara::Poltergeist
     end
 
     private
+
     def log(message)
       logger.puts message if logger
     end

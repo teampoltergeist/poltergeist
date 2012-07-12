@@ -1,13 +1,13 @@
 module Capybara::Poltergeist
   class Node < Capybara::Driver::Node
-    attr_reader :page_id
+    attr_reader :page_id, :id
 
     def initialize(driver, page_id, id)
-      super(driver, id)
-      @page_id = page_id
-    end
+      super(driver, self)
 
-    alias id native
+      @page_id = page_id
+      @id      = id
+    end
 
     def browser
       driver.browser
@@ -94,6 +94,10 @@ module Capybara::Poltergeist
 
     def trigger(event)
       command :trigger, event
+    end
+
+    def ==(other)
+      command :equals, other.id
     end
   end
 end

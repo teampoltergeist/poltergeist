@@ -3,7 +3,8 @@
 class Poltergeist.Node
   @DELEGATES = ['text', 'getAttribute', 'value', 'set', 'setAttribute', 'isObsolete',
                 'removeAttribute', 'isMultiple', 'select', 'tagName', 'find',
-                'isVisible', 'position', 'trigger', 'parentId', 'clickTest', 'scrollIntoView']
+                'isVisible', 'position', 'trigger', 'parentId', 'clickTest',
+                'scrollIntoView', 'isDOMEqual']
 
   constructor: (@page, @id) ->
 
@@ -47,3 +48,6 @@ class Poltergeist.Node
     @page.sendEvent('mousedown', position.x,      position.y)
     @page.sendEvent('mousemove', otherPosition.x, otherPosition.y)
     @page.sendEvent('mouseup',   otherPosition.x, otherPosition.y)
+
+  isEqual: (other) ->
+    @page == other.page && this.isDOMEqual(other.id)
