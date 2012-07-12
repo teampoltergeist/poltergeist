@@ -117,9 +117,9 @@ module Capybara
       end
 
       def message
-        "PhantomJS returned non-zero exit status #{status.exitstatus}. Ensure there is an X display available and " \
-          "that DISPLAY is set. (See the Poltergeist README for details.) Make sure 'phantomjs --version' " \
-          "runs successfully on your system."
+        "PhantomJS returned non-zero exit status #{status.exitstatus}. Make sure phantomjs runs successfully " \
+          "on your system. You can test this by just running the `phantomjs` command which should give you " \
+          "a Javascript REPL."
       end
     end
   end
