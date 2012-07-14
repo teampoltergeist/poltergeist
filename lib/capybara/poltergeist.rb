@@ -2,19 +2,17 @@ require 'capybara'
 
 module Capybara
   module Poltergeist
-    autoload :Driver,          'capybara/poltergeist/driver'
-    autoload :Browser,         'capybara/poltergeist/browser'
-    autoload :Node,            'capybara/poltergeist/node'
-    autoload :ServerManager,   'capybara/poltergeist/server_manager'
-    autoload :Server,          'capybara/poltergeist/server'
-    autoload :WebSocketServer, 'capybara/poltergeist/web_socket_server'
-    autoload :Client,          'capybara/poltergeist/client'
-    autoload :Util,            'capybara/poltergeist/util'
-    autoload :Inspector,       'capybara/poltergeist/inspector'
-    autoload :Spawn,           'capybara/poltergeist/spawn'
-    autoload :JSON,            'capybara/poltergeist/json'
-    autoload :NetworkTraffic,  'capybara/poltergeist/network_traffic'
-
+    require 'capybara/poltergeist/driver'
+    require 'capybara/poltergeist/browser'
+    require 'capybara/poltergeist/node'
+    require 'capybara/poltergeist/server'
+    require 'capybara/poltergeist/web_socket_server'
+    require 'capybara/poltergeist/client'
+    require 'capybara/poltergeist/util'
+    require 'capybara/poltergeist/inspector'
+    require 'capybara/poltergeist/spawn'
+    require 'capybara/poltergeist/json'
+    require 'capybara/poltergeist/network_traffic'
     require 'capybara/poltergeist/errors'
   end
 end

@@ -1,6 +1,6 @@
 module Capybara::Poltergeist
   module NetworkTraffic
-    autoload :Request,  'capybara/poltergeist/network_traffic/request'
-    autoload :Response, 'capybara/poltergeist/network_traffic/response'
+    require 'capybara/poltergeist/network_traffic/request'
+    require 'capybara/poltergeist/network_traffic/response'
   end
 end
