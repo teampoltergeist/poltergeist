@@ -1,3 +1,0 @@
-source :rubygems
-gemspec :path => '../'
-gem 'capybara', '~> 1.1.0'

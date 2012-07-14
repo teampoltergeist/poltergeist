@@ -12,12 +12,9 @@ rvm:
   - rbx-19mode
   - jruby-18mode
   - jruby-19mode
-gemfile:
-  - Gemfile
-  - ci/Gemfile.capybara1-1
+  - rbx-18mode
 matrix:
   allow_failures:
-    - rvm: rbx-18mode
     - rvm: rbx-19mode
 jdk:
   - openjdk6
