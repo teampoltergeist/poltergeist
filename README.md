@@ -46,7 +46,7 @@ or [64
 bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.0-linux-x86_64-dynamic.tar.bz2&can=2&q=)
 binary.
 * Extract it: `sudo tar xvjf phantomjs-1.6.0-linux-*-dynamic.tar.gz -C /usr/local`
-* Link it: `sudo ln -s /usr/local/phantomjs/bin/phantomjs /usr/local/bin/phantomjs`
+* Link it: `sudo ln -s /usr/local/phantomjs-1.6.0-linux*/bin/phantomjs /usr/local/bin/phantomjs`
 
 (Note that you cannot copy the `/usr/local/phantomjs/bin/phantomjs`
 binary elsewhere on its own as it dynamically links with other files in
