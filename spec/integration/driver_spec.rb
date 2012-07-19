@@ -254,9 +254,9 @@ module Capybara::Poltergeist
       end
     end
 
-    describe 'status code support' do
+    context 'status code support' do
       it 'should determine status from the simple response' do
-        @driver.visit('/poltergeist/500')
+        @driver.visit('/poltergeist/status/500')
         @driver.status_code.should == 500
       end
 
