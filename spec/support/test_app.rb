@@ -20,8 +20,9 @@ class TestApp
     halt 404
   end
 
-  get '/poltergeist/500' do
-    halt 500
+  get '/poltergeist/status/:status' do
+    status params['status']
+    render_view 'with_different_resources'
   end
 
   get '/poltergeist/redirect' do
@@ -29,6 +30,11 @@ class TestApp
   end
 
   get '/poltergeist/:view' do |view|
-    erb File.read("#{POLTERGEIST_VIEWS}/#{view}.erb")
+    render_view view
   end
+
+  protected
+    def render_view(view)
+      erb File.read("#{POLTERGEIST_VIEWS}/#{view}.erb")
+    end
 end

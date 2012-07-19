@@ -212,6 +212,7 @@ makes debugging easier). Running `rake autocompile` will watch the
     (wynst) [Issue #97]
 *   Scroll element into viewport if needed on click (Gabriel Sobrinho)
     [Issue #83]
+*   Added status code support. (Dmitriy Nesteryuk and Jon Leighton) [Issue #37]
 
 #### Bug fixes ###
 
