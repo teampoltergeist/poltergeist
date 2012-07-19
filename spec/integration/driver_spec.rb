@@ -254,19 +254,22 @@ module Capybara::Poltergeist
       end
     end
 
-    describe 'status code support' do
+    context 'status code support', :status_code_support => true do
       it 'should determine status from the simple response' do
-        @driver.visit('/poltergeist/500')
+        @driver.visit('/poltergeist/status/500')
+
         @driver.status_code.should == 500
       end
 
       it 'should determine status code when the page has a few resources' do
         @driver.visit('/poltergeist/with_different_resources')
+
         @driver.status_code.should == 200
       end
 
       it 'should determine status code even after redirect' do
         @driver.visit('/poltergeist/redirect')
+
         @driver.status_code.should == 200
       end
     end

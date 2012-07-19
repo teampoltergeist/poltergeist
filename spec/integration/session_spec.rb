@@ -253,5 +253,25 @@ describe Capybara::Session do
         @session.evaluate_script("3;").should == 3
       end
     end
+
+    context 'status code support', :status_code_support => true do
+      it 'should determine status code when an user goes to a page by using a link on it' do
+        @session.visit '/poltergeist/with_different_resources'
+
+        @session.click_link 'Go to 500'
+
+        @session.status_code.should == 500
+      end
+
+      it 'should determine properly status code when an user goes through a few pages' do
+        @session.visit '/poltergeist/with_different_resources'
+
+        @session.click_link 'Go to 201'
+        @session.click_link 'Do redirect'
+        @session.click_link 'Go to 402'
+
+        @session.status_code.should == 402
+      end
+    end
   end
 end
