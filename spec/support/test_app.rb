@@ -1,5 +1,5 @@
 require 'capybara/spec/test_app'
-# 1
+
 class TestApp
   POLTERGEIST_VIEWS  = File.dirname(__FILE__) + "/views"
   POLTERGEIST_PUBLIC = File.dirname(__FILE__) + "/public"
