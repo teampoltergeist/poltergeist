@@ -50,6 +50,7 @@ class Poltergeist.WebPage
 
   onLoadFinishedNative: ->
     @_source or= @native.content
+    @_requestId = null
 
   onConsoleMessage: (message) ->
     console.log(message)
