@@ -129,8 +129,13 @@ module Capybara::Poltergeist
     end
 
     def debug
-      inspector.open
-      pause
+      if @options[:inspector]
+        inspector.open
+        pause
+      else
+        raise Error, "To use the remote debugging, you have to launch the driver " \
+                     "with `:inspector => true` configuration option"
+      end
     end
 
     def pause
