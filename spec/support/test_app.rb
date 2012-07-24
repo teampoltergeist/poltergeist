@@ -34,7 +34,8 @@ class TestApp
   end
 
   protected
-    def render_view(view)
-      erb File.read("#{POLTERGEIST_VIEWS}/#{view}.erb")
-    end
+
+  def render_view(view)
+    erb File.read("#{POLTERGEIST_VIEWS}/#{view}.erb")
+  end
 end

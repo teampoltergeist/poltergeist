@@ -46,7 +46,7 @@ class Poltergeist.WebPage
       false
 
   onLoadStartedNative: ->
-    @_requestId = @_lastRequestId unless @_requestId
+    @requestId = @lastRequestId
 
   onLoadFinishedNative: ->
     @_source or= @native.content
@@ -66,7 +66,7 @@ class Poltergeist.WebPage
     @_errors.push(message: message, stack: stackString)
 
   onResourceRequestedNative: (request) ->
-    @_lastRequestId = request.id
+    @lastRequestId = request.id
 
     @_networkTraffic[request.id] = {
       request:       request,
@@ -76,9 +76,9 @@ class Poltergeist.WebPage
   onResourceReceivedNative: (response) ->
     @_networkTraffic[response.id].responseParts.push(response)
 
-    if @_requestId is response.id
+    if @requestId == response.id
       if response.redirectURL
-        @_requestId = response.id
+        @requestId = response.id
       else
         @_statusCode = response.status
 
