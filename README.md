@@ -1,6 +1,6 @@
 # Poltergeist - A PhantomJS driver for Capybara #
 
-Version: 0.6.0
+Version: 0.7.0
 
 [![Build Status](https://secure.travis-ci.org/jonleighton/poltergeist.png)](http://travis-ci.org/jonleighton/poltergeist)
 [![Dependency Status](https://gemnasium.com/jonleighton/poltergeist.png)](https://gemnasium.com/jonleighton/poltergeist)
@@ -25,28 +25,24 @@ detail](https://github.com/jnicklas/capybara/blob/master/README.md#transactions-
 
 ## Installing PhantomJS ##
 
-You need PhantomJS 1.6.0. There are no other dependencies (you don't
-need Qt, or Xvfb, etc.)
-
-**Note**: Poltergeist 0.6 (the latest release) has a compatibility
-issue with PhantomJS 1.6 (the latest version, released 20th June). So use
-PhantomJS 1.5 for now. Poltergeist 0.7 will be release soon, with an
-update to support PhantomJS 1.6.
+You need at least PhantomJS 1.6.0, but 1.6.1 is recommended as there some issues with the former.
+There are *no other external dependencies* (you don't need Qt, or a running X
+server, etc.)
 
 ### Mac ###
 
-* *With homebrew*: `brew install phantomjs`
-* *Without homebrew*: [Download this](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.5.0-macosx-static.zip&can=2&q=)
+* *Manual install*: [Download this](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.1-macosx-static.zip&can=2&q=)
+* *Homebrew*: `brew install phantomjs`
 
 ### Linux ###
 
 * Download the [32
-bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.0-linux-i686-dynamic.tar.bz2&can=2&q=)
+bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.1-linux-i686-dynamic.tar.bz2&can=2&q=)
 or [64
-bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.0-linux-x86_64-dynamic.tar.bz2&can=2&q=)
+bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.1-linux-x86_64-dynamic.tar.bz2&can=2&q=)
 binary.
-* Extract it: `sudo tar xvjf phantomjs-1.6.0-linux-*-dynamic.tar.gz -C /usr/local`
-* Link it: `sudo ln -s /usr/local/phantomjs-1.6.0-linux*/bin/phantomjs /usr/local/bin/phantomjs`
+* Extract it: `sudo tar xvjf phantomjs-1.6.1-linux-*-dynamic.tar.gz -C /usr/local`
+* Link it: `sudo ln -s /usr/local/phantomjs-1.6.1-linux*/bin/phantomjs /usr/local/bin/phantomjs`
 
 (Note that you cannot copy the `/usr/local/phantomjs/bin/phantomjs`
 binary elsewhere on its own as it dynamically links with other files in
@@ -57,7 +53,7 @@ binary elsewhere on its own as it dynamically links with other files in
 Do this as a last resort if the binaries don't work for you. It will
 take quite a long time as it has to build WebKit.
 
-* Download [the source tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.0-source.zip&can=2&q=)
+* Download [the source tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.1-source.zip&can=2&q=)
 * Extract and cd in
 * `./build.sh`
 
@@ -67,7 +63,7 @@ Supported: MRI 1.8.7, MRI 1.9.2, MRI 1.9.3, JRuby 1.8, JRuby 1.9.
 
 Not supported:
 
-* Rubinius (due to some unknown socket related issues)
+* Rubinius
 * Windows
 
 Contributions are welcome in order to move 'unsupported'
@@ -83,11 +79,6 @@ you're getting errors on a CI that don't occur during development then
 try taking some screenshots - it may well be missing fonts throwing
 things off kilter. Your distro will have various font packages available
 to install.
-
-[Travis CI](http://travis-ci.org/) has PhantomJS 1.5.0 installed. You may
-like to use their
-[chef cookbook](https://github.com/travis-ci/travis-cookbooks/tree/master/ci_environment/phantomjs)
-on your own servers.
 
 ## What's supported? ##
 
@@ -121,10 +112,6 @@ WebKit inspector to view your test run with.
 
 [Read more
 here](http://jonathanleighton.com/articles/2012/poltergeist-0-6-0/)
-
-(This feature is considered experimental - it needs more polish
-and [apparently will only work on
-Linux until the next PhantomJS release](http://code.google.com/p/phantomjs/issues/detail?id=430).)
 
 ### Setting request headers ###
 
@@ -194,20 +181,20 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 ## Changes ##
 
-### 0.7.0 (unreleased) ###
+### 0.7.0 ###
 
 #### Features ####
 
-*   Added an option ":js_errors", allowing poltergeist to continue
+*   Added an option `:js_errors`, allowing poltergeist to continue
     running after JS errors. (John Griffin & Tom Stuart) [Issue #62] [Issue #69]
-*   Added an option ":window_size", allowing users to specify
+*   Added an option `:window_size`, allowing users to specify
     dimensions to which the browser window will be resized.
     (Tom Stuart) [Issue #53]
 *   Capybara 1.0 is no longer supported. Capybara ~> 1.1 is required.
 *   Added ability to set arbitrary http request headers
 *   Inspect network traffic on the page via
     `page.driver.network_traffic` (Doug McInnes) [Issue #77]
-*   Added an option ":phantomjs_options", allowing users to specify
+*   Added an option `:phantomjs_options`, allowing users to specify
     additional command-line options passed to phantomjs executable.
     (wynst) [Issue #97]
 *   Scroll element into viewport if needed on click (Gabriel Sobrinho)
