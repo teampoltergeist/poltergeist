@@ -31,6 +31,9 @@ module TestSessions
 end
 
 RSpec.configure do |config|
+  config.run_all_when_everything_filtered = true
+  config.filter_run :focus => true
+
   config.before do
     Capybara.configure do |config|
       config.default_selector = :xpath
