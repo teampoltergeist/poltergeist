@@ -120,6 +120,14 @@ describe Capybara::Session do
       it 'fires the blur event' do
         @session.find(:css, '#changes_on_blur').text.should == "Blur"
       end
+
+      it "fires the keydown event before the value is updated" do
+        @session.find(:css, '#value_on_keydown').text.should == "Hello"
+      end
+
+      it "fires the keyup event after the value is updated" do
+        @session.find(:css, '#value_on_keyup').text.should == "Hello!"
+      end
     end
 
     it 'supports running multiple sessions at once' do

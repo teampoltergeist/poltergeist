@@ -173,10 +173,10 @@ class PoltergeistAgent.Node
     this.trigger('focus')
 
     for char in value
-      @element.value += char
-
       keyCode = this.characterToKeyCode(char)
       this.keyupdowned('keydown', keyCode)
+      @element.value += char
+
       this.keypressed(false, false, false, false, char.charCodeAt(0), char.charCodeAt(0))
       this.keyupdowned('keyup', keyCode)
 
