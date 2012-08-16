@@ -18,9 +18,11 @@ $(function() {
     })
     .keydown(function(event) {
       $('#changes_on_keydown').text(increment)
+      $('#value_on_keydown').text($(this).val())
     })
     .keyup(function(event) {
       $('#changes_on_keyup').text(increment)
+      $('#value_on_keyup').text($(this).val())
     })
     .keypress(function() {
       $('#changes_on_keypress').text(increment)
