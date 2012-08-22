@@ -42,6 +42,10 @@ class Poltergeist.Browser
 
   visit: (url, headers) ->
     @state = 'loading'
+
+    # Workaround for https://code.google.com/p/phantomjs/issues/detail?id=745
+    @page.setUserAgent(headers['User-Agent']) if headers['User-Agent']
+
     @page.open(url, operation: "get", headers: headers)
 
   current_url: ->

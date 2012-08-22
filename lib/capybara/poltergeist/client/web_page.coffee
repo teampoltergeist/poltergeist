@@ -117,6 +117,9 @@ class Poltergeist.WebPage
   setClipRect: (rect) ->
     @native.clipRect = rect
 
+  setUserAgent: (userAgent) ->
+    @native.settings.userAgent = userAgent
+
   dimensions: ->
     scroll   = this.scrollPosition()
     viewport = this.viewportSize()
