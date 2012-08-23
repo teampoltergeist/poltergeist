@@ -125,6 +125,15 @@ class Poltergeist.Browser
       @state = 'default'
       this.sendResponse(true)
 
+  single_tap: (page_id, id) ->
+    # First cancel all touches, this prevents libraries like Zepto from
+    # mistaking certain taps for double taps (touchstart - touchstart),
+    # when for instance touch interactions occur quickly after each other.
+    this.node(page_id, id).trigger('touchcancel')
+    this.node(page_id, id).trigger('touchstart')
+    this.node(page_id, id).trigger('touchend')
+    this.sendResponse(true)
+
   drag: (page_id, id, other_id) ->
     this.node(page_id, id).dragTo this.node(page_id, other_id)
     this.sendResponse(true)
