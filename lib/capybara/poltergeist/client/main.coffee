@@ -55,6 +55,11 @@ class Poltergeist.ClickFailed extends Poltergeist.Error
   name: "Poltergeist.ClickFailed"
   args: -> [@selector, @position]
 
+class Poltergeist.TouchFailed extends Poltergeist.Error
+  constructor: (@selector, @position) ->
+  name: "Poltergeist.TouchFailed"
+  args: -> [@selector, @position]
+
 class Poltergeist.JavascriptError extends Poltergeist.Error
   constructor: (@errors) ->
   name: "Poltergeist.JavascriptError"

@@ -21,6 +21,8 @@ module Capybara::Poltergeist
         raise ObsoleteNode.new(self, error.response)
       when 'Poltergeist.ClickFailed'
         raise ClickFailed.new(self, error.response)
+      when 'Poltergeist.TouchFailed'
+        raise TouchFailed.new(self, error.response)
       else
         raise
       end

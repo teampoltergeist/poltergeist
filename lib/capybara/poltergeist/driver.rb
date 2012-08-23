@@ -148,7 +148,7 @@ module Capybara::Poltergeist
     end
 
     def invalid_element_errors
-      [Capybara::Poltergeist::ObsoleteNode, Capybara::Poltergeist::ClickFailed]
+      [Capybara::Poltergeist::ObsoleteNode, Capybara::Poltergeist::ClickFailed, Capybara::Poltergeist::TouchFailed]
     end
   end
 end
