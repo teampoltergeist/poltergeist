@@ -92,6 +92,10 @@ module Capybara::Poltergeist
       command 'click', page_id, id
     end
 
+    def single_tap(page_id, id)
+      command 'single_tap', page_id, id
+    end
+
     def drag(page_id, id, other_id)
       command 'drag', page_id, id, other_id
     end

@@ -50,7 +50,11 @@ describe Capybara::Session do
         end
 
         it "raises a ClickFailed error" do
-          expect { @session.click_link("O hai") }.to raise_error(Capybara::Poltergeist::ClickFailed)
+          expect { @session.find(:css, '#foo').click }.to raise_error(Capybara::Poltergeist::ClickFailed)
+        end
+
+        it "raises a TouchFailed error" do
+          expect { @session.find(:css, '#foo').single_tap }.to raise_error(Capybara::Poltergeist::TouchFailed)
         end
 
         context "and is then brought in" do
@@ -60,7 +64,11 @@ describe Capybara::Session do
           end
 
           it "clicks properly" do
-            expect { @session.click_link "O hai" }.to_not raise_error(Capybara::Poltergeist::ClickFailed)
+            expect { @session.find(:css, '#foo').click }.to_not raise_error(Capybara::Poltergeist::ClickFailed)
+          end
+
+          it "taps properly" do
+            expect { @session.find(:css, '#foo').single_tap }.to_not raise_error(Capybara::Poltergeist::TouchFailed)
           end
 
           after do
@@ -181,6 +189,10 @@ describe Capybara::Session do
       @session.evaluate_script("{foo: 'bar'}").should == {"foo" => "bar"}
     end
 
+    it 'can evaluate a statement ending with a semicolon' do
+      @session.evaluate_script('3;').should == 3
+    end
+
     it "synchronises page loads properly" do
       @session.visit '/poltergeist/index'
       @session.click_link "JS redirect"
@@ -233,7 +245,7 @@ describe Capybara::Session do
           begin
             @session.find(:css, '#one').click
           rescue => error
-            error.selector.should == "html body div#two.box"
+            error.selector.should == 'html body div#two.box'
             error.message.should include('[200, 200]')
           end
         end
@@ -256,9 +268,68 @@ describe Capybara::Session do
           end
         end
       end
+    end
 
-      it "can evaluate a statement ending with a semicolon" do
-        @session.evaluate_script("3;").should == 3
+    context 'touch tests' do
+      before do
+        @session.visit '/poltergeist/touch_test'
+      end
+
+      after do
+        @session.driver.resize(1024, 768)
+      end
+
+      it 'scrolls around so that elements can be tapped' do
+        @session.driver.resize(200, 200)
+        log = @session.find(:css, '#log')
+
+        instructions = %w(one four one two three)
+        instructions.each do |instruction, i|
+          @session.find(:css, "##{instruction}").single_tap
+          log.text.should == instruction
+        end
+      end
+
+      context 'with #two overlapping #one' do
+        before do
+          @session.execute_script <<-JS
+            var two = document.getElementById('two')
+            two.style.position = 'absolute'
+            two.style.left     = '0px'
+            two.style.top      = '0px'
+          JS
+        end
+
+        it 'detects if an element is obscured when tapping' do
+          expect {
+            @session.find(:css, '#one').single_tap
+          }.to raise_error(Capybara::Poltergeist::TouchFailed)
+
+          begin
+            @session.find(:css, '#one').single_tap
+          rescue => error
+            error.selector.should == 'html body div#two.box'
+            error.message.should include('[200, 200]')
+          end
+        end
+
+        it 'taps in the centre of an element' do
+          begin
+            @session.find(:css, '#one').single_tap
+          rescue => error
+            error.position.should == [200, 200]
+          end
+        end
+
+        it 'taps in the centre of an element within the viewport, if part is outside the viewport' do
+          @session.driver.resize(200, 200)
+
+          begin
+            @session.find(:css, '#one').single_tap
+          rescue => error
+            error.position.first.should == 150
+          end
+        end
       end
     end
 

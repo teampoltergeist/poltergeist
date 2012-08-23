@@ -17,6 +17,12 @@ module Capybara
   end
 end
 
+class Capybara::Node::Element
+  def single_tap
+    wait_until { base.single_tap }
+  end
+end
+
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app)
 end

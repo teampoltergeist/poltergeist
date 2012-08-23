@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style type="text/css">
+    body {
+      width: 800px;
+      margin: 0;
+    }
+    .box {
+      width: 200px;
+      height: 200px;
+      float: left;
+      margin: 100px;
+    }
+    #one {
+      background: red;
+    }
+    #two {
+      background: orange
+    }
+    #three {
+      background: blue;
+    }
+    #four {
+      background: green;
+    }
+  </style>
+  <script type="text/javascript">
+  window.onload = function() {
+    var log = document.querySelector('#log')
+    var boxes = document.querySelectorAll('.box')
+    for (var i = 0; i < boxes.length; i++) {
+      var el = boxes[i]
+      el.ontouchstart = function() {
+        log.textContent = this.id
+      }
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="one" class="box"></div>
+  <div id="two" class="box"></div>
+  <div id="three" class="box"></div>
+  <div id="four" class="box"></div>
+  <div id="log"></div>
+</body>
+</html>

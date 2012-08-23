@@ -39,6 +39,15 @@ class Poltergeist.Node
     else
       throw new Poltergeist.ClickFailed(test.selector, pos)
 
+  touch: ->
+    this.scrollIntoView()
+
+    pos  = this.clickPosition()
+    test = this.clickTest(pos.x, pos.y)
+
+    unless test.status == 'success'
+      throw new Poltergeist.TouchFailed(test.selector, pos)
+
   dragTo: (other) ->
     this.scrollIntoView()
 
