@@ -248,23 +248,20 @@ class PoltergeistAgent.Node
       # touchEvent.initTouchEvent('touch' + eventName, true, true, window, null, 0, 0, 0, 0, false, false, false, false, touches, targetTouches, changedTouches, 1, 0);
       # element.dispatchEvent(touchEvent);
 
-      x = 0
-      y = 0
       event = document.createEvent('Events')
-      touch = { pageX: x, pageY: y, target: @element }
+      touch = { pageX: 0, pageY: 0, target: @element }
       if name == 'touchcancel'
         event.touches = []
         event.targetTouches = []
         event.changedTouches = [touch]
         event.initEvent(name, true, false)
       else
-        touch = { pageX: x, pageY: y, target: @element }
         event.touches = [touch]
         event.targetTouches = [touch]
         event.changedTouches = []
         event.initEvent(name, true, true)
     else
-      throw "Unknown event"
+      throw 'Unknown event'
 
     @element.dispatchEvent(event)
 
