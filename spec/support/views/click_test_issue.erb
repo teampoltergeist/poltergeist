@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+  <head>
+    <title></title>
+    <style>
+      body {
+        margin: 0;
+      }
+      html, body, div {
+        width: 100%;
+        height: 100%;
+      }
+      .flippable {
+        -webkit-perspective: 1200;
+      }
+      .flippable > div {
+        -webkit-transform-style: preserve-3d;
+        -webkit-transition: -webkit-transform .33s;
+      }
+      .flippable:active > div {
+        -webkit-transform: rotateY(180deg);
+      }
+      .face {
+        position: absolute;
+        -webkit-backface-visibility: hidden;
+      }
+      .front {
+        /* Setting the z-index fixes the issue! */
+        /* z-index: 1; */
+        background: green;
+      }
+      .back {
+        background: red;
+        -webkit-transform: rotateY(180deg);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="flippable">
+      <div>
+        <div class="face front">
+          <a>Foo</a>
+        </div>
+        <div class="face back"></div>
+      </div>
+    </div>
+  </body>
+</html>
