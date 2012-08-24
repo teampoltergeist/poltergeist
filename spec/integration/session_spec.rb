@@ -255,6 +255,16 @@ describe Capybara::Session do
             error.position.first.should == 150
           end
         end
+
+        context "two elements, positioned at the same location, of which one is flipped around" do
+          it 'detects click ability correctly' do
+            @session.visit '/poltergeist/click_test_issue'
+
+            expect {
+              @session.find(:css, '.front').click
+            }.to_not raise_error(Capybara::Poltergeist::ClickFailed)
+          end
+        end
       end
 
       it "can evaluate a statement ending with a semicolon" do
