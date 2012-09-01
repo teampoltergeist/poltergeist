@@ -216,6 +216,7 @@ class PoltergeistAgent.Node
 
   position: ->
     rect = @element.getClientRects()[0]
+    throw new PoltergeistAgent.ObsoleteNode unless rect
 
     {
       top:    rect.top,

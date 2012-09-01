@@ -181,6 +181,15 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 ## Changes ##
 
+### 0.8.0 ###
+
+#### Bug fixes ####
+
+*   Prevent `TypeError: 'undefined' is not an object (evaluating
+    'rect.top')` error when clicking an element with `display: none`.
+    The click will fail, but an obsolete node error will be raised, meaning
+    that Capybara's retry mechanisms will kick in. [Issue #130]
+
 ### 0.7.0 ###
 
 #### Features ####
