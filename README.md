@@ -183,6 +183,12 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 ### 0.8.0 ###
 
+#### Features ####
+
+*   Click co-ordinates are shown in the debug log. You can use this in
+    combination with `page.driver.render` to work out where clicks are
+    actually happening if you are having trouble.
+
 #### Bug fixes ####
 
 *   Prevent `TypeError: 'undefined' is not an object (evaluating

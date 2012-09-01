@@ -19,7 +19,7 @@ class Poltergeist.Browser
 
     @page.onLoadFinished = (status) =>
       if @state == 'loading'
-        this.sendResponse(status)
+        this.sendResponse(status: status, click: @last_click)
         @state = 'default'
 
     @page.onInitialized = =>
@@ -119,11 +119,11 @@ class Poltergeist.Browser
     # state and wait for onLoadFinished before sending a response.
     @state = 'clicked'
 
-    node.click()
+    @last_click = node.click()
 
     if @state != 'loading'
       @state = 'default'
-      this.sendResponse(true)
+      this.sendResponse(@last_click)
 
   drag: (page_id, id, other_id) ->
     this.node(page_id, id).dragTo this.node(page_id, other_id)

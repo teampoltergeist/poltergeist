@@ -36,6 +36,7 @@ class Poltergeist.Node
 
     if test.status == 'success'
       @page.mouseEvent('click', pos.x, pos.y)
+      pos
     else
       throw new Poltergeist.ClickFailed(test.selector, pos)
 
