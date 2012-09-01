@@ -181,7 +181,7 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 ## Changes ##
 
-### 0.8.0 ###
+### 0.8.0 (unreleased) ###
 
 #### Features ####
 
