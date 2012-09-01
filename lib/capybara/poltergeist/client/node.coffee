@@ -35,7 +35,7 @@ class Poltergeist.Node
     test = this.clickTest(pos.x, pos.y)
 
     if test.status == 'success'
-      @page.sendEvent('click', pos.x, pos.y)
+      @page.mouseEvent('click', pos.x, pos.y)
     else
       throw new Poltergeist.ClickFailed(test.selector, pos)
 
@@ -45,9 +45,8 @@ class Poltergeist.Node
     position      = this.clickPosition()
     otherPosition = other.clickPosition()
 
-    @page.sendEvent('mousedown', position.x,      position.y)
-    @page.sendEvent('mousemove', otherPosition.x, otherPosition.y)
-    @page.sendEvent('mouseup',   otherPosition.x, otherPosition.y)
+    @page.mouseEvent('mousedown', position.x,      position.y)
+    @page.mouseEvent('mouseup',   otherPosition.x, otherPosition.y)
 
   isEqual: (other) ->
     @page == other.page && this.isDOMEqual(other.id)

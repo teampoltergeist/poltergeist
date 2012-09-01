@@ -34,6 +34,12 @@ describe Capybara::Session do
         expect { @session.click_link "JS redirect" }.to raise_error(Capybara::Poltergeist::ObsoleteNode)
       end
 
+      it 'hovers an element before clicking it' do
+        @session.visit('/poltergeist/with_js')
+        @session.click_link "Hidden link"
+        @session.current_path.should == '/'
+      end
+
       context "when someone (*cough* prototype *cough*) messes with Array#toJSON" do
         before do
           @session.visit("/poltergeist/index")

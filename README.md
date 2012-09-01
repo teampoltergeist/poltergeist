@@ -190,6 +190,10 @@ makes debugging easier). Running `rake autocompile` will watch the
     The click will fail, but an obsolete node error will be raised, meaning
     that Capybara's retry mechanisms will kick in. [Issue #130]
 
+*   Mouse over the element we will click, before clicking it. This
+    enables `:hover` effects etc to trigger before the click happens,
+    which can affect the click in some cases. [Issue #120]
+
 ### 0.7.0 ###
 
 #### Features ####

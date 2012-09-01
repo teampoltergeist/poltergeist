@@ -5,6 +5,25 @@
     <script src="/poltergeist/jquery-1.6.2.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="/poltergeist/jquery-ui-1.8.14.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="/poltergeist/test.js" type="text/javascript" charset="utf-8"></script>
+
+    <style type="text/css">
+      #off-the-left {
+        position:absolute;
+        left: -5000px;
+      }
+      #hidden_link {
+        background: red;
+        width: 10px;
+        height: 10px;
+        display: block;
+      }
+      #hidden_link span {
+        display: none;
+      }
+      #hidden_link:hover span {
+        display: inline;
+      }
+    </style>
   </head>
 
   <body>
@@ -26,6 +45,7 @@
     <p id="changes_on_keypress"></p>
     <p id="value_on_keydown"></p>
     <p id="value_on_keyup"></p>
-    <div id="off-the-left" style="position:absolute; left: -5000px;"><a href="/" id="foo">O hai</a></div>
+    <div id="off-the-left"><a href="/" id="foo">O hai</a></div>
+    <a href="/" id="hidden_link"><span>Hidden link</span></a>
   </body>
 </html>
