@@ -194,6 +194,9 @@ makes debugging easier). Running `rake autocompile` will watch the
     enables `:hover` effects etc to trigger before the click happens,
     which can affect the click in some cases. [Issue #120]
 
+*   Don't blow up when `evaluate_script` is called with a cyclic
+    structure.
+
 ### 0.7.0 ###
 
 #### Features ####

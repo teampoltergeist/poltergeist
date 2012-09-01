@@ -14,11 +14,17 @@ class PoltergeistAgent
       { error: { message: error.toString(), stack: error.stack } }
 
   @stringify: (object) ->
-    JSON.stringify object, (key, value) ->
-      if Array.isArray(this[key])
-        return this[key]
+    try
+      JSON.stringify object, (key, value) ->
+        if Array.isArray(this[key])
+          return this[key]
+        else
+          return value
+    catch error
+      if error instanceof TypeError
+        '"(cyclic structure)"'
       else
-        return value
+        throw error
 
   pushWindow: (new_window) ->
     @windows.push(new_window)

@@ -293,5 +293,16 @@ describe Capybara::Session do
         @session.status_code.should == 402
       end
     end
+
+    it 'ignores cyclic structure errors in evaluate_script' do
+      code = <<-CODE
+        (function() {
+          var a = {}
+          a.a = a
+          return a
+        })()
+      CODE
+      @session.evaluate_script(code).should == "(cyclic structure)"
+    end
   end
 end
