@@ -116,7 +116,7 @@ class PoltergeistAgent.Node
     @element.dispatchEvent(event)
 
   keyupdowned: (eventName, keyCode) ->
-    event = document.createEvent('UIEvents')
+    event = document.createEvent('HTMLEvents')
     event.initEvent(eventName, true, true)
     event.keyCode  = keyCode
     event.which    = keyCode
@@ -124,7 +124,7 @@ class PoltergeistAgent.Node
     @element.dispatchEvent(event)
 
   keypressed: (altKey, ctrlKey, shiftKey, metaKey, keyCode, charCode) ->
-    event = document.createEvent('UIEvents')
+    event = document.createEvent('Events')
     event.initEvent('keypress', true, true)
     event.window   = @agent.window
     event.altKey   = altKey
