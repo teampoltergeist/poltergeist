@@ -141,6 +141,7 @@ class PoltergeistAgent.Node
     @agent.document.evaluate('ancestor::body', @element, null, XPathResult.BOOLEAN_TYPE, null).booleanValue
 
   text: ->
+    return @element.textContent if @element.tagName == 'TITLE'
     return '' unless this.isVisible()
 
     if this.insideBody()

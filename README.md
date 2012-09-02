@@ -203,6 +203,9 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Don't blow up when `evaluate_script` is called with a cyclic
     structure.
 
+*   Fix the text method for title elements, so it doesn't return an
+    empty string.
+
 ### 0.7.0 ###
 
 #### Features ####
