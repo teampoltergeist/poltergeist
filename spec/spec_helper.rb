@@ -10,6 +10,7 @@ require 'support/test_app'
 require 'support/spec_logger'
 
 Capybara.default_wait_time = 0 # less timeout so tests run faster
+Capybara.server_boot_timeout = 30 # provide a little extra start-up time on slower systems
 
 alias :running :lambda
 
