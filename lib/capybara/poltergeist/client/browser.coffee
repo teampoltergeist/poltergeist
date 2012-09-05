@@ -121,9 +121,11 @@ class Poltergeist.Browser
 
     @last_click = node.click()
 
-    if @state != 'loading'
-      @state = 'default'
-      this.sendResponse(@last_click)
+    setTimeout =>
+      if @state != 'loading'
+        @state = 'default'
+        this.sendResponse(@last_click)
+    , 5
 
   drag: (page_id, id, other_id) ->
     this.node(page_id, id).dragTo this.node(page_id, other_id)
