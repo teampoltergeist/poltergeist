@@ -1,6 +1,6 @@
 module Capybara::Poltergeist
   class Inspector
-    BROWSERS = %w(chromium chromium-browser google-chrome safari)
+    BROWSERS = %w(chromium chromium-browser google-chrome open)
 
     def self.detect_browser
       @browser ||= BROWSERS.find { |name| system("which #{name} &>/dev/null") }
