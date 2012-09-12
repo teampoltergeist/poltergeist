@@ -127,6 +127,10 @@ class Poltergeist.Browser
         this.sendResponse(@last_click)
     , 5
 
+  clickCoordinates: (x, y) ->
+    this.page.sendEvent('click', x, y)
+    this.sendResponse(true)
+
   drag: (page_id, id, other_id) ->
     this.node(page_id, id).dragTo this.node(page_id, other_id)
     this.sendResponse(true)
