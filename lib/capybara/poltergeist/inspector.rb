@@ -3,7 +3,7 @@ module Capybara::Poltergeist
     BROWSERS = %w(chromium chromium-browser google-chrome open)
 
     def self.detect_browser
-      @browser ||= BROWSERS.find { |name| system("which #{name} &>/dev/null") }
+      @browser ||= BROWSERS.find { |name| browser_binary_exists?(name) }
     end
 
     def initialize(browser = nil)
@@ -30,6 +30,17 @@ module Capybara::Poltergeist
                      "You can specify one manually using e.g. `:inspector => 'chromium'` " \
                      "as a configuration option for Poltergeist."
       end
+    end
+
+    def self.browser_binary_exists?(browser)
+      exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
+      ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
+        exts.each { |ext|
+          exe = "#{path}#{File::SEPARATOR}#{browser}#{ext}"
+          return exe if File.executable? exe
+        }
+      end
+      return nil
     end
   end
 end
