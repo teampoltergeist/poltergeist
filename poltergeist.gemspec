@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'image_size',         '~> 1.0'
   s.add_development_dependency 'coffee-script',      '~> 2.2.0'
   s.add_development_dependency 'guard-coffeescript', '~> 1.0.0'
+  s.add_development_dependency 'thin',               '~> 1.4'
 
   s.files        = Dir.glob("{lib}/**/*") + %w(LICENSE README.md)
   s.require_path = 'lib'
