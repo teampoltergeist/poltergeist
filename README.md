@@ -206,6 +206,9 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Fix the text method for title elements, so it doesn't return an
     empty string.
 
+*   Fixed problem with cookies not being clearer between tests on
+    PhantomJS 1.7
+
 ### 0.7.0 ###
 
 #### Features ####
