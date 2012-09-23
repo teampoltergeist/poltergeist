@@ -123,6 +123,7 @@ module Capybara::Poltergeist
     def resize(width, height)
       browser.resize(width, height)
     end
+    alias_method :resize_window, :resize
 
     def network_traffic
       browser.network_traffic
