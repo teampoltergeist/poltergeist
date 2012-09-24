@@ -8,7 +8,12 @@ class Poltergeist.Browser
     this.resetPage()
 
   resetPage: ->
-    @page.release() if @page?
+    if @page?
+      @page.release()
+
+      # Remove the conditional when we stop supporting PhantomJS 1.6
+      phantom.clearCookies() if phantom.clearCookies
+
     @page = new Poltergeist.WebPage(@width, @height)
 
     @page.onLoadStarted = =>

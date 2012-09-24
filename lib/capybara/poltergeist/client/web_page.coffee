@@ -30,11 +30,6 @@ class Poltergeist.WebPage
       this.prototype[delegate] =
         -> @native[delegate].apply(@native, arguments)
 
-  release: ->
-    # Conditional can be removed once we drop PhantomJS 1.6 support
-    @native.clearCookies() if @native.clearCookies
-    @native.release()
-
   onInitializedNative: ->
     @_source = null
     this.injectAgent()
