@@ -274,5 +274,13 @@ module Capybara::Poltergeist
         @driver.status_code.should == 200
       end
     end
+
+    context 'custom user agent' do
+      it 'allows to customize the user agent' do
+        @driver.headers = { 'User-Agent' => 'foo' }
+        @driver.visit '/'
+        @driver.evaluate_script('window.navigator.userAgent').should == 'foo'
+      end
+    end
   end
 end
