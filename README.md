@@ -216,7 +216,7 @@ makes debugging easier). Running `rake autocompile` will watch the
     [Issue #127]
 
 *   Use `el.innerText` for `Node#text`. This ensures that e.g. `<br>` is
-    returned as a newline. It also simplifies the method. [Issue #139]
+    returned as a space. It also simplifies the method. [Issue #139]
 
 ### 0.7.0 ###
 

@@ -310,5 +310,10 @@ describe Capybara::Session do
       CODE
       @session.evaluate_script(code).should == "(cyclic structure)"
     end
+
+    it 'returns BR as a space in #text' do
+      @session.visit '/poltergeist/simple'
+      @session.find(:css, '#break').text.should == "Foo Bar"
+    end
   end
 end
