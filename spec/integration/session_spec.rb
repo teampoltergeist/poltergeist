@@ -313,7 +313,7 @@ describe Capybara::Session do
 
     it 'returns BR as a space in #text' do
       @session.visit '/poltergeist/simple'
-      @session.find(:css, '#break').text.should == "Foo Bar"
+      @session.find(:css, '#break').text.should == "Foo\nBar"
     end
   end
 end
