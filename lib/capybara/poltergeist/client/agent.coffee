@@ -154,7 +154,10 @@ class PoltergeistAgent.Node
 
     for i in [0...results.snapshotLength]
       node = results.snapshotItem(i)
-      text += node.textContent if this.isVisible(node.parentNode)
+      if this.isVisible(node.parentNode)
+        text += node.textContent
+        text += ' ' if node.nextSibling?.nodeName == "BR"
+
     text
 
   getAttribute: (name) ->
