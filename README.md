@@ -209,6 +209,9 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Fixed problem with cookies not being clearer between tests on
     PhantomJS 1.7
 
+*   Fixed Javascript errors during page load causes TimeoutErrors.
+    [Issue #124]
+
 ### 0.7.0 ###
 
 #### Features ####

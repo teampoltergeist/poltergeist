@@ -206,6 +206,10 @@ module Capybara::Poltergeist
         @driver.evaluate_script("1+1").should == 2
       end
 
+      it 'propagates a Javascript error during page load to a ruby exception' do
+        expect { @driver.visit "/poltergeist/js_error" }.to raise_error(JavascriptError)
+      end
+
       it "doesn't propagate a Javascript error to ruby if error raising disabled" do
         driver = Capybara::Poltergeist::Driver.new(nil, :js_errors => false)
         driver.execute_script "setTimeout(function() { omg }, 0)"
