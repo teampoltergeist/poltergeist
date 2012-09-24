@@ -212,6 +212,9 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Fixed Javascript errors during page load causes TimeoutErrors.
     [Issue #124]
 
+*   Ensure the User-Agent header can be set successfully. (Klaus Hartl)
+    [Issue #127]
+
 ### 0.7.0 ###
 
 #### Features ####
