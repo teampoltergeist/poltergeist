@@ -141,21 +141,10 @@ class PoltergeistAgent.Node
     @agent.document.evaluate('ancestor::body', @element, null, XPathResult.BOOLEAN_TYPE, null).booleanValue
 
   text: ->
-    return @element.textContent if @element.tagName == 'TITLE'
-    return '' unless this.isVisible()
-
-    if this.insideBody()
-      el = @element
+    if @element.tagName == 'TEXTAREA'
+      @element.textContent
     else
-      el = @agent.document.body
-
-    results = @agent.document.evaluate('.//text()[not(ancestor::script)]', el, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
-    text    = ''
-
-    for i in [0...results.snapshotLength]
-      node = results.snapshotItem(i)
-      text += node.textContent if this.isVisible(node.parentNode)
-    text
+      @element.innerText
 
   getAttribute: (name) ->
     if name == 'checked' || name == 'selected'

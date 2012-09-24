@@ -215,6 +215,9 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Ensure the User-Agent header can be set successfully. (Klaus Hartl)
     [Issue #127]
 
+*   Use `el.innerText` for `Node#text`. This ensures that e.g. `<br>` is
+    returned as a newline. It also simplifies the method. [Issue #139]
+
 ### 0.7.0 ###
 
 #### Features ####
