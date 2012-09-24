@@ -212,6 +212,15 @@ module Capybara::Poltergeist
         sleep 0.01
         expect { driver.execute_script "" }.to_not raise_error(JavascriptError)
       end
+
+      context "if error raising is not disabled"  do 
+        it "does propagate a Javascript error in page on loading to ruby" do
+          driver = Capybara::Session.new(:poltergeist, TestApp)
+          expect { 
+            driver.visit("/poltergeist/simple_with_js_error")
+          }.to raise_error(JavascriptError)
+        end
+      end
     end
 
     context "network traffic" do
