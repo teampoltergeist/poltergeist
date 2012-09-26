@@ -278,6 +278,16 @@ describe Capybara::Session do
       it "can evaluate a statement ending with a semicolon" do
         @session.evaluate_script("3;").should == 3
       end
+
+      it "can evaluate a multiline script" do
+        @session.evaluate_script(<<-JS).should == [1,2,3]
+          [
+            1,
+            2,
+            3
+          ]
+        JS
+      end
     end
 
     context 'status code support', :status_code_support => true do

@@ -106,7 +106,7 @@ class Poltergeist.Browser
     this.sendResponse this.node(page_id, id).isVisible()
 
   evaluate: (script) ->
-    this.sendResponse @page.evaluate("function() { return #{script} }")
+    this.sendResponse @page.evaluate("function() { return (function(){ return #{script}; }).call(this); }")
 
   execute: (script) ->
     @page.execute("function() { #{script} }")
