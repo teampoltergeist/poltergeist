@@ -216,9 +216,7 @@ makes debugging easier). Running `rake autocompile` will watch the
     [Issue #127]
 
 *   Use `el.innerText` for `Node#text`. This ensures that e.g. `<br>` is
-    returned as a newline. It also simplifies the method. [Issue #139]
-
-*   Don't strip newlines in `Node#text`. [Issue #128]
+    returned as a space. It also simplifies the method. [Issue #139]
 
 *   Fix status code support when a response redirects to another URL.
     This was previously tested to ensure it would return the status code
