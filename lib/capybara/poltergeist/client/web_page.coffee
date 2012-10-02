@@ -67,6 +67,10 @@ class Poltergeist.WebPage
   onResourceRequestedNative: (request) ->
     @lastRequestId = request.id
 
+    if request.url == @redirectURL
+      @redirectURL = null
+      @requestId   = request.id
+
     @_networkTraffic[request.id] = {
       request:       request,
       responseParts: []
@@ -77,7 +81,7 @@ class Poltergeist.WebPage
 
     if @requestId == response.id
       if response.redirectURL
-        @requestId = response.id
+        @redirectURL = response.redirectURL
       else
         @_statusCode = response.status
 

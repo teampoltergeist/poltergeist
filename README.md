@@ -220,6 +220,11 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 *   Don't strip newlines in `Node#text`. [Issue #128]
 
+*   Fix status code support when a response redirects to another URL.
+    This was previously tested to ensure it would return the status code
+    of the redirected URL, but the test was falsely broken and the
+    implementation was also broken.
+
 ### 0.7.0 ###
 
 #### Features ####
