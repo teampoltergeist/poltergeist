@@ -1,10 +1,10 @@
 # Proxy object for forwarding method calls to the node object inside the page.
 
 class Poltergeist.Node
-  @DELEGATES = ['text', 'getAttribute', 'value', 'set', 'setAttribute', 'isObsolete',
+  @DELEGATES = ['text', 'getAttribute', 'value', 'setAttribute', 'isObsolete',
                 'removeAttribute', 'isMultiple', 'select', 'tagName', 'find',
                 'isVisible', 'position', 'trigger', 'parentId', 'clickTest',
-                'scrollIntoView', 'isDOMEqual']
+                'scrollIntoView', 'isDOMEqual', 'focusAndHighlight', 'blur']
 
   constructor: (@page, @id) ->
 
@@ -51,3 +51,8 @@ class Poltergeist.Node
 
   isEqual: (other) ->
     @page == other.page && this.isDOMEqual(other.id)
+
+  set: (value) ->
+    this.focusAndHighlight()
+    @page.sendEvent('keypress', value.toString())
+    this.blur()
