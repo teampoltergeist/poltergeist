@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version=phantomjs-1.6.1-linux-i686-dynamic
+version=phantomjs-1.7.0-linux-i686-dynamic
 wget http://phantomjs.googlecode.com/files/$version.tar.bz2
 tar xjf $version.tar.bz2
 ln -fs `pwd`/$version/bin/phantomjs /usr/local/bin/phantomjs
