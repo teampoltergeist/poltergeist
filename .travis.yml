@@ -1,8 +1,9 @@
 before_script:
-  - sudo ci/install_phantomjs
   # Use Google's name servers. The default name servers cannot
   # resolve capybara1.elabs.se for unknown reasons.
   - sudo su -c 'echo "nameserver 8.8.8.8" > /etc/resolv.conf; echo "nameserver 8.8.4.4" >> /etc/resolv.conf'
+  - sudo ci/install_phantomjs
+  - "export PATH=phantomjs/bin:$PATH"
   - phantomjs --version
 rvm:
   - 1.9.3
