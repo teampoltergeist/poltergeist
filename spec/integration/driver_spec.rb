@@ -335,7 +335,7 @@ module Capybara::Poltergeist
       end
 
       it 'can set cookies with custom settings' do
-        @driver.set_cookie 'capybara', 'omg', path: '/poltergeist'
+        @driver.set_cookie 'capybara', 'omg', :path => '/poltergeist'
 
         @driver.visit('/get_cookie')
         @driver.body.should_not include('omg')
@@ -361,7 +361,7 @@ module Capybara::Poltergeist
       it 'can set cookies with an expires time' do
         time = Time.at(Time.now.to_i + 10000)
         @driver.visit '/'
-        @driver.set_cookie 'foo', 'bar', expires: time
+        @driver.set_cookie 'foo', 'bar', :expires => time
         @driver.cookies['foo'].expires.should == time
       end
     end
