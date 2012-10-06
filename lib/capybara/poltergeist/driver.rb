@@ -146,9 +146,9 @@ module Capybara::Poltergeist
 
     def set_cookie(name, value, options = {})
       browser.set_cookie({
-        name:   name,
-        value:  value,
-        domain: URI.parse(app_server.url('')).host
+        :name   => name,
+        :value  => value,
+        :domain => URI.parse(app_server.url('')).host
       }.merge(options))
     end
 
