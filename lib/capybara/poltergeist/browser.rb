@@ -133,6 +133,10 @@ module Capybara::Poltergeist
       command 'set_headers', headers
     end
 
+    def response_headers
+      command 'response_headers'
+    end
+
     def command(name, *args)
       message = { 'name' => name, 'args' => args }
       log message.inspect

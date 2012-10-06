@@ -83,7 +83,8 @@ class Poltergeist.WebPage
       if response.redirectURL
         @redirectURL = response.redirectURL
       else
-        @_statusCode = response.status
+        @_statusCode      = response.status
+        @_responseHeaders = response.headers
 
   networkTraffic: ->
     @_networkTraffic
@@ -102,6 +103,12 @@ class Poltergeist.WebPage
 
   statusCode: ->
     @_statusCode
+
+  responseHeaders: ->
+    headers = {}
+    @_responseHeaders.forEach (item) ->
+      headers[item.name] = item.value
+    headers
 
   viewportSize: ->
     @native.viewportSize

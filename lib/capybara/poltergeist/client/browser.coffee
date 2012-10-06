@@ -181,6 +181,9 @@ class Poltergeist.Browser
     @page.setCustomHeaders(headers)
     this.sendResponse(true)
 
+  response_headers: ->
+    this.sendResponse(@page.responseHeaders())
+
   exit: ->
     phantom.exit()
 

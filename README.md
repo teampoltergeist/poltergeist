@@ -193,6 +193,8 @@ makes debugging easier). Running `rake autocompile` will watch the
     actually happening if you are having trouble.
 *   Added `:port` configuration option and made the default port 44678
     rather than a random available port.
+*   Support for Capybara's `page.response_headers` API to retrieve the
+    headers of the last page load.
 
 #### Bug fixes ####
 

@@ -134,6 +134,10 @@ module Capybara::Poltergeist
       browser.set_headers(headers)
     end
 
+    def response_headers
+      browser.response_headers
+    end
+
     def debug
       if @options[:inspector]
         inspector.open
