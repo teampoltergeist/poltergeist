@@ -111,8 +111,12 @@ module Capybara::Poltergeist
       nil
     end
 
-    def within_frame(id, &block)
-      browser.within_frame(id, &block)
+    def within_frame(name, &block)
+      browser.within_frame(name, &block)
+    end
+
+    def within_window(name, &block)
+      browser.within_window(name, &block)
     end
 
     def reset!

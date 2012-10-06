@@ -18,6 +18,7 @@ module Capybara::Poltergeist
     it_should_behave_like "driver with status code support"
     it_should_behave_like "driver with cookies support"
     it_should_behave_like "driver with header support"
+    it_should_behave_like "driver with support for window switching"
 
     it 'supports a custom phantomjs path' do
       begin

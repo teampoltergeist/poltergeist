@@ -7,14 +7,13 @@ class Poltergeist.WebPage
 
   @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'documentSize']
 
-  constructor: (width, height) ->
-    @native          = require('webpage').create()
+  constructor: (@native) ->
+    @native or= require('webpage').create()
+
     @_source         = ""
     @_errors         = []
     @_networkTraffic = {}
     @frames          = []
-
-    this.setViewportSize(width: width, height: height)
 
     for callback in WebPage.CALLBACKS
       this.bindCallback(callback)
@@ -77,7 +76,7 @@ class Poltergeist.WebPage
     }
 
   onResourceReceivedNative: (response) ->
-    @_networkTraffic[response.id].responseParts.push(response)
+    @_networkTraffic[response.id]?.responseParts.push(response)
 
     if @requestId == response.id
       if response.redirectURL
@@ -153,6 +152,10 @@ class Poltergeist.WebPage
       @native.switchToMainFrame()
     else
       @native.switchToFrame(@frames[@frames.length - 1])
+
+  getPage: (name) ->
+    page = @native.getPage(name)
+    page && new Poltergeist.WebPage(page)
 
   dimensions: ->
     scroll   = this.scrollPosition()

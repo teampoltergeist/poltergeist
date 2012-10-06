@@ -210,6 +210,9 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Frame switching support now uses native PhantomJS APIs. (This might
     make it work better, but in general it's a badly tested area both in
     Capybara and Poltergeist.)
+*   Support for the Capybara window switching API
+    (`page.within_window`). It is probably buggy, but works for basic
+    things.
 
 #### Bug fixes ####
 

@@ -1,9 +1,10 @@
 class Poltergeist.Browser
   constructor: (@owner, width, height) ->
-    @width   = width || 1024
-    @height  = height || 768
-    @state   = 'default'
-    @page_id = 0
+    @width      = width || 1024
+    @height     = height || 768
+    @state      = 'default'
+    @page_stack = []
+    @page_id    = 0
 
     this.resetPage()
 
@@ -12,7 +13,8 @@ class Poltergeist.Browser
       @page.release()
       phantom.clearCookies()
 
-    @page = new Poltergeist.WebPage(@width, @height)
+    @page = new Poltergeist.WebPage
+    @page.setViewportSize(width: @width, height: @height)
 
     @page.onLoadStarted = =>
       @state = 'loading' if @state == 'clicked'
@@ -118,6 +120,22 @@ class Poltergeist.Browser
 
   pop_frame: ->
     this.sendResponse(@page.popFrame())
+
+  push_window: (name) ->
+    new_page = @page.getPage(name)
+
+    if new_page
+      @page_stack.push(@page)
+      @page = new_page
+      @page_id += 1
+      this.sendResponse(true)
+    else
+      this.sendResponse(false)
+
+  pop_window: ->
+    prev_page = @page_stack.pop()
+    @page = prev_page if prev_page
+    this.sendResponse(true)
 
   click: (page_id, id) ->
     # Get the node before changing state, in case there is an exception

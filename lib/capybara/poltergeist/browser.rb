@@ -82,11 +82,18 @@ module Capybara::Poltergeist
       command 'execute', script
     end
 
-    def within_frame(id, &block)
-      command 'push_frame', id
+    def within_frame(name, &block)
+      command 'push_frame', name
       yield
     ensure
       command 'pop_frame'
+    end
+
+    def within_window(name, &block)
+      command 'push_window', name
+      yield
+    ensure
+      command 'pop_window'
     end
 
     def click(page_id, id)
