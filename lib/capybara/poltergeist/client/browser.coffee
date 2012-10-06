@@ -184,6 +184,19 @@ class Poltergeist.Browser
   response_headers: ->
     this.sendResponse(@page.responseHeaders())
 
+  cookies: ->
+    this.sendResponse(@page.cookies())
+
+  # We're using phantom.addCookie so that cookies can be set
+  # before the first page load has taken place.
+  set_cookie: (cookie) ->
+    phantom.addCookie(cookie)
+    this.sendResponse(true)
+
+  remove_cookie: (name) ->
+    @page.deleteCookie(name)
+    this.sendResponse(true)
+
   exit: ->
     phantom.exit()
 

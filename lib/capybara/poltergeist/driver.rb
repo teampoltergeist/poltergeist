@@ -1,3 +1,5 @@
+require 'uri'
+
 module Capybara::Poltergeist
   class Driver < Capybara::Driver::Base
     DEFAULT_TIMEOUT = 30
@@ -136,6 +138,22 @@ module Capybara::Poltergeist
 
     def response_headers
       browser.response_headers
+    end
+
+    def cookies
+      browser.cookies
+    end
+
+    def set_cookie(name, value, options = {})
+      browser.set_cookie({
+        name:   name,
+        value:  value,
+        domain: URI.parse(app_server.url('')).host
+      }.merge(options))
+    end
+
+    def remove_cookie(name)
+      browser.remove_cookie(name)
     end
 
     def debug

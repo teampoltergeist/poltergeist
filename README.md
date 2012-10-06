@@ -117,10 +117,7 @@ here](http://jonathanleighton.com/articles/2012/poltergeist-0-6-0/)
 Additional HTTP request headers can be set like so:
 
 ``` ruby
-page.driver.headers = {
-  "Cookie" => "foo=bar",
-  "Host"   => "foo.com"
-}
+page.driver.headers = { "User-Agent" => "Poltergeist" }
 ```
 
 The extra headers will apply to all subsequent HTTP requests (including
@@ -133,6 +130,20 @@ You can inspect the network traffic (i.e. what resources have been
 loaded) on the current page by calling `page.driver.network_traffic`.
 This returns an array of request objects. A request object has a
 `response_parts` method containing data about the response chunks.
+
+### Manipulating cookies ###
+
+The following methods are used to inspect and manipulate cookies:
+
+* `page.driver.cookies` - a hash of cookies accessible to the current
+  page. The keys are cookie names. The values are `Cookie` objects, with
+  the following methods: `name`, `value`, `domain`, `path`, `secure?`,
+  `httponly?`, `expires`.
+* `page.driver.set_cookie(name, value, options = {})` - set a cookie.
+  The options hash can take the following keys: `:domain`, `:path`,
+  `:secure`, `:httponly`, `:expires`. `:expires` should be a `Time`
+  object.
+* `page.driver.remove_cookie(name)` - remove a cookie
 
 ## Customization ##
 
@@ -195,6 +206,7 @@ makes debugging easier). Running `rake autocompile` will watch the
     rather than a random available port.
 *   Support for Capybara's `page.response_headers` API to retrieve the
     headers of the last page load.
+*   Support for cookie manipulation. [Issue #12]
 
 #### Bug fixes ####
 

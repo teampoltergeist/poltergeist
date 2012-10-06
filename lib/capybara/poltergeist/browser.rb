@@ -1,4 +1,5 @@
 require 'multi_json'
+require 'time'
 
 module Capybara::Poltergeist
   class Browser
@@ -135,6 +136,22 @@ module Capybara::Poltergeist
 
     def response_headers
       command 'response_headers'
+    end
+
+    def cookies
+      Hash[command('cookies').map { |cookie| [cookie['name'], Cookie.new(cookie)] }]
+    end
+
+    def set_cookie(cookie)
+      if cookie[:expires].respond_to?(:httpdate)
+        cookie[:expires] = cookie[:expires].httpdate
+      end
+
+      command 'set_cookie', cookie
+    end
+
+    def remove_cookie(name)
+      command 'remove_cookie', name
     end
 
     def command(name, *args)

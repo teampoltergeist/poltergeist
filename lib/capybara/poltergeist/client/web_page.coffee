@@ -110,6 +110,12 @@ class Poltergeist.WebPage
       headers[item.name] = item.value
     headers
 
+  cookies: ->
+    @native.cookies
+
+  deleteCookie: (name) ->
+    @native.deleteCookie(name)
+
   viewportSize: ->
     @native.viewportSize
 

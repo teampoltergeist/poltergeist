@@ -13,6 +13,7 @@ module Capybara
     require 'capybara/poltergeist/json'
     require 'capybara/poltergeist/network_traffic'
     require 'capybara/poltergeist/errors'
+    require 'capybara/poltergeist/cookie'
   end
 end
 

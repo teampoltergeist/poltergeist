@@ -314,5 +314,56 @@ module Capybara::Poltergeist
         @driver.status_code.should == 200
       end
     end
+
+    context 'cookies support' do
+      it 'returns set cookies' do
+        @driver.visit('/set_cookie')
+
+        cookie = @driver.cookies['capybara']
+        cookie.name.should      == 'capybara'
+        cookie.value.should     == 'test_cookie'
+        cookie.domain.should    == '127.0.0.1'
+        cookie.path.should      == '/'
+        cookie.secure?.should   == false
+        cookie.httponly?.should == false
+      end
+
+      it 'can set cookies' do
+        @driver.set_cookie 'capybara', 'omg'
+        @driver.visit('/get_cookie')
+        @driver.body.should include('omg')
+      end
+
+      it 'can set cookies with custom settings' do
+        @driver.set_cookie 'capybara', 'omg', path: '/poltergeist'
+
+        @driver.visit('/get_cookie')
+        @driver.body.should_not include('omg')
+
+        @driver.visit('/poltergeist/get_cookie')
+        @driver.body.should include('omg')
+
+        @driver.cookies['capybara'].path.should == '/poltergeist'
+      end
+
+      it 'can remove a cookie' do
+        @driver.visit('/set_cookie')
+
+        @driver.visit('/get_cookie')
+        @driver.body.should include('test_cookie')
+
+        @driver.remove_cookie 'capybara'
+
+        @driver.visit('/get_cookie')
+        @driver.body.should_not include('test_cookie')
+      end
+
+      it 'can set cookies with an expires time' do
+        time = Time.at(Time.now.to_i + 10000)
+        @driver.visit '/'
+        @driver.set_cookie 'foo', 'bar', expires: time
+        @driver.cookies['foo'].expires.should == time
+      end
+    end
   end
 end

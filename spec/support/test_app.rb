@@ -29,6 +29,10 @@ class TestApp
     redirect '/poltergeist/with_different_resources'
   end
 
+  get '/poltergeist/get_cookie' do
+    request.cookies['capybara']
+  end
+
   get '/poltergeist/:view' do |view|
     render_view view
   end
