@@ -192,7 +192,6 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Click co-ordinates are shown in the debug log. You can use this in
     combination with `page.driver.render` to work out where clicks are
     actually happening if you are having trouble.
-
 *   Added `:port` configuration option and made the default port 44678
     rather than a random available port.
 
@@ -202,37 +201,27 @@ makes debugging easier). Running `rake autocompile` will watch the
     'rect.top')` error when clicking an element with `display: none`.
     The click will fail, but an obsolete node error will be raised, meaning
     that Capybara's retry mechanisms will kick in. [Issue #130]
-
 *   Mouse over the element we will click, before clicking it. This
     enables `:hover` effects etc to trigger before the click happens,
     which can affect the click in some cases. [Issue #120]
-
 *   Don't blow up when `evaluate_script` is called with a cyclic
     structure.
-
 *   Fix the text method for title elements, so it doesn't return an
     empty string.
-
 *   Fixed problem with cookies not being clearer between tests on
     PhantomJS 1.7
-
 *   Fixed Javascript errors during page load causes TimeoutErrors.
     [Issue #124]
-
 *   Ensure the User-Agent header can be set successfully. (Klaus Hartl)
     [Issue #127]
-
 *   Use `el.innerText` for `Node#text`. This ensures that e.g. `<br>` is
     returned as a space. It also simplifies the method. [Issue #139]
-
 *   Fix status code support when a response redirects to another URL.
     This was previously tested to ensure it would return the status code
     of the redirected URL, but the test was falsely broken and the
     implementation was also broken.
-
 *   Fixed visiting URLs where only a hash change occurs (no HTTP
     request). [Issue #79]
-
 *   Setting `page.driver.headers` now applies the headers to all
     requests, not just calls to `visit`. (So XHR, asset requests, etc
     will all receive the headers.) [Issue #149]
@@ -282,39 +271,30 @@ makes debugging easier). Running `rake autocompile` will watch the
     want to click), the user will now see an exception explaining what
     happened and which element would actually be targeted by the click. This
     should aid debugging. [Issue #25]
-
 *   Click elements at their middle position rather than the top-left.
     This is presumed to be more likely to succeed because the top-left
     may be obscured by overlapping elements, negative margins, etc. [Issue #26]
-
 *   Add experimental support for using the remote WebKit web inspector.
     This will only work with PhantomJS 1.5, which is not yet released,
     so it won't be officially supported by Poltergeist until 1.5 is
     released. [Issue #31]
-
 *   Add `page.driver.quit` method. If you spawn additional Capybara
     sessions, you might want to use this to reap the child phantomjs
     process. [Issue #24]
-
 *   Errors produced by Javascript on the page will now generate an
     exception within Ruby. [Issue #27]
-
 *   JRuby support. [Issue #20]
 
 #### Bug fixes ####
 
 *   Fix bug where we could end up interacting with an obsolete element. [Issue #30]
-
 *   Raise an suitable error if PhantomJS returns a non-zero exit status.
     Previously a version error would be raised, indicating that the
     PhantomJS version was too old when in fact it did not start at all. [Issue #23]
-
 *   Ensure the `:timeout` option is actually used. [Issue #36]
-
 *   Nodes need to know which page they are associated with. Before this,
     if Javascript caused a new page to load, existing node references
     would be wrong, but wouldn't raise an ObsoleteNode error. [Issue #39]
-
 *   In some circumstances, we could end up missing an inline element
     when attempting to click it. This is due to the use of
     `getBoundingClientRect()`. We're now using `getClientRects()` to
@@ -325,13 +305,10 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Element click position is now calculated using the native
     `getBoundingClientRect()` method, which will be faster and less
     buggy.
-
 *   Handle `window.confirm()`. Always returns true, which is the same
     as capybara-webkit. [Issue #10]
-
 *   Handle `window.prompt()`. Returns the default value, if present, or
     null.
-
 *   Fix bug with page Javascript page loading causing problems. [Issue #19]
 
 ### 0.3.0 ###
@@ -340,7 +317,6 @@ makes debugging easier). Running `rake autocompile` will watch the
     page is smaller than the window. The incorrect position would be
     calculated, and so the click would happen in the wrong place. This is
     fixed. [Issue #8]
-
 *   Poltergeist didn't work in conjunction with the Thin web server,
     because that server uses Event Machine, and Poltergeist was assuming
     that it was the only thing in the process using EventMachine.
@@ -350,7 +326,6 @@ makes debugging easier). Running `rake autocompile` will watch the
     no longer have the overhead of running a mostly-idle event loop.
 
     [Issue #6]
-
 *   Added the `:timeout` option to configure the timeout when talking to
     PhantomJS.
 
