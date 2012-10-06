@@ -158,6 +158,8 @@ end
     as a 2-element array, e.g. [1024, 768]. Default: [1024, 768]
 *   `:phantomjs_options` (Array) - Additional [command line options](http://code.google.com/p/phantomjs/wiki/Interface#Command-line_Options)
     to be passed to PhantomJS, e.g. `['--load-images=no', '--ignore-ssl-errors=yes']`
+*   `:port` (Fixnum) - The port which should be used to communicate
+    with the PhantomJS process. Default: 44678.
 
 ## Bugs ##
 
@@ -188,6 +190,9 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Click co-ordinates are shown in the debug log. You can use this in
     combination with `page.driver.render` to work out where clicks are
     actually happening if you are having trouble.
+
+*   Added `:port` configuration option and made the default port 44678
+    rather than a random available port.
 
 #### Bug fixes ####
 

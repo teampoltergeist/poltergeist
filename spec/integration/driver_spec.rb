@@ -19,24 +19,28 @@ module Capybara::Poltergeist
     it_should_behave_like "driver with cookies support"
 
     it 'supports a custom phantomjs path' do
-      file = POLTERGEIST_ROOT + '/spec/support/custom_phantomjs_called'
-      path = POLTERGEIST_ROOT + '/spec/support/custom_phantomjs'
+      begin
+        file = POLTERGEIST_ROOT + '/spec/support/custom_phantomjs_called'
+        path = POLTERGEIST_ROOT + '/spec/support/custom_phantomjs'
 
-      FileUtils.rm_f file
+        FileUtils.rm_f file
 
-      driver  = Capybara::Poltergeist::Driver.new(nil, :phantomjs => path)
-      driver.browser
+        driver  = Capybara::Poltergeist::Driver.new(nil, :phantomjs => path, :port => 44679)
+        driver.browser
 
-      # If the correct custom path is called, it will touch the file. We allow at
-      # least 10 secs for this to happen before failing.
+        # If the correct custom path is called, it will touch the file. We allow at
+        # least 10 secs for this to happen before failing.
 
-      tries = 0
-      until File.exist?(file) || tries == 100
-        sleep 0.1
-        tries += 1
+        tries = 0
+        until File.exist?(file) || tries == 100
+          sleep 0.1
+          tries += 1
+        end
+
+        File.exist?(file).should == true
+      ensure
+        driver.quit if driver
       end
-
-      File.exist?(file).should == true
     end
 
     it 'raises an error and restart the client, if the client dies while executing a command' do
@@ -61,16 +65,21 @@ module Capybara::Poltergeist
     end
 
     it 'supports specifying viewport size with an option' do
-      Capybara.register_driver :poltergeist_with_custom_window_size do |app|
-        Capybara::Poltergeist::Driver.new(
-          app,
-          :logger => TestSessions.logger,
-          :window_size => [800, 600]
-        )
+      begin
+        Capybara.register_driver :poltergeist_with_custom_window_size do |app|
+          Capybara::Poltergeist::Driver.new(
+            app,
+            :logger      => TestSessions.logger,
+            :window_size => [800, 600],
+            :port        => 44679
+          )
+        end
+        driver = Capybara::Session.new(:poltergeist_with_custom_window_size, TestApp).driver
+        driver.visit("/")
+        driver.evaluate_script('[window.innerWidth, window.innerHeight]').should eq([800, 600])
+      ensure
+        driver.quit if driver
       end
-      @driver = Capybara::Session.new(:poltergeist_with_custom_window_size, TestApp).driver
-      @driver.visit("/")
-      @driver.evaluate_script('[window.innerWidth, window.innerHeight]').should eq([800, 600])
     end
 
     it 'supports rendering the page' do
@@ -107,7 +116,12 @@ module Capybara::Poltergeist
       @driver.visit('/poltergeist/headers')
       @driver.body.should include('COOKIE: foo=bar')
       @driver.body.should include('HOST: foo.com')
+    end
+
+    it 'resets headers when the driver is reset' do
+      @driver.headers = {"foo" => "bar"}
       @driver.reset!
+      @driver.headers.should == {}
     end
 
     it 'supports rendering the page with a nonstring path' do
@@ -138,7 +152,7 @@ module Capybara::Poltergeist
     end
 
     it 'supports quitting the session' do
-      driver = Capybara::Poltergeist::Driver.new(nil)
+      driver = Capybara::Poltergeist::Driver.new(nil, :port => 44679)
       pid    = driver.client_pid
 
       Process.kill(0, pid).should == 1
@@ -215,10 +229,14 @@ module Capybara::Poltergeist
       end
 
       it "doesn't propagate a Javascript error to ruby if error raising disabled" do
-        driver = Capybara::Poltergeist::Driver.new(nil, :js_errors => false)
-        driver.execute_script "setTimeout(function() { omg }, 0)"
-        sleep 0.01
-        expect { driver.execute_script "" }.to_not raise_error(JavascriptError)
+        begin
+          driver = Capybara::Poltergeist::Driver.new(nil, :js_errors => false, :port => 44679)
+          driver.execute_script "setTimeout(function() { omg }, 0)"
+          sleep 0.01
+          expect { driver.execute_script "" }.to_not raise_error(JavascriptError)
+        ensure
+          driver.quit if driver
+        end
       end
     end
 

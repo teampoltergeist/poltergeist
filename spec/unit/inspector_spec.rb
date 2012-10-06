@@ -12,27 +12,21 @@ module Capybara::Poltergeist
       Inspector.new('foo').browser.should == 'foo'
     end
 
-    it 'finds a port to run on' do
-      subject.port.should_not be_nil
-    end
-
-    it 'remembers the port' do
-      subject.port.should == subject.port
-    end
-
     it 'has a url' do
-      subject.stub(:port => 1234)
+      subject = Inspector.new(nil, 1234)
       subject.url.should == "http://localhost:1234/"
     end
 
     it 'can be opened' do
-      subject.stub(:port => 1234, :browser => 'chromium')
+      subject = Inspector.new('chromium', 1234)
       Spawn.should_receive(:spawn).with("chromium", "http://localhost:1234/")
       subject.open
     end
 
     it 'raises an error on open when the browser is unknown' do
-      subject.stub(:port => 1234, :browser => nil)
+      subject = Inspector.new(nil, 1234)
+      subject.stub(:browser => nil)
+
       expect { subject.open }.to raise_error(Capybara::Poltergeist::Error)
     end
   end

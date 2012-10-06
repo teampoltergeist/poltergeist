@@ -8,7 +8,6 @@ module Capybara
     require 'capybara/poltergeist/server'
     require 'capybara/poltergeist/web_socket_server'
     require 'capybara/poltergeist/client'
-    require 'capybara/poltergeist/util'
     require 'capybara/poltergeist/inspector'
     require 'capybara/poltergeist/spawn'
     require 'capybara/poltergeist/json'

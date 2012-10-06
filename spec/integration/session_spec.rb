@@ -148,16 +148,6 @@ describe Capybara::Session do
       end
     end
 
-    it 'supports running multiple sessions at once' do
-      other_session = Capybara::Session.new(:poltergeist, TestApp)
-
-      @session.visit('/')
-      other_session.visit('/')
-
-      @session.should have_content("Hello")
-      other_session.should have_content("Hello")
-    end
-
     it 'has no trouble clicking elements when the size of a document changes' do
       @session.visit('/poltergeist/long_page')
       @session.find(:css, '#penultimate').click

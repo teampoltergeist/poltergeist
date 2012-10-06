@@ -45,7 +45,7 @@ module Capybara::Poltergeist
 
       it 'starts the server with the provided timeout' do
         server = stub
-        Server.should_receive(:new).with(3).and_return(server)
+        Server.should_receive(:new).with(Driver::DEFAULT_PORT, 3).and_return(server)
         subject.server.should == server
       end
     end
@@ -59,17 +59,6 @@ module Capybara::Poltergeist
         Server.should_receive(:new).and_return(server)
         Client.should_receive(:start).with(64297, hash_including(:window_size => [800, 600]))
         subject.client
-      end
-    end
-
-    context 'when setting request headers' do
-      subject { Driver.new(nil) }
-
-      it "resets headers to empty hash after calling reset" do
-        subject.headers.should == {}
-        subject.headers = {"foo" => "bar"}
-        subject.reset!
-        subject.headers.should == {}
       end
     end
   end

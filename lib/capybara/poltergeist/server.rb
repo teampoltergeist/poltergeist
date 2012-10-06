@@ -2,8 +2,8 @@ module Capybara::Poltergeist
   class Server
     attr_reader :port, :socket, :timeout
 
-    def initialize(timeout = nil)
-      @port    = Util.find_available_port
+    def initialize(port, timeout = nil)
+      @port    = port
       @timeout = timeout
       start
     end

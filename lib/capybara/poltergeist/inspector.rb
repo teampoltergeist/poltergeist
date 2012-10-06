@@ -1,21 +1,21 @@
 module Capybara::Poltergeist
   class Inspector
-    BROWSERS = %w(chromium chromium-browser google-chrome open)
+    BROWSERS     = %w(chromium chromium-browser google-chrome open)
+    DEFAULT_PORT = 9664
 
     def self.detect_browser
       @browser ||= BROWSERS.find { |name| browser_binary_exists?(name) }
     end
 
-    def initialize(browser = nil)
+    attr_reader :port
+
+    def initialize(browser = nil, port = DEFAULT_PORT)
       @browser = browser.respond_to?(:to_str) ? browser : nil
+      @port    = port
     end
 
     def browser
       @browser ||= self.class.detect_browser
-    end
-
-    def port
-      @port ||= Util.find_available_port
     end
 
     def url
