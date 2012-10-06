@@ -305,5 +305,16 @@ describe Capybara::Session do
       @session.visit '/poltergeist/simple'
       @session.find(:css, '#break').text.should == "Foo Bar"
     end
+
+    it 'handles hash changes' do
+      @session.visit '/#omg'
+      @session.current_url.should =~ /\/#omg$/
+      @session.execute_script <<-CODE
+        window.onhashchange = function() { window.last_hashchange = window.location.hash }
+      CODE
+      @session.visit '/#foo'
+      @session.current_url.should =~ /\/#foo$/
+      @session.evaluate_script("window.last_hashchange").should == '#foo'
+    end
   end
 end

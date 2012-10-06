@@ -228,6 +228,9 @@ makes debugging easier). Running `rake autocompile` will watch the
     of the redirected URL, but the test was falsely broken and the
     implementation was also broken.
 
+*   Fixed visiting URLs where only a hash change occurs (no HTTP
+    request). [Issue #79]
+
 ### 0.7.0 ###
 
 #### Features ####

@@ -44,12 +44,18 @@ class Poltergeist.Browser
       throw new Poltergeist.ObsoleteNode
 
   visit: (url, headers) ->
-    @state = 'loading'
+    @state   = 'loading'
+    prev_url = @page.currentUrl()
 
     # Workaround for https://code.google.com/p/phantomjs/issues/detail?id=745
     @page.setUserAgent(headers['User-Agent']) if headers['User-Agent']
 
     @page.open(url, operation: "get", headers: headers)
+
+    if /#/.test(url) && prev_url.split('#')[0] == url.split('#')[0]
+      # hashchange occurred, so there will be no onLoadFinished
+      @state = 'default'
+      this.sendResponse 'success'
 
   current_url: ->
     this.sendResponse @page.currentUrl()
