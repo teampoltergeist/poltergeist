@@ -113,13 +113,11 @@ class Poltergeist.Browser
     @page.execute("function() { #{script} }")
     this.sendResponse(true)
 
-  push_frame: (id) ->
-    @page.pushFrame(id)
-    this.sendResponse(true)
+  push_frame: (name) ->
+    this.sendResponse(@page.pushFrame(name))
 
   pop_frame: ->
-    @page.popFrame()
-    this.sendResponse(true)
+    this.sendResponse(@page.popFrame())
 
   click: (page_id, id) ->
     # Get the node before changing state, in case there is an exception

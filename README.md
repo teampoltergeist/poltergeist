@@ -207,6 +207,9 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Support for Capybara's `page.response_headers` API to retrieve the
     headers of the last page load.
 *   Support for cookie manipulation. [Issue #12]
+*   Frame switching support now uses native PhantomJS APIs. (This might
+    make it work better, but in general it's a badly tested area both in
+    Capybara and Poltergeist.)
 
 #### Bug fixes ####
 

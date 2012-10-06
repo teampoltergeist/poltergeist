@@ -4,8 +4,6 @@ class PoltergeistAgent
   constructor: ->
     @elements = []
     @nodes    = {}
-    @windows  = []
-    this.pushWindow(window)
 
   externalCall: (name, args) ->
     try
@@ -26,33 +24,11 @@ class PoltergeistAgent
       else
         throw error
 
-  pushWindow: (new_window) ->
-    @windows.push(new_window)
-
-    @window   = new_window
-    @document = @window.document
-
-    null
-
-  popWindow: ->
-    @windows.pop()
-
-    @window   = @windows[@windows.length - 1]
-    @document = @window.document
-
-    null
-
-  pushFrame: (id) ->
-    this.pushWindow @document.getElementById(id).contentWindow
-
-  popFrame: ->
-    this.popWindow()
-
   currentUrl: ->
     window.location.toString()
 
-  find: (selector, within = @document) ->
-    results = @document.evaluate(selector, within, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
+  find: (selector, within = document) ->
+    results = document.evaluate(selector, within, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
     ids     = []
 
     for i in [0...results.snapshotLength]
@@ -65,8 +41,8 @@ class PoltergeistAgent
     @elements.length - 1
 
   documentSize: ->
-    height: @document.documentElement.scrollHeight,
-    width:  @document.documentElement.scrollWidth
+    height: document.documentElement.scrollHeight,
+    width:  document.documentElement.scrollWidth
 
   get: (id) ->
     @nodes[id] or= new PoltergeistAgent.Node(this, @elements[id])
@@ -97,7 +73,7 @@ class PoltergeistAgent.Node
   isObsolete: ->
     obsolete = (element) =>
       if element.parentNode?
-        if element.parentNode == @agent.document
+        if element.parentNode == document
           false
         else
           obsolete element.parentNode
@@ -111,8 +87,8 @@ class PoltergeistAgent.Node
     @element.dispatchEvent(event)
 
   insideBody: ->
-    @element == @agent.document.body ||
-    @agent.document.evaluate('ancestor::body', @element, null, XPathResult.BOOLEAN_TYPE, null).booleanValue
+    @element == document.body ||
+    document.evaluate('ancestor::body', @element, null, XPathResult.BOOLEAN_TYPE, null).booleanValue
 
   text: ->
     if @element.tagName == 'TEXTAREA'
@@ -158,7 +134,7 @@ class PoltergeistAgent.Node
   isVisible: (element) ->
     element = @element unless element
 
-    if @agent.window.getComputedStyle(element).display == 'none'
+    if window.getComputedStyle(element).display == 'none'
       false
     else if element.parentElement
       this.isVisible element.parentElement
@@ -182,7 +158,7 @@ class PoltergeistAgent.Node
     if Node.EVENTS.MOUSE.indexOf(name) != -1
       event = document.createEvent('MouseEvent')
       event.initMouseEvent(
-        name, true, true, @agent.window, 0, 0, 0, 0, 0,
+        name, true, true, window, 0, 0, 0, 0, 0,
         false, false, false, false, 0, null
       )
     else if Node.EVENTS.FOCUS.indexOf(name) != -1

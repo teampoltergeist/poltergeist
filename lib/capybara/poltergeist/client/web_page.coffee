@@ -5,13 +5,14 @@ class Poltergeist.WebPage
 
   @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'release', 'render']
 
-  @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'pushFrame', 'popFrame', 'documentSize']
+  @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'documentSize']
 
   constructor: (width, height) ->
     @native          = require('webpage').create()
     @_source         = ""
     @_errors         = []
     @_networkTraffic = {}
+    @frames          = []
 
     this.setViewportSize(width: width, height: height)
 
@@ -38,7 +39,6 @@ class Poltergeist.WebPage
   injectAgent: ->
     if @native.evaluate(-> typeof __poltergeist) == "undefined"
       @native.injectJs("#{phantom.libraryPath}/agent.js")
-      @nodes = {}
 
   onConsoleMessageNative: (message) ->
     if message == '__DOMContentLoaded'
@@ -140,6 +140,20 @@ class Poltergeist.WebPage
   setCustomHeaders: (headers) ->
     @native.customHeaders = headers
 
+  pushFrame: (name) ->
+    @frames.push(name)
+    res = @native.switchToFrame(name)
+    this.injectAgent()
+    res
+
+  popFrame: ->
+    @frames.pop()
+
+    if @frames.length == 0
+      @native.switchToMainFrame()
+    else
+      @native.switchToFrame(@frames[@frames.length - 1])
+
   dimensions: ->
     scroll   = this.scrollPosition()
     viewport = this.viewportSize()
@@ -167,7 +181,7 @@ class Poltergeist.WebPage
     dimensions
 
   get: (id) ->
-    @nodes[id] or= new Poltergeist.Node(this, id)
+    new Poltergeist.Node(this, id)
 
   # Before each mouse event we make sure that the mouse is moved to where the
   # event will take place. This deals with e.g. :hover changes.
