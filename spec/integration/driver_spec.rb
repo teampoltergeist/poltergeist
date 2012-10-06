@@ -108,20 +108,37 @@ module Capybara::Poltergeist
       end
     end
 
-    it 'allows request headers to be set' do
-      @driver.headers = {
-        "Cookie" => "foo=bar",
-        "Host" => "foo.com"
-      }
-      @driver.visit('/poltergeist/headers')
-      @driver.body.should include('COOKIE: foo=bar')
-      @driver.body.should include('HOST: foo.com')
-    end
+    context 'setting headers' do
+      it 'allows headers to be set' do
+        @driver.headers = {
+          "Cookie" => "foo=bar",
+          "Host" => "foo.com"
+        }
+        @driver.visit('/poltergeist/headers')
+        @driver.body.should include('COOKIE: foo=bar')
+        @driver.body.should include('HOST: foo.com')
+      end
 
-    it 'resets headers when the driver is reset' do
-      @driver.headers = {"foo" => "bar"}
-      @driver.reset!
-      @driver.headers.should == {}
+      it 'supports User-Agent' do
+        @driver.headers = { 'User-Agent' => 'foo' }
+        @driver.visit '/'
+        @driver.evaluate_script('window.navigator.userAgent').should == 'foo'
+      end
+
+      it 'sets headers for all HTTP requests' do
+        @driver.headers = { 'X-Omg' => 'wat' }
+        @driver.visit '/'
+        @driver.execute_script <<-JS
+          var request = new XMLHttpRequest();
+          request.open('GET', '/poltergeist/headers', false);
+          request.send();
+
+          if (request.status === 200) {
+            document.body.innerHTML = request.responseText;
+          }
+        JS
+        @driver.body.should include('X_OMG: wat')
+      end
     end
 
     it 'supports rendering the page with a nonstring path' do
@@ -294,14 +311,6 @@ module Capybara::Poltergeist
       it 'should determine status code even after redirect' do
         @driver.visit('/poltergeist/redirect')
         @driver.status_code.should == 200
-      end
-    end
-
-    context 'custom user agent' do
-      it 'allows to customize the user agent' do
-        @driver.headers = { 'User-Agent' => 'foo' }
-        @driver.visit '/'
-        @driver.evaluate_script('window.navigator.userAgent').should == 'foo'
       end
     end
   end

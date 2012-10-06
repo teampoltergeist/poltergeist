@@ -124,6 +124,9 @@ class Poltergeist.WebPage
   setUserAgent: (userAgent) ->
     @native.settings.userAgent = userAgent
 
+  setCustomHeaders: (headers) ->
+    @native.customHeaders = headers
+
   dimensions: ->
     scroll   = this.scrollPosition()
     viewport = this.viewportSize()

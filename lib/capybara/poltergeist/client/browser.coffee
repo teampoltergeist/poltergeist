@@ -43,14 +43,11 @@ class Poltergeist.Browser
     else
       throw new Poltergeist.ObsoleteNode
 
-  visit: (url, headers) ->
+  visit: (url) ->
     @state   = 'loading'
     prev_url = @page.currentUrl()
 
-    # Workaround for https://code.google.com/p/phantomjs/issues/detail?id=745
-    @page.setUserAgent(headers['User-Agent']) if headers['User-Agent']
-
-    @page.open(url, operation: "get", headers: headers)
+    @page.open(url)
 
     if /#/.test(url) && prev_url.split('#')[0] == url.split('#')[0]
       # hashchange occurred, so there will be no onLoadFinished
@@ -177,6 +174,12 @@ class Poltergeist.Browser
 
   network_traffic: ->
     this.sendResponse(@page.networkTraffic())
+
+  set_headers: (headers) ->
+    # Workaround for https://code.google.com/p/phantomjs/issues/detail?id=745
+    @page.setUserAgent(headers['User-Agent']) if headers['User-Agent']
+    @page.setCustomHeaders(headers)
+    this.sendResponse(true)
 
   exit: ->
     phantom.exit()

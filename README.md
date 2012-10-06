@@ -124,7 +124,9 @@ page.driver.headers = {
 }
 ```
 
-They will be cleared between tests, so you do not have to do this manually.
+The extra headers will apply to all subsequent HTTP requests (including
+requests for assets, AJAX, etc). They will be automatically cleared at
+the end of the test.
 
 ### Inspecting network traffic ###
 
@@ -230,6 +232,10 @@ makes debugging easier). Running `rake autocompile` will watch the
 
 *   Fixed visiting URLs where only a hash change occurs (no HTTP
     request). [Issue #79]
+
+*   Setting `page.driver.headers` now applies the headers to all
+    requests, not just calls to `visit`. (So XHR, asset requests, etc
+    will all receive the headers.) [Issue #149]
 
 ### 0.7.0 ###
 

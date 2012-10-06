@@ -4,7 +4,6 @@ module Capybara::Poltergeist
     DEFAULT_PORT    = 44678 # 'GHOST' on a keypad :)
 
     attr_reader :app, :app_server, :server, :client, :browser, :options
-    attr_accessor :headers
 
     def initialize(app, options = {})
       @app       = app
@@ -13,7 +12,6 @@ module Capybara::Poltergeist
       @inspector = nil
       @server    = nil
       @client    = nil
-      @headers   = {}
 
       @app_server = Capybara::Server.new(app)
       @app_server.boot if Capybara.run_server
@@ -79,7 +77,7 @@ module Capybara::Poltergeist
     end
 
     def visit(path)
-      browser.visit app_server.url(path), @headers
+      browser.visit app_server.url(path)
     end
 
     def current_url
@@ -117,7 +115,6 @@ module Capybara::Poltergeist
 
     def reset!
       browser.reset
-      @headers = {}
     end
 
     def render(path, options = {})
@@ -131,6 +128,10 @@ module Capybara::Poltergeist
 
     def network_traffic
       browser.network_traffic
+    end
+
+    def headers=(headers)
+      browser.set_headers(headers)
     end
 
     def debug

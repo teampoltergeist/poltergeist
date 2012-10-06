@@ -16,8 +16,8 @@ module Capybara::Poltergeist
       client.restart
     end
 
-    def visit(url, headers)
-      command 'visit', url, headers
+    def visit(url)
+      command 'visit', url
     end
 
     def current_url
@@ -127,6 +127,10 @@ module Capybara::Poltergeist
 
     def equals(page_id, id, other_id)
       command('equals', page_id, id, other_id)
+    end
+
+    def set_headers(headers)
+      command 'set_headers', headers
     end
 
     def command(name, *args)
