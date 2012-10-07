@@ -4,6 +4,7 @@ require 'rspec/core/rake_task'
 base = File.dirname(__FILE__)
 require base + "/lib/capybara/poltergeist/version"
 require 'coffee-script'
+require 'rspec-rerun'
 
 task :autocompile do
   system "guard"
@@ -22,6 +23,7 @@ end
 RSpec::Core::RakeTask.new('test')
 
 task :default => [:compile, :test]
+task :ci => 'rspec-rerun:spec'
 
 task :release do
   puts "Releasing #{Capybara::Poltergeist::VERSION}, y/n?"

@@ -2,3 +2,4 @@
 /spec/support/custom_phantomjs_called
 /ci/Gemfile.*.lock
 /spec/tmp
+/rspec.failures
