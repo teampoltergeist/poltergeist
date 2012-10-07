@@ -1,6 +1,6 @@
 # Poltergeist - A PhantomJS driver for Capybara #
 
-Version: 0.7.0
+Version: 1.0
 
 [![Build Status](https://secure.travis-ci.org/jonleighton/poltergeist.png)](http://travis-ci.org/jonleighton/poltergeist)
 
@@ -286,7 +286,7 @@ Include as much information as possible. For example:
 
 ## Changes ##
 
-### 0.8.0 (unreleased) ###
+### 1.0 ###
 
 #### Features ####
 
@@ -334,7 +334,7 @@ Include as much information as possible. For example:
     requests, not just calls to `visit`. (So XHR, asset requests, etc
     will all receive the headers.) [Issue #149]
 
-### 0.7.0 ###
+### 0.7 ###
 
 #### Features ####
 
@@ -363,14 +363,14 @@ Include as much information as possible. For example:
     happened when dealing with pages that include JS rewriting
     Array.prototype.toJSON. (Tom Stuart) [Issue #63]
 
-### 0.6.0 ###
+### 0.6 ###
 
 #### Features ####
 
 *   Updated to PhantomJS 1.5.0, giving us proper support for reporting
     Javascript exception backtraces.
 
-### 0.5.0 ###
+### 0.5 ###
 
 #### Features ####
 
@@ -408,7 +408,7 @@ Include as much information as possible. For example:
     `getBoundingClientRect()`. We're now using `getClientRects()` to
     address this.
 
-### 0.4.0 ###
+### 0.4 ###
 
 *   Element click position is now calculated using the native
     `getBoundingClientRect()` method, which will be faster and less
@@ -419,7 +419,7 @@ Include as much information as possible. For example:
     null.
 *   Fix bug with page Javascript page loading causing problems. [Issue #19]
 
-### 0.3.0 ###
+### 0.3 ###
 
 *   There was a bad bug to do with clicking elements in a page where the
     page is smaller than the window. The incorrect position would be
@@ -437,11 +437,11 @@ Include as much information as possible. For example:
 *   Added the `:timeout` option to configure the timeout when talking to
     PhantomJS.
 
-### 0.2.0 ###
+### 0.2 ###
 
 *   First version considered 'ready', hopefully fewer problems.
 
-### 0.1.0 ###
+### 0.1 ###
 
 *   First version, various problems.
 
