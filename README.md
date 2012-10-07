@@ -30,40 +30,36 @@ server, etc.)
 
 ### Mac ###
 
-* *Manual install*: [Download this](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.1-macosx-static.zip&can=2&q=)
 * *Homebrew*: `brew install phantomjs`
+* *Manual install*: [Download this](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.7.0-macosx.zip&can=2&q=)
 
 ### Linux ###
 
 * Download the [32
-bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.1-linux-i686-dynamic.tar.bz2&can=2&q=)
+bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.7.0-linux-i686.tar.bz2&can=2&q=)
 or [64
-bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.1-linux-x86_64-dynamic.tar.bz2&can=2&q=)
+bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.7.0-linux-x86_64.tar.bz2&can=2&q=)
 binary.
-* Extract it: `sudo tar xvjf phantomjs-1.6.1-linux-*-dynamic.tar.bz2 -C /usr/local`
-* Link it: `sudo ln -s /usr/local/phantomjs-1.6.1-linux*/bin/phantomjs /usr/local/bin/phantomjs`
-
-(Note that you cannot copy the `/usr/local/phantomjs/bin/phantomjs`
-binary elsewhere on its own as it dynamically links with other files in
-`/usr/local/phantomjs/lib`.)
+* Extract the tarball and copy `bin/phantomjs` into your `PATH`
 
 ### Manual compilation ###
 
 Do this as a last resort if the binaries don't work for you. It will
 take quite a long time as it has to build WebKit.
 
-* Download [the source tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.6.1-source.zip&can=2&q=)
+* Download [the source tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.7.0-source.zip&can=2&q=)
 * Extract and cd in
 * `./build.sh`
 
+(See also the [PhantomJS building
+guide](http://phantomjs.org/build.html).)
+
 ## Compatibility ##
 
-Supported: MRI 1.8.7, MRI 1.9.2, MRI 1.9.3, JRuby 1.8, JRuby 1.9.
+Supported: MRI 1.8.7, MRI 1.9.2, MRI 1.9.3, JRuby 1.8, JRuby 1.9,
+Rubinius 1.8 on UNIX platforms.
 
-Not supported:
-
-* Rubinius
-* Windows
+Not supported: Rubinius 1.9, Windows.
 
 Contributions are welcome in order to move 'unsupported'
 items into the 'supported' list.
@@ -72,6 +68,11 @@ items into the 'supported' list.
 
 There are no special steps to take. You don't need Xvfb or any running X
 server at all.
+
+[Travis CI](https://travis-ci.org/) has PhantomJS pre-installed, but it
+might not be the latest version. If you need to install the latest
+version, [check out the .travis.yml that Poltergeist
+uses](https://github.com/jonleighton/poltergeist/blob/master/.travis.yml).
 
 Depending on your tests, one thing that you may need is some fonts. If
 you're getting errors on a CI that don't occur during development then
@@ -181,19 +182,113 @@ end
 *   `:port` (Fixnum) - The port which should be used to communicate
     with the PhantomJS process. Default: 44678.
 
-## Bugs ##
+## Troubleshooting ##
 
-Please file bug reports on Github and include example code to reproduce the problem wherever
-possible. (Tests are even better.) Please also provide the output with
-`:debug` turned on, and screenshots if you think it's relevant.
+Unfortunately, the nature of full-stack testing is that things can and
+do go wrong from time to time. This section aims to highlight a number
+of common problems and provide ideas about how you can work around them.
+
+### DeadClient errors ###
+
+Sometimes PhantomJS crashes during a test. There are basically two kinds
+of crashes: those that can be reproduced every time, and those that
+occur sporadically and are not easily reproduced.
+
+If your crash happens every time, you should read the [PhantomJS crash
+reporting
+guide](https://github.com/ariya/phantomjs/wiki/Crash-Reporting) and file
+a bug against PhantomJS. Feel free to also file a bug against
+Poltergeist in case there are workarounds that can be implemented within
+Poltergeist. Also, if lots of Poltergeist users are experiencing the
+same crash then fixing this can be given priority.
+
+If your crash is sporadic, there is less that can be done. Often these
+issues are very complicated and difficult to track down. It may be that
+the crash has already been fixed in a newer version of WebKit that will
+eventually find its way into PhantomJS. It's still worth reporting your
+bug against PhantomJS (but first try to see if others are experiencing
+the same crash). But it's probably not worth filing a bug against
+Poltergeist as there's not much we can do.
+
+If your experience sporadic crashes a lot, it may be worth configuring
+your CI to automatically re-run failing tests before reporting a failed
+build.
+
+### ClickFailed errors ###
+
+When Poltergeist clicks on an element, rather than generating a DOM
+click event, it actually generates a "proper" click. This is much closer
+to what happens when a real user clicks on the page - but it means that
+Poltergeist must scroll the page to where the element is, and work out
+correct suitable co-ordinates to click. If the element is covered up by
+another element, the click will fail (this is a good thing - because
+your user won't be able to click a covered up element either).
+
+Sometimes there can be issues with this behavior. If you have problems,
+it's worth taking screenshots of the page and trying to work out what's
+going on. If your click is failing, but you're not getting a
+`ClickFailed` error, then you can turn on the `:debug` option and look
+in the output to see what co-ordinates Poltergeist is using for the
+click. You can then cross-reference this with a screenshot to see if
+something is obviously wrong.
+
+If you can't work out what's going on and just want to work around the
+problem so you can get on with life, then consider using a DOM click
+event instead. For example, if this code is failing:
+
+``` ruby
+click_button "Save"
+```
+
+Then try:
+
+``` ruby
+find_button("Save").trigger('click')
+```
+
+### Timing problems ###
+
+Sometimes tests pass and fail sporadically. This is often because there
+is some problem synchronising events properly. It's often
+straightforward to verify this by adding `sleep` statements into your
+test to allow sufficient time for the page to settle.
+
+If you have these types of problems, read through the [Capybara
+documentation of asynchronous
+Javascript](https://github.com/jnicklas/capybara#asynchronous-javascript-ajax-and-friends)
+which explains the tools that Capybara provides for dealing with this.
+
+### General troubleshooting hints ###
+
+* Configure Poltergeist with `:debug` turned on so you can see its
+  communication with PhantomJS.
+* Take screenshots to figure out what the state of your page is when the
+  problem occurs.
+* Consider downloading the Poltergeist source and using `console.log`
+  debugging to figure out what's going on inside PhantomJS. (This will
+  require an understanding of the Poltergeist source code and PhantomJS,
+  so it's only for the committed!)
+
+### Filing a bug ###
+
+If you can provide specific steps to reproduce your problem, or have
+specific information that might help other help you track down the
+problem, then please file a bug on Github.
+
+Please include the following information:
+
+* Specific steps to reproduce where possible (failing tests are even
+  better)
+* The output obtained from running Poltergeist with `:debug` turned on.
+* Screenshots if they're relevant.
+* Stack traces if there are any Ruby on Javascript exceptions generated.
+* State which versions of Poltergeist and PhantomJS you are using, and
+  on what operating system.
 
 ## Hacking ##
 
-Contributions are very welcome and I will happily give commit access to
-anyone who does a few good pull requests.
-
-To get setup, run `bundle install`. You can run the full test suite with
-`rspec spec/` or `rake`.
+Contributions are very welcome. To get setup, run `bundle install`.  You
+can run the full test suite with `rspec spec/` or `rake`.
 
 While PhantomJS is capable of compiling and running CoffeeScript code
 directly, I prefer to compile the code myself and distribute that (it
