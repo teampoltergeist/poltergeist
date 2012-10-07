@@ -81,8 +81,16 @@ to install.
 
 ## What's supported? ##
 
-Poltergeist supports basically everything that is supported by the stock Selenium driver,
-including Javascript, drag-and-drop, etc.
+Poltergeist supports all the mandatory features for a Capybara driver,
+and the following optional features:
+
+* `page.evaluate_script` and `page.execute_script`
+* `page.within_frame`
+* `page.within_window`
+* `page.status_code`
+* `page.response_headers`
+* cookie handling
+* drag-and-drop
 
 There are some additional features:
 
@@ -210,9 +218,7 @@ makes debugging easier). Running `rake autocompile` will watch the
 *   Frame switching support now uses native PhantomJS APIs. (This might
     make it work better, but in general it's a badly tested area both in
     Capybara and Poltergeist.)
-*   Support for the Capybara window switching API
-    (`page.within_window`). It is probably buggy, but works for basic
-    things.
+*   Support for the Capybara window switching API (`page.within_window`).
 
 #### Bug fixes ####
 
