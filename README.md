@@ -285,17 +285,6 @@ Please include the following information:
 * State which versions of Poltergeist and PhantomJS you are using, and
   on what operating system.
 
-## Hacking ##
-
-Contributions are very welcome. To get setup, run `bundle install`.  You
-can run the full test suite with `rspec spec/` or `rake`.
-
-While PhantomJS is capable of compiling and running CoffeeScript code
-directly, I prefer to compile the code myself and distribute that (it
-makes debugging easier). Running `rake autocompile` will watch the
-`.coffee` files for changes, and compile them into
-`lib/capybara/client/compiled`.
-
 ## Changes ##
 
 ### 0.8.0 (unreleased) ###
