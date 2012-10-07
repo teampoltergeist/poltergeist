@@ -318,7 +318,7 @@ describe Capybara::Session do
     end
 
     context 'window switching support' do
-      it 'waits for the window to load when switching to it' do
+      it 'waits for the window to load' do
         @session.visit '/'
 
         # setTimeout is necessary due to https://code.google.com/p/phantomjs/issues/detail?id=815
@@ -329,6 +329,23 @@ describe Capybara::Session do
         CODE
 
         @session.within_window 'popup' do
+          @session.body.should include('slow page')
+        end
+      end
+    end
+
+    context 'frame support' do
+      it 'waits for the frame to load' do
+        @session.visit '/'
+
+        @session.evaluate_script <<-CODE
+          setTimeout(function() {
+            document.body.innerHTML += '<iframe src="/poltergeist/slow" name="frame">'
+          }, 0)
+        CODE
+
+        @session.within_frame 'frame' do
+          @session.current_path.should == "/poltergeist/slow"
           @session.body.should include('slow page')
         end
       end

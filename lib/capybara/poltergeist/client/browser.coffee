@@ -26,6 +26,9 @@ class Poltergeist.Browser
       if @state == 'loading'
         this.sendResponse(status: status, click: @last_click)
         @state = 'default'
+      else if @state == 'awaiting_frame_load'
+        this.sendResponse(true)
+        @state = 'default'
 
     @page.onInitialized = =>
       @page_id += 1
@@ -127,7 +130,15 @@ class Poltergeist.Browser
     this.sendResponse(true)
 
   push_frame: (name) ->
-    this.sendResponse(@page.pushFrame(name))
+    if @page.pushFrame(name)
+      if @page.currentUrl() == 'about:blank'
+        @state = 'awaiting_frame_load'
+      else
+        this.sendResponse(true)
+    else
+      # There's currently no PhantomJS callback available for frame creation,
+      # so we have to poll
+      setTimeout((=> this.push_frame(name)), 50)
 
   pop_frame: ->
     this.sendResponse(@page.popFrame())

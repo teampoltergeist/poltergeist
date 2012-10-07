@@ -90,7 +90,7 @@ class Poltergeist.WebPage
     @_networkTraffic
 
   content: ->
-    @native.content
+    @native.frameContent
 
   source: ->
     @_source
