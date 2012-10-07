@@ -262,6 +262,7 @@ which explains the tools that Capybara provides for dealing with this.
   communication with PhantomJS.
 * Take screenshots to figure out what the state of your page is when the
   problem occurs.
+* Use the remote web inspector in case it provides any useful insight
 * Consider downloading the Poltergeist source and using `console.log`
   debugging to figure out what's going on inside PhantomJS. (This will
   require an understanding of the Poltergeist source code and PhantomJS,
