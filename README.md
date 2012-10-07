@@ -199,17 +199,16 @@ guide](https://github.com/ariya/phantomjs/wiki/Crash-Reporting) and file
 a bug against PhantomJS. Feel free to also file a bug against
 Poltergeist in case there are workarounds that can be implemented within
 Poltergeist. Also, if lots of Poltergeist users are experiencing the
-same crash then fixing this can be given priority.
+same crash then fixing it will move up the priority list.
 
 If your crash is sporadic, there is less that can be done. Often these
 issues are very complicated and difficult to track down. It may be that
 the crash has already been fixed in a newer version of WebKit that will
 eventually find its way into PhantomJS. It's still worth reporting your
-bug against PhantomJS (but first try to see if others are experiencing
-the same crash). But it's probably not worth filing a bug against
+bug against PhantomJS, but it's probably not worth filing a bug against
 Poltergeist as there's not much we can do.
 
-If your experience sporadic crashes a lot, it may be worth configuring
+If you experience sporadic crashes a lot, it may be worth configuring
 your CI to automatically re-run failing tests before reporting a failed
 build.
 
@@ -219,7 +218,7 @@ When Poltergeist clicks on an element, rather than generating a DOM
 click event, it actually generates a "proper" click. This is much closer
 to what happens when a real user clicks on the page - but it means that
 Poltergeist must scroll the page to where the element is, and work out
-correct suitable co-ordinates to click. If the element is covered up by
+the correct co-ordinates to click. If the element is covered up by
 another element, the click will fail (this is a good thing - because
 your user won't be able to click a covered up element either).
 
@@ -231,9 +230,9 @@ in the output to see what co-ordinates Poltergeist is using for the
 click. You can then cross-reference this with a screenshot to see if
 something is obviously wrong.
 
-If you can't work out what's going on and just want to work around the
-problem so you can get on with life, then consider using a DOM click
-event instead. For example, if this code is failing:
+If you can't figure out what's going on and just want to work around the
+problem so you can get on with life, consider using a DOM click
+event. For example, if this code is failing:
 
 ``` ruby
 click_button "Save"
@@ -253,7 +252,7 @@ straightforward to verify this by adding `sleep` statements into your
 test to allow sufficient time for the page to settle.
 
 If you have these types of problems, read through the [Capybara
-documentation of asynchronous
+documentation on asynchronous
 Javascript](https://github.com/jnicklas/capybara#asynchronous-javascript-ajax-and-friends)
 which explains the tools that Capybara provides for dealing with this.
 
@@ -274,15 +273,15 @@ If you can provide specific steps to reproduce your problem, or have
 specific information that might help other help you track down the
 problem, then please file a bug on Github.
 
-Please include the following information:
+Include as much information as possible. For example:
 
 * Specific steps to reproduce where possible (failing tests are even
   better)
-* The output obtained from running Poltergeist with `:debug` turned on.
-* Screenshots if they're relevant.
-* Stack traces if there are any Ruby on Javascript exceptions generated.
-* State which versions of Poltergeist and PhantomJS you are using, and
-  on what operating system.
+* The output obtained from running Poltergeist with `:debug` turned on
+* Screenshots
+* Stack traces if there are any Ruby on Javascript exceptions generated
+* The Poltergeist and PhantomJS version numbers used
+* The operating system name and version used
 
 ## Changes ##
 
