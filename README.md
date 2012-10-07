@@ -24,9 +24,8 @@ detail](https://github.com/jnicklas/capybara/blob/master/README.md#transactions-
 
 ## Installing PhantomJS ##
 
-You need at least PhantomJS 1.6.0, but 1.6.1 is recommended as there some issues with the former.
-There are *no other external dependencies* (you don't need Qt, or a running X
-server, etc.)
+You need at least PhantomJS 1.7.0.  There are *no other external
+dependencies* (you don't need Qt, or a running X server, etc.)
 
 ### Mac ###
 
