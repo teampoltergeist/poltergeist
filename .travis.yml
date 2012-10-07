@@ -11,9 +11,6 @@ rvm:
   - 1.9.2
   - 1.8.7
   - rbx-18mode
-  - rbx-19mode
+  # - rbx-19mode <- currently fails due to https://github.com/rubinius/rubinius/issues/1812
   - jruby-18mode
   - jruby-19mode
-  - rbx-18mode
-  # RBX 1.9 currently fails due to https://github.com/rubinius/rubinius/issues/1812
-  # - rbx-19mode
