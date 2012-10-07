@@ -33,6 +33,11 @@ class TestApp
     request.cookies['capybara']
   end
 
+  get '/poltergeist/slow' do
+    sleep 0.2
+    "slow page"
+  end
+
   get '/poltergeist/:view' do |view|
     render_view view
   end

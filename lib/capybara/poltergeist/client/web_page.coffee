@@ -1,7 +1,7 @@
 class Poltergeist.WebPage
   @CALLBACKS = ['onAlert', 'onConsoleMessage', 'onLoadFinished', 'onInitialized',
                 'onLoadStarted', 'onResourceRequested', 'onResourceReceived',
-                'onError', 'onNavigationRequested', 'onUrlChanged']
+                'onError', 'onNavigationRequested', 'onUrlChanged', 'onPageCreated']
 
   @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'release', 'render']
 
@@ -14,6 +14,7 @@ class Poltergeist.WebPage
     @_errors         = []
     @_networkTraffic = {}
     @frames          = []
+    @sub_pages       = {}
 
     for callback in WebPage.CALLBACKS
       this.bindCallback(callback)
@@ -154,8 +155,11 @@ class Poltergeist.WebPage
       @native.switchToFrame(@frames[@frames.length - 1])
 
   getPage: (name) ->
-    page = @native.getPage(name)
-    page && new Poltergeist.WebPage(page)
+    if @sub_pages[name]
+      @sub_pages[name]
+    else
+      page = @native.getPage(name)
+      @sub_pages[name] = new Poltergeist.WebPage(page) if page
 
   dimensions: ->
     scroll   = this.scrollPosition()

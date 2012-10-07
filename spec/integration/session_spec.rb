@@ -316,5 +316,22 @@ describe Capybara::Session do
       @session.current_url.should =~ /\/#foo$/
       @session.evaluate_script("window.last_hashchange").should == '#foo'
     end
+
+    context 'window switching support' do
+      it 'waits for the window to load when switching to it' do
+        @session.visit '/'
+
+        # setTimeout is necessary due to https://code.google.com/p/phantomjs/issues/detail?id=815
+        @session.evaluate_script <<-CODE
+          setTimeout(function() {
+            window.open('/poltergeist/slow', 'popup')
+          }, 0)
+        CODE
+
+        @session.within_window 'popup' do
+          @session.body.should include('slow page')
+        end
+      end
+    end
   end
 end

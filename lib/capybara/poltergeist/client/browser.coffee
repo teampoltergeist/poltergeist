@@ -30,6 +30,17 @@ class Poltergeist.Browser
     @page.onInitialized = =>
       @page_id += 1
 
+    @page.onPageCreated = (sub_page) =>
+      if @state == 'awaiting_sub_page'
+        name       = @page_name
+        @state     = 'default'
+        @page_name = null
+
+        # At this point subpage isn't fully initialized, so we can't check
+        # its name. Instead, we just schedule another attempt to push the
+        # window.
+        setTimeout((=> this.push_window(name)), 0)
+
   sendResponse: (response) ->
     errors = @page.errors()
 
@@ -122,15 +133,21 @@ class Poltergeist.Browser
     this.sendResponse(@page.popFrame())
 
   push_window: (name) ->
-    new_page = @page.getPage(name)
+    sub_page = @page.getPage(name)
 
-    if new_page
-      @page_stack.push(@page)
-      @page = new_page
-      @page_id += 1
-      this.sendResponse(true)
+    if sub_page
+      if sub_page.currentUrl() == 'about:blank'
+        sub_page.onLoadFinished = =>
+          sub_page.onLoadFinished = null
+          this.push_window(name)
+      else
+        @page_stack.push(@page)
+        @page = sub_page
+        @page_id += 1
+        this.sendResponse(true)
     else
-      this.sendResponse(false)
+      @page_name = name
+      @state     = 'awaiting_sub_page'
 
   pop_window: ->
     prev_page = @page_stack.pop()
