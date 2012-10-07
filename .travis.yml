@@ -5,7 +5,7 @@ before_script:
   - sudo ci/install_phantomjs
   - "export PATH=phantomjs/bin:$PATH"
   - phantomjs --version
-script: rake ci
+script: rake ci --trace
 rvm:
   - 1.9.3
   - 1.9.2
