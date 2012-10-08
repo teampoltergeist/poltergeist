@@ -108,6 +108,11 @@ the entire page, use `page.driver.render('/path/to/file.png', :full => true)`.
 Sometimes the window size is important to how things are rendered. Poltergeist sets the window
 size to 1024x768 by default, but you can set this yourself with `page.driver.resize(width, height)`.
 
+### Clicking precise coordinates ###
+
+Sometimes its desirable to click a very specific area of the screen. You can accomplish this with
+`page.driver.click(x, y)`, where x and y are the screen coordinates.
+
 ### Remote debugging (experimental) ###
 
 If you use the `:inspector => true` option (see below), remote debugging
@@ -290,6 +295,8 @@ Include as much information as possible. For example:
 
 #### Features ####
 
+*   Add `page.driver.click(x, y)` to click precise coordinates.
+    (Micah Geisel)
 *   Click co-ordinates are shown in the debug log. You can use this in
     combination with `page.driver.render` to work out where clicks are
     actually happening if you are having trouble.

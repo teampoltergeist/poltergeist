@@ -74,6 +74,10 @@ module Capybara::Poltergeist
       command 'visible', page_id, id
     end
 
+    def click_coordinates(x, y)
+      command 'click_coordinates', x, y
+    end
+
     def evaluate(script)
       command 'evaluate', script
     end
