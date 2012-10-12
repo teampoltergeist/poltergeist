@@ -291,12 +291,17 @@ Include as much information as possible. For example:
 
 ## Changes ##
 
-### 1.0 ###
+### Next release ###
 
 #### Features ####
 
 *   Add `page.driver.click(x, y)` to click precise coordinates.
     (Micah Geisel)
+
+### 1.0 ###
+
+#### Features ####
+
 *   Click co-ordinates are shown in the debug log. You can use this in
     combination with `page.driver.render` to work out where clicks are
     actually happening if you are having trouble.
