@@ -151,6 +151,12 @@ module Capybara::Poltergeist
       File.exist?(file).should == true
     end
 
+    it 'supports clicking precise coordinates' do
+      @driver.visit('/poltergeist/click_coordinates')
+      @driver.click(100, 150)
+      @driver.body.should include('x: 100, y: 150')
+    end
+
     it 'supports executing multiple lines of javascript' do
       @driver.execute_script <<-JS
         var a = 1

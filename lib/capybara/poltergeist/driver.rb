@@ -102,6 +102,10 @@ module Capybara::Poltergeist
       browser.find(selector).map { |page_id, id| Capybara::Poltergeist::Node.new(self, page_id, id) }
     end
 
+    def click(x, y)
+      browser.click_coordinates(x, y)
+    end
+
     def evaluate_script(script)
       browser.evaluate(script)
     end
