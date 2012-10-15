@@ -14,6 +14,7 @@ module Capybara
     require 'capybara/poltergeist/network_traffic'
     require 'capybara/poltergeist/errors'
     require 'capybara/poltergeist/cookie'
+    require 'capybara/poltergeist/util'
   end
 end
 

@@ -286,6 +286,15 @@ Include as much information as possible. For example:
 
 ## Changes ##
 
+### 1.0.1 ###
+
+#### Bug fixes ####
+
+*   Don't use a fixed port number by default; find an available port.
+    The port can still be configured to a fixed value using the `:port`
+    option. The reverts the default behaviour to how it was before the
+    1.0 release. [Issue #174]
+
 ### 1.0 ###
 
 #### Features ####
