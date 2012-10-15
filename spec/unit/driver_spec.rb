@@ -45,7 +45,7 @@ module Capybara::Poltergeist
 
       it 'starts the server with the provided timeout' do
         server = stub
-        Server.should_receive(:new).with(Driver::DEFAULT_PORT, 3).and_return(server)
+        Server.should_receive(:new).with(anything, 3).and_return(server)
         subject.server.should == server
       end
     end

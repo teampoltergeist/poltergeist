@@ -3,7 +3,6 @@ require 'uri'
 module Capybara::Poltergeist
   class Driver < Capybara::Driver::Base
     DEFAULT_TIMEOUT = 30
-    DEFAULT_PORT    = 44678 # 'GHOST' on a keypad :)
 
     attr_reader :app, :app_server, :server, :client, :browser, :options
 
@@ -29,8 +28,8 @@ module Capybara::Poltergeist
 
     def server
       @server ||= Server.new(
-        options.fetch(:port,    DEFAULT_PORT),
-        options.fetch(:timeout, DEFAULT_TIMEOUT)
+        options.fetch(:port)    { Util.find_available_port },
+        options.fetch(:timeout) { DEFAULT_TIMEOUT          }
       )
     end
 
