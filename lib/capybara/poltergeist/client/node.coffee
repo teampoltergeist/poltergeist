@@ -54,5 +54,8 @@ class Poltergeist.Node
 
   set: (value) ->
     this.focusAndHighlight()
+    # Sending backspace to clear the input
+    # keycode from: https://github.com/ariya/phantomjs/commit/cab2635e66d74b7e665c44400b8b20a8f225153a#L0R370
+    @page.sendEvent('keypress', 16777219)
     @page.sendEvent('keypress', value.toString())
     this.blur()

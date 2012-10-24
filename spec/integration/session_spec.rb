@@ -120,11 +120,11 @@ describe Capybara::Session do
       end
 
       it 'fires the keydown event' do
-        @session.find(:css, '#changes_on_keydown').text.should == "6"
+        @session.find(:css, '#changes_on_keydown').text.should == "7"
       end
 
       it 'fires the keyup event' do
-        @session.find(:css, '#changes_on_keyup').text.should == "6"
+        @session.find(:css, '#changes_on_keyup').text.should == "7"
       end
 
       it 'fires the keypress event' do
@@ -145,6 +145,12 @@ describe Capybara::Session do
 
       it "fires the keyup event after the value is updated" do
         @session.find(:css, '#value_on_keyup').text.should == "Hello!"
+      end
+      
+      it "clears the input before setting the new value" do
+        element = @session.find(:css, '#change_me')
+        element.set ""
+        element.value.should == ""
       end
     end
 
