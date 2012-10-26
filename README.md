@@ -298,6 +298,11 @@ Include as much information as possible. For example:
 *   Add `page.driver.click(x, y)` to click precise coordinates.
     (Micah Geisel)
 
+#### Bug fixes ####
+
+*   Clearing the value before setting a new value by sending a backspace.
+    This fixes the issue that you can't set an empty value. [Issue #184]
+
 ### 1.0.1 ###
 
 #### Bug fixes ####
