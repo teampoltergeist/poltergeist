@@ -1,10 +1,6 @@
 # Poltergeist - A PhantomJS driver for Capybara #
 
-<<<<<<< HEAD
-Version: 1.0.1
-=======
 Version: 1.0.2
->>>>>>> 1-0-2
 
 [![Build Status](https://secure.travis-ci.org/jonleighton/poltergeist.png)](http://travis-ci.org/jonleighton/poltergeist)
 
