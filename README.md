@@ -180,6 +180,8 @@ end
     as a 2-element array, e.g. [1024, 768]. Default: [1024, 768]
 *   `:phantomjs_options` (Array) - Additional [command line options](https://github.com/ariya/phantomjs/wiki/API-Reference)
     to be passed to PhantomJS, e.g. `['--load-images=no', '--ignore-ssl-errors=yes']`
+*   `:extensions` (Array) - An array of JS files to be preloaded into
+    the phantomjs browser. Useful for faking unsupported APIs.
 *   `:port` (Fixnum) - The port which should be used to communicate
     with the PhantomJS process. Default: 44678.
 
@@ -317,6 +319,11 @@ Include as much information as possible. For example:
     [Issue #192]
 *   Fix `ObsoleteNode` error when using `attach_file` with the `jQuery
     File Upload` plugin. [Issue #115]
+
+*   Add the ability to extend the phantomjs environment via browser
+    options. e.g.
+    `Capybara::Poltergeist::Driver.new( app, :extensions => ['file.js', 'another.js'])`
+    (@JonRowe)
 
 ### 1.0.2 ###
 

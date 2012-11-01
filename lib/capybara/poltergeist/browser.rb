@@ -168,6 +168,12 @@ module Capybara::Poltergeist
       command 'set_js_errors', !!val
     end
 
+    def extensions=(names)
+      Array(names).each do |name|
+        command 'add_extension', name
+      end
+    end
+
     def command(name, *args)
       message = { 'name' => name, 'args' => args }
       log message.inspect
