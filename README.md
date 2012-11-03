@@ -261,6 +261,37 @@ documentation on asynchronous
 Javascript](https://github.com/jnicklas/capybara#asynchronous-javascript-ajax-and-friends)
 which explains the tools that Capybara provides for dealing with this.
 
+### PhantomJS crashes under OS X
+
+Some users have reported problems that manifest themselves as PhantomJS crashes when using Poltergeist under OS X (see [issue #44](https://github.com/jonleighton/poltergeist/issues/44)). It has been observed that many of these crashes are caused by CSS `@font-face` declarations that cause PhantomJS to request TTF files.
+
+To alleviate this, configure your application to deny access to TTF files to PhantomJS under OS X.  Under Rails, you might try using the `rack-contrib` gem, by adding to your `:test` group in your `Gemfile`:
+
+``` ruby
+group :test do
+  # used for Rack::SimpleEndpoint in test environment for
+  # PhantomJS crash workaround
+  gem 'rack-contrib'
+end
+```
+
+And an initializer such as:
+
+``` ruby
+if Rails.env.test?
+  require 'rack/contrib/simple_endpoint'
+  Rails.application.config.middleware.insert_after Rack::Runtime, Rack::SimpleEndpoint, /\.ttf$/ do |req, res|
+    ua = req.env['HTTP_USER_AGENT']
+    if ua =~ /Intel Mac OS X.*PhantomJS/
+      res.status = 403
+      "Denying #{req.fullpath} to #{ua}"
+    else
+      :pass
+    end
+  end
+end
+```
+
 ### General troubleshooting hints ###
 
 * Configure Poltergeist with `:debug` turned on so you can see its
