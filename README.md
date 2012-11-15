@@ -181,7 +181,7 @@ end
 *   `:js_errors` (Boolean) - When false, Javascript errors do not get re-raised in Ruby.
 *   `:window_size` (Array) - The dimensions of the browser window in which to test, expressed
     as a 2-element array, e.g. [1024, 768]. Default: [1024, 768]
-*   `:phantomjs_options` (Array) - Additional [command line options](http://code.google.com/p/phantomjs/wiki/Interface#Command-line_Options)
+*   `:phantomjs_options` (Array) - Additional [command line options](https://github.com/ariya/phantomjs/wiki/API-Reference)
     to be passed to PhantomJS, e.g. `['--load-images=no', '--ignore-ssl-errors=yes']`
 *   `:port` (Fixnum) - The port which should be used to communicate
     with the PhantomJS process. Default: 44678.
