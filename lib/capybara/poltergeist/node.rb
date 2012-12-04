@@ -1,5 +1,8 @@
 module Capybara::Poltergeist
   class Node < Capybara::Driver::Node
+    NBSP = "\xC2\xA0"
+    NBSP.force_encoding("UTF-8") if NBSP.respond_to?(:force_encoding)
+
     attr_reader :page_id, :id
 
     def initialize(driver, page_id, id)
@@ -31,7 +34,7 @@ module Capybara::Poltergeist
     end
 
     def text
-      command(:text).strip.gsub(/\s+/, ' ')
+      command(:text).gsub(NBSP, ' ').gsub(/\s+/u, ' ').strip
     end
 
     def [](name)

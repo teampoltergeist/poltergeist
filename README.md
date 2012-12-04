@@ -324,10 +324,13 @@ Include as much information as possible. For example:
 
 ### Next release ###
 
+#### Bug fixes ####
+
 #### Features ####
 
 *   Add `page.driver.click(x, y)` to click precise coordinates.
     (Micah Geisel)
+*   Add Capybara 2.0 support. (Mauro Asprea) [Issue #163]
 
 ### 1.0.2 ###
 

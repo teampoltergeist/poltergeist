@@ -4,6 +4,7 @@ $:.unshift(POLTERGEIST_ROOT + '/lib')
 require 'bundler/setup'
 
 require 'rspec'
+require 'capybara/spec/spec_helper'
 require 'capybara/poltergeist'
 
 require 'support/test_app'
