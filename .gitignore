@@ -3,3 +3,5 @@
 /ci/Gemfile.*.lock
 /spec/tmp
 /rspec.failures
+/vendor
+/.bundle

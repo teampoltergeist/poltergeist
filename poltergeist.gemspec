@@ -14,13 +14,13 @@ Gem::Specification.new do |s|
   s.summary     = "PhantomJS driver for Capybara"
   s.description = "PhantomJS driver for Capybara"
 
-  s.add_dependency "capybara",       "~> 1.1"
+  s.add_dependency "capybara",       "~> 2.0", ">= 2.0.1"
   s.add_dependency "multi_json",     "~> 1.0"
   s.add_dependency "childprocess",   "~> 0.3"
   s.add_dependency "http_parser.rb", "~> 0.5.3"
   s.add_dependency "faye-websocket", "~> 0.4", ">= 0.4.4"
 
-  s.add_development_dependency 'rspec',              '~> 2.8'
+  s.add_development_dependency 'rspec',              '~> 2.12'
   s.add_development_dependency 'sinatra',            '~> 1.0'
   s.add_development_dependency 'rake',               '~> 0.9.2'
   s.add_development_dependency 'image_size',         '~> 1.0'

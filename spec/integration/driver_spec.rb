@@ -1,24 +1,16 @@
 require 'spec_helper'
-require 'capybara/spec/driver'
 require 'image_size'
 
 module Capybara::Poltergeist
   describe Driver do
     before do
-      @driver = TestSessions::Poltergeist.driver
+      @session = TestSessions::Poltergeist
+      @driver = @session.driver
     end
 
     after do
       @driver.reset!
     end
-
-    it_should_behave_like "driver"
-    it_should_behave_like "driver with javascript support"
-    it_should_behave_like "driver with frame support"
-    it_should_behave_like "driver with status code support"
-    it_should_behave_like "driver with cookies support"
-    it_should_behave_like "driver with header support"
-    it_should_behave_like "driver with support for window switching"
 
     it 'supports a custom phantomjs path' do
       begin
@@ -47,18 +39,18 @@ module Capybara::Poltergeist
 
     it 'raises an error and restart the client, if the client dies while executing a command' do
       lambda { @driver.browser.command('exit') }.should raise_error(DeadClient)
-      @driver.visit('/')
-      @driver.body.should include('Hello world')
+      @session.visit('/')
+      @driver.html.should include('Hello world')
     end
 
     it 'has a viewport size of 1024x768 by default' do
-      @driver.visit('/')
+      @session.visit('/')
       @driver.evaluate_script('[window.innerWidth, window.innerHeight]').should == [1024, 768]
     end
 
     it 'allows the viewport to be resized' do
       begin
-        @driver.visit('/')
+        @session.visit('/')
         @driver.resize(200, 400)
         @driver.evaluate_script('[window.innerWidth, window.innerHeight]').should == [200, 400]
       ensure
@@ -87,22 +79,22 @@ module Capybara::Poltergeist
     it 'supports rendering the page' do
       file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
       FileUtils.rm_f file
-      @driver.visit('/')
-      @driver.render(file)
+      @session.visit('/')
+      @driver.save_screenshot(file)
       File.exist?(file).should == true
     end
 
     it 'supports rendering the whole of a page that goes outside the viewport' do
       file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
-      @driver.visit('/poltergeist/long_page')
-      @driver.render(file)
+      @session.visit('/poltergeist/long_page')
+      @driver.save_screenshot(file)
 
       File.open(file, 'rb') do |f|
         ImageSize.new(f.read).size.should ==
           @driver.evaluate_script('[window.innerWidth, window.innerHeight]')
       end
 
-      @driver.render(file, :full => true)
+      @driver.save_screenshot(file, :full => true)
 
       File.open(file, 'rb') do |f|
         ImageSize.new(f.read).size.should ==
@@ -116,20 +108,20 @@ module Capybara::Poltergeist
           "Cookie" => "foo=bar",
           "Host" => "foo.com"
         }
-        @driver.visit('/poltergeist/headers')
+        @session.visit('/poltergeist/headers')
         @driver.body.should include('COOKIE: foo=bar')
         @driver.body.should include('HOST: foo.com')
       end
 
       it 'supports User-Agent' do
         @driver.headers = { 'User-Agent' => 'foo' }
-        @driver.visit '/'
+        @session.visit '/'
         @driver.evaluate_script('window.navigator.userAgent').should == 'foo'
       end
 
       it 'sets headers for all HTTP requests' do
         @driver.headers = { 'X-Omg' => 'wat' }
-        @driver.visit '/'
+        @session.visit '/'
         @driver.execute_script <<-JS
           var request = new XMLHttpRequest();
           request.open('GET', '/poltergeist/headers', false);
@@ -146,13 +138,13 @@ module Capybara::Poltergeist
     it 'supports rendering the page with a nonstring path' do
       file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
       FileUtils.rm_f file
-      @driver.visit('/')
-      @driver.render(Pathname(file))
+      @session.visit('/')
+      @driver.save_screenshot(Pathname(file))
       File.exist?(file).should == true
     end
 
     it 'supports clicking precise coordinates' do
-      @driver.visit('/poltergeist/click_coordinates')
+      @session.visit('/poltergeist/click_coordinates')
       @driver.click(100, 150)
       @driver.body.should include('x: 100, y: 150')
     end
@@ -250,7 +242,7 @@ module Capybara::Poltergeist
       end
 
       it 'propagates a Javascript error during page load to a ruby exception' do
-        expect { @driver.visit "/poltergeist/js_error" }.to raise_error(JavascriptError)
+        expect { @session.visit "/poltergeist/js_error" }.to raise_error(JavascriptError)
       end
 
       it "doesn't propagate a Javascript error to ruby if error raising disabled" do
@@ -271,7 +263,7 @@ module Capybara::Poltergeist
       end
 
       it "keeps track of network traffic" do
-        @driver.visit('/poltergeist/with_js')
+        @session.visit('/poltergeist/with_js')
         urls = @driver.network_traffic.map(&:url)
 
         urls.grep(%r{/poltergeist/jquery-1.6.2.min.js$}).size.should == 1
@@ -280,51 +272,51 @@ module Capybara::Poltergeist
       end
 
       it "captures responses" do
-        @driver.visit('/poltergeist/with_js')
+        @session.visit('/poltergeist/with_js')
         request = @driver.network_traffic.last
 
         request.response_parts.last.status.should == 200
       end
 
       it "keeps a running list between multiple web page views" do
-        @driver.visit('/poltergeist/with_js')
+        @session.visit('/poltergeist/with_js')
         @driver.network_traffic.length.should equal(4)
 
-        @driver.visit('/poltergeist/with_js')
+        @session.visit('/poltergeist/with_js')
         @driver.network_traffic.length.should equal(8)
       end
 
       it "gets cleared on restart" do
-        @driver.visit('/poltergeist/with_js')
+        @session.visit('/poltergeist/with_js')
         @driver.network_traffic.length.should equal(4)
 
         @driver.restart
 
-        @driver.visit('/poltergeist/with_js')
+        @session.visit('/poltergeist/with_js')
         @driver.network_traffic.length.should equal(4)
       end
     end
 
     context 'status code support' do
       it 'should determine status from the simple response' do
-        @driver.visit('/poltergeist/status/500')
+        @session.visit('/poltergeist/status/500')
         @driver.status_code.should == 500
       end
 
       it 'should determine status code when the page has a few resources' do
-        @driver.visit('/poltergeist/with_different_resources')
+        @session.visit('/poltergeist/with_different_resources')
         @driver.status_code.should == 200
       end
 
       it 'should determine status code even after redirect' do
-        @driver.visit('/poltergeist/redirect')
+        @session.visit('/poltergeist/redirect')
         @driver.status_code.should == 200
       end
     end
 
     context 'cookies support' do
       it 'returns set cookies' do
-        @driver.visit('/set_cookie')
+        @session.visit('/set_cookie')
 
         cookie = @driver.cookies['capybara']
         cookie.name.should      == 'capybara'
@@ -336,38 +328,38 @@ module Capybara::Poltergeist
       end
 
       it 'can set cookies' do
-        @driver.set_cookie 'capybara', 'omg'
-        @driver.visit('/get_cookie')
+        @driver.set_cookie 'capybara', 'omg', :domain => '127.0.0.1'
+        @session.visit('/get_cookie')
         @driver.body.should include('omg')
       end
 
       it 'can set cookies with custom settings' do
-        @driver.set_cookie 'capybara', 'omg', :path => '/poltergeist'
+        @driver.set_cookie 'capybara', 'omg', :path => '/poltergeist', :domain => '127.0.0.1'
 
-        @driver.visit('/get_cookie')
+        @session.visit('/get_cookie')
         @driver.body.should_not include('omg')
 
-        @driver.visit('/poltergeist/get_cookie')
+        @session.visit('/poltergeist/get_cookie')
         @driver.body.should include('omg')
 
         @driver.cookies['capybara'].path.should == '/poltergeist'
       end
 
       it 'can remove a cookie' do
-        @driver.visit('/set_cookie')
+        @session.visit('/set_cookie')
 
-        @driver.visit('/get_cookie')
+        @session.visit('/get_cookie')
         @driver.body.should include('test_cookie')
 
         @driver.remove_cookie 'capybara'
 
-        @driver.visit('/get_cookie')
+        @session.visit('/get_cookie')
         @driver.body.should_not include('test_cookie')
       end
 
       it 'can set cookies with an expires time' do
         time = Time.at(Time.now.to_i + 10000)
-        @driver.visit '/'
+        @session.visit '/'
         @driver.set_cookie 'foo', 'bar', :expires => time
         @driver.cookies['foo'].expires.should == time
       end

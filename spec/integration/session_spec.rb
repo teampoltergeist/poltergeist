@@ -1,16 +1,12 @@
 require 'spec_helper'
-require 'capybara/spec/session'
+
+Capybara::SpecHelper.run_specs TestSessions::Poltergeist, "Poltergeist"
 
 describe Capybara::Session do
   context 'with poltergeist driver' do
     before do
       @session = TestSessions::Poltergeist
     end
-
-    it_should_behave_like "session"
-    it_should_behave_like "session with javascript support"
-    it_should_behave_like "session with headers support"
-    it_should_behave_like "session with status code support"
 
     describe Capybara::Poltergeist::Node do
       it 'raises an error if the element has been removed from the DOM' do
@@ -146,7 +142,7 @@ describe Capybara::Session do
       it "fires the keyup event after the value is updated" do
         @session.find(:css, '#value_on_keyup').text.should == "Hello!"
       end
-      
+
       it "clears the input before setting the new value" do
         element = @session.find(:css, '#change_me')
         element.set ""
@@ -199,7 +195,7 @@ describe Capybara::Session do
       @session.visit '/poltergeist/index'
       @session.click_link "JS redirect"
       sleep 0.1
-      @session.body.should include("Hello world")
+      @session.html.should include("Hello world")
     end
 
     context 'click tests' do
@@ -335,7 +331,7 @@ describe Capybara::Session do
         CODE
 
         @session.within_window 'popup' do
-          @session.body.should include('slow page')
+          @session.html.should include('slow page')
         end
       end
     end
@@ -352,7 +348,7 @@ describe Capybara::Session do
 
         @session.within_frame 'frame' do
           @session.current_path.should == "/poltergeist/slow"
-          @session.body.should include('slow page')
+          @session.html.should include('slow page')
         end
       end
     end

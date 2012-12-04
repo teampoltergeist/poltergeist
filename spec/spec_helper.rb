@@ -4,12 +4,11 @@ $:.unshift(POLTERGEIST_ROOT + '/lib')
 require 'bundler/setup'
 
 require 'rspec'
+require 'capybara/spec/spec_helper'
 require 'capybara/poltergeist'
 
 require 'support/test_app'
 require 'support/spec_logger'
-
-Capybara.default_wait_time = 0 # less timeout so tests run faster
 
 alias :running :lambda
 
@@ -32,12 +31,6 @@ end
 
 RSpec.configure do |config|
   config.before do
-    Capybara.configure do |config|
-      config.default_selector = :xpath
-    end
-  end
-
-  config.before do
     TestSessions.logger.reset
   end
 
@@ -48,4 +41,15 @@ RSpec.configure do |config|
       example.exception.message << "\n\nDebug info:\n" + TestSessions.logger.messages.join("\n")
     end
   end
+
+  Capybara::SpecHelper.configure(config)
+
+  config.before(:each) do
+    Capybara.default_wait_time = 0
+  end
+
+  config.before(:each, :requires => :js) do
+    Capybara.default_wait_time = 1
+  end
+
 end
