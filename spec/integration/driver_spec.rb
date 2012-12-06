@@ -84,6 +84,21 @@ module Capybara::Poltergeist
       end
     end
 
+    it 'supports a nil (infinite) timeout' do
+      begin
+        Capybara.register_driver :poltergeist_with_nil_timeout do |app|
+          Capybara::Poltergeist::Driver.new(
+            app,
+            :timeout => nil
+          )
+        end
+        driver = Capybara::Session.new(:poltergeist_with_nil_timeout, TestApp).driver
+        driver.visit("/").should_not raise_error ArgumentError
+      ensure
+        driver.quit if driver
+      end
+    end
+
     it 'supports rendering the page' do
       file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
       FileUtils.rm_f file
