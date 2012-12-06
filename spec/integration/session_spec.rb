@@ -355,6 +355,19 @@ describe Capybara::Session do
           @session.body.should include('slow page')
         end
       end
+
+      it 'waits for the cross-domain frame to load' do
+        @session.visit '/poltergeist/frames'
+        @session.current_path.should == '/poltergeist/frames'
+
+
+        @session.within_frame 'frame' do
+          @session.current_path.should == '/poltergeist/slow'
+          @session.body.should include('slow page')
+        end
+
+        @session.current_path.should == '/poltergeist/frames'
+      end
     end
   end
 end

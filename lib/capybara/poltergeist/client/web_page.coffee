@@ -197,6 +197,7 @@ class Poltergeist.WebPage
     this.sendEvent(name, x, y)
 
   evaluate: (fn, args...) ->
+    this.injectAgent()
     JSON.parse @native.evaluate("function() { return PoltergeistAgent.stringify(#{this.stringifyCall(fn, args)}) }")
 
   execute: (fn, args...) ->
