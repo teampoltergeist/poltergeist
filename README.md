@@ -175,8 +175,7 @@ end
 *   `:debug` (Boolean) - When true, debug output is logged to `STDERR`
 *   `:logger` (Object responding to `puts`) - When present, debug output is written to this object
 *   `:timeout` (Numeric) - The number of seconds we'll wait for a response
-    when communicating with PhantomJS. `nil` means wait forever. Default
-    is 30.
+    when communicating with PhantomJS. Default is 30.
 *   `:inspector` (Boolean, String) - See 'Remote Debugging', above.
 *   `:js_errors` (Boolean) - When false, Javascript errors do not get re-raised in Ruby.
 *   `:window_size` (Array) - The dimensions of the browser window in which to test, expressed
