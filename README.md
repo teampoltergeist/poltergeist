@@ -328,6 +328,11 @@ Include as much information as possible. For example:
 *   Add `page.driver.click(x, y)` to click precise coordinates.
     (Micah Geisel)
 
+#### Bug fixes ####
+
+*   Allow nil timeout as an option. [Issue #212]
+    (Dawid Janczak)
+
 ### 1.0.2 ###
 
 #### Bug fixes ####

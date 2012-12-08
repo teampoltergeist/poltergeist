@@ -128,7 +128,7 @@ module Capybara::Poltergeist
       start = Time.now
 
       until handler.message?
-        raise Errno::EWOULDBLOCK if (Time.now - start) >= timeout
+        raise Errno::EWOULDBLOCK if timeout && (Time.now - start) >= timeout
         IO.select([socket], [], [], timeout) or raise Errno::EWOULDBLOCK
         data = socket.recv(RECV_SIZE)
         break if data.empty?
