@@ -24,20 +24,20 @@ detail](https://github.com/jnicklas/capybara/blob/master/README.md#transactions-
 
 ## Installing PhantomJS ##
 
-You need at least PhantomJS 1.7.0.  There are *no other external
+You need at least PhantomJS 1.8.1.  There are *no other external
 dependencies* (you don't need Qt, or a running X server, etc.)
 
 ### Mac ###
 
 * *Homebrew*: `brew install phantomjs`
-* *Manual install*: [Download this](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.7.0-macosx.zip&can=2&q=)
+* *Manual install*: [Download this](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.8.1-macosx.zip&can=2&q=)
 
 ### Linux ###
 
 * Download the [32
-bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.7.0-linux-i686.tar.bz2&can=2&q=)
+bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.8.1-linux-i686.tar.bz2&can=2&q=)
 or [64
-bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.7.0-linux-x86_64.tar.bz2&can=2&q=)
+bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.8.1-linux-x86_64.tar.bz2&can=2&q=)
 binary.
 * Extract the tarball and copy `bin/phantomjs` into your `PATH`
 
@@ -46,7 +46,7 @@ binary.
 Do this as a last resort if the binaries don't work for you. It will
 take quite a long time as it has to build WebKit.
 
-* Download [the source tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.7.0-source.zip&can=2&q=)
+* Download [the source tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.8.1-source.zip&can=2&q=)
 * Extract and cd in
 * `./build.sh`
 
