@@ -30,6 +30,7 @@ dependencies* (you don't need Qt, or a running X server, etc.)
 ### Mac ###
 
 * *Homebrew*: `brew install phantomjs`
+* *MacPorts*: `sudo port install phantomjs`
 * *Manual install*: [Download this](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.7.0-macosx.zip&can=2&q=)
 
 ### Linux ###
