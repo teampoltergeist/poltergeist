@@ -355,6 +355,22 @@ describe Capybara::Session do
           @session.body.should include('slow page')
         end
       end
+
+      it 'supports clicking in a frame' do
+        @session.visit '/'
+
+        @session.evaluate_script <<-CODE
+          setTimeout(function() {
+            document.body.innerHTML += '<iframe src="/poltergeist/click_test" name="frame">'
+          }, 0)
+        CODE
+
+        @session.within_frame 'frame' do
+          log = @session.find(:css, '#log')
+          @session.find(:css, "#one").click
+          log.text.should == "one"
+        end
+      end
     end
   end
 end
