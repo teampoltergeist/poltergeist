@@ -329,6 +329,11 @@ Include as much information as possible. For example:
 *   Add `page.driver.click(x, y)` to click precise coordinates.
     (Micah Geisel)
 
+#### Bug fixes ####
+
+*   When clicking on an iframe, the offset of the iframe is now considered
+    when calculating the position for the click event to take place.
+
 ### 1.0.2 ###
 
 #### Bug fixes ####

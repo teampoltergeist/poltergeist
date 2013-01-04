@@ -35,7 +35,14 @@ class Poltergeist.Node
     test = this.clickTest(pos.x, pos.y)
 
     if test.status == 'success'
-      @page.mouseEvent('click', pos.x, pos.y)
+      finalOffset = 
+        left: 0
+        top: 0
+      for offset in @page.frameOffsets
+        finalOffset.left += offset.left
+        finalOffset.top += offset.top
+        
+      @page.mouseEvent('click', pos.x + finalOffset.left, pos.y + finalOffset.top)
       pos
     else
       throw new Poltergeist.ClickFailed(test.selector, pos)
