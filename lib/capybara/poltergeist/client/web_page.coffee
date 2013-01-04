@@ -14,6 +14,7 @@ class Poltergeist.WebPage
     @_errors         = []
     @_networkTraffic = {}
     @frames          = []
+    @frameOffsets    = []
     @sub_pages       = {}
 
     for callback in WebPage.CALLBACKS
@@ -142,12 +143,29 @@ class Poltergeist.WebPage
 
   pushFrame: (name) ->
     @frames.push(name)
+    rect = @native.evaluate("function () {
+      var el = document.getElementById('#{name}') || document.getElementsByName('#{name}')[0];
+      if (el != null) {
+        return el.getBoundingClientRect();
+      } else {
+        return {
+          top: 0,
+          left: 0
+        }
+      }
+    }");
+    @frameOffsets.push(
+      left: rect.left
+      top: rect.top
+    )
     res = @native.switchToFrame(name)
     this.injectAgent()
     res
 
   popFrame: ->
     @frames.pop()
+
+    @frameOffsets.pop()
 
     if @frames.length == 0
       @native.switchToMainFrame()

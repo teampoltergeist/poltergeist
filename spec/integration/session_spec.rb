@@ -357,6 +357,7 @@ describe Capybara::Session do
       end
 
       it 'supports clicking in a frame' do
+        @session.reset!
         @session.visit '/'
 
         @session.evaluate_script <<-CODE
