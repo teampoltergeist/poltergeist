@@ -296,6 +296,8 @@ Include as much information as possible. For example:
     (Micah Geisel)
 *   Add Capybara 2.0 support. Capybara 1.1 and Ruby 1.8 are *no
     longer supported*. (Mauro Asprea) [Issue #163]
+*   Add `node.double_click` to double click the node.
+    (Andy Shen)
 
 #### Bug fixes ####
 

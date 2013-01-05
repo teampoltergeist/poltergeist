@@ -278,6 +278,23 @@ describe Capybara::Session do
       end
     end
 
+    context 'double click tests' do
+      before do
+        @session.visit '/poltergeist/double_click_test'
+      end
+      
+      it 'double clicks properly' do
+        @session.driver.resize(200, 200)
+        log = @session.find(:css, '#log')
+
+        instructions = %w(one four one two three)
+        instructions.each do |instruction, i|
+          @session.find(:css, "##{instruction}").base.double_click
+          log.text.should == instruction
+        end
+      end
+    end
+    
     context 'status code support', :status_code_support => true do
       it 'should determine status code when an user goes to a page by using a link on it' do
         @session.visit '/poltergeist/with_different_resources'
