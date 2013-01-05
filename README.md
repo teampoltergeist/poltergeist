@@ -328,6 +328,9 @@ Include as much information as possible. For example:
 
 *   Add `page.driver.click(x, y)` to click precise coordinates.
     (Micah Geisel)
+*   Add `node.double_click` to double click the node.
+    (Andy Shen)
+
 
 ### 1.0.2 ###
 
