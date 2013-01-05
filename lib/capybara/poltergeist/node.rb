@@ -88,6 +88,10 @@ module Capybara::Poltergeist
       command :click
     end
 
+    def double_click
+      command :double_click
+    end
+
     def drag_to(other)
       command :drag, other.id
     end

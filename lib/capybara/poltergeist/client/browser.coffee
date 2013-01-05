@@ -181,6 +181,22 @@ class Poltergeist.Browser
         this.sendResponse(@last_click)
     , 5
 
+  doubleClick: (page_id, id) ->
+    # Get the node before changing state, in case there is an exception
+    node = this.node(page_id, id)
+
+    # If the click event triggers onNavigationRequested, we will transition to the 'loading'
+    # state and wait for onLoadFinished before sending a response.
+    @state = 'clicked'
+
+    @last_click = node.doubleClick()
+
+    setTimeout =>
+      if @state != 'loading'
+        @state = 'default'
+        this.sendResponse(@last_click)
+    , 5
+
   click_coordinates: (x, y) ->
     @page.sendEvent('click', x, y)
     this.sendResponse({ click: { x: x, y: y } })
