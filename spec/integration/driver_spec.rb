@@ -41,6 +41,18 @@ module Capybara::Poltergeist
         driver.quit if driver
       end
     end
+    
+    it 'supports capturing console.log' do
+      IO.pipe do |read_io, write_io|
+        Capybara.register_driver :poltergeist_with_logger do |app|
+          Capybara::Poltergeist::Driver.new(app, {:phantomjs_logger => write_io})
+        end
+        
+        session = Capybara::Session.new(:poltergeist_with_logger, TestApp)
+        session.visit('/poltergeist/console_log')
+        read_io.gets.to_s.should include('Hello world')
+      end
+    end
 
     it 'raises an error and restart the client, if the client dies while executing a command' do
       lambda { @driver.browser.command('exit') }.should raise_error(DeadClient)

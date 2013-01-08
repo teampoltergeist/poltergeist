@@ -21,6 +21,7 @@ module Capybara::Poltergeist
       @path              = options[:path]              || PHANTOMJS_NAME
       @window_size       = options[:window_size]       || [1024, 768]
       @phantomjs_options = options[:phantomjs_options] || []
+      @phantomjs_logger  = options[:phantomjs_logger]  || $stdout
 
       pid = Process.pid
       at_exit { stop if Process.pid == pid }
@@ -28,7 +29,7 @@ module Capybara::Poltergeist
 
     def start
       check_phantomjs_version
-      @pid = Process.spawn(*command.map(&:to_s))
+      @pid = Process.spawn(*command.map(&:to_s), out: @phantomjs_logger)
     end
 
     def stop

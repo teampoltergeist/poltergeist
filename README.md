@@ -172,6 +172,7 @@ end
 *   `:phantomjs` (String) - A custom path to the phantomjs executable
 *   `:debug` (Boolean) - When true, debug output is logged to `STDERR`
 *   `:logger` (Object responding to `puts`) - When present, debug output is written to this object
+*   `:phantomjs_logger` (Object behaving like `IO`) - When present, the `STDOUT` of phantomjs is redirected to this object
 *   `:timeout` (Numeric) - The number of seconds we'll wait for a response
     when communicating with PhantomJS. Default is 30.
 *   `:inspector` (Boolean, String) - See 'Remote Debugging', above.
@@ -291,7 +292,9 @@ Include as much information as possible. For example:
 ### Next release ###
 
 #### Features ####
-
+    
+*   Add support for custom phantomjs loggers via `:phantomjs_logger` option.
+    (Gabe Bell)    
 *   Add `page.driver.click(x, y)` to click precise coordinates.
     (Micah Geisel)
 *   Add Capybara 2.0 support. Capybara 1.1 and Ruby 1.8 are *no
