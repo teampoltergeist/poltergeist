@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.summary     = "PhantomJS driver for Capybara"
   s.description = "PhantomJS driver for Capybara"
 
-  s.add_dependency "capybara",       "~> 1.1"
+  s.add_dependency "capybara",       "~> 2.0.2"
   s.add_dependency "multi_json",     "~> 1.0"
   s.add_dependency "childprocess",   "~> 0.3"
   s.add_dependency "http_parser.rb", "~> 0.5.3"
