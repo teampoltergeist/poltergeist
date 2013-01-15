@@ -19,8 +19,8 @@ module Capybara::Poltergeist
       @phantomjs_options = options[:phantomjs_options] || []
       @stop_signal       = options[:stop_signal]       || 'TERM'
 
-      pid = Process.pid
-      at_exit { stop if Process.pid == pid }
+      master_pid = Process.pid
+      at_exit { stop if Process.pid == master_pid }
     end
 
     def start
