@@ -38,6 +38,11 @@ class TestApp
     "slow page"
   end
 
+  get '/poltergeist/iframe' do
+    headers['X-Frame-Options'] = nil
+    "iframe"
+  end
+
   get '/poltergeist/:view' do |view|
     render_view view
   end

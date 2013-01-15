@@ -27,6 +27,7 @@ class Poltergeist.Browser
         this.sendResponse(status: status, click: @last_click)
         @state = 'default'
       else if @state == 'awaiting_frame_load'
+        @page.injectAgent()
         this.sendResponse(true)
         @state = 'default'
 
