@@ -48,5 +48,19 @@ module Capybara::Poltergeist
         subject.start
       end
     end
+
+    describe "stop signal" do
+      context "by default" do
+        it "defaults to TERM" do
+          Client.new(6000).stop_signal.should == 'TERM'
+        end
+      end
+
+      context "custom stop signal" do
+        it 'will set provided stop signal' do
+          Client.new(6000, :stop_signal => 'KILL').stop_signal.should == 'KILL'
+        end
+      end
+    end
   end
 end

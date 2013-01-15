@@ -61,5 +61,17 @@ module Capybara::Poltergeist
         subject.client
       end
     end
+
+    context 'with a :stop_signal option' do
+      subject { Driver.new(nil, :stop_signal => 'KILL') }
+
+      it "creates a client with the desired stop signal" do
+        server = stub
+        server.stub(:port).and_return(64297)
+        Server.should_receive(:new).and_return(server)
+        Client.should_receive(:start).with(64297, hash_including(:stop_signal => 'KILL'))
+        subject.client
+      end
+    end
   end
 end

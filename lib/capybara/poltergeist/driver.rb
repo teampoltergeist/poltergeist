@@ -37,7 +37,8 @@ module Capybara::Poltergeist
       @client ||= Client.start(server.port,
         :path              => options[:phantomjs],
         :window_size       => options[:window_size],
-        :phantomjs_options => phantomjs_options
+        :phantomjs_options => phantomjs_options,
+        :stop_signal       => options[:stop_signal]
       )
     end
 
