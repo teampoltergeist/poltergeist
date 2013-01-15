@@ -10,16 +10,17 @@ module Capybara::Poltergeist
       client
     end
 
-    attr_reader :pid, :port, :path, :window_size, :phantomjs_options
+    attr_reader :pid, :port, :path, :window_size, :phantomjs_options, :stop_signal
 
     def initialize(port, options = {})
       @port              = port
       @path              = options[:path]              || PHANTOMJS_NAME
       @window_size       = options[:window_size]       || [1024, 768]
       @phantomjs_options = options[:phantomjs_options] || []
+      @stop_signal       = options[:stop_signal]       || 'TERM'
 
-      pid = Process.pid
-      at_exit { stop if Process.pid == pid }
+      master_pid = Process.pid
+      at_exit { stop if Process.pid == master_pid }
     end
 
     def start
@@ -30,7 +31,7 @@ module Capybara::Poltergeist
     def stop
       if pid
         begin
-          Process.kill('TERM', pid)
+          Process.kill(@stop_signal, pid)
           Process.wait(pid)
         rescue Errno::ESRCH, Errno::ECHILD
           # Zed's dead, baby
