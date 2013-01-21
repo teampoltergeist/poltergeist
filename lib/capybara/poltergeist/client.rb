@@ -1,7 +1,7 @@
 module Capybara::Poltergeist
   class Client
     PHANTOMJS_SCRIPT  = File.expand_path('../client/compiled/main.js', __FILE__)
-    PHANTOMJS_VERSION = '1.7.0'
+    PHANTOMJS_VERSION = '1.8.1'
     PHANTOMJS_NAME    = 'phantomjs'
 
     def self.start(*args)
