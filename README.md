@@ -1,7 +1,5 @@
 # Poltergeist - A PhantomJS driver for Capybara #
 
-Version: 1.0.2
-
 [![Build Status](https://secure.travis-ci.org/jonleighton/poltergeist.png)](http://travis-ci.org/jonleighton/poltergeist)
 
 Poltergeist is a driver for [Capybara](https://github.com/jnicklas/capybara). It allows you to
@@ -56,13 +54,12 @@ guide](http://phantomjs.org/build.html).)
 
 ## Compatibility ##
 
-Supported: MRI 1.8.7, MRI 1.9.2, MRI 1.9.3, JRuby 1.8, JRuby 1.9,
-Rubinius 1.8 on UNIX platforms.
+Poltergeist runs on MRI 1.9, JRuby 1.9 and Rubinius 1.9.
 
-Not supported: Rubinius 1.9, Windows.
+Ruby 1.8 is no longer supported. The last release to support Ruby 1.8
+was 1.0.2, so you should use that if you still need Ruby 1.8 support.
 
-Contributions are welcome in order to move 'unsupported'
-items into the 'supported' list.
+Poltergeist does not currently support the Windows operating system.
 
 ## Running on a CI ##
 
@@ -324,13 +321,12 @@ Include as much information as possible. For example:
 
 ### Next release ###
 
-#### Bug fixes ####
-
 #### Features ####
 
 *   Add `page.driver.click(x, y)` to click precise coordinates.
     (Micah Geisel)
-*   Add Capybara 2.0 support. (Mauro Asprea) [Issue #163]
+*   Add Capybara 2.0 support. Capybara 1.1 and Ruby 1.8 are *no
+    longer supported*. (Mauro Asprea) [Issue #163]
 
 #### Bug fixes ####
 
