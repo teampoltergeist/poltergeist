@@ -1,6 +1,9 @@
 require 'capybara/spec/test_app'
 
 class TestApp
+  configure do
+    set :protection, :except => :frame_options
+  end
   POLTERGEIST_VIEWS  = File.dirname(__FILE__) + "/views"
   POLTERGEIST_PUBLIC = File.dirname(__FILE__) + "/public"
 
