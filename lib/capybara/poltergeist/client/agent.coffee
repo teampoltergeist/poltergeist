@@ -141,18 +141,34 @@ class PoltergeistAgent.Node
     else
       true
 
+  frameOffset: ->
+    win    = window
+    offset = { top: 0, left: 0 }
+
+    while win.frameElement
+      rect = window.frameElement.getClientRects()[0]
+      win  = win.parent
+
+      offset.top  += rect.top
+      offset.left += rect.left
+
+    offset
+
   position: ->
     rect = @element.getClientRects()[0]
     throw new PoltergeistAgent.ObsoleteNode unless rect
+    frameOffset = this.frameOffset()
 
-    {
-      top:    rect.top,
-      right:  rect.right,
-      left:   rect.left,
-      bottom: rect.bottom,
+    pos = {
+      top:    rect.top    + frameOffset.top,
+      right:  rect.right  + frameOffset.left,
+      left:   rect.left   + frameOffset.left,
+      bottom: rect.bottom + frameOffset.top,
       width:  rect.width,
       height: rect.height
     }
+
+    pos
 
   trigger: (name) ->
     if Node.EVENTS.MOUSE.indexOf(name) != -1
@@ -177,6 +193,11 @@ class PoltergeistAgent.Node
     @element.blur()
 
   clickTest: (x, y) ->
+    frameOffset = this.frameOffset()
+
+    x -= frameOffset.left
+    y -= frameOffset.top
+
     el = origEl = document.elementFromPoint(x, y)
 
     while el

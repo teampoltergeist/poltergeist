@@ -303,6 +303,8 @@ Include as much information as possible. For example:
     [Issue #183, #211] (@errm, @motemen)
 *   Fix bug with `within_frame` not properly switching the context back
     after the block has executed. [Issue #242]
+*   Fix calculation of click position when clicking within a frame.
+    [Issue #222, #225]
 
 ### 1.0.2 ###
 
