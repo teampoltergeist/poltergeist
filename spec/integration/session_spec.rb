@@ -148,6 +148,12 @@ describe Capybara::Session do
         element.set ""
         element.value.should == ""
       end
+
+      it "supports special characters" do
+        element = @session.find(:css, "#change_me")
+        element.set "$52.00"
+        element.value.should == "$52.00"
+      end
     end
 
     it 'has no trouble clicking elements when the size of a document changes' do
