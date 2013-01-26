@@ -153,8 +153,8 @@ module Capybara::Poltergeist
     end
 
     def set_cookie(cookie)
-      if cookie[:expires].respond_to?(:httpdate)
-        cookie[:expires] = cookie[:expires].httpdate
+      if cookie[:expires]
+        cookie[:expires] = cookie[:expires].to_i * 1000
       end
 
       command 'set_cookie', cookie

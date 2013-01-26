@@ -309,6 +309,8 @@ Include as much information as possible. For example:
     [Issue #203] (@arnvald)
 *   Fix the `:js_errors` option. Previously errors were not being
     reported, but would still cause commands to fail. [Issue #229]
+*   Fix incorrect time zone handling when setting cookie expiry time
+    [Issue #228]
 
 ### 1.0.2 ###
 

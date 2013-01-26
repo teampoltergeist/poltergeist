@@ -29,7 +29,7 @@ module Capybara::Poltergeist
     end
 
     def expires
-      Time.parse @attributes['expires'] if @attributes['expires']
+      Time.at @attributes['expiry'] if @attributes['expiry']
     end
   end
 end
