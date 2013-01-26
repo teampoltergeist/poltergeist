@@ -19,7 +19,7 @@ module Capybara::Poltergeist
 
     it 'can be opened' do
       subject = Inspector.new('chromium', 1234)
-      Spawn.should_receive(:spawn).with("chromium", "http://localhost:1234/")
+      Process.should_receive(:spawn).with("chromium", "http://localhost:1234/")
       subject.open
     end
 

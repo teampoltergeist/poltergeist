@@ -24,7 +24,7 @@ module Capybara::Poltergeist
 
     def start
       check_phantomjs_version
-      @pid = Spawn.spawn(*command)
+      @pid = Process.spawn(*command.map(&:to_s))
     end
 
     def stop

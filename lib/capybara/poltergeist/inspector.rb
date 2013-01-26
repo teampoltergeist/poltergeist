@@ -24,7 +24,7 @@ module Capybara::Poltergeist
 
     def open
       if browser
-        Spawn.spawn(browser, url)
+        Process.spawn(browser, url)
       else
         raise Error, "Could not find a browser executable to open #{url}. " \
                      "You can specify one manually using e.g. `:inspector => 'chromium'` " \
