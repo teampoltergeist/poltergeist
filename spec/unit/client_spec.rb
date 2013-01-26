@@ -50,16 +50,33 @@ module Capybara::Poltergeist
     end
 
     it "forcibly kills the child if it doesn't respond to SIGTERM" do
-      client = Client.new(1234)
-      Process.stub(spawn: 5678)
-      client.start
+      begin
+        class << Process
+          alias old_wait wait
+        end
 
-      Process.should_receive(:kill).with('TERM', 5678).ordered
-      Process.should_receive(:wait).with(5678, Process::WNOHANG).any_number_of_times.ordered
-      Process.should_receive(:kill).with('KILL', 5678).ordered
-      Process.should_receive(:wait).with(5678).ordered
+        client = Client.new(1234)
+        Process.stub(spawn: 5678)
+        client.start
 
-      client.stop
+        Process.should_receive(:kill).with('TERM', 5678).ordered
+
+        count = 0
+        Process.singleton_class.send(:define_method, :wait) do |*args|
+          count += 1
+          count == 1 ? sleep(3) : 0
+        end
+
+        Process.should_receive(:kill).with('KILL', 5678).ordered
+
+        client.stop
+      ensure
+        class << Process
+          undef wait
+          alias wait old_wait
+          undef old_wait
+        end
+      end
     end
   end
 end

@@ -1,3 +1,5 @@
+require "timeout"
+
 module Capybara::Poltergeist
   class Client
     PHANTOMJS_SCRIPT  = File.expand_path('../client/compiled/main.js', __FILE__)
@@ -34,15 +36,9 @@ module Capybara::Poltergeist
         begin
           Process.kill('TERM', pid)
 
-          timeout = Time.now + KILL_TIMEOUT
-          status  = nil
-
-          while status.nil? && Time.now < timeout
-            status = Process.wait(pid, Process::WNOHANG)
-            sleep 0.1 unless status
-          end
-
-          unless status
+          begin
+            Timeout.timeout(KILL_TIMEOUT) { Process.wait(pid) }
+          rescue Timeout::Error
             Process.kill('KILL', pid)
             Process.wait(pid)
           end
