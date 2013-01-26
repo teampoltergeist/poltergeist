@@ -59,6 +59,12 @@ module Capybara
     end
 
     class ObsoleteNode < NodeError
+      def message
+        "The element you are trying to interact with is not part of the DOM. " \
+          "It's possible to element has been replaced by another element and you meant to interact with " \
+          "the new element. If so you need to do a new 'find' in order to get a reference to the " \
+          "new element."
+      end
     end
 
     class ClickFailed < NodeError

@@ -313,6 +313,8 @@ Include as much information as possible. For example:
     [Issue #228]
 *   Send SIGKILL to PhantomJS if it doesn't exit within 2 seconds
     [Issue #196]
+*   Provide a more informative message for the `ObsoleteNode` error.
+    [Issue #192]
 
 ### 1.0.2 ###
 
