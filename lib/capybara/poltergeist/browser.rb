@@ -1,4 +1,4 @@
-require 'multi_json'
+require 'json'
 require 'time'
 
 module Capybara::Poltergeist
@@ -169,7 +169,7 @@ module Capybara::Poltergeist
       message = { 'name' => name, 'args' => args }
       log message.inspect
 
-      json = JSON.load(server.send(JSON.dump(message)))
+      json = JSON.load(server.send(JSON.generate(message)))
       log json.inspect
 
       if json['error']
