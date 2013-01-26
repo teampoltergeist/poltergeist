@@ -325,6 +325,7 @@ module Capybara::Poltergeist
         cookie.path.should      == '/'
         cookie.secure?.should   == false
         cookie.httponly?.should == false
+        cookie.expires.should   == nil
       end
 
       it 'can set cookies' do

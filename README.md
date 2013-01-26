@@ -305,6 +305,8 @@ Include as much information as possible. For example:
     after the block has executed. [Issue #242]
 *   Fix calculation of click position when clicking within a frame.
     [Issue #222, #225]
+*   Fix error raising when calling `expires` if not set on cookie.
+    [Issue #203] (@arnvald)
 
 ### 1.0.2 ###
 
