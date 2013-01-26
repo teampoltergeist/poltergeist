@@ -360,7 +360,6 @@ describe Capybara::Session do
         @session.visit '/poltergeist/frames'
         @session.current_path.should == '/poltergeist/frames'
 
-
         @session.within_frame 'frame' do
           @session.current_path.should == '/poltergeist/slow'
           @session.body.should include('slow page')

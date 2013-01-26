@@ -329,6 +329,11 @@ Include as much information as possible. For example:
 *   Add `page.driver.click(x, y)` to click precise coordinates.
     (Micah Geisel)
 
+#### Bug fixes ####
+
+*   Fix timing issue when using `within_frame` that could cause errors.
+    [Issue #183, #211] (@errm, @motemen)
+
 ### 1.0.2 ###
 
 #### Bug fixes ####
