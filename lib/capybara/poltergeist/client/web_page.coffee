@@ -19,8 +19,6 @@ class Poltergeist.WebPage
     for callback in WebPage.CALLBACKS
       this.bindCallback(callback)
 
-    this.injectAgent()
-
   for command in @COMMANDS
     do (command) =>
       this.prototype[command] =
@@ -33,7 +31,6 @@ class Poltergeist.WebPage
 
   onInitializedNative: ->
     @_source = null
-    this.injectAgent()
     this.setScrollPosition(left: 0, top: 0)
 
   injectAgent: ->
@@ -142,9 +139,7 @@ class Poltergeist.WebPage
 
   pushFrame: (name) ->
     @frames.push(name)
-    res = @native.switchToFrame(name)
-    this.injectAgent()
-    res
+    @native.switchToFrame(name)
 
   popFrame: ->
     @frames.pop()
