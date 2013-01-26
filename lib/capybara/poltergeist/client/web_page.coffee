@@ -5,7 +5,7 @@ class Poltergeist.WebPage
 
   @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'release', 'render']
 
-  @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'documentSize']
+  @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'documentSize', 'beforeUpload', 'afterUpload']
 
   constructor: (@native) ->
     @native or= require('webpage').create()

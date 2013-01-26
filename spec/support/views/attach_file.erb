@@ -1,0 +1,10 @@
+<script>
+window.onload = function() {
+  var file = document.getElementById("file")
+  file.onchange = function() {
+    file.parentElement.removeChild(file)
+  }
+}
+</script>
+
+<input type="file" id="file">

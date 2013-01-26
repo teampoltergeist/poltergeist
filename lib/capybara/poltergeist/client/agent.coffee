@@ -52,6 +52,12 @@ class PoltergeistAgent
     throw new PoltergeistAgent.ObsoleteNode if node.isObsolete()
     node[name].apply(node, args)
 
+  beforeUpload: (id) ->
+    this.get(id).setAttribute('_poltergeist_selected', '')
+
+  afterUpload: (id) ->
+    this.get(id).removeAttribute('_poltergeist_selected')
+
 class PoltergeistAgent.ObsoleteNode
   toString: -> "PoltergeistAgent.ObsoleteNode"
 

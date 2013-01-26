@@ -315,6 +315,8 @@ Include as much information as possible. For example:
     [Issue #196]
 *   Provide a more informative message for the `ObsoleteNode` error.
     [Issue #192]
+*   Fix `ObsoleteNode` error when using `attach_file` with the `jQuery
+    File Upload` plugin. [Issue #115]
 
 ### 1.0.2 ###
 

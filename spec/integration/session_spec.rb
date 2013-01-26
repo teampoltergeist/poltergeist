@@ -388,5 +388,11 @@ describe Capybara::Session do
         end
       end
     end
+
+    # see https://github.com/jonleighton/poltergeist/issues/115
+    it "handles obsolete node during an attach_file" do
+      @session.visit "/poltergeist/attach_file"
+      @session.attach_file "file", __FILE__
+    end
   end
 end

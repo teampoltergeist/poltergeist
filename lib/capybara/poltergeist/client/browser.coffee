@@ -106,11 +106,11 @@ class Poltergeist.Browser
   # so we have to add an attribute to the element to identify it, then remove it
   # afterwards.
   select_file: (page_id, id, value) ->
-    node     = this.node(page_id, id)
+    node = this.node(page_id, id)
 
-    node.setAttribute('_poltergeist_selected', '')
+    @page.beforeUpload(node.id)
     @page.uploadFile('[_poltergeist_selected]', value)
-    node.removeAttribute('_poltergeist_selected')
+    @page.afterUpload(node.id)
 
     this.sendResponse(true)
 
