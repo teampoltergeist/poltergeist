@@ -21,6 +21,14 @@ module Capybara::Poltergeist
         subject.logger.should == :my_custom_logger
       end
     end
+    
+    context 'with a :phantomjs_logger option' do
+      subject { Driver.new(nil, :phantomjs_logger => :my_custom_logger) }
+
+      it 'logs to the phantomjs_logger given' do
+        subject.phantomjs_logger.should == :my_custom_logger
+      end
+    end
 
     context 'with a :debug => true option' do
       subject { Driver.new(nil, :debug => true) }
