@@ -29,6 +29,7 @@ module Capybara::Poltergeist
     end
 
     def expires
+      return nil unless @attributes['expires']
       Time.parse @attributes['expires']
     end
   end
