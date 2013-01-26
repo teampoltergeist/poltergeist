@@ -233,6 +233,6 @@ class Poltergeist.WebPage
       if result.error.message == 'PoltergeistAgent.ObsoleteNode'
         throw new Poltergeist.ObsoleteNode
       else
-        throw new Poltergeist.JavascriptError([result.error])
+        throw new Poltergeist.BrowserError(result.error.message, result.error.stack)
     else
       result.value
