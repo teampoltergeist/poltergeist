@@ -10,9 +10,6 @@ require 'capybara/poltergeist'
 require 'support/test_app'
 require 'support/spec_logger'
 
-alias :running :lambda
-
-
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(
     app,
@@ -51,5 +48,4 @@ RSpec.configure do |config|
   config.before(:each, :requires => :js) do
     Capybara.default_wait_time = 1
   end
-
 end
