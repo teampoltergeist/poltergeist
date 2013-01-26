@@ -311,6 +311,8 @@ Include as much information as possible. For example:
     reported, but would still cause commands to fail. [Issue #229]
 *   Fix incorrect time zone handling when setting cookie expiry time
     [Issue #228]
+*   Send SIGKILL to PhantomJS if it doesn't exit within 2 seconds
+    [Issue #196]
 
 ### 1.0.2 ###
 

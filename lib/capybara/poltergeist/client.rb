@@ -4,6 +4,8 @@ module Capybara::Poltergeist
     PHANTOMJS_VERSION = '1.8.1'
     PHANTOMJS_NAME    = 'phantomjs'
 
+    KILL_TIMEOUT = 2 # seconds
+
     def self.start(*args)
       client = new(*args)
       client.start
@@ -31,7 +33,19 @@ module Capybara::Poltergeist
       if pid
         begin
           Process.kill('TERM', pid)
-          Process.wait(pid)
+
+          timeout = Time.now + KILL_TIMEOUT
+          status  = nil
+
+          while status.nil? && Time.now < timeout
+            status = Process.wait(pid, Process::WNOHANG)
+            sleep 0.1 unless status
+          end
+
+          unless status
+            Process.kill('KILL', pid)
+            Process.wait(pid)
+          end
         rescue Errno::ESRCH, Errno::ECHILD
           # Zed's dead, baby
         end
