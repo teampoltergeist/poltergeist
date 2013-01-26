@@ -4,7 +4,7 @@ module Capybara::Poltergeist
   class Driver < Capybara::Driver::Base
     DEFAULT_TIMEOUT = 30
 
-    attr_reader :app, :app_server, :server, :client, :browser, :options
+    attr_reader :app, :server, :client, :browser, :options
 
     def initialize(app, options = {})
       @app       = app
@@ -13,9 +13,10 @@ module Capybara::Poltergeist
       @inspector = nil
       @server    = nil
       @client    = nil
+    end
 
-      @app_server = Capybara::Server.new(app)
-      @app_server.boot if Capybara.run_server
+    def needs_server?
+      true
     end
 
     def browser
@@ -77,8 +78,8 @@ module Capybara::Poltergeist
       options.fetch(:js_errors, true)
     end
 
-    def visit(path)
-      browser.visit app_server.url(path)
+    def visit(url)
+      browser.visit(url)
     end
 
     def current_url
@@ -89,9 +90,10 @@ module Capybara::Poltergeist
       browser.status_code
     end
 
-    def body
+    def html
       browser.body
     end
+    alias_method :body, :html
 
     def source
       browser.source.to_s
@@ -126,9 +128,10 @@ module Capybara::Poltergeist
       browser.reset
     end
 
-    def render(path, options = {})
+    def save_screenshot(path, options = {})
       browser.render(path, options)
     end
+    alias_method :render, :save_screenshot
 
     def resize(width, height)
       browser.resize(width, height)
@@ -155,7 +158,7 @@ module Capybara::Poltergeist
       browser.set_cookie({
         :name   => name,
         :value  => value,
-        :domain => URI.parse(app_server.url('')).host
+        :domain => URI.parse(browser.current_url).host
       }.merge(options))
     end
 
