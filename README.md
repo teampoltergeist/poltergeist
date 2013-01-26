@@ -301,6 +301,8 @@ Include as much information as possible. For example:
 
 *   Fix timing issue when using `within_frame` that could cause errors.
     [Issue #183, #211] (@errm, @motemen)
+*   Fix bug with `within_frame` not properly switching the context back
+    after the block has executed. [Issue #242]
 
 ### 1.0.2 ###
 

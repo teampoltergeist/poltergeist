@@ -138,8 +138,11 @@ class Poltergeist.WebPage
     @native.customHeaders = headers
 
   pushFrame: (name) ->
-    @frames.push(name)
-    @native.switchToFrame(name)
+    if @native.switchToFrame(name)
+      @frames.push(name)
+      true
+    else
+      false
 
   popFrame: ->
     @frames.pop()

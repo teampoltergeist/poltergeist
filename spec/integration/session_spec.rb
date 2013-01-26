@@ -350,6 +350,8 @@ describe Capybara::Session do
           @session.current_path.should == "/poltergeist/slow"
           @session.html.should include('slow page')
         end
+
+        @session.current_path.should == '/'
       end
 
       it 'waits for the cross-domain frame to load' do
