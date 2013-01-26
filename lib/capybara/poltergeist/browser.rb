@@ -3,13 +3,12 @@ require 'time'
 
 module Capybara::Poltergeist
   class Browser
-    attr_reader :server, :client, :logger, :js_errors
+    attr_reader :server, :client, :logger
 
-    def initialize(server, client, logger = nil, js_errors = true)
-      @server     = server
-      @client     = client
-      @logger     = logger
-      @js_errors  = js_errors
+    def initialize(server, client, logger = nil)
+      @server = server
+      @client = client
+      @logger = logger
     end
 
     def restart
@@ -165,6 +164,10 @@ module Capybara::Poltergeist
       command 'remove_cookie', name
     end
 
+    def js_errors=(val)
+      command 'set_js_errors', !!val
+    end
+
     def command(name, *args)
       message = { 'name' => name, 'args' => args }
       log message.inspect
@@ -174,12 +177,7 @@ module Capybara::Poltergeist
 
       if json['error']
         if json['error']['name'] == 'Poltergeist.JavascriptError'
-          error = JavascriptError.new(json['error'])
-          if js_errors
-            raise error
-          else
-            log error
-          end
+          raise JavascriptError.new(json['error'])
         else
           raise BrowserError.new(json['error'])
         end

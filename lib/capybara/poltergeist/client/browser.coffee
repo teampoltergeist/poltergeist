@@ -5,6 +5,7 @@ class Poltergeist.Browser
     @state      = 'default'
     @page_stack = []
     @page_id    = 0
+    @js_errors  = true
 
     this.resetPage()
 
@@ -46,9 +47,9 @@ class Poltergeist.Browser
 
   sendResponse: (response) ->
     errors = @page.errors()
+    @page.clearErrors()
 
-    if errors.length > 0
-      @page.clearErrors()
+    if errors.length > 0 && @js_errors
       @owner.sendError(new Poltergeist.JavascriptError(errors))
     else
       @owner.sendResponse(response)
@@ -243,6 +244,10 @@ class Poltergeist.Browser
 
   remove_cookie: (name) ->
     @page.deleteCookie(name)
+    this.sendResponse(true)
+
+  set_js_errors: (value) ->
+    @js_errors = value
     this.sendResponse(true)
 
   exit: ->

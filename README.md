@@ -307,6 +307,8 @@ Include as much information as possible. For example:
     [Issue #222, #225]
 *   Fix error raising when calling `expires` if not set on cookie.
     [Issue #203] (@arnvald)
+*   Fix the `:js_errors` option. Previously errors were not being
+    reported, but would still cause commands to fail. [Issue #229]
 
 ### 1.0.2 ###
 

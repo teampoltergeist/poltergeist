@@ -12,6 +12,11 @@ module Capybara::Poltergeist
       @driver.reset!
     end
 
+    def session_url(path)
+      server = @session.server
+      "http://#{server.host}:#{server.port}#{path}"
+    end
+
     it 'supports a custom phantomjs path' do
       begin
         file = POLTERGEIST_ROOT + '/spec/support/custom_phantomjs_called'
@@ -247,10 +252,11 @@ module Capybara::Poltergeist
 
       it "doesn't propagate a Javascript error to ruby if error raising disabled" do
         begin
-          driver = Capybara::Poltergeist::Driver.new(nil, :js_errors => false, :port => 44679)
+          driver = Capybara::Poltergeist::Driver.new(@session.app, :js_errors => false, logger: TestSessions.logger)
+          driver.visit session_url("/poltergeist/js_error")
           driver.execute_script "setTimeout(function() { omg }, 0)"
-          sleep 0.01
-          expect { driver.execute_script "" }.to_not raise_error(JavascriptError)
+          sleep 0.1
+          driver.body.should include("hello")
         ensure
           driver.quit if driver
         end
