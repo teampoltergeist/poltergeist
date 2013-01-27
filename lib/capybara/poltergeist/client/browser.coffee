@@ -45,6 +45,10 @@ class Poltergeist.Browser
         # window.
         setTimeout((=> this.push_window(name)), 0)
 
+  add_extension: (extension) ->
+    @page.injectExtension extension
+    this.sendResponse 'success'
+
   sendResponse: (response) ->
     errors = @page.errors()
     @page.clearErrors()
