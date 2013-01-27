@@ -28,26 +28,14 @@ class Poltergeist.Node
       y: middle(pos.top,  pos.bottom, viewport.height)
     }
 
-  click: ->
+  click: (event = 'click') ->
     this.scrollIntoView()
 
     pos  = this.clickPosition()
     test = this.clickTest(pos.x, pos.y)
 
     if test.status == 'success'
-      @page.mouseEvent('click', pos.x, pos.y)
-      pos
-    else
-      throw new Poltergeist.ClickFailed(test.selector, pos)
-
-  double_click: ->
-    this.scrollIntoView()
-
-    pos  = this.clickPosition()
-    test = this.clickTest(pos.x, pos.y)
-
-    if test.status == 'success'
-      @page.mouseEvent('doubleclick', pos.x, pos.y)
+      @page.mouseEvent(event, pos.x, pos.y)
       pos
     else
       throw new Poltergeist.ClickFailed(test.selector, pos)
