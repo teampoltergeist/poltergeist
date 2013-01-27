@@ -7,6 +7,8 @@ class Poltergeist.WebPage
 
   @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'documentSize', 'beforeUpload', 'afterUpload']
 
+  @EXTENSIONS = []
+
   constructor: (@native) ->
     @native or= require('webpage').create()
 
@@ -35,7 +37,13 @@ class Poltergeist.WebPage
 
   injectAgent: ->
     if @native.evaluate(-> typeof __poltergeist) == "undefined"
-      @native.injectJs("#{phantom.libraryPath}/agent.js")
+      @native.injectJs "#{phantom.libraryPath}/agent.js"
+      for extension in WebPage.EXTENSIONS
+        @native.injectJs extension
+
+  injectExtension: (file) ->
+    WebPage.EXTENSIONS.push file
+    @native.injectJs file
 
   onConsoleMessageNative: (message) ->
     if message == '__DOMContentLoaded'
