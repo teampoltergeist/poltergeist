@@ -325,11 +325,13 @@ Include as much information as possible. For example:
     [Issue #192]
 *   Fix `ObsoleteNode` error when using `attach_file` with the `jQuery
     File Upload` plugin. [Issue #115]
-
 *   Add the ability to extend the phantomjs environment via browser
     options. e.g.
     `Capybara::Poltergeist::Driver.new( app, :extensions => ['file.js', 'another.js'])`
     (@JonRowe)
+*   Ensure that a `String` is passed over-the-wire to PhantomJS for
+    file input paths, allowing `attach_file` to be called with arbitry
+    objects such as a Pathname. (@mjtko) [Issue #215]
 
 ### 1.0.2 ###
 

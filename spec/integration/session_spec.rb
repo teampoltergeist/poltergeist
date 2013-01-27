@@ -154,6 +154,12 @@ describe Capybara::Session do
         element.set "$52.00"
         element.value.should == "$52.00"
       end
+
+      it 'attaches a file when passed a Pathname' do
+        element = @session.find(:css, '#change_me_file')
+        element.set Pathname.new("a_test_pathname")
+        element.value.should == 'C:\fakepath\a_test_pathname'
+      end
     end
 
     it 'has no trouble clicking elements when the size of a document changes' do
