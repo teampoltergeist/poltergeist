@@ -31,20 +31,29 @@ module Capybara::Poltergeist
       end
     end
 
-    context "with width and height specified" do
+    context 'with width and height specified' do
       subject { Client.new(6000, :window_size => [800, 600]) }
 
-      it "starts phantomjs, passing the width and height through" do
-        Process.should_receive(:spawn).with("phantomjs", Client::PHANTOMJS_SCRIPT, "6000", "800", "600")
+      it 'starts phantomjs, passing the width and height through' do
+        Process.should_receive(:spawn).with("phantomjs", Client::PHANTOMJS_SCRIPT, "6000", "800", "600", out: $stdout)
+        subject.start
+      end
+    end
+    
+    context 'with a custom phantomjs_logger' do
+      subject { Client.new(6000, :phantomjs_logger => :my_custom_logger, :window_size => [800, 600]) }
+
+      it 'starts phantomjs, capturing the STDOUT to custom phantomjs_logger' do
+        Process.should_receive(:spawn).with("phantomjs", Client::PHANTOMJS_SCRIPT, "6000", "800", "600", out: :my_custom_logger)
         subject.start
       end
     end
 
-    context "with additional command-line options" do
+    context 'with additional command-line options' do
       subject { Client.new(6000, :phantomjs_options => %w[--ignore-ssl-error=yes --load-images=no]) }
 
       it 'passed additional command-line options to phantomjs' do
-        Process.should_receive(:spawn).with("phantomjs", '--ignore-ssl-error=yes', '--load-images=no', anything, anything, anything, anything)
+        Process.should_receive(:spawn).with("phantomjs", '--ignore-ssl-error=yes', '--load-images=no', anything, anything, anything, anything, out: $stdout)
         subject.start
       end
     end

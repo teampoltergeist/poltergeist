@@ -42,7 +42,8 @@ module Capybara::Poltergeist
       @client ||= Client.start(server.port,
         :path              => options[:phantomjs],
         :window_size       => options[:window_size],
-        :phantomjs_options => phantomjs_options
+        :phantomjs_options => phantomjs_options,
+        :phantomjs_logger  => phantomjs_logger
       )
     end
 
@@ -76,6 +77,11 @@ module Capybara::Poltergeist
     # logger should be an object that responds to puts, or nil
     def logger
       options[:logger] || (options[:debug] && STDERR)
+    end
+
+    # logger should be an object that behaves like IO or nil
+    def phantomjs_logger
+      options.fetch(:phantomjs_logger, nil)
     end
 
     def visit(url)
