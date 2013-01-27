@@ -170,7 +170,7 @@ class Poltergeist.Browser
     @page = prev_page if prev_page
     this.sendResponse(true)
 
-  click: (page_id, id) ->
+  click: (page_id, id, click_type = 'click') ->
     # Get the node before changing state, in case there is an exception
     node = this.node(page_id, id)
 
@@ -178,13 +178,19 @@ class Poltergeist.Browser
     # state and wait for onLoadFinished before sending a response.
     @state = 'clicked'
 
-    @last_click = node.click()
+    if click_type == 'click'
+      @last_click = node.click()
+    else
+      @last_click = node.double_click()
 
     setTimeout =>
       if @state != 'loading'
         @state = 'default'
         this.sendResponse(@last_click)
     , 5
+
+  double_click: (page_id, id) ->
+    this.click page_id, id, 'double_click'
 
   click_coordinates: (x, y) ->
     @page.sendEvent('click', x, y)
