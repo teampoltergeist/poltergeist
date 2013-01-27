@@ -53,7 +53,7 @@ module Capybara::Poltergeist
         when 'checkbox'
           click if value != checked?
         when 'file'
-          command :select_file, value
+          command :select_file, value.to_s
         else
           command :set, value.to_s
         end
