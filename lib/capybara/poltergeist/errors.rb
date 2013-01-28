@@ -34,7 +34,9 @@ module Capybara
       end
 
       def message
-        "There was an error inside the PhantomJS portion of Poltergeist:\n\n#{javascript_error}"
+        "There was an error inside the PhantomJS portion of Poltergeist. " \
+          "This is probably a bug, so please report it. " \
+          "\n\n#{javascript_error}"
       end
     end
 
@@ -44,8 +46,11 @@ module Capybara
       end
 
       def message
-        "One or more errors were raised in the Javascript code on the page:\n\n" +
-          javascript_errors.map(&:to_s).join("\n")
+        "One or more errors were raised in the Javascript code on the page. " \
+          "If you don't care about these errors, you can ignore them by " \
+          "setting js_errors: false in your Poltergeist configuration (see " \
+          "documentation for details)." \
+          "\n\n#{javascript_errors.map(&:to_s).join("\n")}"
       end
     end
 
@@ -90,7 +95,11 @@ module Capybara
       end
 
       def message
-        "Timed out waiting for response to #{@message}"
+        "Timed out waiting for response to #{@message}. It's possible that this happened " \
+          "because something took a very long time (for example a page load was slow). " \
+          "If so, setting the Poltergeist :timeout option to a higher value will help " \
+          "(see the docs for details). If increasing the timeout does not help, this is " \
+          "probably a bug in Poltergeist - please report it to the issue tracker."
       end
     end
 
@@ -100,7 +109,7 @@ module Capybara
       end
 
       def message
-        "The PhantomJS client died while processing #{@message}"
+        "PhantomJS client died while processing #{@message}"
       end
     end
 
