@@ -53,7 +53,8 @@ module Capybara::Poltergeist
         when 'checkbox'
           click if value != checked?
         when 'file'
-          command :select_file, value.to_s
+          files = value.respond_to?(:to_ary) ? value.to_ary.map(&:to_s) : value.to_s
+          command :select_file, files
         else
           command :set, value.to_s
         end
