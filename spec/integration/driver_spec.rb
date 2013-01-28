@@ -363,13 +363,13 @@ module Capybara::Poltergeist
       end
 
       it 'can set cookies' do
-        @driver.set_cookie 'capybara', 'omg', :domain => '127.0.0.1'
+        @driver.set_cookie 'capybara', 'omg'
         @session.visit('/get_cookie')
         @driver.body.should include('omg')
       end
 
       it 'can set cookies with custom settings' do
-        @driver.set_cookie 'capybara', 'omg', :path => '/poltergeist', :domain => '127.0.0.1'
+        @driver.set_cookie 'capybara', 'omg', :path => '/poltergeist'
 
         @session.visit('/get_cookie')
         @driver.body.should_not include('omg')

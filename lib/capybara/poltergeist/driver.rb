@@ -13,6 +13,7 @@ module Capybara::Poltergeist
       @inspector = nil
       @server    = nil
       @client    = nil
+      @started   = false
     end
 
     def needs_server?
@@ -86,6 +87,7 @@ module Capybara::Poltergeist
     end
 
     def visit(url)
+      @started = true
       browser.visit(url)
     end
 
@@ -133,6 +135,7 @@ module Capybara::Poltergeist
 
     def reset!
       browser.reset
+      @started = false
     end
 
     def save_screenshot(path, options = {})
@@ -162,11 +165,16 @@ module Capybara::Poltergeist
     end
 
     def set_cookie(name, value, options = {})
-      browser.set_cookie({
-        :name   => name,
-        :value  => value,
-        :domain => URI.parse(browser.current_url).host
-      }.merge(options))
+      options[:name]  ||= name
+      options[:value] ||= value
+
+      if @started
+        options[:domain] = URI.parse(browser.current_url).host
+      else
+        options[:domain] = Capybara.app_host || "127.0.0.1"
+      end
+
+      browser.set_cookie(options)
     end
 
     def remove_cookie(name)

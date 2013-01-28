@@ -337,6 +337,7 @@ Include as much information as possible. For example:
 *   Ensure that a `String` is passed over-the-wire to PhantomJS for
     file input paths, allowing `attach_file` to be called with arbitry
     objects such as a Pathname. (@mjtko) [Issue #215]
+*   Cookies can now be set before the first request. [Issue #193]
 
 ### 1.0.2 ###
 
