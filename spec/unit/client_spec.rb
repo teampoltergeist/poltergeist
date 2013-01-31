@@ -33,24 +33,6 @@ module Capybara::Poltergeist
       end
     end
 
-    context 'with width and height specified' do
-      subject { Client.new(server, :window_size => [800, 600]) }
-
-      it 'starts phantomjs, passing the width and height through' do
-        Process.should_receive(:spawn).with("phantomjs", Client::PHANTOMJS_SCRIPT, "6000", "800", "600", anything)
-        subject.start
-      end
-    end
-
-    context 'with additional command-line options' do
-      subject { Client.new(server, :phantomjs_options => %w[--ignore-ssl-error=yes --load-images=no]) }
-
-      it 'passed additional command-line options to phantomjs' do
-        Process.should_receive(:spawn).with("phantomjs", '--ignore-ssl-error=yes', '--load-images=no', anything, anything, anything, anything, anything)
-        subject.start
-      end
-    end
-
     it "forcibly kills the child if it doesn't respond to SIGTERM" do
       begin
         class << Process

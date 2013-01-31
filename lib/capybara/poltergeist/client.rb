@@ -35,7 +35,10 @@ module Capybara::Poltergeist
           @phantomjs_logger.write(data)
         end
       }
-      @pid = Process.spawn(*command.map(&:to_s), out: write)
+
+      redirect_stdout(write) do
+        @pid = Process.spawn(*command.map(&:to_s))
+      end
     end
 
     def stop
@@ -86,6 +89,19 @@ module Capybara::Poltergeist
       end
 
       @phantomjs_version_checked = true
+    end
+
+    # This abomination is because JRuby doesn't support the :out option of
+    # Process.spawn
+    def redirect_stdout(to)
+      prev = STDOUT.dup
+      prev.autoclose = false
+      $stdout = to
+      STDOUT.reopen(to)
+      yield
+    ensure
+      STDOUT.reopen(prev)
+      $stdout = STDOUT
     end
   end
 end
