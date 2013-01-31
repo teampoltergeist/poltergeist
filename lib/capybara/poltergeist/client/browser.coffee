@@ -6,6 +6,7 @@ class Poltergeist.Browser
     @page_stack = []
     @page_id    = 0
     @js_errors  = true
+    @_debug     = false
 
     this.resetPage()
 
@@ -18,18 +19,18 @@ class Poltergeist.Browser
     @page.setViewportSize(width: @width, height: @height)
 
     @page.onLoadStarted = =>
-      @state = 'loading' if @state == 'clicked'
+      this.setState 'loading' if @state == 'clicked'
 
     @page.onNavigationRequested = (url, navigation) =>
-      @state = 'loading' if @state == 'clicked' && navigation == 'FormSubmitted'
+      this.setState 'loading' if @state == 'clicked' && navigation == 'FormSubmitted'
 
     @page.onLoadFinished = (status) =>
       if @state == 'loading'
         this.sendResponse(status: status, click: @last_click)
-        @state = 'default'
+        this.setState 'default'
       else if @state == 'awaiting_frame_load'
         this.sendResponse(true)
-        @state = 'default'
+        this.setState 'default'
 
     @page.onInitialized = =>
       @page_id += 1
@@ -37,17 +38,22 @@ class Poltergeist.Browser
     @page.onPageCreated = (sub_page) =>
       if @state == 'awaiting_sub_page'
         name       = @page_name
-        @state     = 'default'
         @page_name = null
+
+        this.setState 'default'
 
         # At this point subpage isn't fully initialized, so we can't check
         # its name. Instead, we just schedule another attempt to push the
         # window.
         setTimeout((=> this.push_window(name)), 0)
 
-  add_extension: (extension) ->
-    @page.injectExtension extension
-    this.sendResponse 'success'
+  debug: (message) ->
+    if @_debug
+      console.log "poltergeist [#{new Date().getTime()}] #{message}"
+
+  setState: (state) ->
+    this.debug "state #{@state} -> #{state}"
+    @state = state
 
   sendResponse: (response) ->
     errors = @page.errors()
@@ -58,6 +64,10 @@ class Poltergeist.Browser
     else
       @owner.sendResponse(response)
 
+  add_extension: (extension) ->
+    @page.injectExtension extension
+    this.sendResponse 'success'
+
   node: (page_id, id) ->
     if page_id == @page_id
       @page.get(id)
@@ -65,14 +75,15 @@ class Poltergeist.Browser
       throw new Poltergeist.ObsoleteNode
 
   visit: (url) ->
-    @state   = 'loading'
+    this.setState 'loading'
+
     prev_url = @page.currentUrl()
 
     @page.open(url)
 
     if /#/.test(url) && prev_url.split('#')[0] == url.split('#')[0]
       # hashchange occurred, so there will be no onLoadFinished
-      @state = 'default'
+      this.setState 'default'
       this.sendResponse 'success'
 
   current_url: ->
@@ -137,7 +148,7 @@ class Poltergeist.Browser
   push_frame: (name) ->
     if @page.pushFrame(name)
       if @page.currentUrl() == 'about:blank'
-        @state = 'awaiting_frame_load'
+        this.setState 'awaiting_frame_load'
       else
         this.sendResponse(true)
     else
@@ -163,7 +174,7 @@ class Poltergeist.Browser
         this.sendResponse(true)
     else
       @page_name = name
-      @state     = 'awaiting_sub_page'
+      this.setState 'awaiting_sub_page'
 
   pop_window: ->
     prev_page = @page_stack.pop()
@@ -176,13 +187,13 @@ class Poltergeist.Browser
 
     # If the click event triggers onNavigationRequested, we will transition to the 'loading'
     # state and wait for onLoadFinished before sending a response.
-    @state = 'clicked'
+    this.setState 'clicked'
 
     @last_click = node.click(event)
 
     setTimeout =>
       if @state != 'loading'
-        @state = 'default'
+        this.setState 'default'
         this.sendResponse(@last_click)
     , 5
 
@@ -255,6 +266,10 @@ class Poltergeist.Browser
 
   set_js_errors: (value) ->
     @js_errors = value
+    this.sendResponse(true)
+
+  set_debug: (value) ->
+    @_debug = value
     this.sendResponse(true)
 
   exit: ->

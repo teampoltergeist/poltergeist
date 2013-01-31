@@ -175,7 +175,9 @@ end
 `options` is a hash of options. The following options are supported:
 
 *   `:phantomjs` (String) - A custom path to the phantomjs executable
-*   `:debug` (Boolean) - When true, debug output is logged to `STDERR`
+*   `:debug` (Boolean) - When true, debug output is logged to `STDERR`.
+    Some debug info from the PhantomJS portion of Poltergeist is also
+    output, but this goes to `STDOUT` due to technical limitations.
 *   `:logger` (Object responding to `puts`) - When present, debug output is written to this object
 *   `:phantomjs_logger` (`IO` object) - Where the `STDOUT` from PhantomJS is written to. This is
     where you `console.log` statements will show up. Default: `STDOUT`
@@ -309,6 +311,9 @@ Include as much information as possible. For example:
     longer supported*. (Mauro Asprea) [Issue #163]
 *   Add `node.base.double_click` to double click the node.
     (Andy Shen)
+*   The `:debug` option now causes the PhantomJS portion of Poltergeist
+    to output some additional debug info, which may be useful in
+    figuring out timeout errors.
 
 #### Bug fixes ####
 

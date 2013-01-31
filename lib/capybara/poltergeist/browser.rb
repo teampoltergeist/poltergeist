@@ -14,6 +14,8 @@ module Capybara::Poltergeist
     def restart
       server.restart
       client.restart
+
+      self.debug = @debug if @debug
     end
 
     def visit(url)
@@ -176,6 +178,11 @@ module Capybara::Poltergeist
       Array(names).each do |name|
         command 'add_extension', name
       end
+    end
+
+    def debug=(val)
+      @debug = val
+      command 'set_debug', !!val
     end
 
     def command(name, *args)
