@@ -57,21 +57,26 @@ module Capybara::Poltergeist
     # How many seconds to try to bind to the port for before failing
     BIND_TIMEOUT = 5
 
+    HOST = '127.0.0.1'
+
     attr_reader :port, :parser, :socket, :handler, :server
     attr_accessor :timeout
 
-    def initialize(port, timeout = nil)
-      @port    = port
-      @parser  = Http::Parser.new
-      @server  = start_server
+    def initialize(port = nil, timeout = nil)
       @timeout = timeout
+      @parser  = Http::Parser.new
+      @server  = start_server(port)
     end
 
-    def start_server
+    def port
+      server.addr[1]
+    end
+
+    def start_server(port)
       time = Time.now
 
       begin
-        TCPServer.open(port)
+        TCPServer.open(HOST, port || 0)
       rescue Errno::EADDRINUSE
         if (Time.now - time) < BIND_TIMEOUT
           sleep(0.01)

@@ -14,10 +14,10 @@ module Capybara::Poltergeist
       client
     end
 
-    attr_reader :pid, :port, :path, :window_size, :phantomjs_options
+    attr_reader :pid, :server, :path, :window_size, :phantomjs_options
 
-    def initialize(port, options = {})
-      @port              = port
+    def initialize(server, options = {})
+      @server            = server
       @path              = options[:path]              || PHANTOMJS_NAME
       @window_size       = options[:window_size]       || [1024, 768]
       @phantomjs_options = options[:phantomjs_options] || []
@@ -57,14 +57,12 @@ module Capybara::Poltergeist
     end
 
     def command
-      @command ||= begin
-        parts = [path]
-        parts.concat phantomjs_options
-        parts << PHANTOMJS_SCRIPT
-        parts << port
-        parts.concat window_size
-        parts
-      end
+      parts = [path]
+      parts.concat phantomjs_options
+      parts << PHANTOMJS_SCRIPT
+      parts << server.port
+      parts.concat window_size
+      parts
     end
 
     private

@@ -2,7 +2,9 @@ require 'spec_helper'
 
 module Capybara::Poltergeist
   describe Client do
-    subject { Client.new(6000) }
+    let(:server) { stub(port: 6000) }
+
+    subject { Client.new(server) }
 
     it 'raises an error if phantomjs is too old' do
       `true` # stubbing $?
@@ -21,7 +23,7 @@ module Capybara::Poltergeist
     end
 
     it 'raises an error if phantomjs returns a non-zero exit code' do
-      subject = Client.new(6000, :path => 'exit 42 && ')
+      subject = Client.new(server, :path => 'exit 42 && ')
       expect { subject.start }.to raise_error(Error)
 
       begin
@@ -32,16 +34,16 @@ module Capybara::Poltergeist
     end
 
     context 'with width and height specified' do
-      subject { Client.new(6000, :window_size => [800, 600]) }
+      subject { Client.new(server, :window_size => [800, 600]) }
 
       it 'starts phantomjs, passing the width and height through' do
         Process.should_receive(:spawn).with("phantomjs", Client::PHANTOMJS_SCRIPT, "6000", "800", "600", out: $stdout)
         subject.start
       end
     end
-    
+
     context 'with a custom phantomjs_logger' do
-      subject { Client.new(6000, :phantomjs_logger => :my_custom_logger, :window_size => [800, 600]) }
+      subject { Client.new(server, :phantomjs_logger => :my_custom_logger, :window_size => [800, 600]) }
 
       it 'starts phantomjs, capturing the STDOUT to custom phantomjs_logger' do
         Process.should_receive(:spawn).with("phantomjs", Client::PHANTOMJS_SCRIPT, "6000", "800", "600", out: :my_custom_logger)
@@ -50,7 +52,7 @@ module Capybara::Poltergeist
     end
 
     context 'with additional command-line options' do
-      subject { Client.new(6000, :phantomjs_options => %w[--ignore-ssl-error=yes --load-images=no]) }
+      subject { Client.new(server, :phantomjs_options => %w[--ignore-ssl-error=yes --load-images=no]) }
 
       it 'passed additional command-line options to phantomjs' do
         Process.should_receive(:spawn).with("phantomjs", '--ignore-ssl-error=yes', '--load-images=no', anything, anything, anything, anything, out: $stdout)
@@ -64,7 +66,7 @@ module Capybara::Poltergeist
           alias old_wait wait
         end
 
-        client = Client.new(1234)
+        client = Client.new(server)
         Process.stub(spawn: 5678)
         client.start
 

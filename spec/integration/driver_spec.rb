@@ -54,7 +54,7 @@ module Capybara::Poltergeist
       end
     end
 
-    it 'raises an error and restart the client, if the client dies while executing a command' do
+    it 'raises an error and restarts the client, if the client dies while executing a command' do
       lambda { @driver.browser.command('exit') }.should raise_error(DeadClient)
       @session.visit('/')
       @driver.html.should include('Hello world')

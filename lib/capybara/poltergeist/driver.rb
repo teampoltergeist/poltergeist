@@ -34,14 +34,11 @@ module Capybara::Poltergeist
     end
 
     def server
-      @server ||= Server.new(
-        options.fetch(:port)    { Util.find_available_port },
-        options.fetch(:timeout) { DEFAULT_TIMEOUT          }
-      )
+      @server ||= Server.new(options[:port], options.fetch(:timeout) { DEFAULT_TIMEOUT })
     end
 
     def client
-      @client ||= Client.start(server.port,
+      @client ||= Client.start(server,
         :path              => options[:phantomjs],
         :window_size       => options[:window_size],
         :phantomjs_options => phantomjs_options,
