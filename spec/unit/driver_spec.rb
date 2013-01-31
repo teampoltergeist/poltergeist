@@ -21,7 +21,7 @@ module Capybara::Poltergeist
         subject.logger.should == :my_custom_logger
       end
     end
-    
+
     context 'with a :phantomjs_logger option' do
       subject { Driver.new(nil, :phantomjs_logger => :my_custom_logger) }
 
@@ -63,9 +63,9 @@ module Capybara::Poltergeist
 
       it "creates a client with the desired width and height settings" do
         server = stub
-        server.stub(:port).and_return(64297)
         Server.should_receive(:new).and_return(server)
-        Client.should_receive(:start).with(64297, hash_including(:window_size => [800, 600]))
+        Client.should_receive(:start).with(server, hash_including(:window_size => [800, 600]))
+
         subject.client
       end
     end
