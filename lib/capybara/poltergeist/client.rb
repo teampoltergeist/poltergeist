@@ -29,7 +29,13 @@ module Capybara::Poltergeist
 
     def start
       check_phantomjs_version
-      @pid = Process.spawn(*command.map(&:to_s), out: @phantomjs_logger)
+      read, write = IO.pipe
+      @out_thread = Thread.new {
+        while !read.eof? && data = read.readpartial(1024)
+          @phantomjs_logger.write(data)
+        end
+      }
+      @pid = Process.spawn(*command.map(&:to_s), out: write)
     end
 
     def stop
@@ -47,6 +53,7 @@ module Capybara::Poltergeist
           # Zed's dead, baby
         end
 
+        @out_thread.kill
         @pid = nil
       end
     end
