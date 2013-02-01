@@ -33,32 +33,34 @@ module Capybara::Poltergeist
       end
     end
 
-    it "forcibly kills the child if it doesn't respond to SIGTERM" do
-      begin
-        class << Process
-          alias old_wait wait
-        end
+    unless Capybara::Poltergeist.windows?
+      it "forcibly kills the child if it doesn't respond to SIGTERM" do
+        begin
+          class << Process
+            alias old_wait wait
+          end
 
-        client = Client.new(server)
-        Process.stub(spawn: 5678)
-        client.start
+          client = Client.new(server)
+          Process.stub(spawn: 5678)
+          client.start
 
-        Process.should_receive(:kill).with('TERM', 5678).ordered
+          Process.should_receive(:kill).with('TERM', 5678).ordered
 
-        count = 0
-        Process.singleton_class.send(:define_method, :wait) do |*args|
-          count += 1
-          count == 1 ? sleep(3) : 0
-        end
+          count = 0
+          Process.singleton_class.send(:define_method, :wait) do |*args|
+            count += 1
+            count == 1 ? sleep(3) : 0
+          end
 
-        Process.should_receive(:kill).with('KILL', 5678).ordered
+          Process.should_receive(:kill).with('KILL', 5678).ordered
 
-        client.stop
-      ensure
-        class << Process
-          undef wait
-          alias wait old_wait
-          undef old_wait
+          client.stop
+        ensure
+          class << Process
+            undef wait
+            alias wait old_wait
+            undef old_wait
+          end
         end
       end
     end

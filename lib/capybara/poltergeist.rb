@@ -7,6 +7,7 @@ require 'capybara'
 
 module Capybara
   module Poltergeist
+    require 'capybara/poltergeist/utility'
     require 'capybara/poltergeist/driver'
     require 'capybara/poltergeist/browser'
     require 'capybara/poltergeist/node'

@@ -84,7 +84,7 @@ module Capybara::Poltergeist
           )
         end
         driver = Capybara::Session.new(:poltergeist_with_custom_window_size, TestApp).driver
-        driver.visit("/")
+        driver.visit(session_url '/')
         driver.evaluate_script('[window.innerWidth, window.innerHeight]').should eq([800, 600])
       ensure
         driver.quit if driver
@@ -191,11 +191,19 @@ module Capybara::Poltergeist
       driver = Capybara::Poltergeist::Driver.new(nil)
       pid    = driver.client_pid
 
-      Process.kill(0, pid).should == 1
+      def terminate_process(pid)
+        if Capybara::Poltergeist.windows?
+          Process.kill('KILL', pid).should == 1
+        else
+          Process.kill('EXIT', pid).should == 1
+        end
+      end
+
+      terminate_process(pid)
       driver.quit
 
       begin
-        Process.kill(0, pid)
+        terminate_process(pid)
       rescue Errno::ESRCH
       else
         raise "process is still alive"
