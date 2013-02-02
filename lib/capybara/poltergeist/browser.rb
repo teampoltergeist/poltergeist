@@ -113,6 +113,16 @@ module Capybara::Poltergeist
       command 'drag', page_id, id, other_id
     end
 
+    def drag_by(page_id, id, dimensions)
+      left, right = dimensions.fetch(:left, 0), dimensions.fetch(:right, 0)
+      up, down = dimensions.fetch(:up, 0), dimensions.fetch(:down, 0)
+
+      x_delta = right - left
+      y_delta = down - up
+
+      command 'drag_by', page_id, id, x_delta, y_delta
+    end
+
     def select(page_id, id, value)
       command 'select', page_id, id, value
     end
