@@ -24,7 +24,7 @@ module Capybara::Poltergeist
 
         FileUtils.rm_f file
 
-        driver  = Capybara::Poltergeist::Driver.new(nil, :phantomjs => path, :port => 44679)
+        driver  = Capybara::Poltergeist::Driver.new(nil, :phantomjs => path)
         driver.browser
 
         # If the correct custom path is called, it will touch the file. We allow at
@@ -80,8 +80,7 @@ module Capybara::Poltergeist
           Capybara::Poltergeist::Driver.new(
             app,
             :logger      => TestSessions.logger,
-            :window_size => [800, 600],
-            :port        => 44679
+            :window_size => [800, 600]
           )
         end
         driver = Capybara::Session.new(:poltergeist_with_custom_window_size, TestApp).driver
@@ -185,7 +184,7 @@ module Capybara::Poltergeist
     end
 
     it 'supports quitting the session' do
-      driver = Capybara::Poltergeist::Driver.new(nil, :port => 44679)
+      driver = Capybara::Poltergeist::Driver.new(nil)
       pid    = driver.client_pid
 
       Process.kill(0, pid).should == 1
@@ -396,6 +395,17 @@ module Capybara::Poltergeist
         @session.visit '/'
         @driver.set_cookie 'foo', 'bar', :expires => time
         @driver.cookies['foo'].expires.should == time
+      end
+    end
+
+    it "allows the driver to have a fixed port" do
+      begin
+        driver = Capybara::Poltergeist::Driver.new(@driver.app, port: 12345)
+        driver.visit session_url('/')
+
+        expect { TCPServer.new("127.0.0.1", 12345) }.to raise_error(Errno::EADDRINUSE)
+      ensure
+        driver.quit
       end
     end
   end

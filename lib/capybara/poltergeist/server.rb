@@ -2,7 +2,7 @@ module Capybara::Poltergeist
   class Server
     attr_reader :socket, :fixed_port, :timeout
 
-    def initialize(port = nil, timeout = nil)
+    def initialize(fixed_port = nil, timeout = nil)
       @fixed_port = fixed_port
       @timeout    = timeout
       start
