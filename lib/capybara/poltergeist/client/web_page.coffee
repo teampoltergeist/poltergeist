@@ -33,6 +33,7 @@ class Poltergeist.WebPage
 
   onInitializedNative: ->
     @_source = null
+    @injectAgent()
     this.setScrollPosition(left: 0, top: 0)
 
   injectAgent: ->
