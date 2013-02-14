@@ -201,7 +201,7 @@ module Capybara::Poltergeist
     context 'extending browser javascript' do
       before do
         @extended_driver = Capybara::Poltergeist::Driver.new(
-          @driver.app,
+          @session.app,
           :logger     => TestSessions.logger,
           :inspector  => (ENV['DEBUG'] != nil),
           :extensions => %W% #{File.expand_path '../../support/geolocation.js', __FILE__ } %
@@ -209,7 +209,9 @@ module Capybara::Poltergeist
       end
 
       it 'supports extending the phantomjs world' do
-        @extended_driver.visit '/'
+        @extended_driver.visit session_url("/poltergeist/requiring_custom_extension")
+        @extended_driver.body.should include(%Q%Location: <span id="location">1,-1</span>%)
+        @extended_driver.evaluate_script("document.getElementById('location').innerHTML").should == '1,-1'
         @extended_driver.evaluate_script('navigator.geolocation').should_not eq nil
       end
     end
