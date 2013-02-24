@@ -100,6 +100,10 @@ module Capybara::Poltergeist
     end
 
     it 'supports rendering the whole of a page that goes outside the viewport' do
+      if RUBY_VERSION >= "2.0.0"
+        pending "image_size seems to be incompatible with Ruby 2"
+      end
+
       file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
       @session.visit('/poltergeist/long_page')
       @driver.save_screenshot(file)

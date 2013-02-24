@@ -4,6 +4,7 @@ before_script:
   - phantomjs --version
 script: bundle exec rake ci
 rvm:
+  - 2.0.0
   - 1.9.3
   - 1.9.2
   - rbx-19mode
