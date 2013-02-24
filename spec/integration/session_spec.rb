@@ -363,6 +363,14 @@ describe Capybara::Session do
           @session.html.should include('slow page')
         end
       end
+
+      it 'can identify a new window opened via the target attribute (no name)' do
+        @session.visit '/poltergeist/target'
+        @session.click_link 'Link'
+        @session.within_window '' do
+          @session.html.should include('slow page')
+        end
+      end
     end
 
     context 'frame support' do
