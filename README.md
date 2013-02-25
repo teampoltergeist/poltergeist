@@ -11,6 +11,15 @@ you're reading the documentation for the master branch.
 [View documentation for the latest release
 (1.1.0).](https://github.com/jonleighton/poltergeist/tree/v1.1.0)**
 
+## Getting help ##
+
+Questions should be posted [on Stack
+Overflow, using the 'poltergeist' tag](http://stackoverflow.com/questions/tagged/poltergeist).
+
+Bug reports should be posted [on
+GitHub](https://github.com/jonleighton/poltergeist/issues) (and be sure
+to read the bug reporting guidance below).
+
 ## Installation ##
 
 Add `poltergeist` to your Gemfile, and in your test setup add:
