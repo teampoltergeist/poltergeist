@@ -101,19 +101,20 @@ and the following optional features:
 * `page.within_window`
 * `page.status_code`
 * `page.response_headers`
+* `page.save_screenshot`
 * cookie handling
 * drag-and-drop
 
 There are some additional features:
 
-### Taking screenshots ###
+### Taking screenshots with some extensions ###
 
 You can grab screenshots of the page at any point by calling
-`page.driver.render('/path/to/file.png')` (this works the same way as the PhantomJS
+`save_screenshot('/path/to/file.png')` (this works the same way as the PhantomJS
 render feature, so you can specify other extensions like `.pdf`, `.gif`, etc.)
 
 By default, only the viewport will be rendered (the part of the page that is in view). To render
-the entire page, use `page.driver.render('/path/to/file.png', :full => true)`.
+the entire page, use `save_screenshot('/path/to/file.png', :full => true)`.
 
 ### Resizing the window ###
 
