@@ -295,6 +295,15 @@ module Capybara::Poltergeist
       end
     end
 
+    context "alert" do
+      it 'has js alert messages' do
+        @driver.js_alert_messages.should == []
+        @session.visit('/poltergeist/js_alert')
+        @driver.js_alert_messages.should == ["foo", "bar"]
+        @driver.js_alert_messages.should == []
+      end
+    end
+
     context "network traffic" do
       before do
         @driver.restart

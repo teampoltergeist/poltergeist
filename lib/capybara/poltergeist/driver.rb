@@ -179,6 +179,10 @@ module Capybara::Poltergeist
       browser.remove_cookie(name)
     end
 
+    def js_alert_messages
+      browser.js_alert_messages
+    end
+
     def debug
       if @options[:inspector]
         inspector.open
