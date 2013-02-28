@@ -59,6 +59,15 @@ class Poltergeist.Browser
         return false
       return true
 
+    @prompt_messages  = []
+    @prompt_responses = []
+    @page.onPrompt = (msg, defaultVal) =>
+      @prompt_messages.push(msg)
+      val = @prompt_responses.shift()
+      if val
+        return val
+      return defaultVal
+
   js_alert_messages: ->
     this.sendResponse(@alert_messages)
     @alert_messages = []
@@ -69,6 +78,14 @@ class Poltergeist.Browser
 
   set_js_confirm_responses: (responses) ->
     @confirm_responses = responses
+    this.sendResponse(true)
+
+  js_prompt_messages: ->
+    this.sendResponse(@prompt_messages)
+    @prompt_messages = []
+
+  set_js_prompt_responses: (responses) ->
+    @prompt_responses = responses
     this.sendResponse(true)
 
   debug: (message) ->

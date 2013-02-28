@@ -231,5 +231,3 @@ document.addEventListener(
   'DOMContentLoaded',
   -> console.log('__DOMContentLoaded')
 )
-
-window.prompt  = (message, _default) -> _default or null

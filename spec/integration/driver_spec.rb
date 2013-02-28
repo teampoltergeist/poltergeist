@@ -336,6 +336,35 @@ module Capybara::Poltergeist
       end
     end
 
+    context "prompt" do
+      it 'use defaultVal' do
+        @session.visit('/poltergeist/js_prompt')
+        @driver.evaluate_script("result").should == "bar"
+        @driver.js_prompt_messages.should == ["foo"]
+      end
+
+      it 'use value and defaultVal' do
+        @driver.js_prompt_set_responses("hoge")
+        @session.visit('/poltergeist/js_prompt')
+        @driver.evaluate_script("result").should == "hoge"
+        @driver.js_prompt_messages.should == ["foo"]
+        @session.visit('/poltergeist/js_prompt')
+        @driver.evaluate_script("result").should == "bar"
+        @driver.js_prompt_messages.should == ["foo"]
+      end
+
+      it 'use values and defaultVal' do
+        @driver.js_prompt_set_responses("hoge", false, "fuga")
+        @session.visit('/poltergeist/js_prompt')
+        @driver.evaluate_script("result").should == "hoge"
+        @session.visit('/poltergeist/js_prompt')
+        @driver.evaluate_script("result").should == "bar"
+        @session.visit('/poltergeist/js_prompt')
+        @driver.evaluate_script("result").should == "fuga"
+        @driver.js_prompt_messages.should == ["foo", "foo", "foo"]
+      end
+    end
+
     context "network traffic" do
       before do
         @driver.restart

@@ -182,6 +182,14 @@ module Capybara::Poltergeist
       command 'set_js_confirm_responses', responses
     end
 
+    def js_prompt_messages
+      command 'js_prompt_messages'
+    end
+
+    def js_prompt_responses=(responses)
+      command 'set_js_prompt_responses', responses
+    end
+
     def js_errors=(val)
       command 'set_js_errors', !!val
     end
