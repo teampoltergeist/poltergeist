@@ -51,9 +51,25 @@ class Poltergeist.Browser
     @page.onAlert = (msg) =>
       @alert_messages.push(msg)
 
+    @confirm_messages  = []
+    @confirm_responses = []
+    @page.onConfirm = (msg) =>
+      @confirm_messages.push(msg)
+      if @confirm_responses.shift() == false
+        return false
+      return true
+
   js_alert_messages: ->
     this.sendResponse(@alert_messages)
     @alert_messages = []
+
+  js_confirm_messages: ->
+    this.sendResponse(@confirm_messages)
+    @confirm_messages = []
+
+  set_js_confirm_responses: (responses) ->
+    @confirm_responses = responses
+    this.sendResponse(true)
 
   debug: (message) ->
     if @_debug

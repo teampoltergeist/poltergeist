@@ -183,6 +183,14 @@ module Capybara::Poltergeist
       browser.js_alert_messages
     end
 
+    def js_confirm_messages
+      browser.js_confirm_messages
+    end
+
+    def js_confirm_set_responses(*responses)
+      browser.js_confirm_responses = responses
+    end
+
     def debug
       if @options[:inspector]
         inspector.open

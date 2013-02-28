@@ -304,6 +304,38 @@ module Capybara::Poltergeist
       end
     end
 
+    context "confirm" do
+      it 'click OK' do
+        @session.visit('/poltergeist/js_confirm')
+        @driver.evaluate_script("result").should == true
+        @driver.js_confirm_messages.should == ["foo"]
+      end
+
+      it 'click Cancel' do
+        @driver.js_confirm_set_responses(false)
+        @session.visit('/poltergeist/js_confirm')
+        @driver.evaluate_script("result").should == false
+      end
+
+      it 'click Cancel and OK' do
+        @driver.js_confirm_set_responses(false)
+        @session.visit('/poltergeist/js_confirm')
+        @driver.evaluate_script("result").should == false
+        @session.visit('/poltergeist/js_confirm')
+        @driver.evaluate_script("result").should == true
+        @driver.js_confirm_messages.should == ["foo", "foo"]
+      end
+
+      it 'click Cancel twice' do
+        @driver.js_confirm_set_responses(false, false)
+        @session.visit('/poltergeist/js_confirm')
+        @driver.evaluate_script("result").should == false
+        @session.visit('/poltergeist/js_confirm')
+        @driver.evaluate_script("result").should == false
+        @driver.js_confirm_messages.should == ["foo", "foo"]
+      end
+    end
+
     context "network traffic" do
       before do
         @driver.restart
