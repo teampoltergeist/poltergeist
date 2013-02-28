@@ -1,4 +1,5 @@
 require "timeout"
+require "capybara/poltergeist/utility"
 
 module Capybara::Poltergeist
   class Client
@@ -44,13 +45,16 @@ module Capybara::Poltergeist
     def stop
       if pid
         begin
-          Process.kill('TERM', pid)
-
-          begin
-            Timeout.timeout(KILL_TIMEOUT) { Process.wait(pid) }
-          rescue Timeout::Error
+          if Capybara::Poltergeist.windows?
             Process.kill('KILL', pid)
-            Process.wait(pid)
+          else
+            Process.kill('TERM', pid)
+            begin
+              Timeout.timeout(KILL_TIMEOUT) { Process.wait(pid) }
+            rescue Timeout::Error
+              Process.kill('KILL', pid)
+              Process.wait(pid)
+            end
           end
         rescue Errno::ESRCH, Errno::ECHILD
           # Zed's dead, baby

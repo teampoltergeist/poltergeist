@@ -54,6 +54,9 @@ bit](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.8.1-li
 binary.
 * Extract the tarball and copy `bin/phantomjs` into your `PATH`
 
+### Windows ###
+* Download the [precompiled binary](http://phantomjs.org/download.html) for Windows
+
 ### Manual compilation ###
 
 Do this as a last resort if the binaries don't work for you. It will
@@ -68,12 +71,12 @@ guide](http://phantomjs.org/build.html).)
 
 ## Compatibility ##
 
-Poltergeist runs on MRI 1.9, JRuby 1.9 and Rubinius 1.9.
+Poltergeist runs on MRI 1.9, JRuby 1.9 and Rubinius 1.9. Poltergeist
+and PhantomJS are currently supported on Mac OS X, Linux, and Windows
+platforms.
 
 Ruby 1.8 is no longer supported. The last release to support Ruby 1.8
 was 1.0.2, so you should use that if you still need Ruby 1.8 support.
-
-Poltergeist does not currently support the Windows operating system.
 
 ## Running on a CI ##
 
@@ -313,6 +316,7 @@ Include as much information as possible. For example:
 
 #### Features ####
 
+*   Support for Windows hosted Poltergeist (Aaron Tull).
 *   Add support for custom phantomjs loggers via `:phantomjs_logger` option.
     (Gabe Bell)
 *   Add `page.driver.click(x, y)` to click precise coordinates.
