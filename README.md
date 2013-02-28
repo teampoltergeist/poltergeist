@@ -309,6 +309,13 @@ Include as much information as possible. For example:
 
 ## Changes ##
 
+### 1.1.x ###
+
+#### Features ####
+
+*   Added ability to get messages of `window.alert()`, `window.confirm()`, and `window.prompt()`.
+*   Added ability to set responses for `window.confirm()` and `window.prompt()`.
+
 ### 1.1.0 ###
 
 #### Features ####
