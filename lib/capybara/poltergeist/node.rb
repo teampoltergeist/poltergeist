@@ -29,8 +29,16 @@ module Capybara::Poltergeist
       end
     end
 
-    def find(selector)
-      command(:find_within, selector).map { |id| self.class.new(driver, page_id, id) }
+    def find(method, selector)
+      command(:find_within, method, selector).map { |id| self.class.new(driver, page_id, id) }
+    end
+
+    def find_xpath(selector)
+      find :xpath, selector
+    end
+
+    def find_css(selector)
+      find :css, selector
     end
 
     def text

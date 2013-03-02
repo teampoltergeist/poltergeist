@@ -28,13 +28,13 @@ class PoltergeistAgent
     window.location.toString()
 
   find: (method, selector, within = document) ->
-    results = document.evaluate(selector, within, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
-    ids     = []
+    if method == "xpath"
+      xpath   = document.evaluate(selector, within, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
+      results = (xpath.snapshotItem(i) for i in [0...xpath.snapshotLength])
+    else
+      results = within.querySelectorAll(selector)
 
-    for i in [0...results.snapshotLength]
-      ids.push(this.register(results.snapshotItem(i)))
-
-    ids
+    this.register(el) for el in results
 
   register: (element) ->
     @elements.push(element)
@@ -73,8 +73,8 @@ class PoltergeistAgent.Node
   parentId: ->
     @agent.register(@element.parentNode)
 
-  find: (selector) ->
-    @agent.find(selector, @element)
+  find: (method, selector) ->
+    @agent.find(method, selector, @element)
 
   isObsolete: ->
     obsolete = (element) =>

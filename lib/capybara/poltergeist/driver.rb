@@ -114,6 +114,10 @@ module Capybara::Poltergeist
       find :xpath, selector
     end
 
+    def find_css(selector)
+      find :css, selector
+    end
+
     def click(x, y)
       browser.click_coordinates(x, y)
     end
@@ -128,6 +132,7 @@ module Capybara::Poltergeist
     end
 
     def within_frame(name, &block)
+      raise NotImplementedError
       browser.within_frame(name, &block)
     end
 
