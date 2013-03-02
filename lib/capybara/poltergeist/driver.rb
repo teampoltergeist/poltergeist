@@ -106,8 +106,12 @@ module Capybara::Poltergeist
       browser.source.to_s
     end
 
-    def find(selector)
-      browser.find(selector).map { |page_id, id| Capybara::Poltergeist::Node.new(self, page_id, id) }
+    def find(method, selector)
+      browser.find(method, selector).map { |page_id, id| Capybara::Poltergeist::Node.new(self, page_id, id) }
+    end
+
+    def find_xpath(selector)
+      find :xpath, selector
     end
 
     def click(x, y)

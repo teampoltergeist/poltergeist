@@ -38,8 +38,8 @@ module Capybara::Poltergeist
       command 'source'
     end
 
-    def find(selector)
-      result = command('find', selector)
+    def find(method, selector)
+      result = command('find', method, selector)
       result['ids'].map { |id| [result['page_id'], id] }
     end
 

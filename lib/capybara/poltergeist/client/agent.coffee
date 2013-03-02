@@ -27,7 +27,7 @@ class PoltergeistAgent
   currentUrl: ->
     window.location.toString()
 
-  find: (selector, within = document) ->
+  find: (method, selector, within = document) ->
     results = document.evaluate(selector, within, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
     ids     = []
 

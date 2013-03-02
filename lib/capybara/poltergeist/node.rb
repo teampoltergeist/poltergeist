@@ -36,6 +36,7 @@ module Capybara::Poltergeist
     def text
       command(:text).gsub(NBSP, ' ').gsub(/\s+/u, ' ').strip
     end
+    alias visible_text text
 
     def [](name)
       command :attribute, name

@@ -98,8 +98,8 @@ class Poltergeist.Browser
   source: ->
     this.sendResponse @page.source()
 
-  find: (selector) ->
-    this.sendResponse(page_id: @page_id, ids: @page.find(selector))
+  find: (method, selector) ->
+    this.sendResponse(page_id: @page_id, ids: @page.find(method, selector))
 
   find_within: (page_id, id, selector) ->
     this.sendResponse this.node(page_id, id).find(selector)
