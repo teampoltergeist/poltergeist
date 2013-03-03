@@ -100,6 +100,10 @@ module Capybara::Poltergeist
       self[:selected]
     end
 
+    def disabled?
+      self[:disabled]
+    end
+
     def click
       command :click
     end
