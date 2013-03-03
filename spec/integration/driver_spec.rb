@@ -187,26 +187,21 @@ module Capybara::Poltergeist
       end
     end
 
-    it 'supports quitting the session' do
-      driver = Capybara::Poltergeist::Driver.new(nil)
-      pid    = driver.client_pid
+    unless Capybara::Poltergeist.windows?
+      # Not sure how to do this on Windows, so skipping
+      it 'supports quitting the session' do
+        driver = Capybara::Poltergeist::Driver.new(nil)
+        pid    = driver.client_pid
 
-      def terminate_process(pid)
-        if Capybara::Poltergeist.windows?
-          Process.kill('KILL', pid).should == 1
+        Process.kill(0, pid).should == 1
+        driver.quit
+
+        begin
+          Process.kill(0, pid)
+        rescue Errno::ESRCH
         else
-          Process.kill('EXIT', pid).should == 1
+          raise "process is still alive"
         end
-      end
-
-      terminate_process(pid)
-      driver.quit
-
-      begin
-        terminate_process(pid)
-      rescue Errno::ESRCH
-      else
-        raise "process is still alive"
       end
     end
 
