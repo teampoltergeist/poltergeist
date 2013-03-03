@@ -325,6 +325,8 @@ Include as much information as possible. For example:
     and in general doesn't seem to be worth the trouble at the moment.
     It can be reconsidered in the future when PhantomJS has upgraded its
     WebKit version. [Issue #176, #223]
+*   Run phantomjs in a new process group so ^C doesn't trigger a
+    DeadClient error [Issue #252]
 
 ### 1.1.0 ###
 

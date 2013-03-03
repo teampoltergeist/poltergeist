@@ -38,7 +38,7 @@ module Capybara::Poltergeist
       }
 
       redirect_stdout(write) do
-        @pid = Process.spawn(*command.map(&:to_s))
+        @pid = Process.spawn(*command.map(&:to_s), pgroup: true)
       end
     end
 
