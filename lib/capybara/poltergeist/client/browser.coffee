@@ -47,6 +47,47 @@ class Poltergeist.Browser
         # window.
         setTimeout((=> this.push_window(name)), 0)
 
+    @alert_messages = []
+    @page.onAlert = (msg) =>
+      @alert_messages.push(msg)
+
+    @confirm_messages  = []
+    @confirm_responses = []
+    @page.onConfirm = (msg) =>
+      @confirm_messages.push(msg)
+      if @confirm_responses.shift() == false
+        return false
+      return true
+
+    @prompt_messages  = []
+    @prompt_responses = []
+    @page.onPrompt = (msg, defaultVal) =>
+      @prompt_messages.push(msg)
+      val = @prompt_responses.shift()
+      if val
+        return val
+      return defaultVal
+
+  js_alert_messages: ->
+    this.sendResponse(@alert_messages)
+    @alert_messages = []
+
+  js_confirm_messages: ->
+    this.sendResponse(@confirm_messages)
+    @confirm_messages = []
+
+  set_js_confirm_responses: (responses) ->
+    @confirm_responses = responses
+    this.sendResponse(true)
+
+  js_prompt_messages: ->
+    this.sendResponse(@prompt_messages)
+    @prompt_messages = []
+
+  set_js_prompt_responses: (responses) ->
+    @prompt_responses = responses
+    this.sendResponse(true)
+
   debug: (message) ->
     if @_debug
       console.log "poltergeist [#{new Date().getTime()}] #{message}"

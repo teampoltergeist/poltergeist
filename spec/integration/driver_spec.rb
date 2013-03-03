@@ -303,6 +303,76 @@ module Capybara::Poltergeist
       end
     end
 
+    context "alert" do
+      it 'has js alert messages' do
+        @driver.js_alert_messages.should == []
+        @session.visit('/poltergeist/js_alert')
+        @driver.js_alert_messages.should == ["foo", "bar"]
+        @driver.js_alert_messages.should == []
+      end
+    end
+
+    context "confirm" do
+      it 'click OK' do
+        @session.visit('/poltergeist/js_confirm')
+        @driver.evaluate_script("result").should == true
+        @driver.js_confirm_messages.should == ["foo"]
+      end
+
+      it 'click Cancel' do
+        @driver.js_confirm_set_responses(false)
+        @session.visit('/poltergeist/js_confirm')
+        @driver.evaluate_script("result").should == false
+      end
+
+      it 'click Cancel and OK' do
+        @driver.js_confirm_set_responses(false)
+        @session.visit('/poltergeist/js_confirm')
+        @driver.evaluate_script("result").should == false
+        @session.visit('/poltergeist/js_confirm')
+        @driver.evaluate_script("result").should == true
+        @driver.js_confirm_messages.should == ["foo", "foo"]
+      end
+
+      it 'click Cancel twice' do
+        @driver.js_confirm_set_responses(false, false)
+        @session.visit('/poltergeist/js_confirm')
+        @driver.evaluate_script("result").should == false
+        @session.visit('/poltergeist/js_confirm')
+        @driver.evaluate_script("result").should == false
+        @driver.js_confirm_messages.should == ["foo", "foo"]
+      end
+    end
+
+    context "prompt" do
+      it 'use defaultVal' do
+        @session.visit('/poltergeist/js_prompt')
+        @driver.evaluate_script("result").should == "bar"
+        @driver.js_prompt_messages.should == ["foo"]
+      end
+
+      it 'use value and defaultVal' do
+        @driver.js_prompt_set_responses("hoge")
+        @session.visit('/poltergeist/js_prompt')
+        @driver.evaluate_script("result").should == "hoge"
+        @driver.js_prompt_messages.should == ["foo"]
+        @session.visit('/poltergeist/js_prompt')
+        @driver.evaluate_script("result").should == "bar"
+        @driver.js_prompt_messages.should == ["foo"]
+      end
+
+      it 'use values and defaultVal' do
+        @driver.js_prompt_set_responses("hoge", false, "fuga")
+        @session.visit('/poltergeist/js_prompt')
+        @driver.evaluate_script("result").should == "hoge"
+        @session.visit('/poltergeist/js_prompt')
+        @driver.evaluate_script("result").should == "bar"
+        @session.visit('/poltergeist/js_prompt')
+        @driver.evaluate_script("result").should == "fuga"
+        @driver.js_prompt_messages.should == ["foo", "foo", "foo"]
+      end
+    end
+
     context "network traffic" do
       before do
         @driver.restart
