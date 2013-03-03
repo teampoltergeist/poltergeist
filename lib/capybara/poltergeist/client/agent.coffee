@@ -122,8 +122,11 @@ class PoltergeistAgent.Node
     @element == document.body ||
     document.evaluate('ancestor::body', @element, null, XPathResult.BOOLEAN_TYPE, null).booleanValue
 
-  text: ->
-    if @element.tagName == 'TEXTAREA'
+  allText: ->
+    @element.textContent
+
+  visibleText: ->
+    if @element.nodeName == "TEXTAREA"
       @element.textContent
     else
       @element.innerText

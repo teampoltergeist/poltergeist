@@ -44,6 +44,10 @@ module Capybara::Poltergeist
       command 'source'
     end
 
+    def title
+      command 'title'
+    end
+
     def find(method, selector)
       result = command('find', method, selector)
       result['ids'].map { |id| [result['page_id'], id] }
@@ -53,8 +57,12 @@ module Capybara::Poltergeist
       command 'find_within', page_id, id, method, selector
     end
 
-    def text(page_id, id)
-      command 'text', page_id, id
+    def all_text(page_id, id)
+      command 'all_text', page_id, id
+    end
+
+    def visible_text(page_id, id)
+      command 'visible_text', page_id, id
     end
 
     def attribute(page_id, id, name)

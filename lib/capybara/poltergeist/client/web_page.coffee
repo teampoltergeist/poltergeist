@@ -101,6 +101,9 @@ class Poltergeist.WebPage
   source: ->
     @_source
 
+  title: ->
+    @native.frameTitle
+
   errors: ->
     @_errors
 

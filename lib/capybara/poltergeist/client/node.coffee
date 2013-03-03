@@ -1,7 +1,7 @@
 # Proxy object for forwarding method calls to the node object inside the page.
 
 class Poltergeist.Node
-  @DELEGATES = ['text', 'getAttribute', 'value', 'set', 'setAttribute', 'isObsolete',
+  @DELEGATES = ['allText', 'visibleText', 'getAttribute', 'value', 'set', 'setAttribute', 'isObsolete',
                 'removeAttribute', 'isMultiple', 'select', 'tagName', 'find',
                 'isVisible', 'position', 'trigger', 'parentId', 'clickTest',
                 'scrollIntoView', 'isDOMEqual']

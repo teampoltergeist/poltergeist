@@ -106,6 +106,10 @@ module Capybara::Poltergeist
       browser.source.to_s
     end
 
+    def title
+      browser.title
+    end
+
     def find(method, selector)
       browser.find(method, selector).map { |page_id, id| Capybara::Poltergeist::Node.new(self, page_id, id) }
     end

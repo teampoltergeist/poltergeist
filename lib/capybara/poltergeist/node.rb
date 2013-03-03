@@ -41,10 +41,13 @@ module Capybara::Poltergeist
       find :css, selector
     end
 
-    def text
-      command(:text).gsub(NBSP, ' ').gsub(/\s+/u, ' ').strip
+    def all_text
+      filter_text command(:all_text)
     end
-    alias visible_text text
+
+    def visible_text
+      filter_text command(:visible_text)
+    end
 
     def [](name)
       command :attribute, name
@@ -115,6 +118,12 @@ module Capybara::Poltergeist
 
     def ==(other)
       command :equals, other.id
+    end
+
+    private
+
+    def filter_text(text)
+      text.gsub(NBSP, ' ').gsub(/\s+/u, ' ').strip
     end
   end
 end
