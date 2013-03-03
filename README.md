@@ -312,11 +312,16 @@ Include as much information as possible. For example:
 
 ## Changes ##
 
-### 1.1.0 ###
+### Next release ###
 
 #### Features ####
 
 *   Support for Windows hosted Poltergeist (Aaron Tull).
+
+### 1.1.0 ###
+
+#### Features ####
+
 *   Add support for custom phantomjs loggers via `:phantomjs_logger` option.
     (Gabe Bell)
 *   Add `page.driver.click(x, y)` to click precise coordinates.
