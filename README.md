@@ -312,6 +312,14 @@ Include as much information as possible. For example:
 
 ## Changes ##
 
+### 1.1.x ###
+
+#### Features ####
+
+*   Windows opened by the `target` attribute of a link are identified by the 
+    handle `""`.  
+    _e.g._ `within_window("") { ... }` (Cameron Walters)
+
 ### 1.1.0 ###
 
 #### Features ####
