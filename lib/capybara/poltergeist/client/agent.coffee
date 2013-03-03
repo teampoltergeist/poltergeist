@@ -92,6 +92,32 @@ class PoltergeistAgent.Node
     event.initEvent('change', true, false)
     @element.dispatchEvent(event)
 
+  input: ->
+    event = document.createEvent('HTMLEvents')
+    event.initEvent('input', true, false)
+    @element.dispatchEvent(event)
+
+  keyupdowned: (eventName, keyCode) ->
+    event = document.createEvent('UIEvents')
+    event.initEvent(eventName, true, true)
+    event.keyCode  = keyCode
+    event.which    = keyCode
+    event.charCode = 0
+    @element.dispatchEvent(event)
+
+  keypressed: (altKey, ctrlKey, shiftKey, metaKey, keyCode, charCode) ->
+    event = document.createEvent('UIEvents')
+    event.initEvent('keypress', true, true)
+    event.window   = @agent.window
+    event.altKey   = altKey
+    event.ctrlKey  = ctrlKey
+    event.shiftKey = shiftKey
+    event.metaKey  = metaKey
+    event.keyCode  = keyCode
+    event.charCode = charCode
+    event.which    = keyCode
+    @element.dispatchEvent(event)
+
   insideBody: ->
     @element == document.body ||
     document.evaluate('ancestor::body', @element, null, XPathResult.BOOLEAN_TYPE, null).booleanValue
@@ -116,6 +142,25 @@ class PoltergeistAgent.Node
       option.value for option in @element.children when option.selected
     else
       @element.value
+
+  set: (value) ->
+    if (@element.maxLength >= 0)
+      value = value.substr(0, @element.maxLength)
+
+    @element.value = ''
+    this.trigger('focus')
+
+    for char in value
+      keyCode = this.characterToKeyCode(char)
+      this.keyupdowned('keydown', keyCode)
+      @element.value += char
+
+      this.keypressed(false, false, false, false, char.charCodeAt(0), char.charCodeAt(0))
+      this.keyupdowned('keyup', keyCode)
+
+    this.changed()
+    this.input()
+    this.trigger('blur')
 
   isMultiple: ->
     @element.multiple
@@ -191,13 +236,6 @@ class PoltergeistAgent.Node
 
     @element.dispatchEvent(event)
 
-  focusAndHighlight: ->
-    @element.focus()
-    @element.select()
-
-  blur: ->
-    @element.blur()
-
   clickTest: (x, y) ->
     frameOffset = this.frameOffset()
 
@@ -221,6 +259,45 @@ class PoltergeistAgent.Node
     for className in el.classList
       selector += ".#{className}"
     selector
+
+  characterToKeyCode: (character) ->
+    code = character.toUpperCase().charCodeAt(0)
+    specialKeys =
+      96: 192  #`
+      45: 189  #-
+      61: 187  #=
+      91: 219  #[
+      93: 221  #]
+      92: 220  #\
+      59: 186  #;
+      39: 222  #'
+      44: 188  #,
+      46: 190  #.
+      47: 191  #/
+      127: 46  #delete
+      126: 192 #~
+      33: 49   #!
+      64: 50   #@
+      35: 51   ##
+      36: 52   #$
+      37: 53   #%
+      94: 54   #^
+      38: 55   #&
+      42: 56   #*
+      40: 57   #(
+      41: 48   #)
+      95: 189  #_
+      43: 187  #+
+      123: 219 #{
+      125: 221 #}
+      124: 220 #|
+      58: 186  #:
+      34: 222  #"
+      60: 188  #<
+      62: 190  #>
+      63: 191 #?
+
+    specialKeys[code] || code
 
   isDOMEqual: (other_id) ->
     @element == @agent.get(other_id).element
