@@ -27,7 +27,7 @@ describe Capybara::Session do
       it 'raises an error if the element is not visible' do
         @session.visit('/poltergeist/index')
         @session.execute_script "document.querySelector('a[href=js_redirect]').style.display = 'none'"
-        expect { @session.click_link "JS redirect" }.to raise_error(Capybara::Poltergeist::ObsoleteNode)
+        expect { @session.click_link "JS redirect" }.to raise_error(Capybara::ElementNotFound)
       end
 
       it 'hovers an element before clicking it' do
