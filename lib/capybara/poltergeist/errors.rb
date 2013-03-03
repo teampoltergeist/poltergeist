@@ -83,19 +83,24 @@ module Capybara
       end
     end
 
-    class ClickFailed < NodeError
-      def selector
+    class MouseEventFailed < NodeError
+      def name
         response['args'][0]
       end
 
+      def selector
+        response['args'][1]
+      end
+
       def position
-        [response['args'][1]['x'], response['args'][1]['y']]
+        [response['args'][2]['x'], response['args'][2]['y']]
       end
 
       def message
-        "Click at co-ordinates [#{position.join(', ')}] failed. Poltergeist detected " \
+        "Firing a #{name} at co-ordinates [#{position.join(', ')}] failed. Poltergeist detected " \
           "another element with CSS selector '#{selector}' at this position. " \
-          "It may be overlapping the element you are trying to click."
+          "It may be overlapping the element you are trying to interact with. " \
+          "If you don't care about overlapping elements, try using node.trigger('#{name}')."
       end
     end
 

@@ -55,10 +55,10 @@ class Poltergeist.FrameNotFound extends Poltergeist.Error
   name: "Poltergeist.FrameNotFound"
   args: -> [@frameName]
 
-class Poltergeist.ClickFailed extends Poltergeist.Error
-  constructor: (@selector, @position) ->
-  name: "Poltergeist.ClickFailed"
-  args: -> [@selector, @position]
+class Poltergeist.MouseEventFailed extends Poltergeist.Error
+  constructor: (@eventName, @selector, @position) ->
+  name: "Poltergeist.MouseEventFailed"
+  args: -> [@eventName, @selector, @position]
 
 class Poltergeist.JavascriptError extends Poltergeist.Error
   constructor: (@errors) ->

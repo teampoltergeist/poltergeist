@@ -63,8 +63,8 @@ describe Capybara::Session do
           @session.visit("/poltergeist/with_js")
         end
 
-        it "raises a ClickFailed error" do
-          expect { @session.click_link("O hai") }.to raise_error(Capybara::Poltergeist::ClickFailed)
+        it "raises a MouseEventFailed error" do
+          expect { @session.click_link("O hai") }.to raise_error(Capybara::Poltergeist::MouseEventFailed)
         end
 
         context "and is then brought in" do
@@ -74,7 +74,7 @@ describe Capybara::Session do
           end
 
           it "clicks properly" do
-            expect { @session.click_link "O hai" }.to_not raise_error(Capybara::Poltergeist::ClickFailed)
+            expect { @session.click_link "O hai" }.to_not raise_error(Capybara::Poltergeist::MouseEventFailed)
           end
 
           after do
@@ -250,7 +250,7 @@ describe Capybara::Session do
         it 'detects if an element is obscured when clicking' do
           expect {
             @session.find(:css, '#one').click
-          }.to raise_error(Capybara::Poltergeist::ClickFailed)
+          }.to raise_error(Capybara::Poltergeist::MouseEventFailed)
 
           begin
             @session.find(:css, '#one').click

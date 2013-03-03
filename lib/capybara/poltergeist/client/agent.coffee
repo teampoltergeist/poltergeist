@@ -239,7 +239,7 @@ class PoltergeistAgent.Node
 
     @element.dispatchEvent(event)
 
-  clickTest: (x, y) ->
+  mouseEventTest: (x, y) ->
     frameOffset = this.frameOffset()
 
     x -= frameOffset.left

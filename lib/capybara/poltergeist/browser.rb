@@ -123,6 +123,10 @@ module Capybara::Poltergeist
       command 'double_click', page_id, id
     end
 
+    def hover(page_id, id)
+      command 'hover', page_id, id
+    end
+
     def drag(page_id, id, other_id)
       command 'drag', page_id, id, other_id
     end

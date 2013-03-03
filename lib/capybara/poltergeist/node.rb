@@ -22,8 +22,8 @@ module Capybara::Poltergeist
       case error.name
       when 'Poltergeist.ObsoleteNode'
         raise ObsoleteNode.new(self, error.response)
-      when 'Poltergeist.ClickFailed'
-        raise ClickFailed.new(self, error.response)
+      when 'Poltergeist.MouseEventFailed'
+        raise MouseEventFailed.new(self, error.response)
       else
         raise
       end
@@ -110,6 +110,10 @@ module Capybara::Poltergeist
 
     def double_click
       command :double_click
+    end
+
+    def hover
+      command :hover
     end
 
     def drag_to(other)

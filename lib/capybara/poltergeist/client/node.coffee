@@ -3,7 +3,7 @@
 class Poltergeist.Node
   @DELEGATES = ['allText', 'visibleText', 'getAttribute', 'value', 'set', 'setAttribute', 'isObsolete',
                 'removeAttribute', 'isMultiple', 'select', 'tagName', 'find',
-                'isVisible', 'position', 'trigger', 'parentId', 'clickTest',
+                'isVisible', 'position', 'trigger', 'parentId', 'mouseEventTest',
                 'scrollIntoView', 'isDOMEqual']
 
   constructor: (@page, @id) ->
@@ -16,7 +16,7 @@ class Poltergeist.Node
       this.prototype[name] = (args...) ->
         @page.nodeCall(@id, name, args)
 
-  clickPosition: ->
+  mouseEventPosition: ->
     viewport = @page.viewportSize()
     pos      = this.position()
 
@@ -28,23 +28,23 @@ class Poltergeist.Node
       y: middle(pos.top,  pos.bottom, viewport.height)
     }
 
-  click: (event = 'click') ->
+  mouseEvent: (name) ->
     this.scrollIntoView()
 
-    pos  = this.clickPosition()
-    test = this.clickTest(pos.x, pos.y)
+    pos  = this.mouseEventPosition()
+    test = this.mouseEventTest(pos.x, pos.y)
 
     if test.status == 'success'
-      @page.mouseEvent(event, pos.x, pos.y)
+      @page.mouseEvent(name, pos.x, pos.y)
       pos
     else
-      throw new Poltergeist.ClickFailed(test.selector, pos)
+      throw new Poltergeist.MouseEventFailed(name, test.selector, pos)
 
   dragTo: (other) ->
     this.scrollIntoView()
 
-    position      = this.clickPosition()
-    otherPosition = other.clickPosition()
+    position      = this.mouseEventPosition()
+    otherPosition = other.mouseEventPosition()
 
     @page.mouseEvent('mousedown', position.x,      position.y)
     @page.mouseEvent('mouseup',   otherPosition.x, otherPosition.y)

@@ -19,10 +19,10 @@ class Poltergeist.Browser
     @page.setViewportSize(width: @width, height: @height)
 
     @page.onLoadStarted = =>
-      this.setState 'loading' if @state == 'clicked'
+      this.setState 'loading' if @state == 'mouse_event'
 
     @page.onNavigationRequested = (url, navigation) =>
-      this.setState 'loading' if @state == 'clicked' && navigation == 'FormSubmitted'
+      this.setState 'loading' if @state == 'mouse_event' && navigation == 'FormSubmitted'
 
     @page.onLoadFinished = (status) =>
       if @state == 'loading'
@@ -188,24 +188,30 @@ class Poltergeist.Browser
     @page = prev_page if prev_page
     this.sendResponse(true)
 
-  click: (page_id, id, event = 'click') ->
+  mouse_event: (page_id, id, name) ->
     # Get the node before changing state, in case there is an exception
     node = this.node(page_id, id)
 
-    # If the click event triggers onNavigationRequested, we will transition to the 'loading'
+    # If the event triggers onNavigationRequested, we will transition to the 'loading'
     # state and wait for onLoadFinished before sending a response.
-    this.setState 'clicked'
+    this.setState 'mouse_event'
 
-    @last_click = node.click(event)
+    @last_mouse_event = node.mouseEvent(name)
 
     setTimeout =>
       if @state != 'loading'
         this.setState 'default'
-        this.sendResponse(@last_click)
+        this.sendResponse(@last_mouse_event)
     , 5
 
+  click: (page_id, id) ->
+    this.mouse_event page_id, id, 'click'
+
   double_click: (page_id, id) ->
-    this.click page_id, id, 'doubleclick'
+    this.mouse_event page_id, id, 'doubleclick'
+
+  hover: (page_id, id) ->
+    this.mouse_event page_id, id, 'mousemove'
 
   click_coordinates: (x, y) ->
     @page.sendEvent('click', x, y)

@@ -238,7 +238,7 @@ If you experience sporadic crashes a lot, it may be worth configuring
 your CI to automatically re-run failing tests before reporting a failed
 build.
 
-### ClickFailed errors ###
+### MouseEventFailed errors ###
 
 When Poltergeist clicks on an element, rather than generating a DOM
 click event, it actually generates a "proper" click. This is much closer
@@ -251,7 +251,7 @@ your user won't be able to click a covered up element either).
 Sometimes there can be issues with this behavior. If you have problems,
 it's worth taking screenshots of the page and trying to work out what's
 going on. If your click is failing, but you're not getting a
-`ClickFailed` error, then you can turn on the `:debug` option and look
+`MouseEventFailed` error, then you can turn on the `:debug` option and look
 in the output to see what co-ordinates Poltergeist is using for the
 click. You can then cross-reference this with a screenshot to see if
 something is obviously wrong.
