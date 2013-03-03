@@ -318,6 +318,14 @@ Include as much information as possible. For example:
 
 *   Support for Windows hosted Poltergeist (Aaron Tull).
 
+#### Bug fixes ####
+
+*   Reverted the "native" implementation for filling in form fields,
+    which was introduced in 1.0. This implementation caused various bugs
+    and in general doesn't seem to be worth the trouble at the moment.
+    It can be reconsidered in the future when PhantomJS has upgraded its
+    WebKit version. [Issue #176, #223]
+
 ### 1.1.0 ###
 
 #### Features ####
