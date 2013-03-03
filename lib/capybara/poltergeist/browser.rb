@@ -101,8 +101,13 @@ module Capybara::Poltergeist
       command 'execute', script
     end
 
-    def within_frame(name, &block)
-      command 'push_frame', name
+    def within_frame(handle, &block)
+      if handle.is_a?(Capybara::Node::Base)
+        command 'push_frame', handle['id']
+      else
+        command 'push_frame', handle
+      end
+
       yield
     ensure
       command 'pop_frame'
