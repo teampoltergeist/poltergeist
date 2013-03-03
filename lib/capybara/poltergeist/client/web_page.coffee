@@ -158,11 +158,7 @@ class Poltergeist.WebPage
 
   popFrame: ->
     @frames.pop()
-
-    if @frames.length == 0
-      @native.switchToMainFrame()
-    else
-      @native.switchToFrame(@frames[@frames.length - 1])
+    @native.switchToParentFrame()
 
   getPage: (name) ->
     if @sub_pages[name]
