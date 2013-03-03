@@ -317,6 +317,7 @@ Include as much information as possible. For example:
 #### Features ####
 
 *   Support for Windows hosted Poltergeist (Aaron Tull).
+*   Capybara 2.1 support
 
 #### Bug fixes ####
 
