@@ -410,6 +410,14 @@ describe Capybara::Session do
           log.text.should == "one"
         end
       end
+
+      it "doesn't wait forever for the frame to load" do
+        @session.visit '/'
+
+        expect {
+          @session.within_frame('omg') { }
+        }.to raise_error(Capybara::Poltergeist::FrameNotFound)
+      end
     end
 
     # see https://github.com/jonleighton/poltergeist/issues/115

@@ -54,6 +54,16 @@ module Capybara
       end
     end
 
+    class FrameNotFound < ClientError
+      def name
+        response['args'].first
+      end
+
+      def message
+        "The frame '#{name}' was not found."
+      end
+    end
+
     class NodeError < ClientError
       attr_reader :node
 

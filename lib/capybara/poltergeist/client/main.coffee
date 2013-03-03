@@ -50,6 +50,11 @@ class Poltergeist.ObsoleteNode extends Poltergeist.Error
   args: -> []
   toString: -> this.name
 
+class Poltergeist.FrameNotFound extends Poltergeist.Error
+  constructor: (@frameName) ->
+  name: "Poltergeist.FrameNotFound"
+  args: -> [@frameName]
+
 class Poltergeist.ClickFailed extends Poltergeist.Error
   constructor: (@selector, @position) ->
   name: "Poltergeist.ClickFailed"

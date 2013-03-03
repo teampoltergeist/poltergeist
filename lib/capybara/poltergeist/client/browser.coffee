@@ -145,16 +145,17 @@ class Poltergeist.Browser
     @page.execute("function() { #{script} }")
     this.sendResponse(true)
 
-  push_frame: (name) ->
+  push_frame: (name, timeout = new Date().getTime() + 2000) ->
     if @page.pushFrame(name)
       if @page.currentUrl() == 'about:blank'
         this.setState 'awaiting_frame_load'
       else
         this.sendResponse(true)
     else
-      # There's currently no PhantomJS callback available for frame creation,
-      # so we have to poll
-      setTimeout((=> this.push_frame(name)), 50)
+      if new Date().getTime() < timeout
+        setTimeout((=> this.push_frame(name, timeout)), 50)
+      else
+        @owner.sendError(new Poltergeist.FrameNotFound(name))
 
   pop_frame: ->
     this.sendResponse(@page.popFrame())

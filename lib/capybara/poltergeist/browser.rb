@@ -1,8 +1,14 @@
+require "capybara/poltergeist/errors"
 require 'json'
 require 'time'
 
 module Capybara::Poltergeist
   class Browser
+    ERROR_MAPPINGS = {
+      "Poltergeist.JavascriptError" => JavascriptError,
+      "Poltergeist.FrameNotFound"   => FrameNotFound
+    }
+
     attr_reader :server, :client, :logger
 
     def initialize(server, client, logger = nil)
@@ -193,14 +199,11 @@ module Capybara::Poltergeist
       log json.inspect
 
       if json['error']
-        if json['error']['name'] == 'Poltergeist.JavascriptError'
-          raise JavascriptError.new(json['error'])
-        else
-          raise BrowserError.new(json['error'])
-        end
+        klass = ERROR_MAPPINGS[json['error']['name']] || BrowserError
+        raise klass.new(json['error'])
+      else
+        json['response']
       end
-      json['response']
-
     rescue DeadClient
       restart
       raise

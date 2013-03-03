@@ -132,7 +132,6 @@ module Capybara::Poltergeist
     end
 
     def within_frame(name, &block)
-      raise NotImplementedError
       browser.within_frame(name, &block)
     end
 
