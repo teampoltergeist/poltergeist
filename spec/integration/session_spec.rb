@@ -36,12 +36,6 @@ describe Capybara::Session do
         @session.current_path.should == '/'
       end
 
-      it "returns the text of a title element" do
-        @session.visit('/poltergeist/simple')
-        node = @session.find('//title')
-        node.text.should == "Test"
-      end
-
       context "when someone (*cough* prototype *cough*) messes with Array#toJSON" do
         before do
           @session.visit("/poltergeist/index")
