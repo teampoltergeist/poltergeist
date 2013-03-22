@@ -138,6 +138,18 @@ When this option is enabled, you can insert `page.driver.debug` into
 your tests to pause the test and launch a browser which gives you the
 WebKit inspector to view your test run with.
 
+You can register this debugger driver with a different name and set it 
+as the current javascript driver. By example, in your herlper file:
+
+```ruby
+Capybara.register_driver :poltergeist_debug do |app|
+  Capybara::Poltergeist::Driver.new(app, :inspector => true)
+end
+
+# Capybara.javascript_driver = :poltergeist
+Capybara.javascript_driver = :poltergeist_debug
+```
+
 [Read more
 here](http://jonathanleighton.com/articles/2012/poltergeist-0-6-0/)
 
