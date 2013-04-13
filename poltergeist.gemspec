@@ -16,13 +16,13 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = ">= 1.9.2"
 
-  s.add_dependency "capybara",       "~> 2.0", ">= 2.0.1"
+  s.add_dependency "capybara",       "~> 2.1.0"
   s.add_dependency "http_parser.rb", "~> 0.5.3"
   s.add_dependency "faye-websocket", "~> 0.4", ">= 0.4.4"
 
   s.add_development_dependency 'rspec',              '~> 2.12'
   s.add_development_dependency 'sinatra',            '~> 1.0'
-  s.add_development_dependency 'rake',               '~> 0.9.2'
+  s.add_development_dependency 'rake',               '~> 10.0'
   s.add_development_dependency 'image_size',         '~> 1.0'
   s.add_development_dependency 'coffee-script',      '~> 2.2.0'
   s.add_development_dependency 'guard-coffeescript', '~> 1.0.0'
