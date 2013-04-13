@@ -341,6 +341,13 @@ Include as much information as possible. For example:
 *   Run phantomjs in a new process group so ^C doesn't trigger a
     DeadClient error [Issue #252]
 
+### 1.1.1 ###
+
+#### Features ####
+
+*   Changed Capybara dependency to `~> 2.0.1` because Poltergeist 1.1 is
+    not compatible with Capybara 2.1.
+
 ### 1.1.0 ###
 
 #### Features ####
