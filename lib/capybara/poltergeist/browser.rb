@@ -89,6 +89,10 @@ module Capybara::Poltergeist
       command 'visible', page_id, id
     end
 
+    def disabled?(page_id, id)
+      command 'disabled', page_id, id
+    end
+
     def click_coordinates(x, y)
       command 'click_coordinates', x, y
     end

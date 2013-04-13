@@ -101,7 +101,7 @@ module Capybara::Poltergeist
     end
 
     def disabled?
-      self[:disabled]
+      command :disabled?
     end
 
     def click

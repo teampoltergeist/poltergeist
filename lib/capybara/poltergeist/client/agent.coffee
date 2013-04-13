@@ -147,6 +147,8 @@ class PoltergeistAgent.Node
       @element.value
 
   set: (value) ->
+    return if @element.readOnly
+
     if (@element.maxLength >= 0)
       value = value.substr(0, @element.maxLength)
 
@@ -194,6 +196,9 @@ class PoltergeistAgent.Node
       this.isVisible element.parentElement
     else
       true
+
+  isDisabled: ->
+    @element.disabled || @element.tagName == 'OPTION' && @element.parentNode.disabled
 
   frameOffset: ->
     win    = window
