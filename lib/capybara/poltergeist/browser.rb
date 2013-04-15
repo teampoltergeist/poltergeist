@@ -197,6 +197,10 @@ module Capybara::Poltergeist
       command 'remove_cookie', name
     end
 
+    def cookies_enabled=(flag)
+      command 'cookies_enabled', !!flag
+    end
+
     def js_errors=(val)
       command 'set_js_errors', !!val
     end
