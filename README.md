@@ -324,6 +324,12 @@ Include as much information as possible. For example:
 
 ## Changes ##
 
+### Next release ###
+
+#### Bug fixes ####
+
+*   Fix logging of mouse event co-ordinates
+
 ### 1.2.0 ###
 
 #### Features ####

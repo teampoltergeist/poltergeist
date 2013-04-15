@@ -419,5 +419,14 @@ describe Capybara::Session do
       @session.visit "/poltergeist/attach_file"
       @session.attach_file "file", __FILE__
     end
+
+    it "logs mouse event co-ordinates" do
+      @session.visit("/")
+      @session.find(:css, "a").click
+
+      position = eval(TestSessions.logger.messages.last)["response"]["position"]
+      position["x"].should_not be_nil
+      position["y"].should_not be_nil
+    end
   end
 end

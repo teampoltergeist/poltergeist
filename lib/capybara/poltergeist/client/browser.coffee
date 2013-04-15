@@ -26,7 +26,7 @@ class Poltergeist.Browser
 
     @page.onLoadFinished = (status) =>
       if @state == 'loading'
-        this.sendResponse(status: status, click: @last_click)
+        this.sendResponse(status: status, position: @last_mouse_event)
         this.setState 'default'
       else if @state == 'awaiting_frame_load'
         this.sendResponse(true)
