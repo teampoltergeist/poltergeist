@@ -6,7 +6,8 @@ module Capybara::Poltergeist
   class Browser
     ERROR_MAPPINGS = {
       "Poltergeist.JavascriptError" => JavascriptError,
-      "Poltergeist.FrameNotFound"   => FrameNotFound
+      "Poltergeist.FrameNotFound"   => FrameNotFound,
+      "Poltergeist.InvalidSelector" => InvalidSelector
     }
 
     attr_reader :server, :client, :logger

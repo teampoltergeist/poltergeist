@@ -329,6 +329,7 @@ Include as much information as possible. For example:
 #### Bug fixes ####
 
 *   Fix logging of mouse event co-ordinates
+*   Invalid selectors throw a useful error message
 
 ### 1.2.0 ###
 

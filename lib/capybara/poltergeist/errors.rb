@@ -64,6 +64,17 @@ module Capybara
       end
     end
 
+    class InvalidSelector < ClientError
+      def selector
+        response['args'].first
+      end
+
+      def message
+        "The browser raised a syntax error while trying to evaluate " \
+          "the selector #{selector.inspect}"
+      end
+    end
+
     class NodeError < ClientError
       attr_reader :node
 

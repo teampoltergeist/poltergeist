@@ -28,13 +28,19 @@ class PoltergeistAgent
     window.location.toString()
 
   find: (method, selector, within = document) ->
-    if method == "xpath"
-      xpath   = document.evaluate(selector, within, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
-      results = (xpath.snapshotItem(i) for i in [0...xpath.snapshotLength])
-    else
-      results = within.querySelectorAll(selector)
+    try
+      if method == "xpath"
+        xpath   = document.evaluate(selector, within, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
+        results = (xpath.snapshotItem(i) for i in [0...xpath.snapshotLength])
+      else
+        results = within.querySelectorAll(selector)
 
-    this.register(el) for el in results
+      this.register(el) for el in results
+    catch error
+      if error.code == DOMException.SYNTAX_ERR
+        throw new PoltergeistAgent.InvalidSelector
+      else
+        throw e
 
   register: (element) ->
     @elements.push(element)
@@ -60,6 +66,9 @@ class PoltergeistAgent
 
 class PoltergeistAgent.ObsoleteNode
   toString: -> "PoltergeistAgent.ObsoleteNode"
+
+class PoltergeistAgent.InvalidSelector
+  toString: -> "PoltergeistAgent.InvalidSelector"
 
 class PoltergeistAgent.Node
   @EVENTS = {

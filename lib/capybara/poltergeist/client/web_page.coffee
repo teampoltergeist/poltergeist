@@ -238,9 +238,12 @@ class Poltergeist.WebPage
     )
 
     if result.error?
-      if result.error.message == 'PoltergeistAgent.ObsoleteNode'
-        throw new Poltergeist.ObsoleteNode
-      else
-        throw new Poltergeist.BrowserError(result.error.message, result.error.stack)
+      switch result.error.message
+        when 'PoltergeistAgent.ObsoleteNode'
+          throw new Poltergeist.ObsoleteNode
+        when 'PoltergeistAgent.InvalidSelector'
+          throw new Poltergeist.InvalidSelector(args[1])
+        else
+          throw new Poltergeist.BrowserError(result.error.message, result.error.stack)
     else
       result.value

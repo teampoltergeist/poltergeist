@@ -428,5 +428,10 @@ describe Capybara::Session do
       position["x"].should_not be_nil
       position["y"].should_not be_nil
     end
+
+    it "throws an error on an invalid selector" do
+      @session.visit "/poltergeist/table"
+      expect { @session.find(:css, "table tr:last") }.to raise_error(Capybara::Poltergeist::InvalidSelector)
+    end
   end
 end
