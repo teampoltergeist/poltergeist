@@ -13,7 +13,7 @@ class Poltergeist
     @running = true
 
     try
-      @browser[command.name].apply(@browser, command.args)
+      @browser.runCommand(command.name, command.args)
     catch error
       if error instanceof Poltergeist.Error
         this.sendError(error)

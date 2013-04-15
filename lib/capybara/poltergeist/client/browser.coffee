@@ -47,11 +47,16 @@ class Poltergeist.Browser
         # window.
         setTimeout((=> this.push_window(name)), 0)
 
+  runCommand: (name, args) ->
+    this.setState "default"
+    this[name].apply(this, args)
+
   debug: (message) ->
     if @_debug
       console.log "poltergeist [#{new Date().getTime()}] #{message}"
 
   setState: (state) ->
+    return if @state == state
     this.debug "state #{@state} -> #{state}"
     @state = state
 
