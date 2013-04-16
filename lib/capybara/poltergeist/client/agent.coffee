@@ -40,7 +40,7 @@ class PoltergeistAgent
       if error.code == DOMException.SYNTAX_ERR
         throw new PoltergeistAgent.InvalidSelector
       else
-        throw e
+        throw error
 
   register: (element) ->
     @elements.push(element)
