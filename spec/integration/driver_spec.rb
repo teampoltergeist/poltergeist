@@ -405,6 +405,16 @@ module Capybara::Poltergeist
         @driver.set_cookie 'foo', 'bar', :expires => time
         @driver.cookies['foo'].expires.should == time
       end
+
+      it 'can enable and disable cookies' do
+        @driver.cookies_enabled = false
+        @session.visit('/set_cookie')
+        @driver.cookies.should be_empty
+
+        @driver.cookies_enabled = true
+        @session.visit('/set_cookie')
+        @driver.cookies.should_not be_empty
+      end
     end
 
     it "allows the driver to have a fixed port" do
