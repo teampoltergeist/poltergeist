@@ -191,6 +191,10 @@ module Capybara::Poltergeist
       browser.remove_cookie(name)
     end
 
+    def cookies_enabled=(flag)
+      browser.cookies_enabled = flag
+    end
+
     def debug
       if @options[:inspector]
         inspector.open

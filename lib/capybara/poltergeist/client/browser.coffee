@@ -285,6 +285,10 @@ class Poltergeist.Browser
     @page.deleteCookie(name)
     this.sendResponse(true)
 
+  cookies_enabled: (flag) ->
+    phantom.cookiesEnabled = flag
+    this.sendResponse(true)
+
   set_js_errors: (value) ->
     @js_errors = value
     this.sendResponse(true)

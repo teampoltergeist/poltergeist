@@ -326,6 +326,10 @@ Include as much information as possible. For example:
 
 ### Next release ###
 
+#### Features ####
+*   Add support for PhantomJS 1.7's `cookiesEnabled` API
+    (Micah Frost)
+
 #### Bug fixes ####
 
 *   Fix logging of mouse event co-ordinates
