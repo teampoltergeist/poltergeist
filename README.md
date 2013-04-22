@@ -337,6 +337,7 @@ Include as much information as possible. For example:
 *   Invalid selectors throw a useful error message
 *   Tie us to the 0.4 version of faye-websocket since the 0.5 version
     contains breaking changes.
+*   Can set cookies for given domain
 
 ### 1.2.0 ###
 

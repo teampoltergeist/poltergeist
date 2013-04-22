@@ -177,11 +177,12 @@ module Capybara::Poltergeist
     def set_cookie(name, value, options = {})
       options[:name]  ||= name
       options[:value] ||= value
-
-      if @started
-        options[:domain] = URI.parse(browser.current_url).host
-      else
-        options[:domain] = Capybara.app_host || "127.0.0.1"
+      options[:domain] ||= begin
+        if @started
+          URI.parse(browser.current_url).host
+        else
+          Capybara.app_host || "127.0.0.1"
+        end
       end
 
       browser.set_cookie(options)
