@@ -16,7 +16,6 @@ class Poltergeist.WebPage
     @_errors         = []
     @_networkTraffic = {}
     @frames          = []
-    @sub_pages       = {}
 
     for callback in WebPage.CALLBACKS
       this.bindCallback(callback)
@@ -161,11 +160,8 @@ class Poltergeist.WebPage
     @native.switchToParentFrame()
 
   getPage: (name) ->
-    if @sub_pages[name]
-      @sub_pages[name]
-    else
-      page = @native.getPage(name)
-      @sub_pages[name] = new Poltergeist.WebPage(page) if page
+    page = @native.getPage(name)
+    new Poltergeist.WebPage(page) if page
 
   dimensions: ->
     scroll   = this.scrollPosition()
