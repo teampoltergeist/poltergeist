@@ -12,6 +12,12 @@ module Capybara::Poltergeist
       expect { subject.start }.to raise_error(PhantomJSTooOld)
     end
 
+    it "doesn't raise an error if phantomjs is too new" do
+      `true` # stubbing $?
+      subject.stub(:`).with('phantomjs --version').and_return("1.10.0 (development)\n")
+      expect { subject.start }.to_not raise_error(PhantomJSTooOld)
+    end
+
     it 'shows the detected version in the version error message' do
       `true` # stubbing $?
       subject.stub(:`).with('phantomjs --version').and_return("1.3.0\n")
