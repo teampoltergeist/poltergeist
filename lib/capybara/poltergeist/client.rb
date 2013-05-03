@@ -88,8 +88,14 @@ module Capybara::Poltergeist
 
       if version.nil? || $? != 0
         raise PhantomJSFailed.new($?)
-      elsif version.chomp < PHANTOMJS_VERSION
-        raise PhantomJSTooOld.new(version)
+      else
+        major, minor, build = version.chomp.split('.').map(&:to_i)
+        min_major, min_minor, min_build = PHANTOMJS_VERSION.split('.').map(&:to_i)
+        if major < min_major ||
+            major == min_major && minor < min_minor ||
+            major == min_major && minor == min_minor && build < min_build
+          raise PhantomJSTooOld.new(version)
+        end
       end
 
       @phantomjs_version_checked = true
