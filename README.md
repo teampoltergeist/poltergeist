@@ -336,6 +336,8 @@ Include as much information as possible. For example:
 
 *   Add support for PhantomJS 1.7's `cookiesEnabled` API
     (Micah Frost)
+*   Fix within_window finding window after close/open
+    (Ryan Schlesinger) [Issue #312]
 
 #### Bug fixes ####
 
