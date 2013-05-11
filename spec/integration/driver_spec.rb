@@ -406,6 +406,18 @@ module Capybara::Poltergeist
         @driver.cookies['foo'].expires.should == time
       end
 
+      it 'can set cookies for given domain' do
+        port = @session.server.port
+        @driver.set_cookie 'capybara', '127.0.0.1'
+        @driver.set_cookie 'capybara', 'localhost', :domain => 'localhost'
+
+        @session.visit("http://localhost:#{port}/poltergeist/get_cookie")
+        @driver.body.should include('localhost')
+
+        @session.visit("http://127.0.0.1:#{port}/poltergeist/get_cookie")
+        @driver.body.should include('127.0.0.1')
+      end
+
       it 'can enable and disable cookies' do
         @driver.cookies_enabled = false
         @session.visit('/set_cookie')
