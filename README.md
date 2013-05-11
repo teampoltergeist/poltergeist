@@ -366,6 +366,12 @@ Include as much information as possible. For example:
 *   Run phantomjs in a new process group so ^C doesn't trigger a
     DeadClient error [Issue #252]
 
+### 1.1.2 ###
+
+#### Bug fixes #####
+
+*   Tie to faye-websocket 0.4 as 0.5 introduces incompatibilities.
+
 ### 1.1.1 ###
 
 #### Features ####
