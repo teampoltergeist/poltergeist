@@ -418,6 +418,12 @@ Include as much information as possible. For example:
     objects such as a Pathname. (@mjtko) [Issue #215]
 *   Cookies can now be set before the first request. [Issue #193]
 
+### 1.0.3 ###
+
+#### Bug fixes ####
+
+*   Tied to faye-websocket 0.4, as 0.5 introduces incompatibilities.
+
 ### 1.0.2 ###
 
 #### Bug fixes ####
