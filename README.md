@@ -330,14 +330,17 @@ Include as much information as possible. For example:
 
 *   Can set cookies for given domain
 
+#### Bug fixes ####
+
+*   Fix `within_window` finding window after close/open
+    (Ryan Schlesinger) [Issue #312]
+
 ### 1.3.0 ###
 
 #### Features ####
 
 *   Add support for PhantomJS 1.7's `cookiesEnabled` API
     (Micah Frost)
-*   Fix within_window finding window after close/open
-    (Ryan Schlesinger) [Issue #312]
 
 #### Bug fixes ####
 
