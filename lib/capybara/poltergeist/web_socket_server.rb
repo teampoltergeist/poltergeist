@@ -1,6 +1,4 @@
 require 'socket'
-require 'stringio'
-require 'http/parser'
 require 'websocket/driver'
 
 module Capybara::Poltergeist
@@ -20,12 +18,11 @@ module Capybara::Poltergeist
 
     HOST = '127.0.0.1'
 
-    attr_reader :port, :parser, :driver, :socket, :server
+    attr_reader :port, :driver, :socket, :server
     attr_accessor :timeout
 
     def initialize(port = nil, timeout = nil)
       @timeout = timeout
-      @parser  = Http::Parser.new
       @server  = start_server(port)
     end
 
@@ -56,46 +53,15 @@ module Capybara::Poltergeist
     # and use that to initialize a Web Socket.
     def accept
       @socket   = server.accept
-      @env      = nil
       @messages = []
 
-      while msg = socket.gets
-        parser << msg
-        break if msg == "\r\n"
-      end
-
-      @driver = ::WebSocket::Driver.rack(self)
+      @driver = ::WebSocket::Driver.server(self)
+      @driver.on(:connect) { |event| @driver.start }
       @driver.on(:message) { |event| @messages << event.data }
-      @driver.start
     end
 
     def write(data)
       @socket.write(data)
-    end
-
-    def url
-      "ws://#{env['SERVER_NAME']}:#{env['SERVER_PORT']}/"
-    end
-
-    def env
-      @env ||= begin
-        env = {
-          'REQUEST_METHOD' => parser.http_method,
-          'SERVER_NAME'    => '127.0.0.1',
-          'SERVER_PORT'    => port.to_s,
-          'HTTP_ORIGIN'    => 'http://127.0.0.1:2000/'
-        }
-
-        parser.headers.each do |header, value|
-          env['HTTP_' + header.upcase.gsub('-', '_')] = value
-        end
-
-        if env['HTTP_SEC_WEBSOCKET_KEY1']
-          env['rack.input'] = StringIO.new(socket.read(8))
-        end
-
-        env
-      end
     end
 
     # Block until the next message is available from the Web Socket.
