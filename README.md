@@ -334,6 +334,7 @@ Include as much information as possible. For example:
 
 *   Fix logging of mouse event co-ordinates
 *   Invalid selectors throw a useful error message
+*   Fixed closing of open pipes after use (driver.quit now performs pipe.close) [Issue #310]
 
 ### 1.2.0 ###
 
