@@ -36,6 +36,12 @@ describe Capybara::Session do
         @session.current_path.should == '/'
       end
 
+      it "doesn't raise error when asserting svg elements with a count that is not what is in the dom" do
+        @session.visit('/poltergeist/with_js')
+        expect { @session.has_css?('svg circle', count: 2) }.to_not raise_error
+        @session.should_not have_css('svg circle', count: 2)
+      end
+
       context "when someone (*cough* prototype *cough*) messes with Array#toJSON" do
         before do
           @session.visit("/poltergeist/index")

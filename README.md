@@ -336,6 +336,7 @@ Include as much information as possible. For example:
     (Ryan Schlesinger) [Issue #312]
 *   Fix "wrong exec option symbol: pgroup" error on windows (Andrew Meyer)
     [Issue #314]
+*   Fix NoMethodError when using has_css with a count on svg elements
 
 ### 1.3.0 ###
 
