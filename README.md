@@ -334,6 +334,8 @@ Include as much information as possible. For example:
 
 *   Fix `within_window` finding window after close/open
     (Ryan Schlesinger) [Issue #312]
+*   Fix "wrong exec option symbol: pgroup" error on windows (Andrew Meyer)
+    [Issue #314]
 
 ### 1.3.0 ###
 
