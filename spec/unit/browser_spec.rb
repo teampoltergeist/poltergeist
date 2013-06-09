@@ -13,7 +13,7 @@ module Capybara::Poltergeist
       it 'logs requests and responses to the client' do
         request  = { 'name' => 'where is', 'args' => ["the love?"] }
         response = { 'response' => '<3' }
-        server.stub(:send).with(JSON.generate(request)).and_return(JSON.generate(response))
+        server.stub(:send).with(MultiJson.dump(request)).and_return(JSON.dump(response))
 
         subject.command('where is', 'the love?')
 
