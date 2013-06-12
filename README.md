@@ -336,6 +336,7 @@ Include as much information as possible. For example:
     (Ryan Schlesinger) [Issue #312]
 *   Fix "wrong exec option symbol: pgroup" error on windows (Andrew Meyer)
     [Issue #314]
+*   Fixed closing of open pipes after use (driver.quit now performs pipe.close) [Issue #310]
 
 ### 1.3.0 ###
 
@@ -348,7 +349,6 @@ Include as much information as possible. For example:
 
 *   Fix logging of mouse event co-ordinates
 *   Invalid selectors throw a useful error message
-*   Fixed closing of open pipes after use (driver.quit now performs pipe.close) [Issue #310]
 *   Tie us to the 0.4 version of faye-websocket since the 0.5 version
     contains breaking changes.
 
