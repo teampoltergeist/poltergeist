@@ -15,6 +15,7 @@ module Capybara
     require 'capybara/poltergeist/web_socket_server'
     require 'capybara/poltergeist/client'
     require 'capybara/poltergeist/inspector'
+    require 'capybara/poltergeist/json'
     require 'capybara/poltergeist/network_traffic'
     require 'capybara/poltergeist/errors'
     require 'capybara/poltergeist/cookie'

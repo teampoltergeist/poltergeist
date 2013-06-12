@@ -9,7 +9,7 @@ provided by [PhantomJS](http://www.phantomjs.org/).
 **If you're viewing this at https://github.com/jonleighton/poltergeist,
 you're reading the documentation for the master branch.
 [View documentation for the latest release
-(1.2.0).](https://github.com/jonleighton/poltergeist/tree/v1.2.0)**
+(1.3.0).](https://github.com/jonleighton/poltergeist/tree/v1.3.0)**
 
 ## Getting help ##
 
@@ -327,6 +327,20 @@ Include as much information as possible. For example:
 ### Next release ###
 
 #### Features ####
+
+*   Can set cookies for given domain
+
+#### Bug fixes ####
+
+*   Fix `within_window` finding window after close/open
+    (Ryan Schlesinger) [Issue #312]
+*   Fix "wrong exec option symbol: pgroup" error on windows (Andrew Meyer)
+    [Issue #314]
+
+### 1.3.0 ###
+
+#### Features ####
+
 *   Add support for PhantomJS 1.7's `cookiesEnabled` API
     (Micah Frost)
 
@@ -335,6 +349,8 @@ Include as much information as possible. For example:
 *   Fix logging of mouse event co-ordinates
 *   Invalid selectors throw a useful error message
 *   Fixed closing of open pipes after use (driver.quit now performs pipe.close) [Issue #310]
+*   Tie us to the 0.4 version of faye-websocket since the 0.5 version
+    contains breaking changes.
 
 ### 1.2.0 ###
 
@@ -352,6 +368,12 @@ Include as much information as possible. For example:
     WebKit version. [Issue #176, #223]
 *   Run phantomjs in a new process group so ^C doesn't trigger a
     DeadClient error [Issue #252]
+
+### 1.1.2 ###
+
+#### Bug fixes #####
+
+*   Tie to faye-websocket 0.4 as 0.5 introduces incompatibilities.
 
 ### 1.1.1 ###
 
@@ -404,6 +426,12 @@ Include as much information as possible. For example:
     file input paths, allowing `attach_file` to be called with arbitry
     objects such as a Pathname. (@mjtko) [Issue #215]
 *   Cookies can now be set before the first request. [Issue #193]
+
+### 1.0.3 ###
+
+#### Bug fixes ####
+
+*   Tied to faye-websocket 0.4, as 0.5 introduces incompatibilities.
 
 ### 1.0.2 ###
 

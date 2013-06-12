@@ -355,6 +355,32 @@ describe Capybara::Session do
 
         @session.within_window 'popup' do
           @session.html.should include('slow page')
+          @session.evaluate_script('window.close()')
+        end
+      end
+
+      it 'can access a second window of the same name' do
+        @session.visit '/'
+
+        @session.evaluate_script <<-CODE
+          setTimeout(function() {
+            window.open('/poltergeist/simple', 'popup')
+          }, 0)
+        CODE
+
+        @session.within_window 'popup' do
+          @session.html.should include('Test')
+          @session.evaluate_script('window.close()')
+        end
+
+        @session.evaluate_script <<-CODE
+          setTimeout(function() {
+            window.open('/poltergeist/simple', 'popup')
+          }, 0)
+        CODE
+
+        @session.within_window 'popup' do
+          @session.html.should include('Test')
         end
       end
     end
