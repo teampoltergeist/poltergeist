@@ -131,7 +131,7 @@ module Capybara::Poltergeist
     private
 
     def filter_text(text)
-      text.gsub(NBSP, ' ').gsub(/\s+/u, ' ').strip
+      text.to_s.gsub(NBSP, ' ').gsub(/\s+/u, ' ').strip
     end
   end
 end
