@@ -155,6 +155,9 @@ class Poltergeist.WebPage
     else
       false
 
+  pages: ->
+    @native.pagesWindowName
+
   popFrame: ->
     @frames.pop()
     @native.switchToParentFrame()

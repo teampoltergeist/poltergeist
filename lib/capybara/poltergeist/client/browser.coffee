@@ -171,6 +171,9 @@ class Poltergeist.Browser
       else
         @owner.sendError(new Poltergeist.FrameNotFound(name))
 
+  pages: ->
+    this.sendResponse(@page.pages())
+
   pop_frame: ->
     this.sendResponse(@page.popFrame())
 
