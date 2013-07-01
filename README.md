@@ -337,6 +337,7 @@ Include as much information as possible. For example:
 *   Fix "wrong exec option symbol: pgroup" error on windows (Andrew Meyer)
     [Issue #314]
 *   Fixed closing of open pipes after use (driver.quit now performs pipe.close) [Issue #310]
+*   Fix NoMethodError when using has_css with a count on svg elements
 
 ### 1.3.0 ###
 
