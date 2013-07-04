@@ -186,6 +186,32 @@ The following methods are used to inspect and manipulate cookies:
   object.
 * `page.driver.remove_cookie(name)` - remove a cookie
 
+### Window switching ###
+
+The following methods can be used to execute commands inside different windows:
+
+* `page.driver.window_handles` - an array containing the names of all
+  the open windows.
+
+* `page.within_window(name) { # actions }` -  executes
+  the passed block in the context of the named window.
+
+Example:
+
+``` ruby
+find_link("Login with Facebook").trigger("click")
+
+sleep(0.1)
+
+fb_popup = page.driver.window_handles.last
+page.within_window fb_popup do
+  fill_in "email", :with => "facebook_email@email.tst"
+  fill_in "pass", :with => "my_pass"
+  click_button "Log In"
+end
+```
+
+
 ## Customization ##
 
 You can customize the way that Capybara sets up Poltegeist via the following code in your
@@ -329,6 +355,7 @@ Include as much information as possible. For example:
 #### Features ####
 
 *   Can set cookies for given domain
+*   Can get open window names with window_handles [Issue #178]
 
 #### Bug fixes ####
 

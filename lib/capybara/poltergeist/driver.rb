@@ -143,6 +143,10 @@ module Capybara::Poltergeist
       browser.within_window(name, &block)
     end
 
+    def window_handles
+      browser.window_handles
+    end
+
     def reset!
       browser.reset
       @started = false
