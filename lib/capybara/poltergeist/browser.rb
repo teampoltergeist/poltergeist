@@ -118,6 +118,10 @@ module Capybara::Poltergeist
       command 'pop_frame'
     end
 
+    def window_handles
+      command 'pages'
+    end
+
     def within_window(name, &block)
       command 'push_window', name
       yield

@@ -439,5 +439,28 @@ module Capybara::Poltergeist
         driver.quit
       end
     end
+
+    it 'lists the open windows' do
+      @session.visit '/'
+
+      @session.evaluate_script <<-CODE
+          window.open('/poltergeist/simple', 'popup')
+      CODE
+
+      @session.evaluate_script <<-CODE
+          window.open('/poltergeist/simple', 'popup2')
+      CODE
+
+      @session.within_window 'popup2' do
+        @session.html.should include('Test')
+        @session.evaluate_script('window.close()')
+      end
+
+      sleep 0.1;
+
+      @driver.browser.window_handles.should == ["popup"]
+      @driver.window_handles.should == ["popup"]
+    end
+
   end
 end
