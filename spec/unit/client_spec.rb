@@ -16,6 +16,7 @@ module Capybara::Poltergeist
       `true` # stubbing $?
       subject.stub(:`).with('phantomjs --version').and_return("1.10.0 (development)\n")
       expect { subject.start }.to_not raise_error(PhantomJSTooOld)
+      subject.stop # process has been spawned, stopping
     end
 
     it 'shows the detected version in the version error message' do
