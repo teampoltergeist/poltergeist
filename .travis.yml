@@ -1,3 +1,6 @@
+env:
+  global:
+    - 'JRUBY_OPTS=-Xcext.enabled=true'
 script: bundle exec rake ci
 rvm:
   - 2.0.0
