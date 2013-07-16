@@ -52,7 +52,7 @@ module Capybara::Poltergeist
       subject { Driver.new(nil, :timeout => 3) }
 
       it 'starts the server with the provided timeout' do
-        server = stub
+        server = double
         Server.should_receive(:new).with(anything, 3).and_return(server)
         subject.server.should == server
       end
@@ -62,7 +62,7 @@ module Capybara::Poltergeist
       subject { Driver.new(nil, :window_size => [800, 600]) }
 
       it "creates a client with the desired width and height settings" do
-        server = stub
+        server = double
         Server.should_receive(:new).and_return(server)
         Client.should_receive(:start).with(server, hash_including(:window_size => [800, 600]))
 
