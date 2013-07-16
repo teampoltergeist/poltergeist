@@ -74,7 +74,7 @@ describe Capybara::Session do
           end
 
           it "clicks properly" do
-            expect { @session.click_link "O hai" }.to_not raise_error(Capybara::Poltergeist::MouseEventFailed)
+            expect { @session.click_link "O hai" }.not_to raise_error
           end
 
           after do

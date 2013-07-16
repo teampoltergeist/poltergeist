@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module Capybara::Poltergeist
   describe Client do
-    let(:server) { stub(port: 6000) }
+    let(:server) { double(port: 6000) }
 
     subject { Client.new(server) }
 
@@ -15,7 +15,7 @@ module Capybara::Poltergeist
     it "doesn't raise an error if phantomjs is too new" do
       `true` # stubbing $?
       subject.stub(:`).with('phantomjs --version').and_return("1.10.0 (development)\n")
-      expect { subject.start }.to_not raise_error(PhantomJSTooOld)
+      expect { subject.start }.not_to raise_error
       subject.stop # process has been spawned, stopping
     end
 
