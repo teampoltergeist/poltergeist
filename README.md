@@ -153,17 +153,21 @@ Capybara.javascript_driver = :poltergeist_debug
 [Read more
 here](http://jonathanleighton.com/articles/2012/poltergeist-0-6-0/)
 
-### Setting request headers ###
+### Manipulating request headers ###
 
-Additional HTTP request headers can be set like so:
+You can manipulate HTTP request headers with these methods:
 
 ``` ruby
+page.driver.headers # => {}
 page.driver.headers = { "User-Agent" => "Poltergeist" }
+page.driver.add_headers("Referer" => "https://example.com")
+page.driver.headers # => { "User-Agent" => "Poltergeist", "Referer" => "https://example.com" }
 ```
 
-The extra headers will apply to all subsequent HTTP requests (including
-requests for assets, AJAX, etc). They will be automatically cleared at
-the end of the test.
+Notice that `headers=` will overwrite already set headers. You should use
+`add_headers` if you want to add a few more. The extra headers will apply to all
+subsequent HTTP requests (including requests for assets, AJAX, etc). They will
+be automatically cleared at the end of the test.
 
 ### Inspecting network traffic ###
 
@@ -356,6 +360,7 @@ Include as much information as possible. For example:
 
 *   Can set cookies for given domain
 *   Can get open window names with window_handles [Issue #178]
+*   Added ability to read and append headers (Dmitry Vorotilin) [Issue #187]
 
 #### Bug fixes ####
 

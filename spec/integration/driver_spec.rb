@@ -128,6 +128,12 @@ module Capybara::Poltergeist
         @driver.body.should include('HOST: foo.com')
       end
 
+      it 'allows headers to be read' do
+        expect(@driver.headers).to eq({})
+        @driver.headers = { 'User-Agent' => 'PhantomJS', 'Host' => 'foo.com' }
+        expect(@driver.headers).to eq('User-Agent' => 'PhantomJS', 'Host' => 'foo.com')
+      end
+
       it 'supports User-Agent' do
         @driver.headers = { 'User-Agent' => 'foo' }
         @session.visit '/'
@@ -147,6 +153,15 @@ module Capybara::Poltergeist
           }
         JS
         @driver.body.should include('X_OMG: wat')
+      end
+
+      it 'adds new headers' do
+        @driver.headers = { 'User-Agent' => 'PhantomJS', 'Host' => 'foo.com' }
+        @driver.add_headers('User-Agent' => 'Poltergeist', 'Appended' => 'true')
+        @session.visit('/poltergeist/headers')
+        expect(@driver.body).to include('USER_AGENT: Poltergeist')
+        expect(@driver.body).to include('HOST: foo.com')
+        expect(@driver.body).to include('APPENDED: true')
       end
     end
 
