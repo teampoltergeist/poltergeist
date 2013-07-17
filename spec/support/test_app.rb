@@ -45,6 +45,11 @@ class TestApp
     render_view view
   end
 
+  get '/poltergeist/arbitrary_path/:status/:remaining_path' do
+    status params['status'].to_i
+    params['remaining_path']
+  end
+
   protected
 
   def render_view(view)
