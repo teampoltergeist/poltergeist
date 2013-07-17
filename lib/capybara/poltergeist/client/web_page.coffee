@@ -145,6 +145,9 @@ class Poltergeist.WebPage
   setUserAgent: (userAgent) ->
     @native.settings.userAgent = userAgent
 
+  getCustomHeaders: ->
+    @native.customHeaders
+
   setCustomHeaders: (headers) ->
     @native.customHeaders = headers
 

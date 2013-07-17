@@ -266,11 +266,20 @@ class Poltergeist.Browser
   network_traffic: ->
     this.sendResponse(@page.networkTraffic())
 
+  get_headers: ->
+    this.sendResponse(@page.getCustomHeaders())
+
   set_headers: (headers) ->
     # Workaround for https://code.google.com/p/phantomjs/issues/detail?id=745
     @page.setUserAgent(headers['User-Agent']) if headers['User-Agent']
     @page.setCustomHeaders(headers)
     this.sendResponse(true)
+
+  add_headers: (headers) ->
+    allHeaders = @page.getCustomHeaders()
+    for name, value of headers
+      allHeaders[name] = value
+    this.set_headers(allHeaders)
 
   response_headers: ->
     this.sendResponse(@page.responseHeaders())

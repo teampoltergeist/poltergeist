@@ -166,8 +166,16 @@ module Capybara::Poltergeist
       browser.network_traffic
     end
 
+    def headers
+      browser.get_headers
+    end
+
     def headers=(headers)
       browser.set_headers(headers)
+    end
+
+    def add_headers(headers)
+      browser.add_headers(headers)
     end
 
     def response_headers

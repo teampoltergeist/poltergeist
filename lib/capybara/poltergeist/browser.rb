@@ -178,8 +178,16 @@ module Capybara::Poltergeist
       command('equals', page_id, id, other_id)
     end
 
+    def get_headers
+      command 'get_headers'
+    end
+
     def set_headers(headers)
       command 'set_headers', headers
+    end
+
+    def add_headers(headers)
+      command 'add_headers', headers
     end
 
     def response_headers
