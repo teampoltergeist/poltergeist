@@ -370,6 +370,8 @@ Include as much information as possible. For example:
     [Issue #314]
 *   Fixed closing of open pipes after use (driver.quit now performs pipe.close) [Issue #310]
 *   Fix NoMethodError when using has_css with a count on svg elements
+*   Fix URI::InvalidURIError raised when setting a cookie after loading a
+    page with a space in the url [Issue #349]
 
 ### 1.3.0 ###
 
