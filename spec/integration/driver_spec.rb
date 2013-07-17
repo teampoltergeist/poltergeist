@@ -371,6 +371,11 @@ module Capybara::Poltergeist
         @driver.body.should include('omg')
       end
 
+      it 'can set cookies when a space exists in the url' do
+        @session.visit '/poltergeist/arbitrary_path/200/foo bar'
+        @driver.set_cookie 'capybara', 'omg'
+      end
+
       it 'can set cookies with custom settings' do
         @driver.set_cookie 'capybara', 'omg', :path => '/poltergeist'
 
