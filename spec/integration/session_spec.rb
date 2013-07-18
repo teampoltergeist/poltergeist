@@ -30,6 +30,13 @@ describe Capybara::Session do
         expect { @session.click_link "JS redirect" }.to raise_error(Capybara::ElementNotFound)
       end
 
+      it 'hovers an element' do
+        @session.visit('/poltergeist/with_js')
+        expect(@session.find(:css, '#hidden_link span', :visible => false)).to_not be_visible
+        @session.find(:css, '#hidden_link').hover
+        expect(@session.find(:css, '#hidden_link span')).to be_visible
+      end
+
       it 'hovers an element before clicking it' do
         @session.visit('/poltergeist/with_js')
         @session.click_link "Hidden link"
