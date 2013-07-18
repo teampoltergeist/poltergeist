@@ -358,6 +358,18 @@ describe Capybara::Session do
       @session.evaluate_script("window.last_hashchange").should == '#foo'
     end
 
+    it 'supports retrieving the URL of pages with escaped characters' do
+      pending "see issue #349"
+      @session.visit '/poltergeist/arbitrary_path/200/foo%20bar'
+      URI.parse(@session.driver.current_url).path.should eq '/poltergeist/arbitrary_path/200/foo%20bar'
+    end
+
+    it 'supports retrieving the URL of pages with unescaped characters' do
+      pending "see issue #349"
+      @session.visit '/poltergeist/arbitrary_path/200/foo bar'
+      URI.parse(@session.driver.current_url).path.should eq '/poltergeist/arbitrary_path/200/foo%20bar'
+    end
+
     context 'window switching support' do
       it 'waits for the window to load' do
         @session.visit '/'
