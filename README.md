@@ -372,6 +372,8 @@ Include as much information as possible. For example:
 *   Fix NoMethodError when using has_css with a count on svg elements
 *   Fix URI::InvalidURIError raised when setting a cookie after loading a
     page with a space in the url [Issue #349]
+*   Fix leak of phantomjs processes by adding a GC finalizer to the
+    Capybara::Poltergeist::Client object that creates them [Issue #348]
 
 ### 1.3.0 ###
 

@@ -43,6 +43,20 @@ module Capybara::Poltergeist
         else
           @pid = Process.spawn(*command.map(&:to_s), pgroup: true)
         end
+        ObjectSpace.define_finalizer(self, self.class.process_killer(@pid) )
+      end
+    end
+
+    # Returns a proc, that when called will attempt to kill the given process.
+    # This is because implementing ObjectSpace.define_finalizer is tricky.
+    # Hat-Tip to @mperham for describing in detail:
+    # http://www.mikeperham.com/2010/02/24/the-trouble-with-ruby-finalizers/
+    def self.process_killer(pid)
+      proc do
+        begin
+          Proces.kill('KILL', pid)
+        rescue Errno::ESRCH, Errno::ECHILD
+        end
       end
     end
 
@@ -63,6 +77,7 @@ module Capybara::Poltergeist
         rescue Errno::ESRCH, Errno::ECHILD
           # Zed's dead, baby
         end
+        ObjectSpace.undefine_finalizer(self)
         @write_io.close
         @read_io.close
         @out_thread.kill
