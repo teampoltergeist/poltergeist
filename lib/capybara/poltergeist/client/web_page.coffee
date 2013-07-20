@@ -12,7 +12,7 @@ class Poltergeist.WebPage
   constructor: (@native) ->
     @native or= require('webpage').create()
 
-    @_source         = ""
+    @_source         = null
     @_errors         = []
     @_networkTraffic = {}
     @frames          = []
