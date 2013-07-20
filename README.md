@@ -235,7 +235,7 @@ end
     output, but this goes to `STDOUT` due to technical limitations.
 *   `:logger` (Object responding to `puts`) - When present, debug output is written to this object
 *   `:phantomjs_logger` (`IO` object) - Where the `STDOUT` from PhantomJS is written to. This is
-    where you `console.log` statements will show up. Default: `STDOUT`
+    where your `console.log` statements will show up. Default: `STDOUT`
 *   `:timeout` (Numeric) - The number of seconds we'll wait for a response
     when communicating with PhantomJS. Default is 30.
 *   `:inspector` (Boolean, String) - See 'Remote Debugging', above.
