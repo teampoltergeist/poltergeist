@@ -54,7 +54,7 @@ module Capybara::Poltergeist
     def self.process_killer(pid)
       proc do
         begin
-          Proces.kill('KILL', pid)
+          Process.kill('KILL', pid)
         rescue Errno::ESRCH, Errno::ECHILD
         end
       end
