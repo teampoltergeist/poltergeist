@@ -15,6 +15,7 @@ class Poltergeist.WebPage
     @_source         = null
     @_errors         = []
     @_networkTraffic = {}
+    @_temp_headers   = {}
     @frames          = []
 
     for callback in WebPage.CALLBACKS
@@ -33,6 +34,7 @@ class Poltergeist.WebPage
   onInitializedNative: ->
     @_source = null
     @injectAgent()
+    this.removeTempHeaders()
     this.setScrollPosition(left: 0, top: 0)
 
   injectAgent: ->
@@ -150,6 +152,16 @@ class Poltergeist.WebPage
 
   setCustomHeaders: (headers) ->
     @native.customHeaders = headers
+
+  addTempHeader: (header) ->
+    for name, value of header
+      @_temp_headers[name] = value
+
+  removeTempHeaders: ->
+    allHeaders = this.getCustomHeaders()
+    for name, value of @_temp_headers
+      delete allHeaders[name]
+    this.setCustomHeaders(allHeaders)
 
   pushFrame: (name) ->
     if @native.switchToFrame(name)

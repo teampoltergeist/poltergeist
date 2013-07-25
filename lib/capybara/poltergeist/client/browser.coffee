@@ -284,6 +284,10 @@ class Poltergeist.Browser
       allHeaders[name] = value
     this.set_headers(allHeaders)
 
+  add_header: (header, permanent) ->
+    @page.addTempHeader(header) unless permanent
+    this.add_headers(header)
+
   response_headers: ->
     this.sendResponse(@page.responseHeaders())
 
