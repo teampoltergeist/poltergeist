@@ -159,9 +159,14 @@ module Capybara
       end
 
       def message
-        "PhantomJS returned non-zero exit status #{status.exitstatus}. Make sure phantomjs runs successfully " \
-          "on your system. You can test this by just running the `phantomjs` command which should give you " \
-          "a Javascript REPL."
+        case status.exitstatus
+        when 127
+          "PhantomJS command not found. Please make sure path to `phantomjs` is in your $PATH system variable."
+        else
+          "PhantomJS returned non-zero exit status #{status.exitstatus}. Make sure phantomjs runs successfully " \
+            "on your system. You can test this by just running the `phantomjs` command which should give you " \
+            "a Javascript REPL."
+        end
       end
     end
   end
