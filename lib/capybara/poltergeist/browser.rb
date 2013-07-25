@@ -190,6 +190,10 @@ module Capybara::Poltergeist
       command 'add_headers', headers
     end
 
+    def add_header(header, permanent)
+      command 'add_header', header, permanent
+    end
+
     def response_headers
       command 'response_headers'
     end

@@ -163,6 +163,27 @@ module Capybara::Poltergeist
         expect(@driver.body).to include('HOST: foo.com')
         expect(@driver.body).to include('APPENDED: true')
       end
+
+      it 'sets headers on the initial request' do
+        @driver.headers = { 'PermanentA' => 'a' }
+        @driver.add_headers('PermanentB' => 'b')
+        @driver.add_header('Referer', 'http://google.com', :permanent => false)
+        @driver.add_header('TempA', 'a', :permanent => false)
+
+        @session.visit('/poltergeist/headers_with_ajax')
+        initial_request = @session.find(:css, '#initial_request').text
+        ajax_request = @session.find(:css, '#ajax_request').text
+
+        expect(initial_request).to include('PERMANENTA: a')
+        expect(initial_request).to include('PERMANENTB: b')
+        expect(initial_request).to include('REFERER: http://google.com')
+        expect(initial_request).to include('TEMPA: a')
+
+        expect(ajax_request).to include('PERMANENTA: a')
+        expect(ajax_request).to include('PERMANENTB: b')
+        expect(ajax_request).not_to include('REFERER: http://google.com')
+        expect(ajax_request).not_to include('TEMPA: a')
+      end
     end
 
     it 'supports rendering the page with a nonstring path' do
