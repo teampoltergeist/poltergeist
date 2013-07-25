@@ -178,6 +178,11 @@ module Capybara::Poltergeist
       browser.add_headers(headers)
     end
 
+    def add_header(name, value, options = {})
+      permanent = options.fetch(:permanent, true)
+      browser.add_header({ name => value }, permanent)
+    end
+
     def response_headers
       browser.response_headers
     end

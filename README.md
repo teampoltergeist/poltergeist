@@ -165,9 +165,21 @@ page.driver.headers # => { "User-Agent" => "Poltergeist", "Referer" => "https://
 ```
 
 Notice that `headers=` will overwrite already set headers. You should use
-`add_headers` if you want to add a few more. The extra headers will apply to all
+`add_headers` if you want to add a few more. These headers will apply to all
 subsequent HTTP requests (including requests for assets, AJAX, etc). They will
-be automatically cleared at the end of the test.
+be automatically cleared at the end of the test. You have ability to set headers
+only for the initial request:
+
+``` ruby
+page.driver.headers = { "User-Agent" => "Poltergeist" }
+page.driver.add_header("Referer", "http://example.com", permanent: false)
+page.driver.headers # => { "User-Agent" => "Poltergeist", "Referer" => "http://example.com" }
+visit(login_path)
+page.driver.headers # => { "User-Agent" => "Poltergeist" }
+```
+
+This way your temporary headers will be sent only for the initial request, all
+subsequent request will only contain your permanent headers.
 
 ### Inspecting network traffic ###
 
@@ -361,6 +373,7 @@ Include as much information as possible. For example:
 *   Can set cookies for given domain
 *   Can get open window names with window_handles [Issue #178]
 *   Added ability to read and append headers (Dmitry Vorotilin) [Issue #187]
+*   Added ability to set headers only for the first request (Dmitry Vorotilin) [Issue #337]
 
 #### Bug fixes ####
 

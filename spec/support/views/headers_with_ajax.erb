@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="text/javascript">
+    window.onload = function() {
+      var request = new XMLHttpRequest();
+      request.open('GET', '/poltergeist/headers', false);
+      request.send();
+
+      if (request.status === 200) {
+        var div = document.getElementById('ajax_request');
+        div.innerHTML = request.responseText;
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="initial_request">
+    <% for header in request.env.select {|k,v| k.match("^HTTP.*")} %>
+      <%=header[0].split('_',2)[1]%>: <%=header[1]%>
+    <% end %>
+  </div>
+  <div id="ajax_request"></div>
+</body>
+</html>
