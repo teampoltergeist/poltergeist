@@ -1,10 +1,11 @@
 require "timeout"
 require "capybara/poltergeist/utility"
+require 'cliver'
 
 module Capybara::Poltergeist
   class Client
     PHANTOMJS_SCRIPT  = File.expand_path('../client/compiled/main.js', __FILE__)
-    PHANTOMJS_VERSION = '1.8.1'
+    PHANTOMJS_VERSION = ['~> 1.8','>= 1.8.1']
     PHANTOMJS_NAME    = 'phantomjs'
 
     KILL_TIMEOUT = 2 # seconds
@@ -28,8 +29,11 @@ module Capybara::Poltergeist
       at_exit { stop if Process.pid == pid }
     end
 
+    def path_to_phantomjs
+      @path_to_phantomjs ||= Cliver::detect!(path, *PHANTOMJS_VERSION)
+    end
+
     def start
-      check_phantomjs_version
       @read_io, @write_io = IO.pipe
       @out_thread = Thread.new {
         while !@read_io.eof? && data = @read_io.readpartial(1024)
@@ -91,7 +95,7 @@ module Capybara::Poltergeist
     end
 
     def command
-      parts = [path]
+      parts = [path_to_phantomjs]
       parts.concat phantomjs_options
       parts << PHANTOMJS_SCRIPT
       parts << server.port
@@ -100,26 +104,6 @@ module Capybara::Poltergeist
     end
 
     private
-
-    def check_phantomjs_version
-      return if @phantomjs_version_checked
-
-      version = `#{path} --version` rescue nil
-
-      if version.nil? || $? != 0
-        raise PhantomJSFailed.new($?)
-      else
-        major, minor, build = version.chomp.split('.').map(&:to_i)
-        min_major, min_minor, min_build = PHANTOMJS_VERSION.split('.').map(&:to_i)
-        if major < min_major ||
-            major == min_major && minor < min_minor ||
-            major == min_major && minor == min_minor && build < min_build
-          raise PhantomJSTooOld.new(version)
-        end
-      end
-
-      @phantomjs_version_checked = true
-    end
 
     # This abomination is because JRuby doesn't support the :out option of
     # Process.spawn

@@ -7,37 +7,29 @@ module Capybara::Poltergeist
     subject { Client.new(server) }
 
     it 'raises an error if phantomjs is too old' do
-      `true` # stubbing $?
-      subject.stub(:`).with('phantomjs --version').and_return("1.3.0\n")
-      expect { subject.start }.to raise_error(PhantomJSTooOld)
+      Cliver::Detector.any_instance.
+        stub(:`).with(/phantomjs --version/).and_return("1.3.0\n")
+      expect { subject.start }.to raise_error(Cliver::Dependency::VersionMismatch)
     end
 
     it "doesn't raise an error if phantomjs is too new" do
-      `true` # stubbing $?
-      subject.stub(:`).with('phantomjs --version').and_return("1.10.0 (development)\n")
+      Cliver::Detector.any_instance.
+        stub(:`).with(/phantomjs --version/).and_return("1.10.0 (development)\n")
       expect { subject.start }.not_to raise_error
       subject.stop # process has been spawned, stopping
     end
 
     it 'shows the detected version in the version error message' do
-      `true` # stubbing $?
-      subject.stub(:`).with('phantomjs --version').and_return("1.3.0\n")
-      begin
-        subject.start
-      rescue PhantomJSTooOld => e
+      Cliver::Detector.any_instance.
+        stub(:`).with(/phantomjs --version/).and_return("1.3.0\n")
+      expect { subject.start }.to raise_error(Cliver::Dependency::VersionMismatch) do |e|
         e.message.should include('1.3.0')
       end
     end
 
-    it 'raises an error if phantomjs returns a non-zero exit code' do
-      subject = Client.new(server, :path => 'exit 42 && ')
-      expect { subject.start }.to raise_error(Error)
-
-      begin
-        subject.start
-      rescue PhantomJSFailed => e
-        e.message.should include('42')
-      end
+    it 'raises an error if phantomjs does not exist' do
+      subject = Client.new(server, :path => '/does/not/exist')
+      expect { subject.start }.to raise_error(Cliver::Dependency::NotFound)
     end
 
     unless Capybara::Poltergeist.windows?
