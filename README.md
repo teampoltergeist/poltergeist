@@ -336,6 +336,13 @@ documentation on asynchronous
 Javascript](https://github.com/jnicklas/capybara#asynchronous-javascript-ajax-and-friends)
 which explains the tools that Capybara provides for dealing with this.
 
+### Memory leak ###
+
+If you run a few capybara sessions manually please make sure you've called
+`session.driver.quit` when you don't need session anymore. Forgetting about this
+causes memory leakage and your system's resources can be exhausted earlier than
+you may expect.
+
 ### General troubleshooting hints ###
 
 * Configure Poltergeist with `:debug` turned on so you can see its

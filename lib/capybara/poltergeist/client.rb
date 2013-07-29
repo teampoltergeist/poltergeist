@@ -15,6 +15,19 @@ module Capybara::Poltergeist
       client
     end
 
+    # Returns a proc, that when called will attempt to kill the given process.
+    # This is because implementing ObjectSpace.define_finalizer is tricky.
+    # Hat-Tip to @mperham for describing in detail:
+    # http://www.mikeperham.com/2010/02/24/the-trouble-with-ruby-finalizers/
+    def self.process_killer(pid)
+      proc do
+        begin
+          Process.kill('KILL', pid)
+        rescue Errno::ESRCH, Errno::ECHILD
+        end
+      end
+    end
+
     attr_reader :pid, :server, :path, :window_size, :phantomjs_options
 
     def initialize(server, options = {})
@@ -37,26 +50,12 @@ module Capybara::Poltergeist
         end
       }
 
-      redirect_stdout do
-        if Capybara::Poltergeist.windows?
-          @pid = Process.spawn(*command.map(&:to_s))
-        else
-          @pid = Process.spawn(*command.map(&:to_s), pgroup: true)
-        end
-        ObjectSpace.define_finalizer(self, self.class.process_killer(@pid) )
-      end
-    end
+      process_options = {}
+      process_options[:pgroup] = true unless Capybara::Poltergeist.windows?
 
-    # Returns a proc, that when called will attempt to kill the given process.
-    # This is because implementing ObjectSpace.define_finalizer is tricky.
-    # Hat-Tip to @mperham for describing in detail:
-    # http://www.mikeperham.com/2010/02/24/the-trouble-with-ruby-finalizers/
-    def self.process_killer(pid)
-      proc do
-        begin
-          Process.kill('KILL', pid)
-        rescue Errno::ESRCH, Errno::ECHILD
-        end
+      redirect_stdout do
+        @pid = Process.spawn(*command.map(&:to_s), process_options)
+        ObjectSpace.define_finalizer(self, self.class.process_killer(@pid) )
       end
     end
 
