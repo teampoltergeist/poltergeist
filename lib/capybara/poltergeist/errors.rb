@@ -140,28 +140,28 @@ module Capybara
     end
 
     class PhantomJSTooOld < Error
-      attr_reader :version
-
-      def initialize(version)
-        @version = version
-      end
-
-      def message
-        "PhantomJS version #{version} is too old. You must use at least version #{Client::PHANTOMJS_VERSION}"
+      def self.===(other)
+        if Cliver::Dependency::VersionMismatch === other
+          warn "{name} exception has been deprecated in favor of using the " +
+               "cliver gem for command-line dependency detection. Please " +
+               "handle Cliver::Dependency::VersionMismatch instead."
+          true
+        else
+          super
+        end
       end
     end
 
     class PhantomJSFailed < Error
-      attr_reader :status
-
-      def initialize(status)
-        @status = status
-      end
-
-      def message
-        "PhantomJS returned non-zero exit status #{status.exitstatus}. Make sure phantomjs runs successfully " \
-          "on your system. You can test this by just running the `phantomjs` command which should give you " \
-          "a Javascript REPL."
+      def self.===(other)
+        if Cliver::Dependency::NotMet === other
+          warn "{name} exception has been deprecated in favor of using the " +
+               "cliver gem for command-line dependency detection. Please " +
+               "handle Cliver::Dependency::NotMet instead."
+          true
+        else
+          super
+        end
       end
     end
   end

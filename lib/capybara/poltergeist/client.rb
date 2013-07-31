@@ -20,17 +20,15 @@ module Capybara::Poltergeist
 
     def initialize(server, options = {})
       @server            = server
-      @path              = options[:path]              || PHANTOMJS_NAME
+      @path              = Cliver::detect!((options[:path] || PHANTOMJS_NAME),
+                                           *PHANTOMJS_VERSION)
+
       @window_size       = options[:window_size]       || [1024, 768]
       @phantomjs_options = options[:phantomjs_options] || []
       @phantomjs_logger  = options[:phantomjs_logger]  || $stdout
 
       pid = Process.pid
       at_exit { stop if Process.pid == pid }
-    end
-
-    def path_to_phantomjs
-      @path_to_phantomjs ||= Cliver::detect!(path, *PHANTOMJS_VERSION)
     end
 
     def start
@@ -95,7 +93,7 @@ module Capybara::Poltergeist
     end
 
     def command
-      parts = [path_to_phantomjs]
+      parts = [path]
       parts.concat phantomjs_options
       parts << PHANTOMJS_SCRIPT
       parts << server.port

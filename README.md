@@ -361,6 +361,7 @@ Include as much information as possible. For example:
 *   Can set cookies for given domain
 *   Can get open window names with window_handles [Issue #178]
 *   Added ability to read and append headers (Dmitry Vorotilin) [Issue #187]
+*   Depend on Cliver for command-line dependency detection.
 
 #### Bug fixes ####
 
