@@ -7,6 +7,8 @@
 *   Added ability to read and append headers (Dmitry Vorotilin) [Issue #187]
 *   Added ability to set headers only for the first request (Dmitry Vorotilin) [Issue #337]
 *   Depend on Cliver for command-line dependency detection.
+*   Added ability to scroll with `driver.scroll_to left, top` (Jim Lim)
+*   Added ability to capture an element  with `driver.render selector: '#id'` (Jim Lim)
 
 #### Bug fixes ####
 

@@ -157,8 +157,16 @@ module Capybara::Poltergeist
       command 'reset'
     end
 
+    def scroll_to(left, top)
+      command 'scroll_to', left, top
+    end
+
     def render(path, options = {})
-      command 'render', path.to_s, !!options[:full]
+      if !!options[:full] && options.has_key?(:selector)
+        warn "Ignoring :selector in #render since :full => true was given at #{caller.first}"
+        options.delete(:selector)
+      end
+      command 'render', path.to_s, !!options[:full], options[:selector]
     end
 
     def resize(width, height)
