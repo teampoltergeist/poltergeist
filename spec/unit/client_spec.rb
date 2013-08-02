@@ -3,40 +3,36 @@ require 'spec_helper'
 module Capybara::Poltergeist
   describe Client do
     let(:server) { double(port: 6000) }
+    let(:client_params) { {} }
+    subject { Client.new(server, client_params) }
 
-    subject { Client.new(server) }
-
-    it 'raises an error if phantomjs is too old' do
-      `true` # stubbing $?
-      subject.stub(:`).with('phantomjs --version').and_return("1.3.0\n")
-      expect { subject.start }.to raise_error(PhantomJSTooOld)
-    end
-
-    it "doesn't raise an error if phantomjs is too new" do
-      `true` # stubbing $?
-      subject.stub(:`).with('phantomjs --version').and_return("1.10.0 (development)\n")
-      expect { subject.start }.not_to raise_error
-      subject.stop # process has been spawned, stopping
-    end
-
-    it 'shows the detected version in the version error message' do
-      `true` # stubbing $?
-      subject.stub(:`).with('phantomjs --version').and_return("1.3.0\n")
-      begin
-        subject.start
-      rescue PhantomJSTooOld => e
-        e.message.should include('1.3.0')
+    context '#initialize' do
+      it 'raises an error if phantomjs is too old' do
+        Cliver::Detector.any_instance.
+          stub(:`).with(/phantomjs --version/).and_return("1.3.0\n")
+        expect { subject }.to raise_error(Cliver::Dependency::VersionMismatch)
       end
-    end
 
-    it 'raises an error if phantomjs returns a non-zero exit code' do
-      subject = Client.new(server, :path => 'exit 42 && ')
-      expect { subject.start }.to raise_error(Error)
+      it "doesn't raise an error if phantomjs is too new" do
+        Cliver::Detector.any_instance.
+          stub(:`).with(/phantomjs --version/).and_return("1.10.0 (development)\n")
+        expect { subject }.not_to raise_error
+        subject.stop # process has been spawned, stopping
+      end
 
-      begin
-        subject.start
-      rescue PhantomJSFailed => e
-        e.message.should include('42')
+      it 'shows the detected version in the version error message' do
+        Cliver::Detector.any_instance.
+          stub(:`).with(/phantomjs --version/).and_return("1.3.0\n")
+        expect { subject }.to raise_error(Cliver::Dependency::VersionMismatch) do |e|
+          e.message.should include('1.3.0')
+        end
+      end
+
+      context 'when phantomjs does not exist' do
+        let(:client_params) { { :path => '/does/not/exist' } }
+        it 'raises an error' do
+          expect { subject }.to raise_error(Cliver::Dependency::NotFound)
+        end
       end
     end
 

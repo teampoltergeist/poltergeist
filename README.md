@@ -381,6 +381,7 @@ Include as much information as possible. For example:
 *   Can get open window names with window_handles [Issue #178]
 *   Added ability to read and append headers (Dmitry Vorotilin) [Issue #187]
 *   Added ability to set headers only for the first request (Dmitry Vorotilin) [Issue #337]
+*   Depend on Cliver for command-line dependency detection.
 
 #### Bug fixes ####
 
