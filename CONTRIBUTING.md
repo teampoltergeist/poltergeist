@@ -1,8 +1,20 @@
 Contributions are very welcome. If you want a feature to be added,
 chances are it will not happen unless you actually write the code.
 
+# Set Up
+
 To get setup, run `bundle install`.  You
 can run the full test suite with `rspec spec/` or `rake`.
+
+# Reporting a bug:
+
+Help us help you :smile:! The more information you can provide in your
+github issue, the better; the very *best* way to report a bug is to submit
+a pull-request that shows off the bug you're seeing, and describes both the
+*expected* and *actual* behaviors in as much relevant detail as possible,
+as well as the steps you've taken to isolate the issue so far.
+
+# Add a Feature; fix a Bug
 
 All pull requests which add a feature or fix a bug must have the
 following things:
@@ -19,7 +31,7 @@ following things:
   associated bug report. Feel free to add your name if you want to be
   credited.
 
-Some other things to bear in mind:
+# Keep in mind:
 
 * While PhantomJS is capable of compiling and running CoffeeScript code
   directly, I prefer to compile the code myself and distribute that (it
