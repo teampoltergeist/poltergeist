@@ -200,7 +200,7 @@ module Capybara::Poltergeist
       options[:value] ||= value
       options[:domain] ||= begin
         if @started
-          URI.parse(URI.escape(browser.current_url)).host
+          URI.parse(browser.current_url).host
         else
           Capybara.app_host || "127.0.0.1"
         end
