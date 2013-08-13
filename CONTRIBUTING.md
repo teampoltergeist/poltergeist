@@ -26,8 +26,7 @@ following things:
   for `page.execute_script` goes in `session_spec.rb`.)
 * A [good commit
   message](https://github.com/blog/926-shiny-new-commit-styles)
-* An entry into the changelog. This currently resides at the bottom of
-  the `README.md` file. Reference the Github issue number if there is an
+* An entry into the changelog. Reference the Github issue number if there is an
   associated bug report. Feel free to add your name if you want to be
   credited.
 
