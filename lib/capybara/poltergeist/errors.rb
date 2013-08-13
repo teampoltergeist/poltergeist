@@ -20,7 +20,7 @@ module Capybara
       end
 
       def to_s
-        stack
+        [message, stack].join("\n")
       end
     end
 
