@@ -162,6 +162,10 @@ module Capybara::Poltergeist
     end
     alias_method :resize_window, :resize
 
+    def scroll_to(left, top)
+      browser.scroll_to(left, top)
+    end
+
     def network_traffic
       browser.network_traffic
     end

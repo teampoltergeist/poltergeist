@@ -144,6 +144,12 @@ class Poltergeist.WebPage
   setClipRect: (rect) ->
     @native.clipRect = rect
 
+  elementBounds: (selector) ->
+    @native.evaluate(
+      (selector) -> document.querySelector(selector).getBoundingClientRect(),
+      selector
+    )
+
   setUserAgent: (userAgent) ->
     @native.settings.userAgent = userAgent
 
