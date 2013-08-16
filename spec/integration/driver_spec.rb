@@ -74,6 +74,17 @@ module Capybara::Poltergeist
       end
     end
 
+    it 'allows the page to be scrolled' do
+      begin
+        @session.visit('/poltergeist/long_page')
+        @driver.resize(10, 10)
+        @driver.scroll_to(200, 100)
+        @driver.evaluate_script('[window.scrollX, window.scrollY]').should == [200, 100]
+      ensure
+        @driver.scroll_to(0, 0)
+      end
+    end
+
     it 'supports specifying viewport size with an option' do
       begin
         Capybara.register_driver :poltergeist_with_custom_window_size do |app|
@@ -111,6 +122,33 @@ module Capybara::Poltergeist
 
       @driver.save_screenshot(file, :full => true)
 
+      File.open(file, 'rb') do |f|
+        ImageSize.new(f.read).size.should ==
+          @driver.evaluate_script('[document.documentElement.clientWidth, document.documentElement.clientHeight]')
+      end
+    end
+
+    it 'supports rendering just the selected element' do
+      file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
+      @session.visit('/poltergeist/long_page')
+      @driver.save_screenshot(file, :selector => '#penultimate')
+      File.open(file, 'rb') do |f|
+        size = @driver.evaluate_script <<-EOS
+          function() {
+            var ele  = document.getElementById('penultimate');
+            var rect = ele.getBoundingClientRect();
+            return [rect.width, rect.height];
+          }();
+        EOS
+        ImageSize.new(f.read).size.should == size
+      end
+    end
+
+    it 'ignores :selector in #save_screenshot if :full => true' do
+      file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
+      @session.visit('/poltergeist/long_page')
+      @driver.browser.should_receive(:warn).with(/Ignoring :selector/)
+      @driver.save_screenshot(file, :full => true, :selector => '#penultimate')
       File.open(file, 'rb') do |f|
         ImageSize.new(f.read).size.should ==
           @driver.evaluate_script('[document.documentElement.clientWidth, document.documentElement.clientHeight]')

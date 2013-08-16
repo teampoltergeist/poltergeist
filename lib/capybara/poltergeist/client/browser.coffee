@@ -246,7 +246,11 @@ class Poltergeist.Browser
     this.resetPage()
     this.sendResponse(true)
 
-  render: (path, full) ->
+  scroll_to: (left, top) ->
+    @page.setScrollPosition(left: left, top: top)
+    this.sendResponse(true)
+
+  render: (path, full, selector=null) ->
     dimensions = @page.validatedDimensions()
     document   = dimensions.document
     viewport   = dimensions.viewport
@@ -256,6 +260,11 @@ class Poltergeist.Browser
       @page.setClipRect(left: 0, top: 0, width: document.width, height: document.height)
       @page.render(path)
       @page.setScrollPosition(left: dimensions.left, top: dimensions.top)
+    else if selector
+      previous_clip = @page.clipRect
+      @page.setClipRect(@page.elementBounds(selector))
+      @page.render(path)
+      @page.setClipRect(previous_clip)
     else
       @page.setClipRect(left: 0, top: 0, width: viewport.width, height: viewport.height)
       @page.render(path)
