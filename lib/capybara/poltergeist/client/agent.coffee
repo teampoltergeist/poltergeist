@@ -214,11 +214,12 @@ class PoltergeistAgent.Node
     offset = { top: 0, left: 0 }
 
     while win.frameElement
-      rect = window.frameElement.getClientRects()[0]
-      win  = win.parent
-
-      offset.top  += rect.top
-      offset.left += rect.left
+      rect  = win.frameElement.getClientRects()[0]
+      style = win.getComputedStyle(win.frameElement)
+      win   = win.parent
+      
+      offset.top  += rect.top + parseInt(style.getPropertyValue("padding-top"), 10)
+      offset.left += rect.left + parseInt(style.getPropertyValue("padding-left"), 10)
 
     offset
 

@@ -459,6 +459,45 @@ describe Capybara::Session do
         end
       end
 
+      it 'supports clicking in a frame with padding' do
+        @session.visit '/'
+
+        @session.evaluate_script <<-CODE
+          setTimeout(function() {
+            document.body.innerHTML += '<iframe src="/poltergeist/click_test" name="padded_frame" style="padding:100px;">'
+          }, 0)
+        CODE
+
+        @session.within_frame 'padded_frame' do
+          log = @session.find(:css, '#log')
+          @session.find(:css, "#one").click
+          log.text.should == "one"
+        end
+      end
+
+      it 'supports clicking in a frame nested in a frame' do
+        @session.visit '/'
+        
+        # The padding on the frame here is to differ the sizes of the two
+        # frames, ensuring that their offsets are being calculated seperately.
+        # This avoids a false positive where the same frame's offset is
+        # calculated twice, but the click still works because both frames had
+        # the same offset.
+        @session.evaluate_script <<-CODE
+          setTimeout(function() {
+            document.body.innerHTML += '<iframe src="/poltergeist/nested_frame_test" name="outer_frame" style="padding:200px">'
+          }, 0)
+        CODE
+
+        @session.within_frame 'outer_frame' do
+          @session.within_frame 'inner_frame' do
+            log = @session.find(:css, '#log')
+            @session.find(:css, "#one").click
+            log.text.should == "one"
+          end
+        end
+      end
+
       it "doesn't wait forever for the frame to load" do
         @session.visit '/'
 
