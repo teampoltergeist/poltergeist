@@ -12,6 +12,8 @@
 
 #### Bug fixes ####
 
+*   Fix clicks inside `within_frame` not taking into account padding on the
+    frame [Issue #377]
 *   Fix `within_window` finding window after close/open
     (Ryan Schlesinger) [Issue #312]
 *   Fix "wrong exec option symbol: pgroup" error on windows (Andrew Meyer)
