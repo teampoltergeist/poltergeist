@@ -157,6 +157,11 @@ module Capybara::Poltergeist
     end
     alias_method :render, :save_screenshot
 
+    def save_screenshot_base64(options = {})
+      browser.render_base64(options)
+    end
+    alias_method :render_base64, :save_screenshot_base64
+
     def resize(width, height)
       browser.resize(width, height)
     end

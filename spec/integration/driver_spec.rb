@@ -112,49 +112,74 @@ module Capybara::Poltergeist
       File.exist?(file).should == true
     end
 
-    it 'supports rendering the whole of a page that goes outside the viewport' do
-      file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
-      @session.visit('/poltergeist/long_page')
-      @driver.save_screenshot(file)
-
-      File.open(file, 'rb') do |f|
-        ImageSize.new(f.read).size.should ==
-          @driver.evaluate_script('[window.innerWidth, window.innerHeight]')
-      end
-
-      @driver.save_screenshot(file, :full => true)
-
-      File.open(file, 'rb') do |f|
-        ImageSize.new(f.read).size.should ==
-          @driver.evaluate_script('[document.documentElement.clientWidth, document.documentElement.clientHeight]')
-      end
+    it 'supports rendering the page in base64' do
+      @session.visit('/')
+      screenshot = @driver.save_screenshot_base64
+      screenshot.length.should > 100
     end
 
-    it 'supports rendering just the selected element' do
-      file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
-      @session.visit('/poltergeist/long_page')
-      @driver.save_screenshot(file, :selector => '#penultimate')
-      File.open(file, 'rb') do |f|
-        size = @driver.evaluate_script <<-EOS
-          function() {
-            var ele  = document.getElementById('penultimate');
-            var rect = ele.getBoundingClientRect();
-            return [rect.width, rect.height];
-          }();
-        EOS
-        ImageSize.new(f.read).size.should == size
+    shared_examples 'render screen' do
+
+      it 'supports rendering the whole of a page that goes outside the viewport' do
+        file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
+        @session.visit('/poltergeist/long_page')
+
+        create_screenshot file
+        File.open(file, 'rb') do |f|
+          ImageSize.new(f.read).size.should ==
+            @driver.evaluate_script('[window.innerWidth, window.innerHeight]')
+        end
+
+        create_screenshot file, full: true
+        File.open(file, 'rb') do |f|
+          ImageSize.new(f.read).size.should ==
+            @driver.evaluate_script('[document.documentElement.clientWidth, document.documentElement.clientHeight]')
+        end
       end
+
+      it 'supports rendering just the selected element' do
+        file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
+        @session.visit('/poltergeist/long_page')
+
+        create_screenshot file, selector: '#penultimate'
+        File.open(file, 'rb') do |f|
+          size = @driver.evaluate_script <<-EOS
+            function() {
+              var ele  = document.getElementById('penultimate');
+              var rect = ele.getBoundingClientRect();
+              return [rect.width, rect.height];
+            }();
+          EOS
+          ImageSize.new(f.read).size.should == size
+        end
+      end
+
+      it 'ignores :selector in #save_screenshot if :full => true' do
+        file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
+        @session.visit('/poltergeist/long_page')
+        @driver.browser.should_receive(:warn).with(/Ignoring :selector/)
+        create_screenshot file, full: true, selector: '#penultimate'
+        File.open(file, 'rb') do |f|
+          ImageSize.new(f.read).size.should ==
+            @driver.evaluate_script('[document.documentElement.clientWidth, document.documentElement.clientHeight]')
+        end
+      end
+
     end
 
-    it 'ignores :selector in #save_screenshot if :full => true' do
-      file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
-      @session.visit('/poltergeist/long_page')
-      @driver.browser.should_receive(:warn).with(/Ignoring :selector/)
-      @driver.save_screenshot(file, :full => true, :selector => '#penultimate')
-      File.open(file, 'rb') do |f|
-        ImageSize.new(f.read).size.should ==
-          @driver.evaluate_script('[document.documentElement.clientWidth, document.documentElement.clientHeight]')
+    describe '#save_screenshot' do
+      def create_screenshot(file, *args)
+        @driver.save_screenshot file, *args
       end
+      include_examples 'render screen'
+    end
+
+    describe '#save_screenshot_base64' do
+      def create_screenshot(file, *args)
+        image = @driver.save_screenshot_base64(*args)
+        File.open(file, 'wb') { |f| f.write Base64.decode64(image) }
+      end
+      include_examples 'render screen'
     end
 
     context 'setting headers' do
