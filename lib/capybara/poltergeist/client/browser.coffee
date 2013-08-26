@@ -250,26 +250,32 @@ class Poltergeist.Browser
     @page.setScrollPosition(left: left, top: top)
     this.sendResponse(true)
 
-  render: (path, full, selector = null) ->
-    dimensions = @page.validatedDimensions()
-    document   = dimensions.document
-    viewport   = dimensions.viewport
+  render_base64: (format, full, selector = null)->
+    this.set_clip_rect(full, selector)
+    encoded_image = @page.renderBase64(format)
+    this.sendResponse(encoded_image)
 
-    if full
-      @page.setScrollPosition(left: 0, top: 0)
-      @page.setClipRect(left: 0, top: 0, width: document.width, height: document.height)
-      @page.render(path)
-      @page.setScrollPosition(left: dimensions.left, top: dimensions.top)
+  render: (path, full, selector = null) ->
+    dimensions = this.set_clip_rect(full, selector)
+    @page.setScrollPosition(left: 0, top: 0)
+    @page.render(path)
+    @page.setScrollPosition(left: dimensions.left, top: dimensions.top)
+    this.sendResponse(true)
+
+  set_clip_rect: (full, selector) ->
+    dimensions = @page.validatedDimensions()
+    [document, viewport] = [dimensions.document, dimensions.viewport]
+
+    rect = if full
+      left: 0, top: 0, width: document.width, height: document.height
     else
-      rect = if selector?
+      if selector?
         @page.elementBounds(selector)
       else
         left: 0, top: 0, width: viewport.width, height: viewport.height
 
-      @page.setClipRect(rect)
-      @page.render(path)
-
-    this.sendResponse(true)
+    @page.setClipRect(rect)
+    dimensions
 
   resize: (width, height) ->
     @page.setViewportSize(width: width, height: height)

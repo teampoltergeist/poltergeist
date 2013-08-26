@@ -105,6 +105,7 @@ and the following optional features:
 * `page.status_code`
 * `page.response_headers`
 * `page.save_screenshot`
+* `page.render_base64`
 * `page.scroll_to`
 * cookie handling
 * drag-and-drop
@@ -123,6 +124,11 @@ the entire page, use `save_screenshot('/path/to/file.png', :full => true)`.
 You also have an ability to render selected element. Pass option `selector` with
 any valid element selector to make a screenshot bounded by that element
 `save_screenshot('/path/to/file.png', :selector => '#id')`.
+
+If you need for some reasons base64 encoded screenshot you can simply call
+`render_base64` that will return you encoded image. Additional options are the
+same as for `save_screenshot` except the first argument which is format (:png by
+default, acceptable :png, :gif, :jpeg).
 
 ### Resizing the window ###
 

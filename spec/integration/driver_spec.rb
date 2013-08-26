@@ -104,59 +104,109 @@ module Capybara::Poltergeist
       end
     end
 
-    it 'supports rendering the page' do
-      file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
-      FileUtils.rm_f file
-      @session.visit('/')
-      @driver.save_screenshot(file)
-      expect(File.exist?(file)).to be_true
-    end
+    shared_examples 'render screen' do
+      it 'supports rendering the whole of a page that goes outside the viewport' do
+        @session.visit('/poltergeist/long_page')
 
-    it 'supports rendering the whole of a page that goes outside the viewport' do
-      file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
-      @session.visit('/poltergeist/long_page')
-      @driver.save_screenshot(file)
+        create_screenshot file
+        File.open(file, 'rb') do |f|
+          expect(ImageSize.new(f.read).size).to eq(
+            @driver.evaluate_script('[window.innerWidth, window.innerHeight]')
+          )
+        end
 
-      File.open(file, 'rb') do |f|
-        expect(ImageSize.new(f.read).size).to eq(
-          @driver.evaluate_script('[window.innerWidth, window.innerHeight]')
-        )
+        create_screenshot file, full: true
+        File.open(file, 'rb') do |f|
+          expect(ImageSize.new(f.read).size).to eq(
+            @driver.evaluate_script('[document.documentElement.clientWidth, document.documentElement.clientHeight]')
+          )
+        end
       end
 
-      @driver.save_screenshot(file, :full => true)
+      it 'supports rendering just the selected element' do
+        @session.visit('/poltergeist/long_page')
 
-      File.open(file, 'rb') do |f|
-        expect(ImageSize.new(f.read).size).to eq(
-          @driver.evaluate_script('[document.documentElement.clientWidth, document.documentElement.clientHeight]')
-        )
+        create_screenshot file, selector: '#penultimate'
+
+        File.open(file, 'rb') do |f|
+          size = @driver.evaluate_script <<-EOS
+            function() {
+              var ele  = document.getElementById('penultimate');
+              var rect = ele.getBoundingClientRect();
+              return [rect.width, rect.height];
+            }();
+          EOS
+          expect(ImageSize.new(f.read).size).to eq(size)
+        end
+      end
+
+      it 'ignores :selector in #save_screenshot if :full => true' do
+        @session.visit('/poltergeist/long_page')
+        @driver.browser.should_receive(:warn).with(/Ignoring :selector/)
+
+        create_screenshot file, full: true, selector: '#penultimate'
+
+        File.open(file, 'rb') do |f|
+          expect(ImageSize.new(f.read).size).to eq(
+            @driver.evaluate_script('[document.documentElement.clientWidth, document.documentElement.clientHeight]')
+          )
+        end
       end
     end
 
-    it 'supports rendering just the selected element' do
-      file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
-      @session.visit('/poltergeist/long_page')
-      @driver.save_screenshot(file, :selector => '#penultimate')
-      File.open(file, 'rb') do |f|
-        size = @driver.evaluate_script <<-EOS
-          function() {
-            var ele  = document.getElementById('penultimate');
-            var rect = ele.getBoundingClientRect();
-            return [rect.width, rect.height];
-          }();
-        EOS
-        expect(ImageSize.new(f.read).size).to eq(size)
+    describe '#save_screenshot' do
+      let(:format) { :png }
+      let(:file) { POLTERGEIST_ROOT + "/spec/tmp/screenshot.#{format}" }
+
+      def create_screenshot(file, *args)
+        @driver.save_screenshot(file, *args)
       end
+
+      it 'supports rendering the page' do
+        FileUtils.rm_f file
+        @session.visit('/')
+
+        @driver.save_screenshot(file)
+
+        expect(File.exist?(file)).to be_true
+      end
+
+      it 'supports rendering the page with a nonstring path' do
+        FileUtils.rm_f file
+        @session.visit('/')
+
+        @driver.save_screenshot(Pathname(file))
+
+        expect(File.exist?(file)).to be_true
+      end
+
+      include_examples 'render screen'
     end
 
-    it 'ignores :selector in #save_screenshot if :full => true' do
-      file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
-      @session.visit('/poltergeist/long_page')
-      @driver.browser.should_receive(:warn).with(/Ignoring :selector/)
-      @driver.save_screenshot(file, :full => true, :selector => '#penultimate')
-      File.open(file, 'rb') do |f|
-        expect(ImageSize.new(f.read).size).to eq(
-          @driver.evaluate_script('[document.documentElement.clientWidth, document.documentElement.clientHeight]')
-        )
+    describe '#render_base64' do
+      let(:file) { POLTERGEIST_ROOT + "/spec/tmp/screenshot.#{format}" }
+
+      def create_screenshot(file, *args)
+        image = @driver.render_base64(format, *args)
+        File.open(file, 'wb') { |f| f.write Base64.decode64(image) }
+      end
+
+      it 'supports rendering the page in base64' do
+        @session.visit('/')
+
+        screenshot = @driver.render_base64
+
+        expect(screenshot.length).to be > 100
+      end
+
+      context 'png' do
+        let(:format) { :png }
+        include_examples 'render screen'
+      end
+
+      context 'jpeg' do
+        let(:format) { :jpeg }
+        include_examples 'render screen'
       end
     end
 
@@ -227,14 +277,6 @@ module Capybara::Poltergeist
         expect(ajax_request).to_not include('REFERER: http://google.com')
         expect(ajax_request).to_not include('TEMPA: a')
       end
-    end
-
-    it 'supports rendering the page with a nonstring path' do
-      file = POLTERGEIST_ROOT + '/spec/tmp/screenshot.png'
-      FileUtils.rm_f file
-      @session.visit('/')
-      @driver.save_screenshot(Pathname(file))
-      expect(File.exist?(file)).to be_true
     end
 
     it 'supports clicking precise coordinates' do
