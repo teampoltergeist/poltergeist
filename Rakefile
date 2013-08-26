@@ -1,8 +1,7 @@
 require 'bundler/setup'
 require 'rspec/core/rake_task'
 
-base = File.dirname(__FILE__)
-require base + "/lib/capybara/poltergeist/version"
+require 'capybara/poltergeist/version'
 require 'coffee-script'
 require 'rspec-rerun'
 
