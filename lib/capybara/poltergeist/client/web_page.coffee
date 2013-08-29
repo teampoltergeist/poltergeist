@@ -3,7 +3,7 @@ class Poltergeist.WebPage
                 'onLoadStarted', 'onResourceRequested', 'onResourceReceived',
                 'onError', 'onNavigationRequested', 'onUrlChanged', 'onPageCreated']
 
-  @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'release', 'render']
+  @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'release', 'render', 'renderBase64']
 
   @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'documentSize', 'beforeUpload', 'afterUpload']
 

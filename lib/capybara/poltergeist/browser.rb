@@ -162,11 +162,13 @@ module Capybara::Poltergeist
     end
 
     def render(path, options = {})
-      if !!options[:full] && options.has_key?(:selector)
-        warn "Ignoring :selector in #render since :full => true was given at #{caller.first}"
-        options.delete(:selector)
-      end
+      check_render options
       command 'render', path.to_s, !!options[:full], options[:selector]
+    end
+
+    def render_base64(options={})
+      check_render options
+      command 'render_base64', !!options[:full], options[:selector]
     end
 
     def resize(width, height)
@@ -264,5 +266,13 @@ module Capybara::Poltergeist
     def log(message)
       logger.puts message if logger
     end
+
+    def check_render(options)
+      if !!options[:full] && options.has_key?(:selector)
+        warn "Ignoring :selector in #render since :full => true was given at #{caller.first}"
+        options.delete(:selector)
+      end
+    end
+
   end
 end
