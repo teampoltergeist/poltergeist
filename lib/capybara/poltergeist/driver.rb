@@ -161,6 +161,10 @@ module Capybara::Poltergeist
       browser.render_base64(format, options)
     end
 
+    def paper_size=(size = {})
+      browser.set_paper_size(size)
+    end
+
     def resize(width, height)
       browser.resize(width, height)
     end
