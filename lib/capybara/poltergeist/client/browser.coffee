@@ -250,10 +250,12 @@ class Poltergeist.Browser
     @page.setScrollPosition(left: left, top: top)
     this.sendResponse(true)
 
-  render: (path, full, selector=null) ->
+  render: (path, full, selector=null, paper_size=null) ->
     dimensions = @page.validatedDimensions()
     document   = dimensions.document
     viewport   = dimensions.viewport
+
+    @page.setPaperSize(paper_size) if paper_size
 
     if full
       @page.setScrollPosition(left: 0, top: 0)
