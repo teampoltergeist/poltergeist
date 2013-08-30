@@ -157,6 +157,10 @@ module Capybara::Poltergeist
     end
     alias_method :render, :save_screenshot
 
+    def paper_size=(size = {})
+      browser.set_paper_size(size)
+    end
+
     def resize(width, height)
       browser.resize(width, height)
     end

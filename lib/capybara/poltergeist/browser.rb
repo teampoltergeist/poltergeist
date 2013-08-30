@@ -169,6 +169,10 @@ module Capybara::Poltergeist
       command 'render', path.to_s, !!options[:full], options[:selector]
     end
 
+    def set_paper_size(size)
+      command 'set_paper_size', size
+    end
+
     def resize(width, height)
       command 'resize', width, height
     end
