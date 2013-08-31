@@ -114,7 +114,7 @@ module Capybara::Poltergeist
 
     it 'supports rendering the page in base64' do
       @session.visit('/')
-      screenshot = @driver.save_screenshot_base64
+      screenshot = @driver.render_base64
       screenshot.length.should > 100
     end
 
@@ -174,12 +174,19 @@ module Capybara::Poltergeist
       include_examples 'render screen'
     end
 
-    describe '#save_screenshot_base64' do
+    describe '#render_base64' do
       def create_screenshot(file, *args)
-        image = @driver.save_screenshot_base64(*args)
+        image = @driver.render_base64(format, *args)
         File.open(file, 'wb') { |f| f.write Base64.decode64(image) }
       end
-      include_examples 'render screen'
+      context 'png' do
+        let(:format) { :png }
+        include_examples 'render screen'
+      end
+      context 'jpeg' do
+        let(:format) { :jpeg }
+        include_examples 'render screen'
+      end
     end
 
     context 'setting headers' do

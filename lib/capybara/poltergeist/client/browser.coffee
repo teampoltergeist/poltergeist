@@ -250,9 +250,9 @@ class Poltergeist.Browser
     @page.setScrollPosition(left: left, top: top)
     this.sendResponse(true)
 
-  render_base64: (full, selector=null)->
+  render_base64: (format, full, selector=null)->
     this.render_clip full, selector, =>
-      @page.renderBase64()
+      @page.renderBase64(format)
 
   render: (path, full, selector=null) ->
     this.render_clip full, selector, =>

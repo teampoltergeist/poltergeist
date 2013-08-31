@@ -166,9 +166,9 @@ module Capybara::Poltergeist
       command 'render', path.to_s, !!options[:full], options[:selector]
     end
 
-    def render_base64(options={})
+    def render_base64(format, options={})
       check_render options
-      command 'render_base64', !!options[:full], options[:selector]
+      command 'render_base64', format.to_s, !!options[:full], options[:selector]
     end
 
     def resize(width, height)
