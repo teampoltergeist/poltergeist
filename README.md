@@ -105,6 +105,7 @@ and the following optional features:
 * `page.status_code`
 * `page.response_headers`
 * `page.save_screenshot`
+* `page.scroll_to`
 * cookie handling
 * drag-and-drop
 
@@ -118,6 +119,10 @@ render feature, so you can specify other extensions like `.pdf`, `.gif`, etc.)
 
 By default, only the viewport will be rendered (the part of the page that is in view). To render
 the entire page, use `save_screenshot('/path/to/file.png', :full => true)`.
+
+You also have an ability to render selected element. Pass option `selector` with
+any valid element selector to make a screenshot bounded by that element
+`save_screenshot('/path/to/file.png', :selector => '#id')`.
 
 ### Resizing the window ###
 
