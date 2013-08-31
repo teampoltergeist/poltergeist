@@ -4,17 +4,17 @@ module Capybara::Poltergeist
   describe Inspector do
     it 'detects a browser by default' do
       Inspector.stub(:detect_browser => 'chromium')
-      Inspector.new.browser.should == 'chromium'
-      Inspector.new(true).browser.should == 'chromium'
+      expect(Inspector.new.browser).to eq('chromium')
+      expect(Inspector.new(true).browser).to eq('chromium')
     end
 
     it 'allows a browser to be specified' do
-      Inspector.new('foo').browser.should == 'foo'
+      expect(Inspector.new('foo').browser).to eq('foo')
     end
 
     it 'has a url' do
       subject = Inspector.new(nil, 1234)
-      subject.url.should == "http://localhost:1234/"
+      expect(subject.url).to eq("http://localhost:1234/")
     end
 
     it 'can be opened' do

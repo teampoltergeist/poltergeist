@@ -12,9 +12,9 @@ describe Capybara::Session do
       it 'raises an error if the element has been removed from the DOM' do
         @session.visit('/poltergeist/with_js')
         node = @session.find(:css, '#remove_me')
-        node.text.should == 'Remove me'
+        expect(node.text).to eq('Remove me')
         @session.find(:css, '#remove').click
-        lambda { node.text }.should raise_error(Capybara::Poltergeist::ObsoleteNode)
+        expect { node.text }.to raise_error(Capybara::Poltergeist::ObsoleteNode)
       end
 
       it 'raises an error if the element was on a previous page' do
@@ -40,13 +40,13 @@ describe Capybara::Session do
       it 'hovers an element before clicking it' do
         @session.visit('/poltergeist/with_js')
         @session.click_link "Hidden link"
-        @session.current_path.should == '/'
+        expect(@session.current_path).to eq('/')
       end
 
       it "doesn't raise error when asserting svg elements with a count that is not what is in the dom" do
         @session.visit('/poltergeist/with_js')
         expect { @session.has_css?('svg circle', count: 2) }.to_not raise_error
-        @session.should_not have_css('svg circle', count: 2)
+        expect(@session).to_not have_css('svg circle', count: 2)
       end
 
       context "when someone (*cough* prototype *cough*) messes with Array#toJSON" do
@@ -81,7 +81,7 @@ describe Capybara::Session do
           end
 
           it "clicks properly" do
-            expect { @session.click_link "O hai" }.not_to raise_error
+            expect { @session.click_link "O hai" }.to_not raise_error
           end
 
           after do
@@ -98,7 +98,7 @@ describe Capybara::Session do
 
       it "scrolls into view" do
         @session.click_link "Link outside viewport"
-        @session.current_path.should eq '/'
+        expect(@session.current_path).to eq('/')
       end
     end
 
@@ -109,57 +109,57 @@ describe Capybara::Session do
       end
 
       it 'fires the change event' do
-        @session.find(:css, '#changes').text.should == "Hello!"
+        expect(@session.find(:css, '#changes').text).to eq("Hello!")
       end
 
       it 'fires the input event' do
-        @session.find(:css, '#changes_on_input').text.should == "Hello!"
+        expect(@session.find(:css, '#changes_on_input').text).to eq("Hello!")
       end
 
       it 'accepts numbers in a maxlength field' do
         element = @session.find(:css, '#change_me_maxlength')
         element.set 100
-        element.value.should == '100'
+        expect(element.value).to eq('100')
       end
 
       it 'fires the keydown event' do
-        @session.find(:css, '#changes_on_keydown').text.should == "6"
+        expect(@session.find(:css, '#changes_on_keydown').text).to eq("6")
       end
 
       it 'fires the keyup event' do
-        @session.find(:css, '#changes_on_keyup').text.should == "6"
+        expect(@session.find(:css, '#changes_on_keyup').text).to eq("6")
       end
 
       it 'fires the keypress event' do
-        @session.find(:css, '#changes_on_keypress').text.should == "6"
+        expect(@session.find(:css, '#changes_on_keypress').text).to eq("6")
       end
 
       it 'fires the focus event' do
-        @session.find(:css, '#changes_on_focus').text.should == "Focus"
+        expect(@session.find(:css, '#changes_on_focus').text).to eq("Focus")
       end
 
       it 'fires the blur event' do
-        @session.find(:css, '#changes_on_blur').text.should == "Blur"
+        expect(@session.find(:css, '#changes_on_blur').text).to eq("Blur")
       end
 
       it "fires the keydown event before the value is updated" do
-        @session.find(:css, '#value_on_keydown').text.should == "Hello"
+        expect(@session.find(:css, '#value_on_keydown').text).to eq("Hello")
       end
 
       it "fires the keyup event after the value is updated" do
-        @session.find(:css, '#value_on_keyup').text.should == "Hello!"
+        expect(@session.find(:css, '#value_on_keyup').text).to eq("Hello!")
       end
 
       it "clears the input before setting the new value" do
         element = @session.find(:css, '#change_me')
         element.set ""
-        element.value.should == ""
+        expect(element.value).to eq("")
       end
 
       it "supports special characters" do
         element = @session.find(:css, "#change_me")
         element.set "$52.00"
-        element.value.should == "$52.00"
+        expect(element.value).to eq("$52.00")
       end
 
       it 'attaches a file when passed a Pathname' do
@@ -168,7 +168,7 @@ describe Capybara::Session do
 
         element = @session.find(:css, '#change_me_file')
         element.set(filename)
-        element.value.should == 'C:\fakepath\a_test_pathname'
+        expect(element.value).to eq('C:\fakepath\a_test_pathname')
       end
     end
 
@@ -180,44 +180,44 @@ describe Capybara::Session do
         el.parentNode.removeChild(el)
       JS
       @session.click_link('Phasellus blandit velit')
-      @session.should have_content("Hello")
+      expect(@session).to have_content("Hello")
     end
 
     it 'handles clicks where the target is in view, but the document is smaller than the viewport' do
       @session.visit '/poltergeist/simple'
       @session.click_link 'Link'
-      @session.should have_content('Hello world')
+      expect(@session).to have_content('Hello world')
     end
 
     it 'handles clicks where a parent element has a border' do
       @session.visit '/poltergeist/table'
       @session.click_link 'Link'
-      @session.should have_content('Hello world')
+      expect(@session).to have_content('Hello world')
     end
 
     it 'handles window.confirm(), returning true unconditionally' do
       @session.visit '/'
-      @session.evaluate_script("window.confirm('foo')").should == true
+      expect(@session.evaluate_script("window.confirm('foo')")).to be_true
     end
 
     it 'handles window.prompt(), returning the default value or null' do
       @session.visit '/'
-      @session.evaluate_script("window.prompt()").should == nil
-      @session.evaluate_script("window.prompt('foo', 'default')").should == 'default'
+      expect(@session.evaluate_script("window.prompt()")).to be_nil
+      expect(@session.evaluate_script("window.prompt('foo', 'default')")).to eq('default')
     end
 
     it 'handles evaluate_script values properly' do
-      @session.evaluate_script('null').should == nil
-      @session.evaluate_script('false').should == false
-      @session.evaluate_script('true').should == true
-      @session.evaluate_script("{foo: 'bar'}").should == {"foo" => "bar"}
+      expect(@session.evaluate_script('null')).to be_nil
+      expect(@session.evaluate_script('false')).to be_false
+      expect(@session.evaluate_script('true')).to be_true
+      expect(@session.evaluate_script("{foo: 'bar'}")).to eq({"foo" => "bar"})
     end
 
     it "synchronises page loads properly" do
       @session.visit '/poltergeist/index'
       @session.click_link "JS redirect"
       sleep 0.1
-      @session.html.should include("Hello world")
+      expect(@session.html).to include("Hello world")
     end
 
     context 'click tests' do
@@ -236,7 +236,7 @@ describe Capybara::Session do
         instructions = %w(one four one two three)
         instructions.each do |instruction, i|
           @session.find(:css, "##{instruction}").click
-          log.text.should == instruction
+          expect(log.text).to eq(instruction)
         end
       end
 
@@ -265,8 +265,8 @@ describe Capybara::Session do
           begin
             @session.find(:css, '#one').click
           rescue => error
-            error.selector.should == "html body div#two.box"
-            error.message.should include('[200, 200]')
+            expect(error.selector).to eq("html body div#two.box")
+            expect(error.message).to include('[200, 200]')
           end
         end
 
@@ -274,7 +274,7 @@ describe Capybara::Session do
           begin
             @session.find(:css, '#one').click
           rescue => error
-            error.position.should == [200, 200]
+            expect(error.position).to eq([200, 200])
           end
         end
 
@@ -284,13 +284,13 @@ describe Capybara::Session do
           begin
             @session.find(:css, '#one').click
           rescue => error
-            error.position.first.should == 150
+            expect(error.position.first).to eq(150)
           end
         end
       end
 
       it "can evaluate a statement ending with a semicolon" do
-        @session.evaluate_script("3;").should == 3
+        expect(@session.evaluate_script("3;")).to eq(3)
       end
     end
 
@@ -306,28 +306,28 @@ describe Capybara::Session do
         instructions = %w(one four one two three)
         instructions.each do |instruction, i|
           @session.find(:css, "##{instruction}").base.double_click
-          log.text.should == instruction
+          expect(log.text).to eq(instruction)
         end
       end
     end
     
     context 'status code support', :status_code_support => true do
-      it 'should determine status code when an user goes to a page by using a link on it' do
+      it 'determines status code when an user goes to a page by using a link on it' do
         @session.visit '/poltergeist/with_different_resources'
 
         @session.click_link 'Go to 500'
 
-        @session.status_code.should == 500
+        expect(@session.status_code).to eq(500)
       end
 
-      it 'should determine properly status code when an user goes through a few pages' do
+      it 'determines properly status code when an user goes through a few pages' do
         @session.visit '/poltergeist/with_different_resources'
 
         @session.click_link 'Go to 201'
         @session.click_link 'Do redirect'
         @session.click_link 'Go to 402'
 
-        @session.status_code.should == 402
+        expect(@session.status_code).to eq(402)
       end
     end
 
@@ -339,23 +339,23 @@ describe Capybara::Session do
           return a
         })()
       CODE
-      @session.evaluate_script(code).should == "(cyclic structure)"
+      expect(@session.evaluate_script(code)).to eq("(cyclic structure)")
     end
 
     it 'returns BR as a space in #text' do
       @session.visit '/poltergeist/simple'
-      @session.find(:css, '#break').text.should == "Foo Bar"
+      expect(@session.find(:css, '#break').text).to eq("Foo Bar")
     end
 
     it 'handles hash changes' do
       @session.visit '/#omg'
-      @session.current_url.should =~ /\/#omg$/
+      expect(@session.current_url).to match(/\/#omg$/)
       @session.execute_script <<-CODE
         window.onhashchange = function() { window.last_hashchange = window.location.hash }
       CODE
       @session.visit '/#foo'
-      @session.current_url.should =~ /\/#foo$/
-      @session.evaluate_script("window.last_hashchange").should == '#foo'
+      expect(@session.current_url).to match(/\/#foo$/)
+      expect(@session.evaluate_script("window.last_hashchange")).to eq('#foo')
     end
 
     it 'supports retrieving the URL of pages with escaped characters' do
@@ -382,7 +382,7 @@ describe Capybara::Session do
         CODE
 
         @session.within_window 'popup' do
-          @session.html.should include('slow page')
+          expect(@session.html).to include('slow page')
           @session.evaluate_script('window.close()')
         end
       end
@@ -397,7 +397,7 @@ describe Capybara::Session do
         CODE
 
         @session.within_window 'popup' do
-          @session.html.should include('Test')
+          expect(@session.html).to include('Test')
           @session.evaluate_script('window.close()')
         end
 
@@ -408,7 +408,7 @@ describe Capybara::Session do
         CODE
 
         @session.within_window 'popup' do
-          @session.html.should include('Test')
+          expect(@session.html).to include('Test')
         end
       end
     end
@@ -424,23 +424,23 @@ describe Capybara::Session do
         CODE
 
         @session.within_frame 'frame' do
-          @session.current_path.should == "/poltergeist/slow"
-          @session.html.should include('slow page')
+          expect(@session.current_path).to eq("/poltergeist/slow")
+          expect(@session.html).to include('slow page')
         end
 
-        @session.current_path.should == '/'
+        expect(@session.current_path).to eq('/')
       end
 
       it 'waits for the cross-domain frame to load' do
         @session.visit '/poltergeist/frames'
-        @session.current_path.should == '/poltergeist/frames'
+        expect(@session.current_path).to eq('/poltergeist/frames')
 
         @session.within_frame 'frame' do
-          @session.current_path.should == '/poltergeist/slow'
-          @session.body.should include('slow page')
+          expect(@session.current_path).to eq('/poltergeist/slow')
+          expect(@session.body).to include('slow page')
         end
 
-        @session.current_path.should == '/poltergeist/frames'
+        expect(@session.current_path).to eq('/poltergeist/frames')
       end
 
       it 'supports clicking in a frame' do
@@ -455,7 +455,7 @@ describe Capybara::Session do
         @session.within_frame 'frame' do
           log = @session.find(:css, '#log')
           @session.find(:css, "#one").click
-          log.text.should == "one"
+          expect(log.text).to eq("one")
         end
       end
 
@@ -471,7 +471,7 @@ describe Capybara::Session do
         @session.within_frame 'padded_frame' do
           log = @session.find(:css, '#log')
           @session.find(:css, "#one").click
-          log.text.should == "one"
+          expect(log.text).to eq("one")
         end
       end
 
@@ -493,7 +493,7 @@ describe Capybara::Session do
           @session.within_frame 'inner_frame' do
             log = @session.find(:css, '#log')
             @session.find(:css, "#one").click
-            log.text.should == "one"
+            expect(log.text).to eq("one")
           end
         end
       end
@@ -518,8 +518,8 @@ describe Capybara::Session do
       @session.find(:css, "a").click
 
       position = eval(TestSessions.logger.messages.last)["response"]["position"]
-      position["x"].should_not be_nil
-      position["y"].should_not be_nil
+      expect(position["x"]).to_not be_nil
+      expect(position["y"]).to_not be_nil
     end
 
     it "throws an error on an invalid selector" do

@@ -16,7 +16,7 @@ module Capybara::Poltergeist
       it "doesn't raise an error if phantomjs is too new" do
         Cliver::Detector.any_instance.
           stub(:`).with(/phantomjs --version/).and_return("1.10.0 (development)\n")
-        expect { subject }.not_to raise_error
+        expect { subject }.to_not raise_error
         subject.stop # process has been spawned, stopping
       end
 
@@ -24,7 +24,7 @@ module Capybara::Poltergeist
         Cliver::Detector.any_instance.
           stub(:`).with(/phantomjs --version/).and_return("1.3.0\n")
         expect { subject }.to raise_error(Cliver::Dependency::VersionMismatch) do |e|
-          e.message.should include('1.3.0')
+          expect(e.message).to include('1.3.0')
         end
       end
 

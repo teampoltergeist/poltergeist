@@ -17,7 +17,7 @@ module Capybara::Poltergeist
 
         subject.command('where is', 'the love?')
 
-        logger.string.should == "#{request.inspect}\n#{response.inspect}\n"
+        expect(logger.string).to eq("#{request.inspect}\n#{response.inspect}\n")
       end
     end
   end
