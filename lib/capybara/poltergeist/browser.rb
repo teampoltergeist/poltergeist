@@ -166,7 +166,7 @@ module Capybara::Poltergeist
         warn "Ignoring :selector in #render since :full => true was given at #{caller.first}"
         options.delete(:selector)
       end
-      command 'render', path.to_s, !!options[:full], options[:selector]
+      command 'render', path.to_s, !!options[:full], options[:selector], options[:paper_size]
     end
 
     def resize(width, height)

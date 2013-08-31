@@ -132,6 +132,9 @@ class Poltergeist.WebPage
   setViewportSize: (size) ->
     @native.viewportSize = size
 
+  setPaperSize: (size) ->
+    @native.paperSize = size
+
   scrollPosition: ->
     @native.scrollPosition
 

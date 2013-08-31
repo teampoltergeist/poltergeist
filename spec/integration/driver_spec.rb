@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'image_size'
+require 'pdf/reader'
 
 module Capybara::Poltergeist
   describe Driver do
@@ -153,6 +154,18 @@ module Capybara::Poltergeist
           }();
         EOS
         expect(ImageSize.new(f.read).size).to eq(size)
+      end
+    end
+
+    it 'changes Pdf size rendered by #save_screenshot when :paper_size object is passed' do
+      file = POLTERGEIST_ROOT + '/spec/tmp/document.pdf'
+      @session.visit('/poltergeist/long_page')
+      @driver.save_screenshot(file, paper_size: { width: '1in', height: '1in'})
+      reader = PDF::Reader.new(file)
+      reader.pages.each do |page|
+        bbox   = page.attributes[:MediaBox]
+        width  = (bbox[2] - bbox[0]) / 72
+        width.should == 1
       end
     end
 

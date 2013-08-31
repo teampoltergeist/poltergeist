@@ -9,6 +9,7 @@
 *   Depend on Cliver for command-line dependency detection.
 *   Added ability to scroll with `driver.scroll_to left, top` (Jim Lim)
 *   Added ability to capture an element  with `driver.render selector: '#id'` (Jim Lim)
+*   Added ability to pass a paper_size option in save_screenshot (Philippe Lehoux)
 
 #### Bug fixes ####
 
