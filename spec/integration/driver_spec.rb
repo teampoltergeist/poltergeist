@@ -69,28 +69,20 @@ module Capybara::Poltergeist
     end
 
     it 'allows the viewport to be resized' do
-      begin
-        @session.visit('/')
-        @driver.resize(200, 400)
-        expect(
-          @driver.evaluate_script('[window.innerWidth, window.innerHeight]')
-        ).to eq([200, 400])
-      ensure
-        @driver.resize(1024, 768)
-      end
+      @session.visit('/')
+      @driver.resize(200, 400)
+      expect(
+        @driver.evaluate_script('[window.innerWidth, window.innerHeight]')
+      ).to eq([200, 400])
     end
 
     it 'allows the page to be scrolled' do
-      begin
-        @session.visit('/poltergeist/long_page')
-        @driver.resize(10, 10)
-        @driver.scroll_to(200, 100)
-        expect(
-          @driver.evaluate_script('[window.scrollX, window.scrollY]')
-        ).to eq([200, 100])
-      ensure
-        @driver.scroll_to(0, 0)
-      end
+      @session.visit('/poltergeist/long_page')
+      @driver.resize(10, 10)
+      @driver.scroll_to(200, 100)
+      expect(
+        @driver.evaluate_script('[window.scrollX, window.scrollY]')
+      ).to eq([200, 100])
     end
 
     it 'supports specifying viewport size with an option' do
