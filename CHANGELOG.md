@@ -2,6 +2,12 @@
 
 #### Features ####
 
+#### Bug fixes ####
+
+### 1.4.0 ###
+
+#### Features ####
+
 *   Can set cookies for given domain
 *   Can get open window names with window_handles [Issue #178]
 *   Added ability to read and append headers (Dmitry Vorotilin) [Issue #187]
