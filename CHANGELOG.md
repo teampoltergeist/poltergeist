@@ -3,6 +3,10 @@
 #### Features ####
 
 #### Bug fixes ####
+
+### 1.4.1 ###
+
+#### Bug fixes ####
 *   Kill thread first off and then close IO [Issue #385]
 
 ### 1.4.0 ###
