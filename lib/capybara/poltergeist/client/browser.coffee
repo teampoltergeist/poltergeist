@@ -277,10 +277,6 @@ class Poltergeist.Browser
     @page.setClipRect(rect)
     dimensions
 
-  set_paper_size: (size) ->
-    @page.setPaperSize(size)
-    this.sendResponse(true)
-
   resize: (width, height) ->
     @page.setViewportSize(width: width, height: height)
     this.sendResponse(true)

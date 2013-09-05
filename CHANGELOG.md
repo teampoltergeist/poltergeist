@@ -1,7 +1,6 @@
 ### Next release ###
 
 #### Features ####
-*   Added ability to set paper_size via a driver setter (Philippe Lehoux)
 
 #### Bug fixes ####
 *   Kill thread first off and then close IO [Issue #385]
