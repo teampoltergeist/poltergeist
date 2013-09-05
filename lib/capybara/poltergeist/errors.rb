@@ -142,7 +142,7 @@ module Capybara
     class PhantomJSTooOld < Error
       def self.===(other)
         if Cliver::Dependency::VersionMismatch === other
-          warn "{name} exception has been deprecated in favor of using the " +
+          warn "#{name} exception has been deprecated in favor of using the " +
                "cliver gem for command-line dependency detection. Please " +
                "handle Cliver::Dependency::VersionMismatch instead."
           true
@@ -155,7 +155,7 @@ module Capybara
     class PhantomJSFailed < Error
       def self.===(other)
         if Cliver::Dependency::NotMet === other
-          warn "{name} exception has been deprecated in favor of using the " +
+          warn "#{name} exception has been deprecated in favor of using the " +
                "cliver gem for command-line dependency detection. Please " +
                "handle Cliver::Dependency::NotMet instead."
           true
