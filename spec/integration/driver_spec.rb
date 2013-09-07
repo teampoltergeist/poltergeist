@@ -607,5 +607,13 @@ module Capybara::Poltergeist
       expect(@driver.browser.window_handles).to eq(["popup"])
       expect(@driver.window_handles).to eq(["popup"])
     end
+
+    context 'send_keys' do
+      it 'sends keys to webpage' do
+        @session.visit('/poltergeist/with_js')
+        @driver.find_css('#change_me').first.send_keys('hello')
+        expect(@session.find(:css, '#change_me').value).to eq('hello')
+      end
+    end
   end
 end
