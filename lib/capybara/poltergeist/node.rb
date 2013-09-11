@@ -131,7 +131,7 @@ module Capybara::Poltergeist
     private
 
     def filter_text(text)
-      text.to_s.gsub(NBSP, ' ').gsub(/\s+/u, ' ').strip
+      Capybara::Helpers.normalize_whitespace(text.to_s.gsub(NBSP, ' '))
     end
   end
 end
