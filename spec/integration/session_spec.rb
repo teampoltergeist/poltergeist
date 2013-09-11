@@ -526,5 +526,27 @@ describe Capybara::Session do
       @session.visit "/poltergeist/table"
       expect { @session.find(:css, "table tr:last") }.to raise_error(Capybara::Poltergeist::InvalidSelector)
     end
+
+    context 'whitespace stripping tests' do
+      before do
+        @session.visit '/poltergeist/filter_text_test'
+      end
+
+      it 'get text' do
+        expect(@session.find(:css, '#foo').text).to eq 'foo'
+      end
+
+      it 'get text without whitespace of end' do
+        expect(@session.find(:css, '#bar').text).to eq 'bar'
+      end
+
+      it 'get text without whitespace and NBSP of end' do
+        expect(@session.find(:css, '#baz').text).to eq 'baz'
+      end
+
+      it 'get text without whitespace, NBSP and unicode whitespace of end' do
+        expect(@session.find(:css, '#qux').text).to eq 'qux'
+      end
+    end
   end
 end
