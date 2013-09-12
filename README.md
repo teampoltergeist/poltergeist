@@ -83,10 +83,7 @@ was 1.0.2, so you should use that if you still need Ruby 1.8 support.
 There are no special steps to take. You don't need Xvfb or any running X
 server at all.
 
-[Travis CI](https://travis-ci.org/) has PhantomJS pre-installed, but it
-might not be the latest version. If you need to install the latest
-version, [check out the .travis.yml that Poltergeist
-uses](https://github.com/jonleighton/poltergeist/blob/master/.travis.yml).
+[Travis CI](https://travis-ci.org/) has PhantomJS pre-installed.
 
 Depending on your tests, one thing that you may need is some fonts. If
 you're getting errors on a CI that don't occur during development then
