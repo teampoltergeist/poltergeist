@@ -536,15 +536,15 @@ describe Capybara::Session do
         expect(@session.find(:css, '#foo').text).to eq 'foo'
       end
 
-      it 'get text without whitespace of end' do
+      it 'get text stripped whitespace' do
         expect(@session.find(:css, '#bar').text).to eq 'bar'
       end
 
-      it 'get text without whitespace and NBSP of end' do
+      it 'get text stripped whitespace and NBSP' do
         expect(@session.find(:css, '#baz').text).to eq 'baz'
       end
 
-      it 'get text without whitespace, NBSP and unicode whitespace of end' do
+      it 'get text stripped whitespace, NBSP and unicode whitespace' do
         expect(@session.find(:css, '#qux').text).to eq 'qux'
       end
     end
