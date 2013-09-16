@@ -532,19 +532,19 @@ describe Capybara::Session do
         @session.visit '/poltergeist/filter_text_test'
       end
 
-      it 'get text' do
+      it 'gets text' do
         expect(@session.find(:css, '#foo').text).to eq 'foo'
       end
 
-      it 'get text stripped whitespace' do
+      it 'gets text stripped whitespace' do
         expect(@session.find(:css, '#bar').text).to eq 'bar'
       end
 
-      it 'get text stripped whitespace and NBSP' do
+      it 'gets text stripped whitespace and nbsp' do
         expect(@session.find(:css, '#baz').text).to eq 'baz'
       end
 
-      it 'get text stripped whitespace, NBSP and unicode whitespace' do
+      it 'gets text stripped whitespace, nbsp and unicode whitespace' do
         expect(@session.find(:css, '#qux').text).to eq 'qux'
       end
     end
