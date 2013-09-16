@@ -4,6 +4,7 @@
 *   Added ability to set paper_size via a driver setter (Philippe Lehoux)
 
 #### Bug fixes ####
+*   Use `Capybara::Helpers.normalize_whitespace` in filter_text to strip unicode whitespace (Wataru Miyaguni)
 
 ### 1.4.1 ###
 
