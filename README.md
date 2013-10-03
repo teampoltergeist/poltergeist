@@ -43,26 +43,25 @@ dependencies* (you don't need Qt, or a running X server, etc.)
 
 * *Homebrew*: `brew install phantomjs`
 * *MacPorts*: `sudo port install phantomjs`
-* *Manual install*: [Download this](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.8.1-macosx.zip&can=2&q=)
+* *Manual install*: [Download this](http://phantomjs.googlecode.com/files/phantomjs-1.9.2-macosx.zip)
 
 ### Linux ###
 
-* Download the [32
-bit](https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-i686.tar.bz2)
-or [64
-bit](https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2)
+* Download the [32 bit](https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-i686.tar.bz2)
+or [64 bit](https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2)
 binary.
 * Extract the tarball and copy `bin/phantomjs` into your `PATH`
 
 ### Windows ###
-* Download the [precompiled binary](http://phantomjs.org/download.html) for Windows
+* Download the [precompiled binary](http://phantomjs.googlecode.com/files/phantomjs-1.9.2-windows.zip)
+for Windows
 
 ### Manual compilation ###
 
 Do this as a last resort if the binaries don't work for you. It will
 take quite a long time as it has to build WebKit.
 
-* Download [the source tarball](http://code.google.com/p/phantomjs/downloads/detail?name=phantomjs-1.8.1-source.zip&can=2&q=)
+* Download [the source tarball](http://phantomjs.googlecode.com/files/phantomjs-1.9.2-source.zip)
 * Extract and cd in
 * `./build.sh`
 
