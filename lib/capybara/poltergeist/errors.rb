@@ -65,13 +65,17 @@ module Capybara
     end
 
     class InvalidSelector < ClientError
+      def method
+        response['args'][0]
+      end
+
       def selector
-        response['args'].first
+        response['args'][1]
       end
 
       def message
         "The browser raised a syntax error while trying to evaluate " \
-          "the selector #{selector.inspect}"
+          "#{method} selector #{selector.inspect}"
       end
     end
 

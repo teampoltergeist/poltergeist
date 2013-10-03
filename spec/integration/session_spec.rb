@@ -527,6 +527,11 @@ describe Capybara::Session do
       expect { @session.find(:css, "table tr:last") }.to raise_error(Capybara::Poltergeist::InvalidSelector)
     end
 
+    it 'throws an error on wrong xpath' do
+      @session.visit('/poltergeist/with_js')
+      expect { @session.find(:xpath, '#remove_me') }.to raise_error(Capybara::Poltergeist::InvalidSelector)
+    end
+
     context 'whitespace stripping tests' do
       before do
         @session.visit '/poltergeist/filter_text_test'

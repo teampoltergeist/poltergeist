@@ -51,9 +51,9 @@ class Poltergeist.ObsoleteNode extends Poltergeist.Error
   toString: -> this.name
 
 class Poltergeist.InvalidSelector extends Poltergeist.Error
-  constructor: (@selector) ->
+  constructor: (@method, @selector) ->
   name: "Poltergeist.InvalidSelector"
-  args: -> [@selector]
+  args: -> [@method, @selector]
 
 class Poltergeist.FrameNotFound extends Poltergeist.Error
   constructor: (@frameName) ->

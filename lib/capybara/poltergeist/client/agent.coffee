@@ -37,7 +37,8 @@ class PoltergeistAgent
 
       this.register(el) for el in results
     catch error
-      if error.code == DOMException.SYNTAX_ERR
+      # DOMException.INVALID_EXPRESSION_ERR is undefined, using pure code
+      if error.code == DOMException.SYNTAX_ERR || error.code == 51
         throw new PoltergeistAgent.InvalidSelector
       else
         throw error
