@@ -62,6 +62,11 @@ module Capybara::Poltergeist
       expect(@driver.html).to include('Hello world')
     end
 
+    it 'quits silently before visit call' do
+      driver = Capybara::Poltergeist::Driver.new(nil)
+      expect { driver.quit }.not_to raise_error
+    end
+
     it 'has a viewport size of 1024x768 by default' do
       @session.visit('/')
       expect(

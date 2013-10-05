@@ -26,15 +26,13 @@ module Capybara::Poltergeist
       @server  = start_server(port)
     end
 
-    def port
-      server.addr[1]
-    end
-
     def start_server(port)
       time = Time.now
 
       begin
-        TCPServer.open(HOST, port || 0)
+        TCPServer.open(HOST, port || 0).tap do |server|
+          @port = server.addr[1]
+        end
       rescue Errno::EADDRINUSE
         if (Time.now - time) < BIND_TIMEOUT
           sleep(0.01)
