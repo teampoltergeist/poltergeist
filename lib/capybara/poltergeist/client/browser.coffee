@@ -250,6 +250,10 @@ class Poltergeist.Browser
     @page.setScrollPosition(left: left, top: top)
     this.sendResponse(true)
 
+  send_keys: (page_id, id, type, keys, modifier) ->
+    # this.execute("document.querySelector('#change_me').focus()")
+    this.sendResponse this.node(page_id, id).sendEvent(type, keys, modifier)
+
   render_base64: (format, full, selector = null)->
     this.set_clip_rect(full, selector)
     encoded_image = @page.renderBase64(format)

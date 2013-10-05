@@ -40,6 +40,11 @@ class Poltergeist.Node
     else
       throw new Poltergeist.MouseEventFailed(name, test.selector, pos)
 
+  sendEvent: (type, keys, modifier) ->
+    this.trigger('focus')
+    @page.sendEvent(type, keys, null, null, modifier)
+    true
+
   dragTo: (other) ->
     this.scrollIntoView()
 

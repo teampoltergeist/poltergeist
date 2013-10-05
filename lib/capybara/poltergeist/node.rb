@@ -125,6 +125,11 @@ module Capybara::Poltergeist
       command :equals, other.id
     end
 
+    def send_keys(keys, type = :keypress, modifier = nil)
+      raise Error unless [:keyup, :keypress, :keydown].include?(type)
+      command :send_keys, type, keys, modifier
+    end
+
     private
 
     def filter_text(text)

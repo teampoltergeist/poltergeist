@@ -179,6 +179,10 @@ module Capybara::Poltergeist
       command 'resize', width, height
     end
 
+    def send_keys(page_id, id, type, keys, modifier)
+      command 'send_keys', page_id, id, type, keys, modifier
+    end
+
     def network_traffic
       command('network_traffic').values.map do |event|
         NetworkTraffic::Request.new(
