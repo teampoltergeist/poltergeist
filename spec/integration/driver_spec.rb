@@ -44,14 +44,18 @@ module Capybara::Poltergeist
     end
 
     it 'supports capturing console.log' do
-      output = StringIO.new
-      Capybara.register_driver :poltergeist_with_logger do |app|
-        Capybara::Poltergeist::Driver.new(app, :phantomjs_logger => output)
-      end
+      begin
+        output = StringIO.new
+        Capybara.register_driver :poltergeist_with_logger do |app|
+          Capybara::Poltergeist::Driver.new(app, :phantomjs_logger => output)
+        end
 
-      session = Capybara::Session.new(:poltergeist_with_logger, TestApp)
-      session.visit('/poltergeist/console_log')
-      expect(output.string).to include('Hello world')
+        session = Capybara::Session.new(:poltergeist_with_logger, TestApp)
+        session.visit('/poltergeist/console_log')
+        expect(output.string).to include('Hello world')
+      ensure
+        session.driver.quit
+      end
     end
 
     # FIXME: It definitely must be fixed on jruby, because all futher tests fail
@@ -357,15 +361,19 @@ module Capybara::Poltergeist
       end
 
       it 'supports extending the phantomjs world' do
-        @extended_driver.visit session_url("/poltergeist/requiring_custom_extension")
-        expect(@extended_driver.body).
-          to include(%Q%Location: <span id="location">1,-1</span>%)
-        expect(
-          @extended_driver.evaluate_script("document.getElementById('location').innerHTML")
-        ).to eq('1,-1')
-        expect(
-          @extended_driver.evaluate_script('navigator.geolocation')
-        ).to_not eq(nil)
+        begin
+          @extended_driver.visit session_url("/poltergeist/requiring_custom_extension")
+          expect(@extended_driver.body).
+            to include(%Q%Location: <span id="location">1,-1</span>%)
+          expect(
+            @extended_driver.evaluate_script("document.getElementById('location').innerHTML")
+          ).to eq('1,-1')
+          expect(
+            @extended_driver.evaluate_script('navigator.geolocation')
+          ).to_not eq(nil)
+        ensure
+          @extended_driver.quit
+        end
       end
     end
 
