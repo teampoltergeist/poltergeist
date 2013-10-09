@@ -105,6 +105,7 @@ and the following optional features:
 * `page.scroll_to`
 * cookie handling
 * drag-and-drop
+* basic http authentication
 
 There are some additional features:
 
@@ -233,6 +234,17 @@ page.within_window fb_popup do
   click_button "Log In"
 end
 ```
+
+### Basic HTTP authentication ###
+
+This method can be used for basic authentication:
+
+``` ruby
+page.driver.basic_authorize('username', 'password')
+```
+
+It actually appends `Authorize` header to bunch of your headers, so since you've
+set it don't try to use `headers=` which will overwrite it.
 
 
 ## Customization ##

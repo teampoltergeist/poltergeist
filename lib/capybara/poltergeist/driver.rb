@@ -225,6 +225,13 @@ module Capybara::Poltergeist
       browser.cookies_enabled = flag
     end
 
+    # Since PhantomJS doesn't send `Authorize` header with POST
+    # request at all, it's better to set header manually.
+    def basic_authorize(user, password)
+      credentials = ["#{user}:#{password}"].pack('m*')
+      add_header('Authorization', "Basic #{credentials}")
+    end
+
     def debug
       if @options[:inspector]
         inspector.open

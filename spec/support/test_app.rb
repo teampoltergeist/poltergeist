@@ -41,6 +41,16 @@ class TestApp
     "slow page"
   end
 
+  get '/poltergeist/basic_auth' do
+    auth = Rack::Auth::Basic::Request.new(request.env)
+    if auth.provided? and auth.basic? and auth.credentials and auth.credentials == ['login', 'pass']
+      'Welcome, authenticated client'
+    else
+      headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+      halt 401, "Not authorized\n"
+    end
+  end
+
   get '/poltergeist/:view' do |view|
     render_view view
   end

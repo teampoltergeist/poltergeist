@@ -620,5 +620,23 @@ module Capybara::Poltergeist
       expect(@driver.browser.window_handles).to eq(["popup"])
       expect(@driver.window_handles).to eq(["popup"])
     end
+
+    context 'basic http authentication' do
+      it 'does not set header' do
+        @session.visit '/poltergeist/basic_auth'
+
+        expect(@session.status_code).to eq(401)
+        expect(@session).not_to have_content('Welcome, authenticated client')
+      end
+
+      it 'sets header' do
+        @driver.basic_authorize('login', 'pass')
+
+        @session.visit '/poltergeist/basic_auth'
+
+        expect(@session.status_code).to eq(200)
+        expect(@session).to have_content('Welcome, authenticated client')
+      end
+    end
   end
 end
