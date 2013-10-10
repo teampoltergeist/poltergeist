@@ -1,6 +1,7 @@
 ### Next release ###
 
 #### Features ####
+*   Added ability to clear network traffic (Vick Vu)
 *   Added ability to set paper_size via a driver setter (Philippe Lehoux)
 *   Can support Basic HTTP authentication
 

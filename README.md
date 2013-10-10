@@ -198,6 +198,9 @@ You can inspect the network traffic (i.e. what resources have been
 loaded) on the current page by calling `page.driver.network_traffic`.
 This returns an array of request objects. A request object has a
 `response_parts` method containing data about the response chunks.
+Please note that network traffic is not cleared when you visit new page.
+You can manually clear the network traffic by calling `page.driver.clear_network_traffic`
+or `page.driver.reset`
 
 ### Manipulating cookies ###
 
