@@ -622,20 +622,49 @@ module Capybara::Poltergeist
     end
 
     context 'basic http authentication' do
-      it 'does not set header' do
+      it 'denies without credentials' do
         @session.visit '/poltergeist/basic_auth'
 
         expect(@session.status_code).to eq(401)
         expect(@session).not_to have_content('Welcome, authenticated client')
       end
 
-      it 'sets header' do
+      it 'allows with given credentials' do
         @driver.basic_authorize('login', 'pass')
 
         @session.visit '/poltergeist/basic_auth'
 
         expect(@session.status_code).to eq(200)
         expect(@session).to have_content('Welcome, authenticated client')
+      end
+
+      it 'allows even overwriting headers' do
+        @driver.basic_authorize('login', 'pass')
+        @driver.headers = [{ 'Poltergeist' => 'true' }]
+
+        @session.visit '/poltergeist/basic_auth'
+
+        expect(@session.status_code).to eq(200)
+        expect(@session).to have_content('Welcome, authenticated client')
+      end
+
+      it 'denies with wrong credentials' do
+        @driver.basic_authorize('user', 'pass!')
+
+        @session.visit '/poltergeist/basic_auth'
+
+        expect(@session.status_code).to eq(401)
+        expect(@session).not_to have_content('Welcome, authenticated client')
+      end
+
+      it 'allows on POST request' do
+        @driver.basic_authorize('login', 'pass')
+
+        @session.visit '/poltergeist/basic_auth'
+        @session.click_button('Submit')
+
+        expect(@session.status_code).to eq(200)
+        expect(@session).to have_content('Authorized POST request')
       end
     end
   end

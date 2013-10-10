@@ -7,6 +7,19 @@ class TestApp
   POLTERGEIST_VIEWS  = File.dirname(__FILE__) + "/views"
   POLTERGEIST_PUBLIC = File.dirname(__FILE__) + "/public"
 
+  helpers do
+    def requires_credentials(login, password)
+      return if authorized?(login, password)
+      headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+      halt 401, "Not authorized\n"
+    end
+
+    def authorized?(login, password)
+      @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+      @auth.provided? and @auth.basic? and @auth.credentials and @auth.credentials == [login, password]
+    end
+  end
+
   get '/poltergeist/test.js' do
     File.read("#{POLTERGEIST_PUBLIC}/test.js")
   end
@@ -42,13 +55,13 @@ class TestApp
   end
 
   get '/poltergeist/basic_auth' do
-    auth = Rack::Auth::Basic::Request.new(request.env)
-    if auth.provided? and auth.basic? and auth.credentials and auth.credentials == ['login', 'pass']
-      'Welcome, authenticated client'
-    else
-      headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
-      halt 401, "Not authorized\n"
-    end
+    requires_credentials('login', 'pass')
+    render_view :basic_auth
+  end
+
+  post '/poltergeist/post_basic_auth' do
+    requires_credentials('login', 'pass')
+    'Authorized POST request'
   end
 
   get '/poltergeist/:view' do |view|

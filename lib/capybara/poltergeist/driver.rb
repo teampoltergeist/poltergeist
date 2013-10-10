@@ -225,10 +225,14 @@ module Capybara::Poltergeist
       browser.cookies_enabled = flag
     end
 
-    # Since PhantomJS doesn't send `Authorize` header with POST
-    # request at all, it's better to set header manually.
+    # * PhantomJS with set settings doesn't send `Authorize` on POST request
+    # * With manually set header PhantomJS makes next request with
+    # `Authorization: Basic Og==` header when settings are empty and the
+    # response was `401 Unauthorized` (which means Base64.encode64(':')).
+    # Combining both methods to reach proper behavior.
     def basic_authorize(user, password)
-      credentials = ["#{user}:#{password}"].pack('m*')
+      browser.set_http_auth(user, password)
+      credentials = ["#{user}:#{password}"].pack('m*').strip
       add_header('Authorization', "Basic #{credentials}")
     end
 

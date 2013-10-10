@@ -327,6 +327,10 @@ class Poltergeist.Browser
     phantom.cookiesEnabled = flag
     this.sendResponse(true)
 
+  set_http_auth: (user, password) ->
+    @page.setHttpAuth(user, password)
+    this.sendResponse(true)
+
   set_js_errors: (value) ->
     @js_errors = value
     this.sendResponse(true)

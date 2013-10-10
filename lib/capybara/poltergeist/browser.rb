@@ -232,6 +232,10 @@ module Capybara::Poltergeist
       command 'cookies_enabled', !!flag
     end
 
+    def set_http_auth(user, password)
+      command 'set_http_auth', user, password
+    end
+
     def js_errors=(val)
       command 'set_js_errors', !!val
     end

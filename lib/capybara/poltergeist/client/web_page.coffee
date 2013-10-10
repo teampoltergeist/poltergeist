@@ -93,6 +93,10 @@ class Poltergeist.WebPage
         @_statusCode      = response.status
         @_responseHeaders = response.headers
 
+  setHttpAuth: (user, password) ->
+    @native.settings.userName = user
+    @native.settings.password = password
+
   networkTraffic: ->
     @_networkTraffic
 
