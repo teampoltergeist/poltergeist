@@ -5,7 +5,11 @@
 *   Can support Basic HTTP authentication
 
 #### Bug fixes ####
-*   Use `Capybara::Helpers.normalize_whitespace` in filter_text to strip unicode whitespace (Wataru Miyaguni)
+*   Use `Capybara::Helpers.normalize_whitespace` in filter_text to strip unicode
+    whitespace (Wataru Miyaguni)
+*   Fix missed interpolation on deprecated error classes
+*   Raise InvalidSelector when wrong xpath selector was used [Issue #395]
+*   Fix `driver.quit` before visiting any url with `IOError` error [Issue #398]
 
 ### 1.4.1 ###
 

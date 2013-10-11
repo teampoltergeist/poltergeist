@@ -114,9 +114,12 @@ There are some additional features:
 You can grab screenshots of the page at any point by calling
 `save_screenshot('/path/to/file.png')` (this works the same way as the PhantomJS
 render feature, so you can specify other extensions like `.pdf`, `.gif`, etc.)
+Just in case you render pdf it's might be worth to set `driver.paper_size=` with
+settings provided by PhantomJS in [here](https://github.com/ariya/phantomjs/wiki/API-Reference-WebPage#wiki-webpage-paperSize)
 
-By default, only the viewport will be rendered (the part of the page that is in view). To render
-the entire page, use `save_screenshot('/path/to/file.png', :full => true)`.
+By default, only the viewport will be rendered (the part of the page that is in
+view). To render the entire page, use `save_screenshot('/path/to/file.png',
+:full => true)`.
 
 You also have an ability to render selected element. Pass option `selector` with
 any valid element selector to make a screenshot bounded by that element
