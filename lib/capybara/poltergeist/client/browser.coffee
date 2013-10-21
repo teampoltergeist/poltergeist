@@ -288,6 +288,10 @@ class Poltergeist.Browser
   network_traffic: ->
     this.sendResponse(@page.networkTraffic())
 
+  clear_network_traffic: ->
+    @page.clearNetworkTraffic()
+    this.sendResponse(true)
+
   get_headers: ->
     this.sendResponse(@page.getCustomHeaders())
 

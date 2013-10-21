@@ -188,6 +188,10 @@ module Capybara::Poltergeist
       end
     end
 
+    def clear_network_traffic
+      command('clear_network_traffic')
+    end
+
     def equals(page_id, id, other_id)
       command('equals', page_id, id, other_id)
     end

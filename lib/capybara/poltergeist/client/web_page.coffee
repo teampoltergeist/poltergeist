@@ -100,6 +100,9 @@ class Poltergeist.WebPage
   networkTraffic: ->
     @_networkTraffic
 
+  clearNetworkTraffic: ->
+    @_networkTraffic = {}
+
   content: ->
     @native.frameContent
 

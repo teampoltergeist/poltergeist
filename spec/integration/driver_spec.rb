@@ -490,6 +490,15 @@ module Capybara::Poltergeist
         @session.visit('/poltergeist/with_js')
         expect(@driver.network_traffic.length).to eq(4)
       end
+
+      it "gets cleared when being cleared" do
+        @session.visit('/poltergeist/with_js')
+        expect(@driver.network_traffic.length).to eq(4)
+
+        @driver.clear_network_traffic
+
+        expect(@driver.network_traffic.length).to eq(0)
+      end
     end
 
     context 'status code support' do

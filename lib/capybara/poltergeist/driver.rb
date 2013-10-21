@@ -178,6 +178,10 @@ module Capybara::Poltergeist
       browser.network_traffic
     end
 
+    def clear_network_traffic
+      browser.clear_network_traffic
+    end
+
     def headers
       browser.get_headers
     end
