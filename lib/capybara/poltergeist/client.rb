@@ -78,9 +78,17 @@ module Capybara::Poltergeist
         rescue Errno::ESRCH, Errno::ECHILD
           # Zed's dead, baby
         end
+
+
         @out_thread.kill
-        @write_io.close
-        @read_io.close
+        begin
+          @write_io.close
+          @read_io.close
+        rescue Exception => e
+          puts "Got an exception!"
+          puts e.message
+          puts e.backtrace
+        end
         ObjectSpace.undefine_finalizer(self)
         @pid = nil
       end
