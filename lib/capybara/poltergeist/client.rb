@@ -47,8 +47,11 @@ module Capybara::Poltergeist
     def start
       @read_io, @write_io = IO.pipe
       @out_thread = Thread.new {
-        while !@read_io.eof? && data = @read_io.readpartial(1024)
-          @phantomjs_logger.write(data)
+        loop do
+          while IO.select([@read_io], nil, nil, 0.25)
+            data = @read_io.readpartial(1024)
+            @phantomjs_logger.write(data)
+          end
         end
       }
 
@@ -88,7 +91,10 @@ module Capybara::Poltergeist
     private
 
     # This abomination is because JRuby doesn't support the :out option of
-    # Process.spawn
+    # Process.spawn. To be honest it works pretty bad with pipes either, because
+    # we ought close writing end in parent process immediately but JRuby will
+    # lose all the output from child. Process.popen can be used here and seems
+    # it works with JRuby but I've experienced strange mistakes on Rubinius.
     def redirect_stdout
       prev = STDOUT.dup
       prev.autoclose = false
