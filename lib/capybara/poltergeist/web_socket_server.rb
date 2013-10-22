@@ -87,11 +87,10 @@ module Capybara::Poltergeist
       raise TimeoutError.new(message)
     end
 
+    # Closing sockets separately as `close_read`, `close_write`
+    # causes IO mistakes on JRuby, using just `close` fixes that.
     def close
-      [server, socket].compact.each do |s|
-        s.close_read
-        s.close_write
-      end
+      [server, socket].compact.each(&:close)
     end
   end
 end

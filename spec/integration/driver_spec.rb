@@ -58,9 +58,7 @@ module Capybara::Poltergeist
       end
     end
 
-    # FIXME: It definitely must be fixed on jruby, because all futher tests fail
     it 'raises an error and restarts the client if the client dies while executing a command' do
-      pending 'Temporarily disabled for jruby' if RUBY_PLATFORM == 'java'
       expect { @driver.browser.command('exit') }.to raise_error(DeadClient)
       @session.visit('/')
       expect(@driver.html).to include('Hello world')

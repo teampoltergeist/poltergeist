@@ -11,6 +11,7 @@
 *   Fix missed interpolation on deprecated error classes
 *   Raise InvalidSelector when wrong xpath selector was used [Issue #395]
 *   Fix `driver.quit` before visiting any url with `IOError` error [Issue #398]
+*   Fix JRuby support when PhantomJS quits first  [Issue #382, #404]
 
 ### 1.4.1 ###
 
