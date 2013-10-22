@@ -63,26 +63,11 @@ module Capybara::Poltergeist
 
     def stop
       if pid
-        begin
-          if Capybara::Poltergeist.windows?
-            Process.kill('KILL', pid)
-          else
-            Process.kill('TERM', pid)
-            begin
-              Timeout.timeout(KILL_TIMEOUT) { Process.wait(pid) }
-            rescue Timeout::Error
-              Process.kill('KILL', pid)
-              Process.wait(pid)
-            end
-          end
-        rescue Errno::ESRCH, Errno::ECHILD
-          # Zed's dead, baby
-        end
+        kill_phantomjs
         @out_thread.kill
         @write_io.close
         @read_io.close
         ObjectSpace.undefine_finalizer(self)
-        @pid = nil
       end
     end
 
@@ -113,6 +98,25 @@ module Capybara::Poltergeist
     ensure
       STDOUT.reopen(prev)
       $stdout = STDOUT
+    end
+
+    def kill_phantomjs
+      begin
+        if Capybara::Poltergeist.windows?
+          Process.kill('KILL', pid)
+        else
+          Process.kill('TERM', pid)
+          begin
+            Timeout.timeout(KILL_TIMEOUT) { Process.wait(pid) }
+          rescue Timeout::Error
+            Process.kill('KILL', pid)
+            Process.wait(pid)
+          end
+        end
+      rescue Errno::ESRCH, Errno::ECHILD
+        # Zed's dead, baby
+      end
+      @pid = nil
     end
   end
 end
