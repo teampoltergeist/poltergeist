@@ -65,8 +65,8 @@ module Capybara::Poltergeist
       if pid
         kill_phantomjs
         @out_thread.kill
-        @write_io.close
-        @read_io.close
+        soft_close_io(@read_io)
+        soft_close_io(@write_io)
         ObjectSpace.undefine_finalizer(self)
       end
     end
@@ -117,6 +117,21 @@ module Capybara::Poltergeist
         # Zed's dead, baby
       end
       @pid = nil
+    end
+
+    # Ensures that a valiant attempt is made to close the given IO,
+    # but it failing to close is not exceptional.
+    # Prevents flapping tests and odd exceptions in JRuby.
+    # HT @crimsonknave for reporting & isolating the problem.
+    # [Issue 404](https://github.com/jonleighton/poltergeist/pull/404)
+    def soft_close_io(io, report_io=$stderr)
+      io.close unless io.closed?
+    rescue IOError => e
+      if report_io
+        report_io.puts "Got an exception while closing an IO: #{e}"
+        report_io.puts e.backtrace
+      end
+      nil
     end
   end
 end
