@@ -676,5 +676,21 @@ module Capybara::Poltergeist
         expect(@session).to have_content('Authorized POST request')
       end
     end
+
+    context 'controlling onResourceRequested' do
+      it 'blocks unwanted urls' do
+        @driver.eval_on_resource_requested <<-JS
+        function (request) {
+          return !request.url.match(/unwanted/);
+        }
+        JS
+        @session.visit('/poltergeist/resource_requested_test')
+        expect(@session.status_code).to eq(200)
+        expect(@session).to have_content('We are loading some unwanted action here')
+        @session.within_frame 'frame' do
+          expect(@session.html).not_to include('We shouldn\'t see this.')
+        end
+      end
+    end
   end
 end

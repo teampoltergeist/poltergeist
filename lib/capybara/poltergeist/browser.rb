@@ -273,6 +273,10 @@ module Capybara::Poltergeist
       raise
     end
 
+    def eval_on_resource_requested(script)
+      command 'eval_on_resource_requested', script.strip
+    end
+
     private
 
     def log(message)

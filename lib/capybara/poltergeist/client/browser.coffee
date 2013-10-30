@@ -162,6 +162,10 @@ class Poltergeist.Browser
     @page.execute("function() { #{script} }")
     this.sendResponse(true)
 
+  eval_on_resource_requested: (script) ->
+    @page.evalOnResourceRequested = eval("(#{script})")
+    this.sendResponse(true)
+
   push_frame: (name, timeout = new Date().getTime() + 2000) ->
     if @page.pushFrame(name)
       if @page.currentUrl() == 'about:blank'
