@@ -414,6 +414,14 @@ describe Capybara::Session do
     end
 
     context 'frame support' do
+
+      it 'supports selection by index' do
+        @session.visit '/poltergeist/frames'
+        @session.within_frame 0 do
+          expect(@session.current_path).to eq("/poltergeist/slow")
+        end
+      end
+
       it 'waits for the frame to load' do
         @session.visit '/'
 
