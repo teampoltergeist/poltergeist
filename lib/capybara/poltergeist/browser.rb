@@ -108,7 +108,7 @@ module Capybara::Poltergeist
 
     def within_frame(handle, &block)
       if handle.is_a?(Capybara::Node::Base)
-        command 'push_frame', handle['id']
+        command 'push_frame', handle[:name]
       else
         command 'push_frame', handle
       end

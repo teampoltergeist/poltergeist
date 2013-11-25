@@ -12,6 +12,7 @@
 *   Raise InvalidSelector when wrong xpath selector was used [Issue #395]
 *   Fix `driver.quit` before visiting any url with `IOError` error [Issue #398]
 *   Fix JRuby support when PhantomJS quits first  [Issue #382, #404]
+*   Fix ability to pass element to `within_frame`  [Issue #414]
 
 ### 1.4.1 ###
 

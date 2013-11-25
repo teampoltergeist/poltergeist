@@ -414,10 +414,19 @@ describe Capybara::Session do
     end
 
     context 'frame support' do
-
       it 'supports selection by index' do
         @session.visit '/poltergeist/frames'
+
         @session.within_frame 0 do
+          expect(@session.current_path).to eq("/poltergeist/slow")
+        end
+      end
+
+      it 'supports selection by element' do
+        @session.visit '/poltergeist/frames'
+        frame = @session.find(:css, 'iframe')
+
+        @session.within_frame(frame) do
           expect(@session.current_path).to eq("/poltergeist/slow")
         end
       end
@@ -485,7 +494,7 @@ describe Capybara::Session do
 
       it 'supports clicking in a frame nested in a frame' do
         @session.visit '/'
-        
+
         # The padding on the frame here is to differ the sizes of the two
         # frames, ensuring that their offsets are being calculated seperately.
         # This avoids a false positive where the same frame's offset is
