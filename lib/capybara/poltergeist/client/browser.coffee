@@ -361,3 +361,11 @@ class Poltergeist.Browser
   # This command is purely for testing error handling
   browser_error: ->
     throw new Error('zomg')
+
+  go_back: ->
+    this.page.goBack() if this.page.canGoBack
+    this.sendResponse(true)
+
+  go_forward: ->
+    this.page.goForward() if this.page.canGoForward
+    this.sendResponse(true)

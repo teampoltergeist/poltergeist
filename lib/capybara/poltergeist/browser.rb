@@ -277,6 +277,14 @@ module Capybara::Poltergeist
       raise
     end
 
+    def go_back
+      command 'go_back'
+    end
+
+    def go_forward
+      command 'go_forward'
+    end
+
     private
 
     def log(message)
