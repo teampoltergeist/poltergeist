@@ -60,7 +60,7 @@ module Capybara::Poltergeist
 
       redirect_stdout do
         @pid = Process.spawn(*command.map(&:to_s), process_options)
-        ObjectSpace.define_finalizer(self, self.class.process_killer(@pid) )
+        ObjectSpace.define_finalizer(self, self.class.process_killer(@pid))
       end
     end
 
