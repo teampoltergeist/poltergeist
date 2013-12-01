@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+  </head>
+
+  <body>
+    <input id="empty_input" type="text">
+    <input id="filled_input" type="text" value="Text">
+    <textarea id="empty_textarea"></textarea>
+    <textarea id="filled_textarea">Description</textarea>
+    <div id="empty_div" contenteditable="true"></div>
+    <div id="filled_div" contenteditable="true">Content</div>
+
+    <form id="without_submit_button">
+      <input type="text">
+    </form>
+
+    <script>
+      function processForm(e) {
+          if (e.preventDefault) e.preventDefault();
+          document.querySelector("#without_submit_button input").value = "Submitted";
+          return false;
+      }
+
+      var form = document.getElementById("without_submit_button");
+      form.addEventListener("submit", processForm);
+    </script>
+  </body>
+</html>

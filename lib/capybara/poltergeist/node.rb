@@ -125,6 +125,11 @@ module Capybara::Poltergeist
       command :equals, other.id
     end
 
+    def send_keys(*keys)
+      command :send_keys, keys
+    end
+    alias_method :send_key, :send_keys
+
     private
 
     def filter_text(text)

@@ -179,6 +179,10 @@ module Capybara::Poltergeist
       command 'resize', width, height
     end
 
+    def send_keys(page_id, id, keys)
+      command 'send_keys', page_id, id, normalize_keys(keys)
+    end
+
     def network_traffic
       command('network_traffic').values.map do |event|
         NetworkTraffic::Request.new(
@@ -283,6 +287,21 @@ module Capybara::Poltergeist
       if !!options[:full] && options.has_key?(:selector)
         warn "Ignoring :selector in #render since :full => true was given at #{caller.first}"
         options.delete(:selector)
+      end
+    end
+
+    def normalize_keys(keys)
+      keys.map do |key|
+        case key
+        when Array
+          # String itself with modifiers like :alt, :shift, etc
+          raise Error, 'PhantomJS behaviour for key modifiers is currently ' \
+                       'broken, we will add this in later versions'
+        when Symbol
+          { key: key } # Return a known sequence for PhantomJS
+        when String
+          key # Plain string, nothing to do
+        end
       end
     end
   end

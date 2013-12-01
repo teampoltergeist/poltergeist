@@ -674,5 +674,88 @@ module Capybara::Poltergeist
         expect(@session).to have_content('Authorized POST request')
       end
     end
+
+    context 'has ability to send keys' do
+      before { @session.visit('/poltergeist/send_keys') }
+
+      it 'sends keys to empty input' do
+        input = @session.find(:css, '#empty_input')
+
+        input.native.send_keys('Input')
+
+        expect(input.value).to eq('Input')
+      end
+
+      it 'sends keys to filled input' do
+        input = @session.find(:css, '#filled_input')
+
+        input.native.send_keys(' appended')
+
+        expect(input.value).to eq('Text appended')
+      end
+
+      it 'sends keys to empty textarea' do
+        input = @session.find(:css, '#empty_textarea')
+
+        input.native.send_keys('Input')
+
+        expect(input.value).to eq('Input')
+      end
+
+      it 'sends keys to filled textarea' do
+        input = @session.find(:css, '#filled_textarea')
+
+        input.native.send_keys(' appended')
+
+        expect(input.value).to eq('Description appended')
+      end
+
+      it 'sends keys to empty contenteditable div' do
+        input = @session.find(:css, '#empty_div')
+
+        input.native.send_keys('Input')
+
+        expect(input.text).to eq('Input')
+      end
+
+      it 'sends keys to filled contenteditable div' do
+        input = @session.find(:css, '#filled_div')
+
+        input.native.send_keys(' appended')
+
+        expect(input.text).to eq('Content appended')
+      end
+
+      it 'sends sequences' do
+        input = @session.find(:css, '#empty_input')
+
+        input.native.send_keys(:Shift, 'S', :Alt, 't', 'r', 'i', 'g', :Left, 'n')
+
+        expect(input.value).to eq('String')
+      end
+
+      it 'submits the form with sequence' do
+        input = @session.find(:css, '#without_submit_button input')
+
+        input.native.send_keys(:Enter)
+
+        expect(input.value).to eq('Submitted')
+      end
+
+      it 'raises error on modifier' do
+        input = @session.find(:css, '#empty_input')
+
+        expect { input.native.send_keys([:Shift, 's'], 'tring') }
+          .to raise_error(Capybara::Poltergeist::Error)
+      end
+
+      it 'has an alias' do
+        input = @session.find(:css, '#empty_input')
+
+        input.native.send_key('S')
+
+        expect(input.value).to eq('S')
+      end
+    end
   end
 end
