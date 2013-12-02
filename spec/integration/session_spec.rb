@@ -122,6 +122,12 @@ describe Capybara::Session do
         expect(element.value).to eq('100')
       end
 
+      it 'accepts negatives in a number field' do
+        element = @session.find(:css, '#change_me_number')
+        element.set -100
+        expect(element.value).to eq('-100')
+      end
+
       it 'fires the keydown event' do
         expect(@session.find(:css, '#changes_on_keydown').text).to eq("6")
       end
