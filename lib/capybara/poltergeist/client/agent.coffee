@@ -141,6 +141,12 @@ class PoltergeistAgent.Node
     else
       @element.innerText
 
+  deleteText: ->
+    range = document.createRange()
+    range.selectNodeContents(@element)
+    window.getSelection().addRange(range)
+    window.getSelection().deleteFromDocument()
+
   getAttribute: (name) ->
     if name == 'checked' || name == 'selected'
       @element[name]
