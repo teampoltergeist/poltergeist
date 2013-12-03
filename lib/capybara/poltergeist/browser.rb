@@ -66,6 +66,10 @@ module Capybara::Poltergeist
       command 'visible_text', page_id, id
     end
 
+    def delete_text(page_id, id)
+      command 'delete_text', page_id, id
+    end
+
     def attribute(page_id, id, name)
       command 'attribute', page_id, id, name.to_s
     end
@@ -275,6 +279,14 @@ module Capybara::Poltergeist
     rescue DeadClient
       restart
       raise
+    end
+
+    def go_back
+      command 'go_back'
+    end
+
+    def go_forward
+      command 'go_forward'
     end
 
     private

@@ -5,6 +5,7 @@
 *   Added ability to set paper_size via a driver setter (Philippe Lehoux)
 *   Can support Basic HTTP authentication
 *   Added basic implementation of `send_keys`
+*   Added ability to go_back, go_forward, set the contents of a contenteditable element and Capybara 2.2 support (Pedro Carriço)
 
 #### Bug fixes ####
 *   Use `Capybara::Helpers.normalize_whitespace` in filter_text to strip unicode

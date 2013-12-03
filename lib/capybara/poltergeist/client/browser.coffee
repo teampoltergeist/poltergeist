@@ -121,6 +121,9 @@ class Poltergeist.Browser
   visible_text: (page_id, id) ->
     this.sendResponse this.node(page_id, id).visibleText()
 
+  delete_text: (page_id, id) ->
+    this.sendResponse this.node(page_id, id).deleteText()
+
   attribute: (page_id, id, name) ->
     this.sendResponse this.node(page_id, id).getAttribute(name)
 
@@ -361,3 +364,11 @@ class Poltergeist.Browser
   # This command is purely for testing error handling
   browser_error: ->
     throw new Error('zomg')
+
+  go_back: ->
+    this.page.goBack() if this.page.canGoBack
+    this.sendResponse(true)
+
+  go_forward: ->
+    this.page.goForward() if this.page.canGoForward
+    this.sendResponse(true)

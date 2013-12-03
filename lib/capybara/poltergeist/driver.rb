@@ -262,5 +262,13 @@ module Capybara::Poltergeist
     def invalid_element_errors
       [Capybara::Poltergeist::ObsoleteNode, Capybara::Poltergeist::MouseEventFailed]
     end
+
+    def go_back
+      browser.go_back
+    end
+
+    def go_forward
+      browser.go_forward
+    end
   end
 end
