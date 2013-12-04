@@ -15,6 +15,7 @@
 *   Fix `driver.quit` before visiting any url with `IOError` error [Issue #398]
 *   Fix JRuby support when PhantomJS quits first  [Issue #382, #404]
 *   Fix ability to pass element to `within_frame`  [Issue #414]
+*   Fix setting negatives in number inputs (John Hawthorn)
 
 ### 1.4.1 ###
 
