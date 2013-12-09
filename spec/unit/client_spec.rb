@@ -46,13 +46,14 @@ module Capybara::Poltergeist
 
     unless Capybara::Poltergeist.windows?
       it "forcibly kills the child if it doesn't respond to SIGTERM" do
+        client = Client.new(server)
+
         Process.stub(spawn: 5678)
         Process.stub(:wait) do
           @count = @count.to_i + 1
           @count == 1 ? sleep(3) : 0
         end
 
-        client = Client.new(server)
         client.start
 
         Process.should_receive(:kill).with('TERM', 5678).ordered
