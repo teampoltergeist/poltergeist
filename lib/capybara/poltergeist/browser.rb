@@ -175,6 +175,10 @@ module Capybara::Poltergeist
       command 'render_base64', format.to_s, !!options[:full], options[:selector]
     end
 
+    def set_zoom_factor(zoom_factor)
+      command 'set_zoom_factor', zoom_factor
+    end
+
     def set_paper_size(size)
       command 'set_paper_size', size
     end

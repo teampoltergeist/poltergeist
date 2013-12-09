@@ -188,6 +188,36 @@ module Capybara::Poltergeist
         expect(File.exist?(file)).to be_true
       end
 
+
+      shared_examples 'when #zoom_factor= is set' do
+        let(:format) {:xbm}
+        it 'changes image dimensions' do
+          @session.visit('/poltergeist/zoom_test')
+
+          black_pixels_count = ->(file) {
+            File.read(file).to_s[/{.*}/m][1...-1].split(/\W/).map{|n| n.hex.to_s(2).count('1')}.reduce(:+)
+          }
+          @driver.save_screenshot(file)
+          before = black_pixels_count[file]
+
+          @driver.zoom_factor = zoom_factor
+          @driver.save_screenshot(file)
+          after = black_pixels_count[file]
+
+          expect(after.to_f/before.to_f).to eq(zoom_factor**2)
+        end
+      end
+
+      context 'zoom in' do
+        let(:zoom_factor) { 2 }
+        include_examples 'when #zoom_factor= is set'
+      end
+
+      context 'zoom out' do
+        let(:zoom_factor) { 0.5 }
+        include_examples 'when #zoom_factor= is set'
+      end
+
       context 'when #paper_size= is set' do
         let(:format) { :pdf }
 

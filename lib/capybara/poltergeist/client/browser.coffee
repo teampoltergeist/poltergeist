@@ -293,6 +293,10 @@ class Poltergeist.Browser
     @page.setPaperSize(size)
     this.sendResponse(true)
 
+  set_zoom_factor: (zoom_factor) ->
+    @page.setZoomFactor(zoom_factor)
+    this.sendResponse(true)
+
   resize: (width, height) ->
     @page.setViewportSize(width: width, height: height)
     this.sendResponse(true)
