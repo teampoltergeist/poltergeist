@@ -128,6 +128,12 @@ describe Capybara::Session do
         expect(element.value).to eq('-100')
       end
 
+      it 'sets value in a select field' do
+        element = @session.find(:css, '#change_me_select')
+        element.set "Yolo"
+        expect(element.value).to eq("2")
+      end
+
       it 'fires the keydown event' do
         expect(@session.find(:css, '#changes_on_keydown').text).to eq("6")
       end
