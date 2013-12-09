@@ -47,11 +47,8 @@ module Capybara::Poltergeist
     def start
       @read_io, @write_io = IO.pipe
       @out_thread = Thread.new {
-        loop do
-          while IO.select([@read_io], nil, nil, 0.25)
-            data = @read_io.readpartial(1024)
-            @phantomjs_logger.write(data)
-          end
+        while !@read_io.eof? && data = @read_io.readpartial(1024)
+          @phantomjs_logger.write(data)
         end
       }
 
@@ -68,8 +65,7 @@ module Capybara::Poltergeist
       if pid
         kill_phantomjs
         @out_thread.kill
-        @write_io.close
-        @read_io.close
+        close_io
         ObjectSpace.undefine_finalizer(self)
       end
     end
@@ -91,7 +87,7 @@ module Capybara::Poltergeist
     private
 
     # This abomination is because JRuby doesn't support the :out option of
-    # Process.spawn. To be honest it works pretty bad with pipes either, because
+    # Process.spawn. To be honest it works pretty bad with pipes too, because
     # we ought close writing end in parent process immediately but JRuby will
     # lose all the output from child. Process.popen can be used here and seems
     # it works with JRuby but I've experienced strange mistakes on Rubinius.
@@ -123,6 +119,27 @@ module Capybara::Poltergeist
         # Zed's dead, baby
       end
       @pid = nil
+    end
+
+    # We grab all the output from PhantomJS like console.log in another thread
+    # and when PhantomJS crashes we try to restart it. In order to do it we stop
+    # server and client and on JRuby see this error `IOError: Stream closed`.
+    # It happens because JRuby tries to close pipe and it is blocked on `eof?`
+    # or `readpartial` call. The error is raised in the related thread and it's
+    # not actually main thread but the thread that listens to the output. That's
+    # why if you put some debug code after `rescue IOError` it won't be shown.
+    # In fact the main thread will continue working after the error even if we
+    # don't use `rescue`. The first attempt to fix it was a try not to block on
+    # IO, but looks like similar issue appers after JRuby upgrade. Perhaps the
+    # only way to fix it is catching the exception what this method overall does.
+    def close_io
+      [@write_io, @read_io].each do |io|
+        begin
+          io.close unless io.closed?
+        rescue IOError
+          raise unless RUBY_ENGINE == 'jruby'
+        end
+      end
     end
   end
 end
