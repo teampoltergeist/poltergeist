@@ -268,11 +268,13 @@ module Capybara::Poltergeist
     end
 
     def command(name, *args)
-      message = { 'name' => name, 'args' => args }
-      log message.inspect
+      message = JSON.dump({ 'name' => name, 'args' => args })
+      log message
 
-      json = JSON.load(server.send(JSON.dump(message)))
-      log json.inspect
+      response = server.send(message)
+      log response
+
+      json = JSON.load(response)
 
       if json['error']
         klass = ERROR_MAPPINGS[json['error']['name']] || BrowserError
