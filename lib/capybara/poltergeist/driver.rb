@@ -165,6 +165,10 @@ module Capybara::Poltergeist
       browser.set_paper_size(size)
     end
 
+    def zoom_factor=(zoom_factor)
+      browser.set_zoom_factor(zoom_factor)
+    end
+
     def resize(width, height)
       browser.resize(width, height)
     end

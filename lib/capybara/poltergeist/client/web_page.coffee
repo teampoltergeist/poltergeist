@@ -139,6 +139,9 @@ class Poltergeist.WebPage
   setViewportSize: (size) ->
     @native.viewportSize = size
 
+  setZoomFactor: (zoom_factor) ->
+    @native.zoomFactor = zoom_factor
+
   setPaperSize: (size) ->
     @native.paperSize = size
 
