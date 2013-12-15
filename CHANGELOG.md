@@ -2,6 +2,8 @@
 
 #### Features ####
 
+*   Added ability to set zoom_factor(Dmytro Budnyk)
+
 #### Bug fixes ####
 
 ### 1.5.0 ###
