@@ -144,6 +144,7 @@ class PoltergeistAgent.Node
   deleteText: ->
     range = document.createRange()
     range.selectNodeContents(@element)
+    window.getSelection().removeAllRanges()
     window.getSelection().addRange(range)
     window.getSelection().deleteFromDocument()
 

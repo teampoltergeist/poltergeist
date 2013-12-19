@@ -70,7 +70,6 @@ module Capybara::Poltergeist
       elsif tag_name == 'textarea'
         command :set, value.to_s
       elsif self[:contenteditable] == 'true'
-        click
         command :delete_text
         send_keys(value.to_s)
       end
