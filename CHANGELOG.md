@@ -6,6 +6,9 @@
 
 #### Bug fixes ####
 
+*   Fix `set` appending to `contenteditable` instead of replacing its text
+    (Pedro Carriço and Erik Ostrom) [Issue #432]
+
 ### 1.5.0 ###
 
 #### Features ####

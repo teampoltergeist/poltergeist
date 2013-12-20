@@ -787,5 +787,27 @@ module Capybara::Poltergeist
         expect(input.value).to eq('S')
       end
     end
+
+    context "set" do
+      before { @session.visit('/poltergeist/set') }
+
+      it "sets a contenteditable's content" do
+        input = @session.find(:css, '#filled_div')
+        input.set('new text')
+        expect(input.text).to eq('new text')
+      end
+
+      it "sets multiple contenteditables' content" do
+        input = @session.find(:css, '#empty_div')
+        input.set('new text')
+
+        expect(input.text).to eq('new text')
+
+        input = @session.find(:css, '#filled_div')
+        input.set('replacement text')
+
+        expect(input.text).to eq('replacement text')
+      end
+    end
   end
 end
