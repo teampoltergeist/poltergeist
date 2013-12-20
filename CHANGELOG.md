@@ -2,7 +2,8 @@
 
 #### Features ####
 
-*   Added ability to set zoom_factor(Dmytro Budnyk)
+*   Added ability to set zoom_factor (Dmytro Budnyk)
+*   Write JSON to the logger, rather than Ruby [Issue #430]
 
 #### Bug fixes ####
 
@@ -12,6 +13,7 @@
 ### 1.5.0 ###
 
 #### Features ####
+
 *   Added ability to clear network traffic (Vick Vu)
 *   Added ability to set paper_size via a driver setter (Philippe Lehoux)
 *   Can support Basic HTTP authentication
@@ -20,6 +22,7 @@
     element and Capybara 2.2 support (Pedro Carriço)
 
 #### Bug fixes ####
+
 *   Use `Capybara::Helpers.normalize_whitespace` in filter_text to strip unicode
     whitespace (Wataru Miyaguni)
 *   Fix missed interpolation on deprecated error classes
@@ -32,6 +35,7 @@
 ### 1.4.1 ###
 
 #### Bug fixes ####
+
 *   Kill thread first off and then close IO [Issue #385]
 
 ### 1.4.0 ###
@@ -100,7 +104,7 @@
 
 ### 1.1.2 ###
 
-#### Bug fixes #####
+#### Bug fixes ####
 
 *   Tie to faye-websocket 0.4 as 0.5 introduces incompatibilities.
 
@@ -246,7 +250,7 @@
     [Issue #83]
 *   Added status code support. (Dmitriy Nesteryuk and Jon Leighton) [Issue #37]
 
-#### Bug fixes ###
+#### Bug fixes ####
 
 *   Fix issue with `ClickFailed` exception happening with a negative
     co-ordinate (which should be impossible). (Jon Leighton, Gabriel
