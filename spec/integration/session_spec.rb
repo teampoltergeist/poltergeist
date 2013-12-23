@@ -540,7 +540,7 @@ describe Capybara::Session do
       @session.visit("/")
       @session.find(:css, "a").click
 
-      position = eval(TestSessions.logger.messages.last)["response"]["position"]
+      position = JSON.load(TestSessions.logger.messages.last)["response"]["position"]
       expect(position["x"]).to_not be_nil
       expect(position["y"]).to_not be_nil
     end

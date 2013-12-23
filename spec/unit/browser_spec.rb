@@ -11,13 +11,13 @@ module Capybara::Poltergeist
       subject      { Browser.new(server, client, logger) }
 
       it 'logs requests and responses to the client' do
-        request  = { 'name' => 'where is', 'args' => ["the love?"] }
-        response = { 'response' => '<3' }
-        server.stub(:send).with(MultiJson.dump(request)).and_return(JSON.dump(response))
+        request = %({"name":"where is","args":["the love?"]})
+        response = %({"response":"<3"})
+        server.stub(:send).with(request).and_return(response)
 
         subject.command('where is', 'the love?')
 
-        expect(logger.string).to eq("#{request.inspect}\n#{response.inspect}\n")
+        expect(logger.string).to eq("#{request}\n#{response}\n")
       end
     end
   end
