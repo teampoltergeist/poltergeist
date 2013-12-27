@@ -1,20 +1,41 @@
 ### Next release ###
 
 #### Features ####
+
+*   Added ability to set zoom_factor (Dmytro Budnyk)
+*   Write JSON to the logger, rather than Ruby [Issue #430]
+
+#### Bug fixes ####
+
+*   Fix `set` appending to `contenteditable` instead of replacing its text
+    (Pedro Carriço and Erik Ostrom) [Issue #432]
+
+### 1.5.0 ###
+
+#### Features ####
+
 *   Added ability to clear network traffic (Vick Vu)
 *   Added ability to set paper_size via a driver setter (Philippe Lehoux)
 *   Can support Basic HTTP authentication
+*   Added basic implementation of `send_keys`
+*   Added ability to go_back, go_forward, set the contents of a contenteditable
+    element and Capybara 2.2 support (Pedro Carriço)
 
 #### Bug fixes ####
+
 *   Use `Capybara::Helpers.normalize_whitespace` in filter_text to strip unicode
     whitespace (Wataru Miyaguni)
 *   Fix missed interpolation on deprecated error classes
 *   Raise InvalidSelector when wrong xpath selector was used [Issue #395]
 *   Fix `driver.quit` before visiting any url with `IOError` error [Issue #398]
+*   Fix JRuby support when PhantomJS quits first  [Issue #382, #404]
+*   Fix ability to pass element to `within_frame`  [Issue #414]
+*   Fix setting negatives in number inputs (John Hawthorn)
 
 ### 1.4.1 ###
 
 #### Bug fixes ####
+
 *   Kill thread first off and then close IO [Issue #385]
 
 ### 1.4.0 ###
@@ -24,11 +45,14 @@
 *   Can set cookies for given domain
 *   Can get open window names with window_handles [Issue #178]
 *   Added ability to read and append headers (Dmitry Vorotilin) [Issue #187]
-*   Added ability to set headers only for the first request (Dmitry Vorotilin) [Issue #337]
+*   Added ability to set headers only for the first request
+    (Dmitry Vorotilin) [Issue #337]
 *   Depend on Cliver for command-line dependency detection.
 *   Added ability to scroll with `driver.scroll_to left, top` (Jim Lim)
-*   Added ability to capture an element  with `driver.render selector: '#id'` (Jim Lim)
-*   Added ability to render base64-encoded image with `driver.render_base64` (Jim Lim) [Issue #189]
+*   Added ability to capture an element  with `driver.render selector: '#id'`
+    (Jim Lim)
+*   Added ability to render base64-encoded image with `driver.render_base64`
+    (Jim Lim) [Issue #189]
 
 #### Bug fixes ####
 
@@ -38,10 +62,12 @@
     (Ryan Schlesinger) [Issue #312]
 *   Fix "wrong exec option symbol: pgroup" error on windows (Andrew Meyer)
     [Issue #314]
-*   Fixed closing of open pipes after use (driver.quit now performs pipe.close) [Issue #310]
+*   Fixed closing of open pipes after use (driver.quit now performs pipe.close)
+    [Issue #310]
 *   Fix NoMethodError when using has_css with a count on svg elements
 *   Fix URI::InvalidURIError raised when setting a cookie after loading a
-    page with a space in the url or when using Capybara::Session#current_path [Issue #349]
+    page with a space in the url or when using Capybara::Session#current_path
+    [Issue #349]
 *   Fix leak of phantomjs processes by adding a GC finalizer to the
     Capybara::Poltergeist::Client object that creates them [Issue #348]
 
@@ -78,7 +104,7 @@
 
 ### 1.1.2 ###
 
-#### Bug fixes #####
+#### Bug fixes ####
 
 *   Tie to faye-websocket 0.4 as 0.5 introduces incompatibilities.
 
@@ -106,7 +132,7 @@
     figuring out timeout errors.
 *   Add the ability to extend the phantomjs environment via browser
     options. e.g.
-    `Capybara::Poltergeist::Driver.new( app, :extensions => ['file.js', 'another.js'])`
+    `Capybara::Poltergeist::Driver.new(app, :extensions => ['file.js', 'another.js'])`
     (Jon Rowe)
 
 #### Bug fixes ####
@@ -224,7 +250,7 @@
     [Issue #83]
 *   Added status code support. (Dmitriy Nesteryuk and Jon Leighton) [Issue #37]
 
-#### Bug fixes ###
+#### Bug fixes ####
 
 *   Fix issue with `ClickFailed` exception happening with a negative
     co-ordinate (which should be impossible). (Jon Leighton, Gabriel
@@ -265,10 +291,12 @@
 
 #### Bug fixes ####
 
-*   Fix bug where we could end up interacting with an obsolete element. [Issue #30]
+*   Fix bug where we could end up interacting with an obsolete element.
+    [Issue #30]
 *   Raise an suitable error if PhantomJS returns a non-zero exit status.
     Previously a version error would be raised, indicating that the
-    PhantomJS version was too old when in fact it did not start at all. [Issue #23]
+    PhantomJS version was too old when in fact it did not start at all.
+    [Issue #23]
 *   Ensure the `:timeout` option is actually used. [Issue #36]
 *   Nodes need to know which page they are associated with. Before this,
     if Javascript caused a new page to load, existing node references

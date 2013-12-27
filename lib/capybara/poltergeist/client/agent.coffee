@@ -141,6 +141,13 @@ class PoltergeistAgent.Node
     else
       @element.innerText
 
+  deleteText: ->
+    range = document.createRange()
+    range.selectNodeContents(@element)
+    window.getSelection().removeAllRanges()
+    window.getSelection().addRange(range)
+    window.getSelection().deleteFromDocument()
+
   getAttribute: (name) ->
     if name == 'checked' || name == 'selected'
       @element[name]
@@ -165,13 +172,16 @@ class PoltergeistAgent.Node
     @element.value = ''
     this.trigger('focus')
 
-    for char in value
-      keyCode = this.characterToKeyCode(char)
-      this.keyupdowned('keydown', keyCode)
-      @element.value += char
+    if @element.type == 'number'
+      @element.value = value
+    else
+      for char in value
+        keyCode = this.characterToKeyCode(char)
+        this.keyupdowned('keydown', keyCode)
+        @element.value += char
 
-      this.keypressed(false, false, false, false, char.charCodeAt(0), char.charCodeAt(0))
-      this.keyupdowned('keyup', keyCode)
+        this.keypressed(false, false, false, false, char.charCodeAt(0), char.charCodeAt(0))
+        this.keyupdowned('keyup', keyCode)
 
     this.changed()
     this.input()

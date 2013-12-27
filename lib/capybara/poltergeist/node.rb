@@ -69,6 +69,9 @@ module Capybara::Poltergeist
         end
       elsif tag_name == 'textarea'
         command :set, value.to_s
+      elsif self[:contenteditable] == 'true'
+        command :delete_text
+        send_keys(value.to_s)
       end
     end
 
@@ -124,6 +127,11 @@ module Capybara::Poltergeist
     def ==(other)
       command :equals, other.id
     end
+
+    def send_keys(*keys)
+      command :send_keys, keys
+    end
+    alias_method :send_key, :send_keys
 
     private
 

@@ -169,6 +169,10 @@ module Capybara::Poltergeist
       browser.set_paper_size(size)
     end
 
+    def zoom_factor=(zoom_factor)
+      browser.set_zoom_factor(zoom_factor)
+    end
+
     def resize(width, height)
       browser.resize(width, height)
     end
@@ -265,6 +269,14 @@ module Capybara::Poltergeist
 
     def invalid_element_errors
       [Capybara::Poltergeist::ObsoleteNode, Capybara::Poltergeist::MouseEventFailed]
+    end
+
+    def go_back
+      browser.go_back
+    end
+
+    def go_forward
+      browser.go_forward
     end
   end
 end

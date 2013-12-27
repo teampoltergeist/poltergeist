@@ -66,6 +66,10 @@ module Capybara::Poltergeist
       command 'visible_text', page_id, id
     end
 
+    def delete_text(page_id, id)
+      command 'delete_text', page_id, id
+    end
+
     def attribute(page_id, id, name)
       command 'attribute', page_id, id, name.to_s
     end
@@ -108,7 +112,7 @@ module Capybara::Poltergeist
 
     def within_frame(handle, &block)
       if handle.is_a?(Capybara::Node::Base)
-        command 'push_frame', handle['id']
+        command 'push_frame', handle[:name] || handle[:id]
       else
         command 'push_frame', handle
       end
@@ -171,12 +175,20 @@ module Capybara::Poltergeist
       command 'render_base64', format.to_s, !!options[:full], options[:selector]
     end
 
+    def set_zoom_factor(zoom_factor)
+      command 'set_zoom_factor', zoom_factor
+    end
+
     def set_paper_size(size)
       command 'set_paper_size', size
     end
 
     def resize(width, height)
       command 'resize', width, height
+    end
+
+    def send_keys(page_id, id, keys)
+      command 'send_keys', page_id, id, normalize_keys(keys)
     end
 
     def network_traffic
@@ -264,11 +276,13 @@ module Capybara::Poltergeist
     end
 
     def command(name, *args)
-      message = { 'name' => name, 'args' => args }
-      log message.inspect
+      message = JSON.dump({ 'name' => name, 'args' => args })
+      log message
 
-      json = JSON.load(server.send(JSON.dump(message)))
-      log json.inspect
+      response = server.send(message)
+      log response
+
+      json = JSON.load(response)
 
       if json['error']
         klass = ERROR_MAPPINGS[json['error']['name']] || BrowserError
@@ -285,6 +299,14 @@ module Capybara::Poltergeist
       command 'eval_on_resource_requested', script.strip
     end
 
+    def go_back
+      command 'go_back'
+    end
+
+    def go_forward
+      command 'go_forward'
+    end
+
     private
 
     def log(message)
@@ -295,6 +317,21 @@ module Capybara::Poltergeist
       if !!options[:full] && options.has_key?(:selector)
         warn "Ignoring :selector in #render since :full => true was given at #{caller.first}"
         options.delete(:selector)
+      end
+    end
+
+    def normalize_keys(keys)
+      keys.map do |key|
+        case key
+        when Array
+          # String itself with modifiers like :alt, :shift, etc
+          raise Error, 'PhantomJS behaviour for key modifiers is currently ' \
+                       'broken, we will add this in later versions'
+        when Symbol
+          { key: key } # Return a known sequence for PhantomJS
+        when String
+          key # Plain string, nothing to do
+        end
       end
     end
   end

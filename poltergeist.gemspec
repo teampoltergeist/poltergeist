@@ -18,10 +18,10 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 1.9.3'
 
-  s.add_dependency 'capybara',         '~> 2.1.0'
+  s.add_dependency 'capybara',         '~> 2.1'
   s.add_dependency 'websocket-driver', '>= 0.2.0'
   s.add_dependency 'multi_json',       '~> 1.0'
-  s.add_dependency 'cliver',           '~> 0.2.1'
+  s.add_dependency 'cliver',           '~> 0.3.1'
 
   s.add_development_dependency 'rspec',              '~> 2.12'
   s.add_development_dependency 'sinatra',            '~> 1.0'

@@ -122,6 +122,12 @@ describe Capybara::Session do
         expect(element.value).to eq('100')
       end
 
+      it 'accepts negatives in a number field' do
+        element = @session.find(:css, '#change_me_number')
+        element.set -100
+        expect(element.value).to eq('-100')
+      end
+
       it 'fires the keydown event' do
         expect(@session.find(:css, '#changes_on_keydown').text).to eq("6")
       end
@@ -414,6 +420,23 @@ describe Capybara::Session do
     end
 
     context 'frame support' do
+      it 'supports selection by index' do
+        @session.visit '/poltergeist/frames'
+
+        @session.within_frame 0 do
+          expect(@session.current_path).to eq("/poltergeist/slow")
+        end
+      end
+
+      it 'supports selection by element' do
+        @session.visit '/poltergeist/frames'
+        frame = @session.find(:css, 'iframe')
+
+        @session.within_frame(frame) do
+          expect(@session.current_path).to eq("/poltergeist/slow")
+        end
+      end
+
       it 'waits for the frame to load' do
         @session.visit '/'
 
@@ -477,7 +500,7 @@ describe Capybara::Session do
 
       it 'supports clicking in a frame nested in a frame' do
         @session.visit '/'
-        
+
         # The padding on the frame here is to differ the sizes of the two
         # frames, ensuring that their offsets are being calculated seperately.
         # This avoids a false positive where the same frame's offset is
@@ -517,7 +540,7 @@ describe Capybara::Session do
       @session.visit("/")
       @session.find(:css, "a").click
 
-      position = eval(TestSessions.logger.messages.last)["response"]["position"]
+      position = JSON.load(TestSessions.logger.messages.last)["response"]["position"]
       expect(position["x"]).to_not be_nil
       expect(position["y"]).to_not be_nil
     end

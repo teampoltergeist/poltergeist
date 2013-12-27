@@ -3,7 +3,7 @@ class Poltergeist.WebPage
                 'onLoadStarted', 'onResourceRequested', 'onResourceReceived',
                 'onError', 'onNavigationRequested', 'onUrlChanged', 'onPageCreated']
 
-  @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'release', 'render', 'renderBase64']
+  @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'release', 'render', 'renderBase64', 'goBack', 'goForward']
 
   @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'documentSize', 'beforeUpload', 'afterUpload']
 
@@ -157,6 +157,9 @@ class Poltergeist.WebPage
   setViewportSize: (size) ->
     @native.viewportSize = size
 
+  setZoomFactor: (zoom_factor) ->
+    @native.zoomFactor = zoom_factor
+
   setPaperSize: (size) ->
     @native.paperSize = size
 
@@ -296,3 +299,9 @@ class Poltergeist.WebPage
           throw new Poltergeist.BrowserError(result.error.message, result.error.stack)
     else
       result.value
+
+  canGoBack: ->
+    @native.canGoBack
+
+  canGoForward: ->
+    @native.canGoForward

@@ -9,7 +9,7 @@ provided by [PhantomJS](http://www.phantomjs.org/).
 **If you're viewing this at https://github.com/jonleighton/poltergeist,
 you're reading the documentation for the master branch.
 [View documentation for the latest release
-(1.4.1).](https://github.com/jonleighton/poltergeist/tree/v1.4.1)**
+(1.5.0).](https://github.com/jonleighton/poltergeist/tree/v1.5.0)**
 
 ## Getting help ##
 
@@ -104,6 +104,7 @@ and the following optional features:
 * `page.driver.render_base64(format, options)`
 * `page.driver.scroll_to(left, top)`
 * `page.driver.basic_authorize(user, password)`
+* `element.native.send_keys(*keys)`
 * cookie handling
 * drag-and-drop
 
@@ -241,6 +242,25 @@ page.within_window fb_popup do
 end
 ```
 
+### Sending keys ###
+
+There's an ability to send arbitrary keys to the element:
+
+``` ruby
+element = find('input#id')
+element.native.send_key('String')
+```
+
+or even more complicated:
+
+``` ruby
+element.native.send_keys('H', 'elo', :Left, 'l') # => 'Hello'
+element.native.send_key(:Enter) # triggers Enter key
+```
+Since it's implemented natively in PhantomJS this will exactly imitate user
+behavior.
+See more about [sendEvent](http://phantomjs.org/api/webpage/method/send-event.html) and
+[PhantomJS keys](https://github.com/ariya/phantomjs/commit/cab2635e66d74b7e665c44400b8b20a8f225153a)
 
 ## Customization ##
 

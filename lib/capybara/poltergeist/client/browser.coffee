@@ -121,6 +121,9 @@ class Poltergeist.Browser
   visible_text: (page_id, id) ->
     this.sendResponse this.node(page_id, id).visibleText()
 
+  delete_text: (page_id, id) ->
+    this.sendResponse this.node(page_id, id).deleteText()
+
   attribute: (page_id, id, name) ->
     this.sendResponse this.node(page_id, id).getAttribute(name)
 
@@ -259,6 +262,15 @@ class Poltergeist.Browser
     @page.setScrollPosition(left: left, top: top)
     this.sendResponse(true)
 
+  send_keys: (page_id, id, keys) ->
+    # Programmatically generated focus doesn't work for `sendKeys`.
+    # That's why we need something more realistic like user behavior.
+    this.node(page_id, id).mouseEvent('click')
+    for sequence in keys
+      key = if sequence.key? then @page.native.event.key[sequence.key] else sequence
+      @page.sendEvent('keypress', key)
+    this.sendResponse(true)
+
   render_base64: (format, full, selector = null)->
     this.set_clip_rect(full, selector)
     encoded_image = @page.renderBase64(format)
@@ -288,6 +300,10 @@ class Poltergeist.Browser
 
   set_paper_size: (size) ->
     @page.setPaperSize(size)
+    this.sendResponse(true)
+
+  set_zoom_factor: (zoom_factor) ->
+    @page.setZoomFactor(zoom_factor)
     this.sendResponse(true)
 
   resize: (width, height) ->
@@ -368,3 +384,11 @@ class Poltergeist.Browser
   # This command is purely for testing error handling
   browser_error: ->
     throw new Error('zomg')
+
+  go_back: ->
+    this.page.goBack() if this.page.canGoBack
+    this.sendResponse(true)
+
+  go_forward: ->
+    this.page.goForward() if this.page.canGoForward
+    this.sendResponse(true)
