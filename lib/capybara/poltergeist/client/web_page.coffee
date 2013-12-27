@@ -73,6 +73,8 @@ class Poltergeist.WebPage
 
   onResourceRequestedNative: (requestData, networkRequest) ->
     if this.hasOwnProperty('evalOnResourceRequested') && !this.evalOnResourceRequested(requestData)
+      @_blockedUrls ||= []
+      @_blockedUrls.push requestData.url
       networkRequest.abort()
       return
 
@@ -108,6 +110,12 @@ class Poltergeist.WebPage
   clearNetworkTraffic: ->
     @_networkTraffic = {}
 
+  blockedUrls: ->
+    @_blockedUrls || []
+
+  clearBlockedUrls: ->
+    @_blockedUrls = []
+
   content: ->
     @native.frameContent
 
@@ -116,6 +124,11 @@ class Poltergeist.WebPage
 
   title: ->
     @native.frameTitle
+
+  frameUrl: (frameName) ->
+    query = (frameName) ->
+      document.querySelector("iframe[name='#{frameName}']")?.src
+    this.evaluate(query, frameName)
 
   errors: ->
     @_errors

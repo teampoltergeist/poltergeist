@@ -687,7 +687,7 @@ module Capybara::Poltergeist
         @session.visit('/poltergeist/resource_requested_test')
         expect(@session.status_code).to eq(200)
         expect(@session).to have_content('We are loading some unwanted action here')
-        @session.within_frame 'frame' do
+        @session.within_frame 'framename' do
           expect(@session.html).not_to include('We shouldn\'t see this.')
         end
       end

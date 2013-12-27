@@ -192,6 +192,14 @@ module Capybara::Poltergeist
       command('clear_network_traffic')
     end
 
+    def blocked_urls
+      command 'blocked_urls'
+    end
+
+    def clear_blocked_urls
+      command 'clear_blocked_urls'
+    end
+
     def equals(page_id, id, other_id)
       command('equals', page_id, id, other_id)
     end
