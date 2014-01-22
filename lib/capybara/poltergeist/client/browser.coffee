@@ -318,7 +318,7 @@ class Poltergeist.Browser
     this.sendResponse(true)
 
   blocked_urls: ->
-    @page.blockedUrls()
+    this.sendResponse(@page.blockedUrls())
 
   clear_blocked_urls: ->
     @page.clearBlockedUrls()

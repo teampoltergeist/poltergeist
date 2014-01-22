@@ -74,7 +74,7 @@ class Poltergeist.WebPage
   onResourceRequestedNative: (requestData, networkRequest) ->
     if this.hasOwnProperty('evalOnResourceRequested') && !this.evalOnResourceRequested(requestData)
       @_blockedUrls ||= []
-      @_blockedUrls.push requestData.url
+      @_blockedUrls.push requestData.url unless requestData.url in @_blockedUrls
       networkRequest.abort()
       return
 
