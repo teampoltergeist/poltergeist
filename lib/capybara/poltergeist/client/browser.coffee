@@ -173,7 +173,7 @@ class Poltergeist.Browser
     @page.frameUrl(frame_name)
 
   push_frame: (name, timeout = new Date().getTime() + 2000) ->
-    if @frame_url(name) in @blocked_urls()
+    if @frame_url(name) in @page.blockedUrls()
       this.sendResponse(true)
     else if @page.pushFrame(name)
       if @page.currentUrl() == 'about:blank'
