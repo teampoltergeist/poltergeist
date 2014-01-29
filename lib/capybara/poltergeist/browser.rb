@@ -70,6 +70,10 @@ module Capybara::Poltergeist
       command 'delete_text', page_id, id
     end
 
+    def attributes(page_id, id)
+      command 'attributes', page_id, id
+    end
+
     def attribute(page_id, id, name)
       command 'attribute', page_id, id, name.to_s
     end

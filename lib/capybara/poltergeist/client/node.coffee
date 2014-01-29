@@ -2,7 +2,7 @@
 
 class Poltergeist.Node
   @DELEGATES = ['allText', 'visibleText', 'getAttribute', 'value', 'set', 'setAttribute', 'isObsolete',
-                'removeAttribute', 'isMultiple', 'select', 'tagName', 'find',
+                'removeAttribute', 'isMultiple', 'select', 'tagName', 'find', 'getAttributes',
                 'isVisible', 'position', 'trigger', 'parentId', 'mouseEventTest',
                 'scrollIntoView', 'isDOMEqual', 'isDisabled', 'deleteText']
 
