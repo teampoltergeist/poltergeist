@@ -83,6 +83,14 @@ class PoltergeistAgent.Node
   parentId: ->
     @agent.register(@element.parentNode)
 
+  parentIds: ->
+    ids = []
+    parent = @element.parentNode
+    while parent != document
+      ids.push @agent.register(parent)
+      parent = parent.parentNode
+    ids
+
   find: (method, selector) ->
     @agent.find(method, selector, @element)
 

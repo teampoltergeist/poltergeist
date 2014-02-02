@@ -49,6 +49,10 @@ module Capybara::Poltergeist
       command 'title'
     end
 
+    def parents(page_id, id)
+      command 'parents', page_id, id
+    end
+
     def find(method, selector)
       result = command('find', method, selector)
       result['ids'].map { |id| [result['page_id'], id] }
