@@ -583,5 +583,11 @@ describe Capybara::Session do
         'href' => '#', 'id' => 'my_link', 'class' => 'some_class', 'data' => 'rah!'
       )
     end
+
+    it "knows about its parents" do
+      @session.visit '/poltergeist/simple'
+      parents = @session.find(:css,'#nav').native.parents
+      expect(parents.map(&:tag_name)).to eq ['li','ul','body','html']
+    end
   end
 end
