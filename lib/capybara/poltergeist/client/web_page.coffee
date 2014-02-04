@@ -270,17 +270,18 @@ class Poltergeist.WebPage
       name, args
     )
 
-    if result.error?
-      switch result.error.message
-        when 'PoltergeistAgent.ObsoleteNode'
-          throw new Poltergeist.ObsoleteNode
-        when 'PoltergeistAgent.InvalidSelector'
-          [method, selector] = args
-          throw new Poltergeist.InvalidSelector(method, selector)
-        else
-          throw new Poltergeist.BrowserError(result.error.message, result.error.stack)
-    else
-      result.value
+    if result != null
+      if result.error?
+        switch result.error.message
+          when 'PoltergeistAgent.ObsoleteNode'
+            throw new Poltergeist.ObsoleteNode
+          when 'PoltergeistAgent.InvalidSelector'
+            [method, selector] = args
+            throw new Poltergeist.InvalidSelector(method, selector)
+          else
+            throw new Poltergeist.BrowserError(result.error.message, result.error.stack)
+      else
+        result.value
 
   canGoBack: ->
     @native.canGoBack
