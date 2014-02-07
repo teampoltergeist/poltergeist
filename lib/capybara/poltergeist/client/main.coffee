@@ -4,8 +4,7 @@ class Poltergeist
     @connection = new Poltergeist.Connection(this, port)
 
     # The QtWebKit bridge doesn't seem to like Function.prototype.bind
-    that = this
-    phantom.onError = (message, stack) -> that.onError(message, stack)
+    phantom.onError = (message, stack) => @onError(message, stack)
 
     @running = false
 
@@ -13,29 +12,28 @@ class Poltergeist
     @running = true
 
     try
-      @browser.runCommand(command.name, command.args)
+      @browser.runCommand command.name, command.args
     catch error
       if error instanceof Poltergeist.Error
-        this.sendError(error)
+        @sendError error
       else
-        this.sendError(new Poltergeist.BrowserError(error.toString(), error.stack))
+        @sendError new Poltergeist.BrowserError(error.toString(), error.stack)
 
-  sendResponse: (response) ->
-    this.send(response: response)
+  sendResponse: (response) -> @send { response }
 
   sendError: (error) ->
-    this.send(
+    @send
       error:
-        name: error.name || 'Generic',
-        args: error.args && error.args() || [error.toString()]
-    )
+        name: error.name or "Generic",
+        args: error.args and error.args() or [error.toString()]
+
 
   send: (data) ->
     # Prevents more than one response being sent for a single
     # command. This can happen in some scenarios where an error
     # is raised but the script can still continue.
     if @running
-      @connection.send(data)
+      @connection.send data
       @running = false
 
 # This is necessary because the remote debugger will wrap the
@@ -48,7 +46,7 @@ class Poltergeist.Error
 class Poltergeist.ObsoleteNode extends Poltergeist.Error
   name: "Poltergeist.ObsoleteNode"
   args: -> []
-  toString: -> this.name
+  toString: -> @name
 
 class Poltergeist.InvalidSelector extends Poltergeist.Error
   constructor: (@method, @selector) ->
@@ -77,9 +75,9 @@ class Poltergeist.BrowserError extends Poltergeist.Error
 
 # We're using phantom.libraryPath so that any stack traces
 # report the full path.
-phantom.injectJs("#{phantom.libraryPath}/web_page.js")
-phantom.injectJs("#{phantom.libraryPath}/node.js")
-phantom.injectJs("#{phantom.libraryPath}/connection.js")
-phantom.injectJs("#{phantom.libraryPath}/browser.js")
+phantom.injectJs "#{phantom.libraryPath}/web_page.js"
+phantom.injectJs "#{phantom.libraryPath}/node.js"
+phantom.injectJs "#{phantom.libraryPath}/connection.js"
+phantom.injectJs "#{phantom.libraryPath}/browser.js"
 
-new Poltergeist(phantom.args[0], phantom.args[1], phantom.args[2])
+new Poltergeist(phantom.args...)
