@@ -410,7 +410,7 @@ module Capybara::Poltergeist
         expect { @driver.browser.command 'browser_error' }.to raise_error(BrowserError)
 
         begin
-          @driver.browser.command 'browser_error'
+          @driver.browser.command 'browserError'
         rescue BrowserError => e
           expect(e.message).to include("Error: zomg")
           expect(e.message).to include("compiled/browser.js")
