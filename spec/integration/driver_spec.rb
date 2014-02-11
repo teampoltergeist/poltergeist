@@ -131,6 +131,17 @@ module Capybara::Poltergeist
         end
       end
 
+      it 'supports rendering the entire window when documentElement has no height' do
+        @session.visit('/poltergeist/fixed_positioning')
+
+        create_screenshot file, full: true
+        File.open(file, 'rb') do |f|
+          expect(ImageSize.new(f.read).size).to eq(
+            @driver.evaluate_script('[window.innerWidth, window.innerHeight]')
+          )
+        end
+      end
+
       it 'supports rendering just the selected element' do
         @session.visit('/poltergeist/long_page')
 
