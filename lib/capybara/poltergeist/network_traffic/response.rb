@@ -21,7 +21,7 @@ module Capybara::Poltergeist::NetworkTraffic
     end
 
     def redirect_url
-      @data['redirectUrl']
+      @data['redirectURL']
     end
 
     def body_size
