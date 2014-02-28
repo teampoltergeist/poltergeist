@@ -75,7 +75,8 @@ class PoltergeistAgent.Node
   @EVENTS = {
     FOCUS: ['blur', 'focus', 'focusin', 'focusout'],
     MOUSE: ['click', 'dblclick', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove',
-            'mouseover', 'mouseout', 'mouseup']
+            'mouseover', 'mouseout', 'mouseup'],
+    FORM: ['submit']
   }
 
   constructor: (@agent, @element) ->
@@ -272,12 +273,18 @@ class PoltergeistAgent.Node
         false, false, false, false, 0, null
       )
     else if Node.EVENTS.FOCUS.indexOf(name) != -1
-      event = document.createEvent('HTMLEvents')
-      event.initEvent(name, true, true)
+      event = this.obtainEvent(name)
+    else if Node.EVENTS.FORM.indexOf(name) != -1
+      event = this.obtainEvent(name)
     else
       throw "Unknown event"
 
     @element.dispatchEvent(event)
+
+  obtainEvent: (name) ->
+    event = document.createEvent('HTMLEvents')
+    event.initEvent(name, true, true)
+    event
 
   mouseEventTest: (x, y) ->
     frameOffset = this.frameOffset()

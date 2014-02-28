@@ -555,6 +555,12 @@ describe Capybara::Session do
       expect { @session.find(:xpath, '#remove_me') }.to raise_error(Capybara::Poltergeist::InvalidSelector)
     end
 
+    it 'should submit form' do
+        @session.visit('/poltergeist/send_keys')
+        @session.find(:css, '#without_submit_button').trigger('submit')
+        expect(@session.find(:css, '#without_submit_button input').value).to eq('Submitted')
+      end
+
     context 'whitespace stripping tests' do
       before do
         @session.visit '/poltergeist/filter_text_test'
