@@ -188,6 +188,25 @@ module Capybara::Poltergeist
         expect(File.exist?(file)).to be_true
       end
 
+      it 'renders to Capybara.save_and_open_page_path without path' do
+        @session.visit('/')
+
+        original_path = Capybara.save_and_open_page_path
+
+        Capybara.save_and_open_page_path = File.dirname(file)
+
+        FileUtils.rm_f file
+        @driver.save_screenshot(File.basename(file))
+        expect(File.exist?(file)).to be_true
+
+        Capybara.save_and_open_page_path = POLTERGEIST_ROOT
+
+        FileUtils.rm_f file
+        @driver.save_screenshot(file)
+        expect(File.exist?(file)).to be_true
+
+        Capybara.save_and_open_page_path = original_path
+      end
 
       shared_examples 'when #zoom_factor= is set' do
         let(:format) {:xbm}
