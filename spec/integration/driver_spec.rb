@@ -480,6 +480,26 @@ module Capybara::Poltergeist
       end
     end
 
+    context "phantomjs {'status': 'fail'} responses" do
+      before { @port = @session.server.port }
+      it "Do not occur when DNS correct" do
+        expect { @session.visit("http://localhost:#{@port}/") }.not_to raise_error
+      end
+
+      it "Should handle when DNS incorrect" do
+        expect { @session.visit("http://nope:#{@port}/") }.to raise_error(StatusFailError)
+      end
+      it "Should have a descriptive message when DNS incorrect" do
+        begin
+          @session.visit("http://nope:#{@port}/")
+        rescue StatusFailError => e
+          expect(e.message).to include("Request failed to reach server, check DNS and/or server status")
+        else
+          raise "expected StatusFailError"
+        end
+      end
+    end
+
     context "network traffic" do
       before do
         @driver.restart

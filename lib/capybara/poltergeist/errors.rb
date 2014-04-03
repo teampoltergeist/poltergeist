@@ -54,6 +54,12 @@ module Capybara
       end
     end
 
+    class StatusFailError < ClientError
+      def message
+        "Request failed to reach server, check DNS and/or server status"
+      end
+    end
+
     class FrameNotFound < ClientError
       def name
         response['args'].first

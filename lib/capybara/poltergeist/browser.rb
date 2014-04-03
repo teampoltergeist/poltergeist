@@ -7,7 +7,8 @@ module Capybara::Poltergeist
     ERROR_MAPPINGS = {
       "Poltergeist.JavascriptError" => JavascriptError,
       "Poltergeist.FrameNotFound"   => FrameNotFound,
-      "Poltergeist.InvalidSelector" => InvalidSelector
+      "Poltergeist.InvalidSelector" => InvalidSelector,
+      "Poltergeist.StatusFailError" => StatusFailError
     }
 
     attr_reader :server, :client, :logger
