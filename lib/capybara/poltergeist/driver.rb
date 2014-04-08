@@ -153,6 +153,11 @@ module Capybara::Poltergeist
     end
 
     def save_screenshot(path, options = {})
+      if Capybara.save_and_open_page_path
+        path = File.expand_path(path, Capybara.save_and_open_page_path)
+        FileUtils.mkdir_p(File.dirname(path))
+      end
+
       browser.render(path, options)
     end
     alias_method :render, :save_screenshot
