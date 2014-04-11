@@ -705,6 +705,24 @@ module Capybara::Poltergeist
       end
     end
 
+    context 'controlling onResourceRequested' do
+      it 'blocks unwanted urls' do
+        @driver.eval_on_resource_requested <<-JS
+        function (request) {
+          return !request.url.match(/unwanted/);
+        }
+        JS
+        @session.visit('/poltergeist/resource_requested_test')
+        expect(@session.status_code).to eq(200)
+
+        expect(@driver.browser.blocked_urls.first).to end_with('unwanted')
+        expect(@session).to have_content('We are loading some unwanted action here')
+        @session.within_frame 'framename' do
+          expect(@session.html).not_to include('We shouldn\'t see this.')
+        end
+      end
+    end
+
     context 'has ability to send keys' do
       before { @session.visit('/poltergeist/send_keys') }
 

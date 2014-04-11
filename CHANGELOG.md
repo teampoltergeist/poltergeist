@@ -4,6 +4,7 @@
 
 *   Added ability to set zoom_factor (Dmytro Budnyk)
 *   Write JSON to the logger, rather than Ruby [Issue #430]
+*   Added ability to block http requests (Alexander Adam)
 
 #### Bug fixes ####
 
