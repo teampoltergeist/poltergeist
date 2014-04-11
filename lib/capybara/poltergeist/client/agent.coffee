@@ -7,25 +7,24 @@ class PoltergeistAgent
 
   externalCall: (name, args) ->
     try
-      { value: this[name].apply(this, args) }
+      { value: @[name](args...) }
     catch error
       { error: { message: error.toString(), stack: error.stack } }
 
   @stringify: (object) ->
     try
       JSON.stringify object, (key, value) ->
-        if Array.isArray(this[key])
-          return this[key]
+        if Array.isArray(@[key])
+          @[key]
         else
-          return value
+          value
     catch error
       if error instanceof TypeError
         '"(cyclic structure)"'
       else
         throw error
 
-  currentUrl: ->
-    encodeURI(window.location.href)
+  currentUrl: -> encodeURI(window.location.href)
 
   find: (method, selector, within = document) ->
     try
@@ -35,7 +34,7 @@ class PoltergeistAgent
       else
         results = within.querySelectorAll(selector)
 
-      this.register(el) for el in results
+      @register(el) for el in results
     catch error
       # DOMException.INVALID_EXPRESSION_ERR is undefined, using pure code
       if error.code == DOMException.SYNTAX_ERR || error.code == 51
@@ -44,7 +43,7 @@ class PoltergeistAgent
         throw error
 
   register: (element) ->
-    @elements.push(element)
+    @elements.push element
     @elements.length - 1
 
   documentSize: ->
@@ -52,18 +51,18 @@ class PoltergeistAgent
     width:  document.documentElement.scrollWidth
 
   get: (id) ->
-    @nodes[id] or= new PoltergeistAgent.Node(this, @elements[id])
+    @nodes[id] ?= new PoltergeistAgent.Node(this, @elements[id])
 
   nodeCall: (id, name, args) ->
-    node = this.get(id)
+    node = @get(id)
     throw new PoltergeistAgent.ObsoleteNode if node.isObsolete()
-    node[name].apply(node, args)
+    node[name](args...)
 
   beforeUpload: (id) ->
-    this.get(id).setAttribute('_poltergeist_selected', '')
+    @get(id).setAttribute "_poltergeist_selected", ""
 
   afterUpload: (id) ->
-    this.get(id).removeAttribute('_poltergeist_selected')
+    @get(id).removeAttribute "_poltergeist_selected"
 
 class PoltergeistAgent.ObsoleteNode
   toString: -> "PoltergeistAgent.ObsoleteNode"
@@ -72,52 +71,78 @@ class PoltergeistAgent.InvalidSelector
   toString: -> "PoltergeistAgent.InvalidSelector"
 
 class PoltergeistAgent.Node
-  @EVENTS = {
-    FOCUS: ['blur', 'focus', 'focusin', 'focusout'],
-    MOUSE: ['click', 'dblclick', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove',
-            'mouseover', 'mouseout', 'mouseup']
-  }
+  @EVENTS =
+    FOCUS: "blur focus focusin focusout"
+    MOUSE: "click dblclick mousedown mouseenter mouseleave mousemove
+            mouseover mouseout mouseup"
+
+  @SPECIAL_KEYS =
+    96: 192  #`
+    45: 189  #-
+    61: 187  #=
+    91: 219  #[
+    93: 221  #]
+    92: 220  #\
+    59: 186  #;
+    39: 222  #'
+    44: 188  #,
+    46: 190  #.
+    47: 191  #/
+    127: 46  #delete
+    126: 192 #~
+    33: 49   #!
+    64: 50   #@
+    35: 51   ##
+    36: 52   #$
+    37: 53   #%
+    94: 54   #^
+    38: 55   #&
+    42: 56   #*
+    40: 57   #(
+    41: 48   #)
+    95: 189  #_
+    43: 187  #+
+    123: 219 #{
+    125: 221 #}
+    124: 220 #|
+    58: 186  #:
+    34: 222  #"
+    60: 188  #<
+    62: 190  #>
+    63: 191 #?
 
   constructor: (@agent, @element) ->
 
-  parentId: ->
-    @agent.register(@element.parentNode)
+  parentId: -> @agent.register(@element.parentNode)
 
-  find: (method, selector) ->
-    @agent.find(method, selector, @element)
+  find: (method, selector) -> @agent.find(method, selector, @element)
 
   isObsolete: ->
-    obsolete = (element) =>
-      if element.parentNode?
-        if element.parentNode == document
-          false
-        else
-          obsolete element.parentNode
-      else
-        true
-    obsolete @element
+    element = @element
+    element = element.parentNode while element.parentNode
+    element isnt document
 
   changed: ->
-    event = document.createEvent('HTMLEvents')
-    event.initEvent('change', true, false)
-    @element.dispatchEvent(event)
+    event = document.createEvent("HTMLEvents")
+    event.initEvent "change", true, false
+    @element.dispatchEvent event
 
   input: ->
-    event = document.createEvent('HTMLEvents')
-    event.initEvent('input', true, false)
-    @element.dispatchEvent(event)
+    event = document.createEvent("HTMLEvents")
+    event.initEvent "input", true, false
+    @element.dispatchEvent event
 
   keyupdowned: (eventName, keyCode) ->
-    event = document.createEvent('UIEvents')
-    event.initEvent(eventName, true, true)
+    event = document.createEvent("UIEvents")
+    event.initEvent eventName, true, true
     event.keyCode  = keyCode
     event.which    = keyCode
     event.charCode = 0
-    @element.dispatchEvent(event)
+    @element.dispatchEvent event
 
   keypressed: (altKey, ctrlKey, shiftKey, metaKey, keyCode, charCode) ->
-    event = document.createEvent('UIEvents')
-    event.initEvent('keypress', true, true)
+    event = document.createEvent("UIEvents")
+    event.initEvent "keypress", true, true
     event.window   = @agent.window
     event.altKey   = altKey
     event.ctrlKey  = ctrlKey
@@ -126,39 +151,38 @@ class PoltergeistAgent.Node
     event.keyCode  = keyCode
     event.charCode = charCode
     event.which    = keyCode
-    @element.dispatchEvent(event)
+    @element.dispatchEvent event
 
   insideBody: ->
     @element == document.body ||
-    document.evaluate('ancestor::body', @element, null, XPathResult.BOOLEAN_TYPE, null).booleanValue
+    document.evaluate("ancestor::body", @element, null, XPathResult.BOOLEAN_TYPE, null).booleanValue
 
   allText: ->
     @element.textContent
 
   visibleText: ->
-    if @element.nodeName == "TEXTAREA"
+    if @element.nodeName is "TEXTAREA"
       @element.textContent
     else
       @element.innerText
 
   deleteText: ->
     range = document.createRange()
-    range.selectNodeContents(@element)
-    window.getSelection().removeAllRanges()
-    window.getSelection().addRange(range)
-    window.getSelection().deleteFromDocument()
+    range.selectNodeContents @element
+    getSelection().removeAllRanges()
+    getSelection().addRange range
+    getSelection().deleteFromDocument()
 
   getAttribute: (name) ->
-    if name == 'checked' || name == 'selected'
+    if name is "checked" or name is "selected"
       @element[name]
     else
       @element.getAttribute(name)
 
-  scrollIntoView: ->
-    @element.scrollIntoViewIfNeeded()
+  scrollIntoView: -> @element.scrollIntoViewIfNeeded()
 
   value: ->
-    if @element.tagName == 'SELECT' && @element.multiple
+    if @element.tagName is "SELECT" && @element.multiple
       option.value for option in @element.children when option.selected
     else
       @element.value
@@ -166,59 +190,49 @@ class PoltergeistAgent.Node
   set: (value) ->
     return if @element.readOnly
 
-    if (@element.maxLength >= 0)
-      value = value.substr(0, @element.maxLength)
+    value = value.substr(0, @element.maxLength) if @element.maxLength >= 0
 
-    @element.value = ''
-    this.trigger('focus')
+    @element.value = ""
+    @trigger "focus"
 
-    if @element.type == 'number'
+    if @element.type is "number"
       @element.value = value
     else
       for char in value
-        keyCode = this.characterToKeyCode(char)
-        this.keyupdowned('keydown', keyCode)
+        keyCode = @characterToKeyCode(char)
+        @keyupdowned "keydown", keyCode
         @element.value += char
 
-        this.keypressed(false, false, false, false, char.charCodeAt(0), char.charCodeAt(0))
-        this.keyupdowned('keyup', keyCode)
+        @keypressed false, false, false, false, char.charCodeAt(0), char.charCodeAt(0)
+        @keyupdowned "keyup", keyCode
 
-    this.changed()
-    this.input()
-    this.trigger('blur')
+    @changed()
+    @input()
+    @trigger "blur"
 
-  isMultiple: ->
-    @element.multiple
+  isMultiple: -> @element.multiple
 
-  setAttribute: (name, value) ->
-    @element.setAttribute(name, value)
+  setAttribute: (name, value) -> @element.setAttribute name, value
 
-  removeAttribute: (name) ->
-    @element.removeAttribute(name)
+  removeAttribute: (name) -> @element.removeAttribute name
 
   select: (value) ->
-    if value == false && !@element.parentNode.multiple
+    if value is false && !@element.parentNode.multiple
       false
     else
       @element.selected = value
-      this.changed()
+      @changed()
       true
 
-  tagName: ->
-    @element.tagName
+  tagName: -> @element.tagName
 
-  isVisible: (element) ->
-    element = @element unless element
-
-    if window.getComputedStyle(element).display == 'none'
-      false
-    else if element.parentElement
-      this.isVisible element.parentElement
-    else
-      true
+  isVisible: (element = @element) ->
+    return true unless element.parentNode?
+    return false if getComputedStyle(element).display is "none"
+    @isVisible(element.parentNode)
 
   isDisabled: ->
-    @element.disabled || @element.tagName == 'OPTION' && @element.parentNode.disabled
+    @element.disabled or @element.tagName is "OPTION" and @element.parentNode.disabled
 
   frameOffset: ->
     win    = window
@@ -228,7 +242,7 @@ class PoltergeistAgent.Node
       rect  = win.frameElement.getClientRects()[0]
       style = win.getComputedStyle(win.frameElement)
       win   = win.parent
-      
+
       offset.top  += rect.top + parseInt(style.getPropertyValue("padding-top"), 10)
       offset.left += rect.left + parseInt(style.getPropertyValue("padding-left"), 10)
 
@@ -237,9 +251,9 @@ class PoltergeistAgent.Node
   position: ->
     rect = @element.getClientRects()[0]
     throw new PoltergeistAgent.ObsoleteNode unless rect
-    frameOffset = this.frameOffset()
+    frameOffset = @frameOffset()
 
-    pos = {
+    {
       top:    rect.top    + frameOffset.top,
       right:  rect.right  + frameOffset.left,
       left:   rect.left   + frameOffset.left,
@@ -248,25 +262,20 @@ class PoltergeistAgent.Node
       height: rect.height
     }
 
-    pos
-
   trigger: (name) ->
     if Node.EVENTS.MOUSE.indexOf(name) != -1
-      event = document.createEvent('MouseEvent')
-      event.initMouseEvent(
-        name, true, true, window, 0, 0, 0, 0, 0,
-        false, false, false, false, 0, null
-      )
+      event = document.createEvent("MouseEvent")
+      event.initMouseEvent name, true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null
     else if Node.EVENTS.FOCUS.indexOf(name) != -1
-      event = document.createEvent('HTMLEvents')
-      event.initEvent(name, true, true)
+      event = document.createEvent("HTMLEvents")
+      event.initEvent name, true, true
     else
       throw "Unknown event"
 
-    @element.dispatchEvent(event)
+    @element.dispatchEvent event
 
   mouseEventTest: (x, y) ->
-    frameOffset = this.frameOffset()
+    frameOffset = @frameOffset()
 
     x -= frameOffset.left
     y -= frameOffset.top
@@ -275,68 +284,28 @@ class PoltergeistAgent.Node
 
     while el
       if el == @element
-        return { status: 'success' }
+        return { status: "success" }
       else
         el = el.parentNode
 
-    { status: 'failure', selector: origEl && this.getSelector(origEl) }
+    { status: "failure", selector: origEl && @getSelector(origEl) }
 
   getSelector: (el) ->
-    selector = if el.tagName != 'HTML' then this.getSelector(el.parentNode) + ' ' else ''
+    selector = if el.tagName != 'HTML' then @getSelector(el.parentNode) + ' ' else ''
     selector += el.tagName.toLowerCase()
     selector += "##{el.id}" if el.id
-    for className in el.classList
-      selector += ".#{className}"
+    selector += ".#{className}" for className in el.classList
     selector
 
   characterToKeyCode: (character) ->
     code = character.toUpperCase().charCodeAt(0)
-    specialKeys =
-      96: 192  #`
-      45: 189  #-
-      61: 187  #=
-      91: 219  #[
-      93: 221  #]
-      92: 220  #\
-      59: 186  #;
-      39: 222  #'
-      44: 188  #,
-      46: 190  #.
-      47: 191  #/
-      127: 46  #delete
-      126: 192 #~
-      33: 49   #!
-      64: 50   #@
-      35: 51   ##
-      36: 52   #$
-      37: 53   #%
-      94: 54   #^
-      38: 55   #&
-      42: 56   #*
-      40: 57   #(
-      41: 48   #)
-      95: 189  #_
-      43: 187  #+
-      123: 219 #{
-      125: 221 #}
-      124: 220 #|
-      58: 186  #:
-      34: 222  #"
-      60: 188  #<
-      62: 190  #>
-      63: 191 #?
+    Node.SPECIAL_KEYS[code] or code
 
-    specialKeys[code] || code
-
-  isDOMEqual: (other_id) ->
-    @element == @agent.get(other_id).element
+  isDOMEqual: (other_id) -> @element == @agent.get(other_id).element
 
 window.__poltergeist = new PoltergeistAgent
 
-document.addEventListener(
-  'DOMContentLoaded',
-  -> console.log('__DOMContentLoaded')
-)
+document.addEventListener "DOMContentLoaded", -> console.log("__DOMContentLoaded")
 
 window.confirm = (message) -> true
 window.prompt  = (message, _default) -> _default or null

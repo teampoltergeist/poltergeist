@@ -30,11 +30,11 @@ module Capybara::Poltergeist
     end
 
     def current_url
-      command 'current_url'
+      command 'currentUrl'
     end
 
     def status_code
-      command 'status_code'
+      command 'statusCode'
     end
 
     def body
@@ -51,23 +51,23 @@ module Capybara::Poltergeist
 
     def find(method, selector)
       result = command('find', method, selector)
-      result['ids'].map { |id| [result['page_id'], id] }
+      result['ids'].map { |id| [result['pageId'], id] }
     end
 
     def find_within(page_id, id, method, selector)
-      command 'find_within', page_id, id, method, selector
+      command 'findWithin', page_id, id, method, selector
     end
 
     def all_text(page_id, id)
-      command 'all_text', page_id, id
+      command 'allText', page_id, id
     end
 
     def visible_text(page_id, id)
-      command 'visible_text', page_id, id
+      command 'visibleText', page_id, id
     end
 
     def delete_text(page_id, id)
-      command 'delete_text', page_id, id
+      command 'deleteText', page_id, id
     end
 
     def attribute(page_id, id, name)
@@ -83,11 +83,11 @@ module Capybara::Poltergeist
     end
 
     def select_file(page_id, id, value)
-      command 'select_file', page_id, id, value
+      command 'selectFile', page_id, id, value
     end
 
     def tag_name(page_id, id)
-      command('tag_name', page_id, id).downcase
+      command('tagName', page_id, id).downcase
     end
 
     def visible?(page_id, id)
@@ -99,7 +99,7 @@ module Capybara::Poltergeist
     end
 
     def click_coordinates(x, y)
-      command 'click_coordinates', x, y
+      command 'clickCoordinates', x, y
     end
 
     def evaluate(script)
@@ -112,14 +112,14 @@ module Capybara::Poltergeist
 
     def within_frame(handle, &block)
       if handle.is_a?(Capybara::Node::Base)
-        command 'push_frame', handle[:name] || handle[:id]
+        command 'pushFrame', handle[:name] || handle[:id]
       else
-        command 'push_frame', handle
+        command 'pushFrame', handle
       end
 
       yield
     ensure
-      command 'pop_frame'
+      command 'popFrame'
     end
 
     def window_handles
@@ -127,10 +127,10 @@ module Capybara::Poltergeist
     end
 
     def within_window(name, &block)
-      command 'push_window', name
+      command 'pushWindow', name
       yield
     ensure
-      command 'pop_window'
+      command 'popWindow'
     end
 
     def click(page_id, id)
@@ -138,7 +138,7 @@ module Capybara::Poltergeist
     end
 
     def double_click(page_id, id)
-      command 'double_click', page_id, id
+      command 'doubleClick', page_id, id
     end
 
     def hover(page_id, id)
@@ -162,7 +162,7 @@ module Capybara::Poltergeist
     end
 
     def scroll_to(left, top)
-      command 'scroll_to', left, top
+      command 'scrollTo', left, top
     end
 
     def render(path, options = {})
@@ -172,15 +172,15 @@ module Capybara::Poltergeist
 
     def render_base64(format, options = {})
       check_render_options!(options)
-      command 'render_base64', format.to_s, !!options[:full], options[:selector]
+      command 'renderBase64', format.to_s, !!options[:full], options[:selector]
     end
 
     def set_zoom_factor(zoom_factor)
-      command 'set_zoom_factor', zoom_factor
+      command 'setZoomFactor', zoom_factor
     end
 
     def set_paper_size(size)
-      command 'set_paper_size', size
+      command 'setPaperSize', size
     end
 
     def resize(width, height)
@@ -188,11 +188,11 @@ module Capybara::Poltergeist
     end
 
     def send_keys(page_id, id, keys)
-      command 'send_keys', page_id, id, normalize_keys(keys)
+      command 'sendKeys', page_id, id, normalize_keys(keys)
     end
 
     def network_traffic
-      command('network_traffic').values.map do |event|
+      command('networkTraffic').values.map do |event|
         NetworkTraffic::Request.new(
           event['request'],
           event['responseParts'].map { |response| NetworkTraffic::Response.new(response) }
@@ -201,7 +201,7 @@ module Capybara::Poltergeist
     end
 
     def clear_network_traffic
-      command('clear_network_traffic')
+      command 'clearNetworkTraffic'
     end
 
     def equals(page_id, id, other_id)
@@ -209,23 +209,23 @@ module Capybara::Poltergeist
     end
 
     def get_headers
-      command 'get_headers'
+      command 'getHeaders'
     end
 
     def set_headers(headers)
-      command 'set_headers', headers
+      command 'setHeaders', headers
     end
 
     def add_headers(headers)
-      command 'add_headers', headers
+      command 'addHeaders', headers
     end
 
     def add_header(header, permanent)
-      command 'add_header', header, permanent
+      command 'addHeader', header, permanent
     end
 
     def response_headers
-      command 'response_headers'
+      command 'responseHeaders'
     end
 
     def cookies
@@ -237,34 +237,34 @@ module Capybara::Poltergeist
         cookie[:expires] = cookie[:expires].to_i * 1000
       end
 
-      command 'set_cookie', cookie
+      command 'setCookie', cookie
     end
 
     def remove_cookie(name)
-      command 'remove_cookie', name
+      command 'removeCookie', name
     end
 
     def cookies_enabled=(flag)
-      command 'cookies_enabled', !!flag
+      command 'cookiesEnabled', !!flag
     end
 
     def set_http_auth(user, password)
-      command 'set_http_auth', user, password
+      command 'setHttpAuth', user, password
     end
 
     def js_errors=(val)
-      command 'set_js_errors', !!val
+      command 'setJsErrors', !!val
     end
 
     def extensions=(names)
       Array(names).each do |name|
-        command 'add_extension', name
+        command 'addExtension', name
       end
     end
 
     def debug=(val)
       @debug = val
-      command 'set_debug', !!val
+      command 'setDebug', !!val
     end
 
     def command(name, *args)
@@ -288,11 +288,11 @@ module Capybara::Poltergeist
     end
 
     def go_back
-      command 'go_back'
+      command 'goBack'
     end
 
     def go_forward
-      command 'go_forward'
+      command 'goForward'
     end
 
     private
