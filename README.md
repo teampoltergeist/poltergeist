@@ -293,7 +293,7 @@ end
 *   `:extensions` (Array) - An array of JS files to be preloaded into
     the phantomjs browser. Useful for faking unsupported APIs.
 *   `:port` (Fixnum) - The port which should be used to communicate
-    with the PhantomJS process. Default: 44678.
+    with the PhantomJS process. Defaults to a random open port.
 
 ## Troubleshooting ##
 
