@@ -237,7 +237,14 @@ class Poltergeist.WebPage
 
   evaluate: (fn, args...) ->
     this.injectAgent()
-    JSON.parse @native.evaluate("function() { return PoltergeistAgent.stringify(#{this.stringifyCall(fn, args)}) }")
+    JSON.parse this.sanitize(@native.evaluate("function() { return PoltergeistAgent.stringify(#{this.stringifyCall(fn, args)}) }"))
+
+  sanitize: (potential_string) ->
+    if typeof(potential_string) == "string"
+      # JSON doesn't like \r or \n in strings unless escaped
+      potential_string.replace("\n","\\n").replace("\r","\\r")
+    else
+      potential_string
 
   execute: (fn, args...) ->
     @native.evaluate("function() { #{this.stringifyCall(fn, args)} }")
@@ -270,17 +277,18 @@ class Poltergeist.WebPage
       name, args
     )
 
-    if result.error?
-      switch result.error.message
-        when 'PoltergeistAgent.ObsoleteNode'
-          throw new Poltergeist.ObsoleteNode
-        when 'PoltergeistAgent.InvalidSelector'
-          [method, selector] = args
-          throw new Poltergeist.InvalidSelector(method, selector)
-        else
-          throw new Poltergeist.BrowserError(result.error.message, result.error.stack)
-    else
-      result.value
+    if result != null
+      if result.error?
+        switch result.error.message
+          when 'PoltergeistAgent.ObsoleteNode'
+            throw new Poltergeist.ObsoleteNode
+          when 'PoltergeistAgent.InvalidSelector'
+            [method, selector] = args
+            throw new Poltergeist.InvalidSelector(method, selector)
+          else
+            throw new Poltergeist.BrowserError(result.error.message, result.error.stack)
+      else
+        result.value
 
   canGoBack: ->
     @native.canGoBack
