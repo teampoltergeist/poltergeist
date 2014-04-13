@@ -9,6 +9,8 @@
 
 *   Fix `set` appending to `contenteditable` instead of replacing its text
     (Pedro Carriço and Erik Ostrom) [Issue #432]
+*   Raise exception on PhantomJS "status: fail" result (i.e DNS issue) instead
+    of returning minimal HTML body (Dean Holdren) [Issue #473]
 
 ### 1.5.0 ###
 

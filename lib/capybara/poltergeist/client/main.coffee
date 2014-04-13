@@ -75,6 +75,10 @@ class Poltergeist.BrowserError extends Poltergeist.Error
   name: "Poltergeist.BrowserError"
   args: -> [@message, @stack]
 
+class Poltergeist.StatusFailError extends Poltergeist.Error
+  name: "Poltergeist.StatusFailError"
+  args: -> []
+
 # We're using phantom.libraryPath so that any stack traces
 # report the full path.
 phantom.injectJs("#{phantom.libraryPath}/web_page.js")

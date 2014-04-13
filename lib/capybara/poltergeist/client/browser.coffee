@@ -66,6 +66,8 @@ class Poltergeist.Browser
 
     if errors.length > 0 && @js_errors
       @owner.sendError(new Poltergeist.JavascriptError(errors))
+    else if @page.statusCode() == null && response? && response['status'] == 'fail'
+      @owner.sendError(new Poltergeist.StatusFailError)
     else
       @owner.sendResponse(response)
 
