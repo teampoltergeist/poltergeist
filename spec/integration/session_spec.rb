@@ -576,5 +576,12 @@ describe Capybara::Session do
         expect(@session.find(:css, '#qux').text).to eq 'qux'
       end
     end
+
+    it "allows access to element attributes" do
+      @session.visit "/poltergeist/attributes"
+      expect(@session.find(:css,'#my_link').native.attributes).to eq(
+        'href' => '#', 'id' => 'my_link', 'class' => 'some_class', 'data' => 'rah!'
+      )
+    end
   end
 end
