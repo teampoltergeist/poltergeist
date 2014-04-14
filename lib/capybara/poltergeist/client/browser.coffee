@@ -132,6 +132,9 @@ class Poltergeist.Browser
   attributes: (page_id, id, name) ->
     this.sendResponse this.node(page_id, id).getAttributes()
 
+  parents: (page_id, id) ->
+    this.sendResponse this.node(page_id, id).parentIds()
+
   value: (page_id, id) ->
     this.sendResponse this.node(page_id, id).value()
 

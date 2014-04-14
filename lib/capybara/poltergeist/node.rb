@@ -26,6 +26,10 @@ module Capybara::Poltergeist
       end
     end
 
+    def parents
+      command(:parents).map { |parent_id| self.class.new(driver, page_id, parent_id) }
+    end
+
     def find(method, selector)
       command(:find_within, method, selector).map { |id| self.class.new(driver, page_id, id) }
     end
