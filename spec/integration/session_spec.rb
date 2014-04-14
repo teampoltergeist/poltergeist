@@ -576,5 +576,11 @@ describe Capybara::Session do
         expect(@session.find(:css, '#qux').text).to eq 'qux'
       end
     end
+
+    it "knows about its parents" do
+      @session.visit '/poltergeist/simple'
+      parents = @session.find(:css,'#nav').native.parents
+      expect(parents.map &:tag_name).to eq ['li','ul','body','html']
+    end
   end
 end
