@@ -71,15 +71,22 @@ class Poltergeist.WebPage
 
     @_errors.push(message: message, stack: stackString)
 
-  onResourceRequestedNative: (request) ->
-    @lastRequestId = request.id
+  onResourceRequestedNative: (requestData, networkRequest) ->
+    if this.hasOwnProperty('evalOnResourceRequested') && !this.evalOnResourceRequested(requestData)
+      @_blockedUrls ||= []
+      @_blockedUrls.push requestData.url unless requestData.url in @_blockedUrls
+      networkRequest.abort()
+      return
 
-    if request.url == @redirectURL
+
+    @lastRequestId = requestData.id
+
+    if requestData.url == @redirectURL
       @redirectURL = null
-      @requestId   = request.id
+      @requestId   = requestData.id
 
-    @_networkTraffic[request.id] = {
-      request:       request,
+    @_networkTraffic[requestData.id] = {
+      request:       requestData,
       responseParts: []
     }
 
@@ -103,6 +110,12 @@ class Poltergeist.WebPage
   clearNetworkTraffic: ->
     @_networkTraffic = {}
 
+  blockedUrls: ->
+    @_blockedUrls || []
+
+  clearBlockedUrls: ->
+    @_blockedUrls = []
+
   content: ->
     @native.frameContent
 
@@ -111,6 +124,11 @@ class Poltergeist.WebPage
 
   title: ->
     @native.frameTitle
+
+  frameUrl: (frameName) ->
+    query = (frameName) ->
+      document.querySelector("iframe[name='#{frameName}']")?.src
+    this.evaluate(query, frameName)
 
   errors: ->
     @_errors

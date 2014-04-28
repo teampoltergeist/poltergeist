@@ -173,8 +173,17 @@ class Poltergeist.Browser
     @page.execute("function() { #{script} }")
     this.sendResponse(true)
 
+  eval_on_resource_requested: (script) ->
+    @page.evalOnResourceRequested = eval("(#{script})")
+    this.sendResponse(true)
+
+  frame_url: (frame_name) ->
+    @page.frameUrl(frame_name)
+
   push_frame: (name, timeout = new Date().getTime() + 2000) ->
-    if @page.pushFrame(name)
+    if @frame_url(name) in @page.blockedUrls()
+      this.sendResponse(true)
+    else if @page.pushFrame(name)
       if @page.currentUrl() == 'about:blank'
         this.setState 'awaiting_frame_load'
       else
@@ -314,6 +323,13 @@ class Poltergeist.Browser
 
   clear_network_traffic: ->
     @page.clearNetworkTraffic()
+    this.sendResponse(true)
+
+  blocked_urls: ->
+    this.sendResponse(@page.blockedUrls())
+
+  clear_blocked_urls: ->
+    @page.clearBlockedUrls()
     this.sendResponse(true)
 
   get_headers: ->
