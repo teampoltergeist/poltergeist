@@ -48,8 +48,8 @@ class PoltergeistAgent
     @elements.length - 1
 
   documentSize: ->
-    height: document.documentElement.scrollHeight,
-    width:  document.documentElement.scrollWidth
+    height: document.documentElement.scrollHeight || document.documentElement.clientHeight,
+    width:  document.documentElement.scrollWidth  || document.documentElement.clientWidth
 
   get: (id) ->
     @nodes[id] or= new PoltergeistAgent.Node(this, @elements[id])
