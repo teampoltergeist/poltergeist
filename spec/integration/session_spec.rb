@@ -633,5 +633,15 @@ describe Capybara::Session do
       parents = @session.find(:css, '#nav').native.parents
       expect(parents.map(&:tag_name)).to eq ['li','ul','body','html']
     end
+
+    context 'SVG tests' do
+      before do
+        @session.visit '/poltergeist/svg_test'
+      end
+
+      it 'gets text from tspan node' do
+        expect(@session.find(:css, 'tspan').text).to eq 'svg foo'
+      end
+    end
   end
 end
