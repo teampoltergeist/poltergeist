@@ -577,6 +577,16 @@ describe Capybara::Session do
       end
     end
 
+    context 'SVG tests' do
+      before do
+        @session.visit '/poltergeist/svg_test'
+      end
+
+      it 'gets text from tspan node' do
+        expect(@session.find(:css, 'tspan').text).to eq 'svg foo'
+      end
+    end
+
     it "allows access to element attributes" do
       @session.visit "/poltergeist/attributes"
       expect(@session.find(:css,'#my_link').native.attributes).to eq(
