@@ -6,10 +6,10 @@ Poltergeist is a driver for [Capybara](https://github.com/jnicklas/capybara). It
 run your Capybara tests on a headless [WebKit](http://webkit.org) browser,
 provided by [PhantomJS](http://www.phantomjs.org/).
 
-**If you're viewing this at https://github.com/jonleighton/poltergeist,
+**If you're viewing this at https://github.com/teampoltergeist/poltergeist,
 you're reading the documentation for the master branch.
 [View documentation for the latest release
-(1.5.0).](https://github.com/jonleighton/poltergeist/tree/v1.5.0)**
+(1.5.0).](https://github.com/teampoltergeist/poltergeist/tree/v1.5.0)**
 
 ## Getting help ##
 
@@ -17,7 +17,7 @@ Questions should be posted [on Stack
 Overflow, using the 'poltergeist' tag](http://stackoverflow.com/questions/tagged/poltergeist).
 
 Bug reports should be posted [on
-GitHub](https://github.com/jonleighton/poltergeist/issues) (and be sure
+GitHub](https://github.com/teampoltergeist/poltergeist/issues) (and be sure
 to read the bug reporting guidance below).
 
 ## Installation ##
