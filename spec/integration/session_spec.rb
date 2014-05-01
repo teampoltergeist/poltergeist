@@ -246,7 +246,7 @@ describe Capybara::Session do
         end
       end
 
-      # See https://github.com/jonleighton/poltergeist/issues/60
+      # See https://github.com/teampoltergeist/poltergeist/issues/60
       it "fixes some weird layout issue that we're not entirely sure about the reason for" do
         @session.visit '/poltergeist/datepicker'
         @session.find(:css, '#datepicker').set('2012-05-11')
@@ -304,7 +304,7 @@ describe Capybara::Session do
       before do
         @session.visit '/poltergeist/double_click_test'
       end
-      
+
       it 'double clicks properly' do
         @session.driver.resize(200, 200)
         log = @session.find(:css, '#log')
@@ -316,7 +316,7 @@ describe Capybara::Session do
         end
       end
     end
-    
+
     context 'status code support', :status_code_support => true do
       it 'determines status code when an user goes to a page by using a link on it' do
         @session.visit '/poltergeist/with_different_resources'
@@ -530,7 +530,7 @@ describe Capybara::Session do
       end
     end
 
-    # see https://github.com/jonleighton/poltergeist/issues/115
+    # see https://github.com/teampoltergeist/poltergeist/issues/115
     it "handles obsolete node during an attach_file" do
       @session.visit "/poltergeist/attach_file"
       @session.attach_file "file", __FILE__
