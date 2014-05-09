@@ -19,7 +19,7 @@ module Capybara::Poltergeist
     end
 
     def url
-      "http://localhost:#{port}/"
+      "//localhost:#{port}/"
     end
 
     def open
