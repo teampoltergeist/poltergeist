@@ -779,6 +779,16 @@ module Capybara::Poltergeist
         expect(input.text).to eq('Input')
       end
 
+      it 'persists focus across calls' do
+        input = @session.find(:css, '#empty_div')
+
+        input.native.send_keys('helo')
+        input.native.send_keys(:Left)
+        input.native.send_keys('l')
+
+        expect(input.text).to eq('hello')
+      end
+
       it 'sends keys to filled contenteditable div' do
         input = @session.find(:css, '#filled_div')
 
