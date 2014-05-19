@@ -235,6 +235,16 @@ class PoltergeistAgent.Node
   isDisabled: ->
     @element.disabled || @element.tagName == 'OPTION' && @element.parentNode.disabled
 
+  containsSelection: ->
+    selectedNode = document.getSelection().focusNode
+
+    return false if !selectedNode
+
+    if selectedNode.nodeType == 3
+      selectedNode = selectedNode.parentNode
+
+    @element.contains(selectedNode)
+
   frameOffset: ->
     win    = window
     offset = { top: 0, left: 0 }
