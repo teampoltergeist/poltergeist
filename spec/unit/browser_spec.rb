@@ -3,8 +3,8 @@ require 'stringio'
 
 module Capybara::Poltergeist
   describe Browser do
-    let(:server) { double("server").as_null_object }
-    let(:client) { double("client").as_null_object }
+    let(:server) { double('server').as_null_object }
+    let(:client) { double('client').as_null_object }
 
     context 'with a logger' do
       let(:logger) { StringIO.new }

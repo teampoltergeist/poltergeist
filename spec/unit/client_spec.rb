@@ -12,7 +12,7 @@ module Capybara::Poltergeist
         expect { subject }.to raise_error(Cliver::Dependency::VersionMismatch)
       end
 
-      it "doesn't raise an error if phantomjs is too new" do
+      it 'does not raise an error if phantomjs is too new' do
         begin
           stub_version('1.10.0 (development)')
           expect { subject }.to_not raise_error
@@ -45,7 +45,7 @@ module Capybara::Poltergeist
     end
 
     unless Capybara::Poltergeist.windows?
-      it "forcibly kills the child if it doesn't respond to SIGTERM" do
+      it 'forcibly kills the child if it does not respond to SIGTERM' do
         client = Client.new(server)
 
         Process.stub(spawn: 5678)

@@ -27,31 +27,31 @@ describe Capybara::Session do
       it 'raises an error if the element is not visible' do
         @session.visit('/poltergeist/index')
         @session.execute_script "document.querySelector('a[href=js_redirect]').style.display = 'none'"
-        expect { @session.click_link "JS redirect" }.to raise_error(Capybara::ElementNotFound)
+        expect { @session.click_link 'JS redirect' }.to raise_error(Capybara::ElementNotFound)
       end
 
       it 'hovers an element' do
         @session.visit('/poltergeist/with_js')
-        expect(@session.find(:css, '#hidden_link span', :visible => false)).to_not be_visible
+        expect(@session.find(:css, '#hidden_link span', visible: false)).to_not be_visible
         @session.find(:css, '#hidden_link').hover
         expect(@session.find(:css, '#hidden_link span')).to be_visible
       end
 
       it 'hovers an element before clicking it' do
         @session.visit('/poltergeist/with_js')
-        @session.click_link "Hidden link"
+        @session.click_link 'Hidden link'
         expect(@session.current_path).to eq('/')
       end
 
-      it "doesn't raise error when asserting svg elements with a count that is not what is in the dom" do
+      it 'does not raise error when asserting svg elements with a count that is not what is in the dom' do
         @session.visit('/poltergeist/with_js')
         expect { @session.has_css?('svg circle', count: 2) }.to_not raise_error
         expect(@session).to_not have_css('svg circle', count: 2)
       end
 
-      context "when someone (*cough* prototype *cough*) messes with Array#toJSON" do
+      context 'when someone (*cough* prototype *cough*) messes with Array#toJSON' do
         before do
-          @session.visit("/poltergeist/index")
+          @session.visit('/poltergeist/index')
           array_munge = <<-EOS
           Array.prototype.toJSON = function() {
             return "ohai";
@@ -60,28 +60,28 @@ describe Capybara::Session do
           @session.execute_script array_munge
         end
 
-        it "gives a proper error" do
-          expect { @session.find(:css, "username") }.to raise_error(Capybara::ElementNotFound)
+        it 'gives a proper error' do
+          expect { @session.find(:css, 'username') }.to raise_error(Capybara::ElementNotFound)
         end
       end
 
-      context "when the element is not in the viewport" do
+      context 'when the element is not in the viewport' do
         before do
-          @session.visit("/poltergeist/with_js")
+          @session.visit('/poltergeist/with_js')
         end
 
-        it "raises a MouseEventFailed error" do
-          expect { @session.click_link("O hai") }.to raise_error(Capybara::Poltergeist::MouseEventFailed)
+        it 'raises a MouseEventFailed error' do
+          expect { @session.click_link('O hai') }.to raise_error(Capybara::Poltergeist::MouseEventFailed)
         end
 
-        context "and is then brought in" do
+        context 'and is then brought in' do
           before do
             @session.execute_script "$('#off-the-left').animate({left: '10'});"
             Capybara.default_wait_time = 1 #we need capybara to retry until animation finished
           end
 
-          it "clicks properly" do
-            expect { @session.click_link "O hai" }.to_not raise_error
+          it 'clicks properly' do
+            expect { @session.click_link 'O hai' }.to_not raise_error
           end
 
           after do
@@ -91,13 +91,13 @@ describe Capybara::Session do
       end
     end
 
-    context "when the element is not in the viewport of parent element" do
+    context 'when the element is not in the viewport of parent element' do
       before do
-        @session.visit("/poltergeist/scroll")
+        @session.visit('/poltergeist/scroll')
       end
 
-      it "scrolls into view" do
-        @session.click_link "Link outside viewport"
+      it 'scrolls into view' do
+        @session.click_link 'Link outside viewport'
         expect(@session.current_path).to eq('/')
       end
     end
@@ -105,15 +105,15 @@ describe Capybara::Session do
     describe 'Node#set' do
       before do
         @session.visit('/poltergeist/with_js')
-        @session.find(:css, '#change_me').set("Hello!")
+        @session.find(:css, '#change_me').set('Hello!')
       end
 
       it 'fires the change event' do
-        expect(@session.find(:css, '#changes').text).to eq("Hello!")
+        expect(@session.find(:css, '#changes').text).to eq('Hello!')
       end
 
       it 'fires the input event' do
-        expect(@session.find(:css, '#changes_on_input').text).to eq("Hello!")
+        expect(@session.find(:css, '#changes_on_input').text).to eq('Hello!')
       end
 
       it 'accepts numbers in a maxlength field' do
@@ -129,43 +129,43 @@ describe Capybara::Session do
       end
 
       it 'fires the keydown event' do
-        expect(@session.find(:css, '#changes_on_keydown').text).to eq("6")
+        expect(@session.find(:css, '#changes_on_keydown').text).to eq('6')
       end
 
       it 'fires the keyup event' do
-        expect(@session.find(:css, '#changes_on_keyup').text).to eq("6")
+        expect(@session.find(:css, '#changes_on_keyup').text).to eq('6')
       end
 
       it 'fires the keypress event' do
-        expect(@session.find(:css, '#changes_on_keypress').text).to eq("6")
+        expect(@session.find(:css, '#changes_on_keypress').text).to eq('6')
       end
 
       it 'fires the focus event' do
-        expect(@session.find(:css, '#changes_on_focus').text).to eq("Focus")
+        expect(@session.find(:css, '#changes_on_focus').text).to eq('Focus')
       end
 
       it 'fires the blur event' do
-        expect(@session.find(:css, '#changes_on_blur').text).to eq("Blur")
+        expect(@session.find(:css, '#changes_on_blur').text).to eq('Blur')
       end
 
-      it "fires the keydown event before the value is updated" do
-        expect(@session.find(:css, '#value_on_keydown').text).to eq("Hello")
+      it 'fires the keydown event before the value is updated' do
+        expect(@session.find(:css, '#value_on_keydown').text).to eq('Hello')
       end
 
-      it "fires the keyup event after the value is updated" do
-        expect(@session.find(:css, '#value_on_keyup').text).to eq("Hello!")
+      it 'fires the keyup event after the value is updated' do
+        expect(@session.find(:css, '#value_on_keyup').text).to eq('Hello!')
       end
 
-      it "clears the input before setting the new value" do
+      it 'clears the input before setting the new value' do
         element = @session.find(:css, '#change_me')
-        element.set ""
-        expect(element.value).to eq("")
+        element.set ''
+        expect(element.value).to eq('')
       end
 
-      it "supports special characters" do
-        element = @session.find(:css, "#change_me")
-        element.set "$52.00"
-        expect(element.value).to eq("$52.00")
+      it 'supports special characters' do
+        element = @session.find(:css, '#change_me')
+        element.set '$52.00'
+        expect(element.value).to eq('$52.00')
       end
 
       it 'attaches a file when passed a Pathname' do
@@ -186,7 +186,7 @@ describe Capybara::Session do
         el.parentNode.removeChild(el)
       JS
       @session.click_link('Phasellus blandit velit')
-      expect(@session).to have_content("Hello")
+      expect(@session).to have_content('Hello')
     end
 
     it 'handles clicks where the target is in view, but the document is smaller than the viewport' do
@@ -208,7 +208,7 @@ describe Capybara::Session do
 
     it 'handles window.prompt(), returning the default value or null' do
       @session.visit '/'
-      expect(@session.evaluate_script("window.prompt()")).to be_nil
+      expect(@session.evaluate_script('window.prompt()')).to be_nil
       expect(@session.evaluate_script("window.prompt('foo', 'default')")).to eq('default')
     end
 
@@ -216,14 +216,14 @@ describe Capybara::Session do
       expect(@session.evaluate_script('null')).to be_nil
       expect(@session.evaluate_script('false')).to be_false
       expect(@session.evaluate_script('true')).to be_true
-      expect(@session.evaluate_script("{foo: 'bar'}")).to eq({"foo" => "bar"})
+      expect(@session.evaluate_script("{foo: 'bar'}")).to eq({'foo' => 'bar'})
     end
 
-    it "synchronises page loads properly" do
+    it 'synchronises page loads properly' do
       @session.visit '/poltergeist/index'
-      @session.click_link "JS redirect"
+      @session.click_link 'JS redirect'
       sleep 0.1
-      expect(@session.html).to include("Hello world")
+      expect(@session.html).to include('Hello world')
     end
 
     context 'click tests' do
@@ -247,7 +247,7 @@ describe Capybara::Session do
       end
 
       # See https://github.com/teampoltergeist/poltergeist/issues/60
-      it "fixes some weird layout issue that we're not entirely sure about the reason for" do
+      it 'fixes some weird layout issue that we are not entirely sure about the reason for' do
         @session.visit '/poltergeist/datepicker'
         @session.find(:css, '#datepicker').set('2012-05-11')
         @session.click_link 'some link'
@@ -271,7 +271,7 @@ describe Capybara::Session do
           begin
             @session.find(:css, '#one').click
           rescue => error
-            expect(error.selector).to eq("html body div#two.box")
+            expect(error.selector).to eq('html body div#two.box')
             expect(error.message).to include('[200, 200]')
           end
         end
@@ -295,8 +295,8 @@ describe Capybara::Session do
         end
       end
 
-      it "can evaluate a statement ending with a semicolon" do
-        expect(@session.evaluate_script("3;")).to eq(3)
+      it 'can evaluate a statement ending with a semicolon' do
+        expect(@session.evaluate_script('3;')).to eq(3)
       end
     end
 
@@ -317,7 +317,7 @@ describe Capybara::Session do
       end
     end
 
-    context 'status code support', :status_code_support => true do
+    context 'status code support', status_code_support: true do
       it 'determines status code when an user goes to a page by using a link on it' do
         @session.visit '/poltergeist/with_different_resources'
 
@@ -345,12 +345,12 @@ describe Capybara::Session do
           return a
         })()
       CODE
-      expect(@session.evaluate_script(code)).to eq("(cyclic structure)")
+      expect(@session.evaluate_script(code)).to eq('(cyclic structure)')
     end
 
     it 'returns BR as a space in #text' do
       @session.visit '/poltergeist/simple'
-      expect(@session.find(:css, '#break').text).to eq("Foo Bar")
+      expect(@session.find(:css, '#break').text).to eq('Foo Bar')
     end
 
     it 'handles hash changes' do
@@ -361,7 +361,7 @@ describe Capybara::Session do
       CODE
       @session.visit '/#foo'
       expect(@session.current_url).to match(/\/#foo$/)
-      expect(@session.evaluate_script("window.last_hashchange")).to eq('#foo')
+      expect(@session.evaluate_script('window.last_hashchange')).to eq('#foo')
     end
 
     it 'supports retrieving the URL of pages with escaped characters' do
@@ -424,7 +424,7 @@ describe Capybara::Session do
         @session.visit '/poltergeist/frames'
 
         @session.within_frame 0 do
-          expect(@session.current_path).to eq("/poltergeist/slow")
+          expect(@session.current_path).to eq('/poltergeist/slow')
         end
       end
 
@@ -433,7 +433,7 @@ describe Capybara::Session do
         frame = @session.find(:css, 'iframe')
 
         @session.within_frame(frame) do
-          expect(@session.current_path).to eq("/poltergeist/slow")
+          expect(@session.current_path).to eq('/poltergeist/slow')
         end
       end
 
@@ -447,7 +447,7 @@ describe Capybara::Session do
         CODE
 
         @session.within_frame 'frame' do
-          expect(@session.current_path).to eq("/poltergeist/slow")
+          expect(@session.current_path).to eq('/poltergeist/slow')
           expect(@session.html).to include('slow page')
         end
 
@@ -477,8 +477,8 @@ describe Capybara::Session do
 
         @session.within_frame 'frame' do
           log = @session.find(:css, '#log')
-          @session.find(:css, "#one").click
-          expect(log.text).to eq("one")
+          @session.find(:css, '#one').click
+          expect(log.text).to eq('one')
         end
       end
 
@@ -493,8 +493,8 @@ describe Capybara::Session do
 
         @session.within_frame 'padded_frame' do
           log = @session.find(:css, '#log')
-          @session.find(:css, "#one").click
-          expect(log.text).to eq("one")
+          @session.find(:css, '#one').click
+          expect(log.text).to eq('one')
         end
       end
 
@@ -515,13 +515,13 @@ describe Capybara::Session do
         @session.within_frame 'outer_frame' do
           @session.within_frame 'inner_frame' do
             log = @session.find(:css, '#log')
-            @session.find(:css, "#one").click
-            expect(log.text).to eq("one")
+            @session.find(:css, '#one').click
+            expect(log.text).to eq('one')
           end
         end
       end
 
-      it "doesn't wait forever for the frame to load" do
+      it 'does not wait forever for the frame to load' do
         @session.visit '/'
 
         expect {
@@ -531,23 +531,23 @@ describe Capybara::Session do
     end
 
     # see https://github.com/teampoltergeist/poltergeist/issues/115
-    it "handles obsolete node during an attach_file" do
-      @session.visit "/poltergeist/attach_file"
-      @session.attach_file "file", __FILE__
+    it 'handles obsolete node during an attach_file' do
+      @session.visit '/poltergeist/attach_file'
+      @session.attach_file 'file', __FILE__
     end
 
-    it "logs mouse event co-ordinates" do
-      @session.visit("/")
-      @session.find(:css, "a").click
+    it 'logs mouse event co-ordinates' do
+      @session.visit('/')
+      @session.find(:css, 'a').click
 
-      position = JSON.load(TestSessions.logger.messages.last)["response"]["position"]
-      expect(position["x"]).to_not be_nil
-      expect(position["y"]).to_not be_nil
+      position = JSON.load(TestSessions.logger.messages.last)['response']['position']
+      expect(position['x']).to_not be_nil
+      expect(position['y']).to_not be_nil
     end
 
-    it "throws an error on an invalid selector" do
-      @session.visit "/poltergeist/table"
-      expect { @session.find(:css, "table tr:last") }.to raise_error(Capybara::Poltergeist::InvalidSelector)
+    it 'throws an error on an invalid selector' do
+      @session.visit '/poltergeist/table'
+      expect { @session.find(:css, 'table tr:last') }.to raise_error(Capybara::Poltergeist::InvalidSelector)
     end
 
     it 'throws an error on wrong xpath' do
@@ -583,16 +583,16 @@ describe Capybara::Session do
       end
     end
 
-    it "allows access to element attributes" do
-      @session.visit "/poltergeist/attributes"
+    it 'allows access to element attributes' do
+      @session.visit '/poltergeist/attributes'
       expect(@session.find(:css,'#my_link').native.attributes).to eq(
         'href' => '#', 'id' => 'my_link', 'class' => 'some_class', 'data' => 'rah!'
       )
     end
 
-    it "knows about its parents" do
+    it 'knows about its parents' do
       @session.visit '/poltergeist/simple'
-      parents = @session.find(:css,'#nav').native.parents
+      parents = @session.find(:css, '#nav').native.parents
       expect(parents.map(&:tag_name)).to eq ['li','ul','body','html']
     end
   end

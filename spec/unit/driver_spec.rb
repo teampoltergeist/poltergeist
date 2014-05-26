@@ -15,7 +15,7 @@ module Capybara::Poltergeist
     end
 
     context 'with a :logger option' do
-      subject { Driver.new(nil, :logger => :my_custom_logger) }
+      subject { Driver.new(nil, logger: :my_custom_logger) }
 
       it 'logs to the logger given' do
         expect(subject.logger).to eq(:my_custom_logger)
@@ -23,15 +23,15 @@ module Capybara::Poltergeist
     end
 
     context 'with a :phantomjs_logger option' do
-      subject { Driver.new(nil, :phantomjs_logger => :my_custom_logger) }
+      subject { Driver.new(nil, phantomjs_logger: :my_custom_logger) }
 
       it 'logs to the phantomjs_logger given' do
         expect(subject.phantomjs_logger).to eq(:my_custom_logger)
       end
     end
 
-    context 'with a :debug => true option' do
-      subject { Driver.new(nil, :debug => true) }
+    context 'with a :debug option' do
+      subject { Driver.new(nil, debug: true) }
 
       it 'logs to STDERR' do
         expect(subject.logger).to eq(STDERR)
@@ -39,7 +39,7 @@ module Capybara::Poltergeist
     end
 
     context 'with an :inspector option' do
-      subject { Driver.new(nil, :inspector => 'foo') }
+      subject { Driver.new(nil, inspector: 'foo') }
 
       it 'has an inspector' do
         expect(subject.inspector).to_not be_nil
@@ -49,7 +49,7 @@ module Capybara::Poltergeist
     end
 
     context 'with a :timeout option' do
-      subject { Driver.new(nil, :timeout => 3) }
+      subject { Driver.new(nil, timeout: 3) }
 
       it 'starts the server with the provided timeout' do
         server = double
@@ -59,12 +59,12 @@ module Capybara::Poltergeist
     end
 
     context 'with a :window_size option' do
-      subject { Driver.new(nil, :window_size => [800, 600]) }
+      subject { Driver.new(nil, window_size: [800, 600]) }
 
-      it "creates a client with the desired width and height settings" do
+      it 'creates a client with the desired width and height settings' do
         server = double
         Server.should_receive(:new).and_return(server)
-        Client.should_receive(:start).with(server, hash_including(:window_size => [800, 600]))
+        Client.should_receive(:start).with(server, hash_including(window_size: [800, 600]))
 
         subject.client
       end
