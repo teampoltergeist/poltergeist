@@ -4,6 +4,24 @@
 
 #### Bug fixes ####
 
+*   Fix `set` appending to `contenteditable` instead of replacing its text
+    (Pedro Carriço and Erik Ostrom) [Issue #432]
+*   Raise exception on PhantomJS "status: fail" result (i.e DNS issue) instead
+    of returning minimal HTML body (Dean Holdren) [Issue #473]
+*   Render full window size when document has no height (Kevin McConnell)
+*   Don't alter focus with send_keys if we're already in the target element
+    (Adam Prescott) [Issue #493]
+
+
+### 1.5.1 ###
+
+#### Bug fixes ####
+
+*   Ensure process exits with correct status code and $! is propagated; fixes a
+    bug that was present in MRI 2.1.x in combination with other gems that
+    register `at_exit` hooks.
+    (Micah Geisel) [Issue #497]
+
 ### 1.5.0 ###
 
 #### Features ####
