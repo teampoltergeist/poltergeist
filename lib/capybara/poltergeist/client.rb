@@ -41,7 +41,13 @@ module Capybara::Poltergeist
       @phantomjs_logger  = options[:phantomjs_logger]  || $stdout
 
       pid = Process.pid
-      at_exit { stop if Process.pid == pid }
+      at_exit do
+        # do the work in a separate thread, to avoid stomping on $!,
+        # since other libraries depend on it directly.
+        Thread.new do
+          stop if Process.pid == pid
+        end.join
+      end
     end
 
     def start
