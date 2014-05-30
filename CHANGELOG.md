@@ -15,6 +15,8 @@
 *   Render full window size when document has no height (Kevin McConnell)
 *   Don't alter focus with send_keys if we're already in the target element
     (Adam Prescott) [Issue #493]
+*   Ensure process exits with correct status code and $! is propagated.
+    (Micah Geisel) [Issue #497]
 
 ### 1.5.0 ###
 
