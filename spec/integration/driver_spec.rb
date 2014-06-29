@@ -277,6 +277,14 @@ module Capybara::Poltergeist
       end
     end
 
+    describe '#visit' do
+      it 'do not supports invalid URIs' do
+        expect {
+          @session.visit('/poltergeist/arbitrary_path/200/foo bar')
+        }.to raise_error URI::InvalidURIError
+      end
+    end
+
     context 'setting headers' do
       it 'allows headers to be set' do
         @driver.headers = {
@@ -597,11 +605,6 @@ module Capybara::Poltergeist
         @driver.set_cookie 'capybara', 'omg'
         @session.visit('/get_cookie')
         expect(@driver.body).to include('omg')
-      end
-
-      it 'can set cookies when a space exists in the url' do
-        @session.visit '/poltergeist/arbitrary_path/200/foo bar'
-        @driver.set_cookie 'capybara', 'omg'
       end
 
       it 'can set cookies with custom settings' do

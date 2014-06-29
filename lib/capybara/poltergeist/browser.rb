@@ -27,7 +27,7 @@ module Capybara::Poltergeist
     end
 
     def visit(url)
-      command 'visit', url
+      command 'visit', URI.parse(url)
     end
 
     def current_url
