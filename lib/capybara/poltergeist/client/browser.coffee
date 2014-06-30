@@ -232,6 +232,9 @@ class Poltergeist.Browser
   click: (page_id, id) ->
     this.mouse_event page_id, id, 'click'
 
+  right_click: (page_id, id) ->
+    this.mouse_event page_id, id, 'rightclick'
+
   double_click: (page_id, id) ->
     this.mouse_event page_id, id, 'doubleclick'
 

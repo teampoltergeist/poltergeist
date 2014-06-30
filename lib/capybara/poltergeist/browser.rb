@@ -146,6 +146,10 @@ module Capybara::Poltergeist
       command 'click', page_id, id
     end
 
+    def right_click(page_id, id)
+      command 'right_click', page_id, id
+    end
+
     def double_click(page_id, id)
       command 'double_click', page_id, id
     end
