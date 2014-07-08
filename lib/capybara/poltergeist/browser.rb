@@ -304,6 +304,10 @@ module Capybara::Poltergeist
       command 'go_forward'
     end
 
+    def modal_messages
+      command 'modal_messages'
+    end
+
     private
 
     def log(message)

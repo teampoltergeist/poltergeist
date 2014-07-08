@@ -274,5 +274,32 @@ module Capybara::Poltergeist
     def go_forward
       browser.go_forward
     end
+
+    def accept_modal(type, options = {}, &blk)
+      yield if block_given?
+      find_modal(options)
+    end
+
+    private
+
+    def find_modal(options)
+      start_time    = Time.now
+      timeout_sec   = options[:wait] || Capybara.default_wait_time
+      expect_text   = options[:text]
+      not_found_msg = 'Unable to find modal dialog'
+      not_found_msg += " with #{expect_text}" if expect_text
+
+      begin
+        modals = browser.modal_messages
+        raise Capybara::ModalNotFound if modals.empty?
+        raise Capybara::ModalNotFound if (expect_text && !modals.include?(expect_text))
+      rescue Capybara::ModalNotFound => e
+        raise e, not_found_msg if (Time.now - start_time) >= timeout_sec
+        sleep(0.05)
+        retry
+      end
+
+      modals.first
+    end
   end
 end

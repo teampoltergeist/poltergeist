@@ -8,6 +8,8 @@ class Poltergeist.Browser
     @js_errors  = true
     @_debug     = false
 
+    @processed_modal_messages = []
+
     this.resetPage()
 
   resetPage: ->
@@ -47,6 +49,9 @@ class Poltergeist.Browser
         # window.
         setTimeout((=> this.push_window(name)), 0)
 
+    @page.onAlert = (msg) =>
+      this.setModalMessage msg
+
   runCommand: (name, args) ->
     this.setState "default"
     this[name].apply(this, args)
@@ -59,6 +64,9 @@ class Poltergeist.Browser
     return if @state == state
     this.debug "state #{@state} -> #{state}"
     @state = state
+
+  setModalMessage: (msg) ->
+    @processed_modal_messages.push(msg)
 
   sendResponse: (response) ->
     errors = @page.errors()
@@ -388,3 +396,7 @@ class Poltergeist.Browser
   go_forward: ->
     this.page.goForward() if this.page.canGoForward
     this.sendResponse(true)
+
+  modal_messages: ->
+    this.sendResponse(@processed_modal_messages)
+    @processed_modal_messages = []
