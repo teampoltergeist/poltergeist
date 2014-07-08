@@ -279,6 +279,8 @@ module Capybara::Poltergeist
       case type
       when :confirm
         browser.accept_confirm
+      when :prompt
+        browser.accept_prompt options[:with]
       end
 
       yield if block_given?
@@ -289,6 +291,8 @@ module Capybara::Poltergeist
       case type
       when :confirm
         browser.dismiss_confirm
+      when :prompt
+        browser.dismiss_prompt
       end
 
       yield if block_given?

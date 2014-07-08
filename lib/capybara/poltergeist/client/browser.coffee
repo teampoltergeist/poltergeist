@@ -10,6 +10,7 @@ class Poltergeist.Browser
 
     @processed_modal_messages = []
     @confirm_processes = []
+    @prompt_responses = []
 
     this.resetPage()
 
@@ -59,6 +60,14 @@ class Poltergeist.Browser
 
       this.setModalMessage msg
       return process
+
+    @page.onPrompt = (msg, defaultVal) =>
+      defaultVal or= ''
+      response = @prompt_responses.shift()
+      response = defaultVal if (response == undefined || response == false)
+
+      this.setModalMessage msg
+      return response
 
   runCommand: (name, args) ->
     this.setState "default"
@@ -407,6 +416,10 @@ class Poltergeist.Browser
 
   set_confirm_process: (process) ->
     @confirm_processes.push process
+    this.sendResponse(true)
+
+  set_prompt_response: (response) ->
+    @prompt_responses.push response
     this.sendResponse(true)
 
   modal_messages: ->

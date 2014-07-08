@@ -312,6 +312,20 @@ module Capybara::Poltergeist
       command 'set_confirm_process', false
     end
 
+    #
+    # press "OK" with text (response) or default value
+    #
+    def accept_prompt(response)
+      command 'set_prompt_response', response || false
+    end
+
+    #
+    # press "Cancel"
+    #
+    def dismiss_prompt
+      command 'set_prompt_response', nil
+    end
+
     def modal_messages
       command 'modal_messages'
     end
