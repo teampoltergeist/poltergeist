@@ -7,6 +7,10 @@ class Poltergeist.Browser
     @_debug     = false
     @_counter   = 0
 
+    @processed_modal_messages = []
+    @confirm_processes = []
+    @prompt_responses = []
+
     this.resetPage()
 
   resetPage: ->
@@ -20,6 +24,24 @@ class Poltergeist.Browser
     @page.setViewportSize(width: @width, height: @height)
     @page.handle = "#{@_counter++}"
     @pages.push(@page)
+
+    @page.onAlert = (msg) =>
+      @setModalMessage msg
+
+    @page.onConfirm = (msg) =>
+      process = @confirm_processes.shift()
+      process = true if process == undefined
+
+      @setModalMessage msg
+      return process
+
+    @page.onPrompt = (msg, defaultVal) =>
+      defaultVal ||= ''
+      response = @prompt_responses.shift()
+      response = defaultVal if (response == undefined || response == false)
+
+      @setModalMessage msg
+      return response
 
     @page.onPageCreated = (newPage) =>
       page = new Poltergeist.WebPage(newPage)
@@ -36,6 +58,9 @@ class Poltergeist.Browser
   debug: (message) ->
     if @_debug
       console.log "poltergeist [#{new Date().getTime()}] #{message}"
+
+  setModalMessage: (msg) ->
+    @processed_modal_messages.push(msg)
 
   sendResponse: (response) ->
     errors = @currentPage.errors
@@ -400,3 +425,15 @@ class Poltergeist.Browser
         this.sendResponse(true)
     else
       this.sendResponse(false)
+
+  set_confirm_process: (process) ->
+    @confirm_processes.push process
+    @sendResponse(true)
+
+  set_prompt_response: (response) ->
+    @prompt_responses.push response
+    @sendResponse(true)
+
+  modal_messages: ->
+    @sendResponse(@processed_modal_messages)
+    @processed_modal_messages = []

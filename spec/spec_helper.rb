@@ -44,7 +44,9 @@ RSpec.configure do |config|
     Capybara.default_wait_time = 0
   end
 
-  config.before(:each, :requires => :js) do
-    Capybara.default_wait_time = 1
+  [:js, :modals].each do |cond|
+    config.before(:each, :requires => cond) do
+      Capybara.default_wait_time = 1
+    end
   end
 end
