@@ -9,6 +9,7 @@ class Poltergeist.Browser
     @_debug     = false
 
     @processed_modal_messages = []
+    @confirm_processes = []
 
     this.resetPage()
 
@@ -51,6 +52,13 @@ class Poltergeist.Browser
 
     @page.onAlert = (msg) =>
       this.setModalMessage msg
+
+    @page.onConfirm = (msg) =>
+      process = @confirm_processes.shift()
+      process = true if process == undefined
+
+      this.setModalMessage msg
+      return process
 
   runCommand: (name, args) ->
     this.setState "default"
@@ -395,6 +403,10 @@ class Poltergeist.Browser
 
   go_forward: ->
     this.page.goForward() if this.page.canGoForward
+    this.sendResponse(true)
+
+  set_confirm_process: (process) ->
+    @confirm_processes.push process
     this.sendResponse(true)
 
   modal_messages: ->

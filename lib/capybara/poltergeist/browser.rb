@@ -304,6 +304,14 @@ module Capybara::Poltergeist
       command 'go_forward'
     end
 
+    def accept_confirm
+      command 'set_confirm_process', true
+    end
+
+    def dismiss_confirm
+      command 'set_confirm_process', false
+    end
+
     def modal_messages
       command 'modal_messages'
     end

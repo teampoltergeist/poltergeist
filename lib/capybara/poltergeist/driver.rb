@@ -276,6 +276,21 @@ module Capybara::Poltergeist
     end
 
     def accept_modal(type, options = {}, &blk)
+      case type
+      when :confirm
+        browser.accept_confirm
+      end
+
+      yield if block_given?
+      find_modal(options)
+    end
+
+    def dismiss_modal(type, options = {}, &blk)
+      case type
+      when :confirm
+        browser.dismiss_confirm
+      end
+
       yield if block_given?
       find_modal(options)
     end
