@@ -201,17 +201,6 @@ describe Capybara::Session do
       expect(@session).to have_content('Hello world')
     end
 
-    it 'handles window.confirm(), returning true unconditionally' do
-      @session.visit '/'
-      expect(@session.evaluate_script("window.confirm('foo')")).to be_true
-    end
-
-    it 'handles window.prompt(), returning the default value or null' do
-      @session.visit '/'
-      expect(@session.evaluate_script('window.prompt()')).to be_nil
-      expect(@session.evaluate_script("window.prompt('foo', 'default')")).to eq('default')
-    end
-
     it 'handles evaluate_script values properly' do
       expect(@session.evaluate_script('null')).to be_nil
       expect(@session.evaluate_script('false')).to be_false
