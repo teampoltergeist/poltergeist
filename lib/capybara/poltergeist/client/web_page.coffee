@@ -233,7 +233,11 @@ class Poltergeist.WebPage
   # event will take place. This deals with e.g. :hover changes.
   mouseEvent: (name, x, y) ->
     this.sendEvent('mousemove', x, y)
-    this.sendEvent(name, x, y)
+
+    if name == 'rightclick'
+      this.sendEvent('click', x, y, 'right')
+    else
+      this.sendEvent(name, x, y)
 
   evaluate: (fn, args...) ->
     this.injectAgent()

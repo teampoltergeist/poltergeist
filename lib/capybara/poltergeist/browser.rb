@@ -27,7 +27,7 @@ module Capybara::Poltergeist
     end
 
     def visit(url)
-      command 'visit', url
+      command 'visit', URI.parse(url)
     end
 
     def current_url
@@ -144,6 +144,10 @@ module Capybara::Poltergeist
 
     def click(page_id, id)
       command 'click', page_id, id
+    end
+
+    def right_click(page_id, id)
+      command 'right_click', page_id, id
     end
 
     def double_click(page_id, id)
