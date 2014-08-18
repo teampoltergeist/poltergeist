@@ -275,7 +275,7 @@ module Capybara::Poltergeist
       browser.go_forward
     end
 
-    def accept_modal(type, options = {}, &blk)
+    def accept_modal(type, options = {})
       case type
       when :confirm
         browser.accept_confirm
@@ -287,7 +287,7 @@ module Capybara::Poltergeist
       find_modal(options)
     end
 
-    def dismiss_modal(type, options = {}, &blk)
+    def dismiss_modal(type, options = {})
       case type
       when :confirm
         browser.dismiss_confirm

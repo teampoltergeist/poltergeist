@@ -7,7 +7,6 @@
 *   Added ability to access all of a nodes attributes (Jon Rowe)
 *   Added ability to manipulate modals (`window.alert()`, `window.confirm()` and `window.prompt()`) that has been implemented from Capybara 2.4
 
-
 #### Bug fixes ####
 
 *   Fix `set` appending to `contenteditable` instead of replacing its text

@@ -52,21 +52,21 @@ class Poltergeist.Browser
         setTimeout((=> this.push_window(name)), 0)
 
     @page.onAlert = (msg) =>
-      this.setModalMessage msg
+      @setModalMessage msg
 
     @page.onConfirm = (msg) =>
       process = @confirm_processes.shift()
       process = true if process == undefined
 
-      this.setModalMessage msg
+      @setModalMessage msg
       return process
 
     @page.onPrompt = (msg, defaultVal) =>
-      defaultVal or= ''
+      defaultVal ||= ''
       response = @prompt_responses.shift()
       response = defaultVal if (response == undefined || response == false)
 
-      this.setModalMessage msg
+      @setModalMessage msg
       return response
 
   runCommand: (name, args) ->
@@ -416,12 +416,12 @@ class Poltergeist.Browser
 
   set_confirm_process: (process) ->
     @confirm_processes.push process
-    this.sendResponse(true)
+    @sendResponse(true)
 
   set_prompt_response: (response) ->
     @prompt_responses.push response
-    this.sendResponse(true)
+    @sendResponse(true)
 
   modal_messages: ->
-    this.sendResponse(@processed_modal_messages)
+    @sendResponse(@processed_modal_messages)
     @processed_modal_messages = []
