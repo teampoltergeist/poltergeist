@@ -60,6 +60,7 @@ module Capybara::Poltergeist
 
       process_options = {}
       process_options[:pgroup] = true unless Capybara::Poltergeist.windows?
+      process_options[:out] = @write_io unless RUBY_ENGINE == 'jruby'
 
       redirect_stdout do
         @pid = Process.spawn(*command.map(&:to_s), process_options)
@@ -98,14 +99,18 @@ module Capybara::Poltergeist
     # lose all the output from child. Process.popen can be used here and seems
     # it works with JRuby but I've experienced strange mistakes on Rubinius.
     def redirect_stdout
-      prev = STDOUT.dup
-      prev.autoclose = false
-      $stdout = @write_io
-      STDOUT.reopen(@write_io)
+      if RUBY_ENGINE == 'jruby'
+        prev = STDOUT.dup
+        prev.autoclose = false
+        $stdout = @write_io
+        STDOUT.reopen(@write_io)
+      end
       yield
     ensure
-      STDOUT.reopen(prev)
-      $stdout = STDOUT
+      if RUBY_ENGINE == 'jruby'
+        STDOUT.reopen(prev)
+        $stdout = STDOUT
+      end
     end
 
     def kill_phantomjs
