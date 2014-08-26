@@ -100,12 +100,11 @@ module Capybara::Poltergeist
     def redirect_stdout
       prev = STDOUT.dup
       prev.autoclose = false
-      $stdout = @write_io
       STDOUT.reopen(@write_io)
       yield
     ensure
       STDOUT.reopen(prev)
-      $stdout = STDOUT
+      prev.close unless prev.closed?
     end
 
     def kill_phantomjs
