@@ -17,6 +17,7 @@
     (Adam Prescott) [Issue #493]
 *   Ensure process exits with correct status code and $! is propagated.
     (Micah Geisel) [Issue #497]
+*   Close dup'ed fd after using (Dmitry Vorotilin) [Issue #446, #529, #528]
 
 ### 1.5.0 ###
 
