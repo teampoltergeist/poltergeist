@@ -11,10 +11,9 @@ require 'support/test_app'
 require 'support/spec_logger'
 
 Capybara.register_driver :poltergeist do |app|
+  debug = !ENV['DEBUG'].nil?
   Capybara::Poltergeist::Driver.new(
-    app,
-    :logger    => TestSessions.logger,
-    :inspector => (ENV['DEBUG'] != nil)
+    app, logger: TestSessions.logger, inspector: debug, debug: debug
   )
 end
 

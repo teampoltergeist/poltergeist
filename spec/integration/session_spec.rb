@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-Capybara::SpecHelper.run_specs TestSessions::Poltergeist, 'Poltergeist', capybara_skip: [:modals, :windows]
+Capybara::SpecHelper.run_specs TestSessions::Poltergeist, 'Poltergeist', capybara_skip: [:modals]
 
 describe Capybara::Session do
   context 'with poltergeist driver' do
@@ -338,13 +338,13 @@ describe Capybara::Session do
     end
 
     it 'ignores cyclic structure errors in evaluate_script' do
-      code = <<-CODE
+      code = <<-JS
         (function() {
           var a = {}
           a.a = a
           return a
         })()
-      CODE
+      JS
       expect(@session.evaluate_script(code)).to eq('(cyclic structure)')
     end
 
@@ -356,9 +356,9 @@ describe Capybara::Session do
     it 'handles hash changes' do
       @session.visit '/#omg'
       expect(@session.current_url).to match(/\/#omg$/)
-      @session.execute_script <<-CODE
+      @session.execute_script <<-JS
         window.onhashchange = function() { window.last_hashchange = window.location.hash }
-      CODE
+      JS
       @session.visit '/#foo'
       expect(@session.current_url).to match(/\/#foo$/)
       expect(@session.evaluate_script('window.last_hashchange')).to eq('#foo')
@@ -374,40 +374,39 @@ describe Capybara::Session do
       it 'waits for the window to load' do
         @session.visit '/'
 
-        # setTimeout is necessary due to https://code.google.com/p/phantomjs/issues/detail?id=815
-        @session.evaluate_script <<-CODE
-          setTimeout(function() {
+        popup = @session.window_opened_by do
+          @session.execute_script <<-JS
             window.open('/poltergeist/slow', 'popup')
-          }, 0)
-        CODE
+          JS
+        end
 
-        @session.within_window 'popup' do
+        @session.within_window(popup) do
           expect(@session.html).to include('slow page')
-          @session.evaluate_script('window.close()')
+          @session.execute_script('window.close()')
         end
       end
 
       it 'can access a second window of the same name' do
         @session.visit '/'
 
-        @session.evaluate_script <<-CODE
-          setTimeout(function() {
+        popup = @session.window_opened_by do
+          @session.execute_script <<-JS
             window.open('/poltergeist/simple', 'popup')
-          }, 0)
-        CODE
-
-        @session.within_window 'popup' do
-          expect(@session.html).to include('Test')
-          @session.evaluate_script('window.close()')
+          JS
         end
 
-        @session.evaluate_script <<-CODE
-          setTimeout(function() {
-            window.open('/poltergeist/simple', 'popup')
-          }, 0)
-        CODE
+        @session.within_window(popup) do
+          expect(@session.html).to include('Test')
+          @session.execute_script('window.close()')
+        end
 
-        @session.within_window 'popup' do
+        another_popup = @session.window_opened_by do
+          @session.execute_script <<-JS
+            window.open('/poltergeist/simple', 'popup')
+          JS
+        end
+
+        @session.within_window(another_popup) do
           expect(@session.html).to include('Test')
         end
       end
@@ -434,11 +433,9 @@ describe Capybara::Session do
       it 'waits for the frame to load' do
         @session.visit '/'
 
-        @session.evaluate_script <<-CODE
-          setTimeout(function() {
-            document.body.innerHTML += '<iframe src="/poltergeist/slow" name="frame">'
-          }, 0)
-        CODE
+        @session.execute_script <<-JS
+          document.body.innerHTML += '<iframe src="/poltergeist/slow" name="frame">'
+        JS
 
         @session.within_frame 'frame' do
           expect(@session.current_path).to eq('/poltergeist/slow')
@@ -463,11 +460,9 @@ describe Capybara::Session do
       it 'supports clicking in a frame' do
         @session.visit '/'
 
-        @session.evaluate_script <<-CODE
-          setTimeout(function() {
-            document.body.innerHTML += '<iframe src="/poltergeist/click_test" name="frame">'
-          }, 0)
-        CODE
+        @session.execute_script <<-JS
+          document.body.innerHTML += '<iframe src="/poltergeist/click_test" name="frame">'
+        JS
 
         @session.within_frame 'frame' do
           log = @session.find(:css, '#log')
@@ -479,11 +474,9 @@ describe Capybara::Session do
       it 'supports clicking in a frame with padding' do
         @session.visit '/'
 
-        @session.evaluate_script <<-CODE
-          setTimeout(function() {
-            document.body.innerHTML += '<iframe src="/poltergeist/click_test" name="padded_frame" style="padding:100px;">'
-          }, 0)
-        CODE
+        @session.execute_script <<-JS
+          document.body.innerHTML += '<iframe src="/poltergeist/click_test" name="padded_frame" style="padding:100px;">'
+        JS
 
         @session.within_frame 'padded_frame' do
           log = @session.find(:css, '#log')
@@ -500,11 +493,9 @@ describe Capybara::Session do
         # This avoids a false positive where the same frame's offset is
         # calculated twice, but the click still works because both frames had
         # the same offset.
-        @session.evaluate_script <<-CODE
-          setTimeout(function() {
-            document.body.innerHTML += '<iframe src="/poltergeist/nested_frame_test" name="outer_frame" style="padding:200px">'
-          }, 0)
-        CODE
+        @session.execute_script <<-JS
+          document.body.innerHTML += '<iframe src="/poltergeist/nested_frame_test" name="outer_frame" style="padding:200px">'
+        JS
 
         @session.within_frame 'outer_frame' do
           @session.within_frame 'inner_frame' do

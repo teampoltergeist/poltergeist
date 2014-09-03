@@ -1,22 +1,27 @@
 class Poltergeist.WebPage
-  @CALLBACKS = ['onAlert', 'onConsoleMessage', 'onLoadFinished', 'onInitialized',
-                'onLoadStarted', 'onResourceRequested', 'onResourceReceived',
-                'onError', 'onNavigationRequested', 'onUrlChanged', 'onPageCreated']
+  @CALLBACKS = ['onAlert', 'onConsoleMessage', 'onLoadFinished',
+                'onInitialized', 'onLoadStarted', 'onResourceRequested',
+                'onResourceReceived', 'onError', 'onNavigationRequested',
+                'onUrlChanged', 'onPageCreated', 'onClosing']
 
-  @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'release', 'render', 'renderBase64', 'goBack', 'goForward']
+  @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'release', 'render',
+                'renderBase64', 'goBack', 'goForward']
 
   @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'documentSize', 'beforeUpload', 'afterUpload']
 
   @EXTENSIONS = []
 
-  constructor: (@native) ->
-    @native or= require('webpage').create()
+  constructor: (@_native) ->
+    @_native or= require('webpage').create()
 
-    @_source         = null
-    @_errors         = []
-    @_networkTraffic = {}
-    @_temp_headers   = {}
+    @id              = 0
+    @source          = null
+    @closed          = false
+    @state           = 'default'
     @frames          = []
+    @errors          = []
+    @_networkTraffic = {}
+    @_tempHeaders    = {}
 
     for callback in WebPage.CALLBACKS
       this.bindCallback(callback)
@@ -29,37 +34,33 @@ class Poltergeist.WebPage
   for delegate in @DELEGATES
     do (delegate) =>
       this.prototype[delegate] =
-        -> @native[delegate].apply(@native, arguments)
+        -> @_native[delegate].apply(@_native, arguments)
 
   onInitializedNative: ->
-    @_source = null
+    @id += 1
+    @source = null
     @injectAgent()
     this.removeTempHeaders()
     this.setScrollPosition(left: 0, top: 0)
 
-  injectAgent: ->
-    if @native.evaluate(-> typeof __poltergeist) == "undefined"
-      @native.injectJs "#{phantom.libraryPath}/agent.js"
-      for extension in WebPage.EXTENSIONS
-        @native.injectJs extension
-
-  injectExtension: (file) ->
-    WebPage.EXTENSIONS.push file
-    @native.injectJs file
+  onClosingNative: ->
+    @handle = null
+    @closed = true
 
   onConsoleMessageNative: (message) ->
     if message == '__DOMContentLoaded'
-      @_source = @native.content
+      @source = @_native.content
       false
+    else
+      console.log(message)
 
   onLoadStartedNative: ->
+    @state = 'loading'
     @requestId = @lastRequestId
 
-  onLoadFinishedNative: ->
-    @_source or= @native.content
-
-  onConsoleMessage: (message) ->
-    console.log(message)
+  onLoadFinishedNative: (@status) ->
+    @state = 'default'
+    @source or= @_native.content
 
   onErrorNative: (message, stack) ->
     stackString = message
@@ -69,7 +70,7 @@ class Poltergeist.WebPage
       stackString += "    at #{frame.file}:#{frame.line}"
       stackString += " in #{frame.function}" if frame.function && frame.function != ''
 
-    @_errors.push(message: message, stack: stackString)
+    @errors.push(message: message, stack: stackString)
 
   onResourceRequestedNative: (request) ->
     @lastRequestId = request.id
@@ -90,12 +91,40 @@ class Poltergeist.WebPage
       if response.redirectURL
         @redirectURL = response.redirectURL
       else
-        @_statusCode      = response.status
+        @statusCode = response.status
         @_responseHeaders = response.headers
 
+  injectAgent: ->
+    if this.native().evaluate(-> typeof __poltergeist) == "undefined"
+      this.native().injectJs "#{phantom.libraryPath}/agent.js"
+      for extension in WebPage.EXTENSIONS
+        this.native().injectJs extension
+
+  injectExtension: (file) ->
+    WebPage.EXTENSIONS.push file
+    this.native().injectJs file
+
+  native: ->
+    if @closed
+      throw new Poltergeist.NoSuchWindowError
+    else
+      @_native
+
+  windowName: ->
+    this.native().windowName
+
+  keyCode: (name) ->
+    this.native().event.key[name]
+
+  waitState: (state, callback) ->
+    if @state == state
+      callback.call()
+    else
+      setTimeout (=> @waitState(state, callback)), 100
+
   setHttpAuth: (user, password) ->
-    @native.settings.userName = user
-    @native.settings.password = password
+    this.native().settings.userName = user
+    this.native().settings.password = password
 
   networkTraffic: ->
     @_networkTraffic
@@ -104,22 +133,13 @@ class Poltergeist.WebPage
     @_networkTraffic = {}
 
   content: ->
-    @native.frameContent
-
-  source: ->
-    @_source
+    this.native().frameContent
 
   title: ->
-    @native.frameTitle
-
-  errors: ->
-    @_errors
+    this.native().frameTitle
 
   clearErrors: ->
-    @_errors = []
-
-  statusCode: ->
-    @_statusCode
+    @errors = []
 
   responseHeaders: ->
     headers = {}
@@ -128,77 +148,70 @@ class Poltergeist.WebPage
     headers
 
   cookies: ->
-    @native.cookies
+    this.native().cookies
 
   deleteCookie: (name) ->
-    @native.deleteCookie(name)
+    this.native().deleteCookie(name)
 
   viewportSize: ->
-    @native.viewportSize
+    this.native().viewportSize
 
   setViewportSize: (size) ->
-    @native.viewportSize = size
+    this.native().viewportSize = size
 
   setZoomFactor: (zoom_factor) ->
-    @native.zoomFactor = zoom_factor
+    this.native().zoomFactor = zoom_factor
 
   setPaperSize: (size) ->
-    @native.paperSize = size
+    this.native().paperSize = size
 
   scrollPosition: ->
-    @native.scrollPosition
+    this.native().scrollPosition
 
   setScrollPosition: (pos) ->
-    @native.scrollPosition = pos
+    this.native().scrollPosition = pos
 
   clipRect: ->
-    @native.clipRect
+    this.native().clipRect
 
   setClipRect: (rect) ->
-    @native.clipRect = rect
+    this.native().clipRect = rect
 
   elementBounds: (selector) ->
-    @native.evaluate(
+    this.native().evaluate(
       (selector) -> document.querySelector(selector).getBoundingClientRect(),
       selector
     )
 
   setUserAgent: (userAgent) ->
-    @native.settings.userAgent = userAgent
+    this.native().settings.userAgent = userAgent
 
   getCustomHeaders: ->
-    @native.customHeaders
+    this.native().customHeaders
 
   setCustomHeaders: (headers) ->
-    @native.customHeaders = headers
+    this.native().customHeaders = headers
 
   addTempHeader: (header) ->
     for name, value of header
-      @_temp_headers[name] = value
+      @_tempHeaders[name] = value
 
   removeTempHeaders: ->
     allHeaders = this.getCustomHeaders()
-    for name, value of @_temp_headers
+    for name, value of @_tempHeaders
       delete allHeaders[name]
     this.setCustomHeaders(allHeaders)
 
   pushFrame: (name) ->
-    if @native.switchToFrame(name)
+    if this.native().switchToFrame(name)
       @frames.push(name)
       true
     else
       false
 
-  pages: ->
-    @native.pagesWindowName
-
   popFrame: ->
     @frames.pop()
-    @native.switchToParentFrame()
-
-  getPage: (name) ->
-    page = @native.getPage(name)
-    new Poltergeist.WebPage(page) if page
+    this.native().switchToParentFrame()
 
   dimensions: ->
     scroll   = this.scrollPosition()
@@ -237,7 +250,7 @@ class Poltergeist.WebPage
 
   evaluate: (fn, args...) ->
     this.injectAgent()
-    JSON.parse this.sanitize(@native.evaluate("function() { return PoltergeistAgent.stringify(#{this.stringifyCall(fn, args)}) }"))
+    JSON.parse this.sanitize(this.native().evaluate("function() { return PoltergeistAgent.stringify(#{this.stringifyCall(fn, args)}) }"))
 
   sanitize: (potential_string) ->
     if typeof(potential_string) == "string"
@@ -247,7 +260,7 @@ class Poltergeist.WebPage
       potential_string
 
   execute: (fn, args...) ->
-    @native.evaluate("function() { #{this.stringifyCall(fn, args)} }")
+    this.native().evaluate("function() { #{this.stringifyCall(fn, args)} }")
 
   stringifyCall: (fn, args) ->
     if args.length == 0
@@ -261,7 +274,7 @@ class Poltergeist.WebPage
   # hence the 'that' closure.
   bindCallback: (name) ->
     that = this
-    @native[name] = ->
+    this.native()[name] = ->
       if that[name + 'Native']? # For internal callbacks
         result = that[name + 'Native'].apply(that, arguments)
 
@@ -291,7 +304,7 @@ class Poltergeist.WebPage
         result.value
 
   canGoBack: ->
-    @native.canGoBack
+    this.native().canGoBack
 
   canGoForward: ->
-    @native.canGoForward
+    this.native().canGoForward

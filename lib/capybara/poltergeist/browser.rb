@@ -5,10 +5,11 @@ require 'time'
 module Capybara::Poltergeist
   class Browser
     ERROR_MAPPINGS = {
-      "Poltergeist.JavascriptError" => JavascriptError,
-      "Poltergeist.FrameNotFound"   => FrameNotFound,
-      "Poltergeist.InvalidSelector" => InvalidSelector,
-      "Poltergeist.StatusFailError" => StatusFailError
+      'Poltergeist.JavascriptError' => JavascriptError,
+      'Poltergeist.FrameNotFound'   => FrameNotFound,
+      'Poltergeist.InvalidSelector' => InvalidSelector,
+      'Poltergeist.StatusFailError' => StatusFailError,
+      'Poltergeist.NoSuchWindowError' => NoSuchWindowError
     }
 
     attr_reader :server, :client, :logger
@@ -131,15 +132,35 @@ module Capybara::Poltergeist
       command 'pop_frame'
     end
 
+    def window_handle
+      command 'window_handle'
+    end
+
     def window_handles
-      command 'pages'
+      command 'window_handles'
+    end
+
+    def switch_to_window(handle)
+      command 'switch_to_window', handle
+    end
+
+    def open_new_window
+      command 'open_new_window'
+    end
+
+    def close_window(handle)
+      command 'close_window', handle
     end
 
     def within_window(name, &block)
-      command 'push_window', name
+      original = window_handle
+      handle = command 'window_handle', name
+      handle = name if handle.nil? && window_handles.include?(name)
+      raise NoSuchWindowError unless handle
+      switch_to_window(handle)
       yield
     ensure
-      command 'pop_window'
+      switch_to_window(original)
     end
 
     def click(page_id, id)

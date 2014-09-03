@@ -139,12 +139,32 @@ module Capybara::Poltergeist
       browser.within_frame(name, &block)
     end
 
-    def within_window(name, &block)
-      browser.within_window(name, &block)
+    def current_window_handle
+      browser.window_handle
     end
 
     def window_handles
       browser.window_handles
+    end
+
+    def close_window(handle)
+      browser.close_window(handle)
+    end
+
+    def open_new_window
+      browser.open_new_window
+    end
+
+    def switch_to_window(handle)
+      browser.switch_to_window(handle)
+    end
+
+    def within_window(name, &block)
+      browser.within_window(name, &block)
+    end
+ 
+    def no_such_window_error
+      NoSuchWindowError
     end
 
     def reset!

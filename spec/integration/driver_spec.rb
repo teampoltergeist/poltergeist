@@ -9,9 +9,7 @@ module Capybara::Poltergeist
       @driver = @session.driver
     end
 
-    after do
-      @driver.reset!
-    end
+    after { @driver.reset! }
 
     def session_url(path)
       server = @session.server
@@ -667,23 +665,28 @@ module Capybara::Poltergeist
     it 'lists the open windows' do
       @session.visit '/'
 
-      @session.evaluate_script <<-CODE
-          window.open('/poltergeist/simple', 'popup')
-      CODE
+      @session.execute_script <<-JS
+        window.open('/poltergeist/simple', 'popup')
+      JS
 
-      @session.evaluate_script <<-CODE
+      expect(@driver.window_handles).to eq(['0', '1'])
+
+      popup2 = @session.window_opened_by do
+        @session.execute_script <<-JS
           window.open('/poltergeist/simple', 'popup2')
-      CODE
+        JS
+      end
 
-      @session.within_window 'popup2' do
+      expect(@driver.window_handles).to eq(['0', '1', '2'])
+
+      @session.within_window(popup2) do
         expect(@session.html).to include('Test')
-        @session.evaluate_script('window.close()')
+        @session.execute_script('window.close()')
       end
 
       sleep 0.1;
 
-      expect(@driver.browser.window_handles).to eq(['popup'])
-      expect(@driver.window_handles).to eq(['popup'])
+      expect(@driver.window_handles).to eq(['0', '1'])
     end
 
     context 'basic http authentication' do
