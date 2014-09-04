@@ -35,7 +35,11 @@ class Poltergeist.Node
     test = this.mouseEventTest(pos.x, pos.y)
 
     if test.status == 'success'
-      @page.mouseEvent(name, pos.x, pos.y)
+      if name == 'rightclick'
+        @page.mouseEvent('click', pos.x, pos.y, 'right')
+        this.trigger('contextmenu')
+      else
+        @page.mouseEvent(name, pos.x, pos.y)
       pos
     else
       throw new Poltergeist.MouseEventFailed(name, test.selector, pos)

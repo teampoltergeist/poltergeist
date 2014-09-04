@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-Capybara::SpecHelper.run_specs TestSessions::Poltergeist, "Poltergeist"
+Capybara::SpecHelper.run_specs TestSessions::Poltergeist, 'Poltergeist', capybara_skip: [:modals, :windows]
 
 describe Capybara::Session do
   context 'with poltergeist driver' do
@@ -366,12 +366,6 @@ describe Capybara::Session do
 
     it 'supports retrieving the URL of pages with escaped characters' do
       @session.visit '/poltergeist/arbitrary_path/200/foo%20bar'
-      expect(URI.parse(@session.current_url).path).to eq('/poltergeist/arbitrary_path/200/foo%20bar')
-      expect(@session.current_path).to eq('/poltergeist/arbitrary_path/200/foo%20bar')
-    end
-
-    it 'supports retrieving the URL of pages with unescaped characters' do
-      @session.visit '/poltergeist/arbitrary_path/200/foo bar'
       expect(URI.parse(@session.current_url).path).to eq('/poltergeist/arbitrary_path/200/foo%20bar')
       expect(@session.current_path).to eq('/poltergeist/arbitrary_path/200/foo%20bar')
     end

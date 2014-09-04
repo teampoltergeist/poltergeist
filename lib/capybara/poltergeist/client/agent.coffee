@@ -75,7 +75,7 @@ class PoltergeistAgent.Node
   @EVENTS = {
     FOCUS: ['blur', 'focus', 'focusin', 'focusout'],
     MOUSE: ['click', 'dblclick', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove',
-            'mouseover', 'mouseout', 'mouseup'],
+            'mouseover', 'mouseout', 'mouseup', 'contextmenu'],
     FORM: ['submit']
   }
 
@@ -145,10 +145,11 @@ class PoltergeistAgent.Node
     @element.textContent
 
   visibleText: ->
-    if @element.nodeName == "TEXTAREA"
-      @element.textContent
-    else
-      @element.innerText
+    if this.isVisible()
+      if @element.nodeName == "TEXTAREA"
+        @element.textContent
+      else
+        @element.innerText
 
   deleteText: ->
     range = document.createRange()

@@ -116,6 +116,10 @@ module Capybara::Poltergeist
       command :click
     end
 
+    def right_click
+      command :right_click
+    end
+
     def double_click
       command :double_click
     end
