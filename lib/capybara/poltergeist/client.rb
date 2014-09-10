@@ -99,13 +99,13 @@ module Capybara::Poltergeist
     # it works with JRuby but I've experienced strange mistakes on Rubinius.
     def redirect_stdout
       prev = STDOUT.dup
-      prev.autoclose = false
       $stdout = @write_io
       STDOUT.reopen(@write_io)
       yield
     ensure
       STDOUT.reopen(prev)
       $stdout = STDOUT
+      prev.close
     end
 
     def kill_phantomjs

@@ -9,7 +9,7 @@ provided by [PhantomJS](http://www.phantomjs.org/).
 **If you're viewing this at https://github.com/teampoltergeist/poltergeist,
 you're reading the documentation for the master branch.
 [View documentation for the latest release
-(1.5.0).](https://github.com/teampoltergeist/poltergeist/tree/v1.5.0)**
+(1.5.1).](https://github.com/teampoltergeist/poltergeist/tree/v1.5.1)**
 
 ## Getting help ##
 
@@ -97,7 +97,6 @@ and the following optional features:
 
 * `page.evaluate_script` and `page.execute_script`
 * `page.within_frame`
-* `page.within_window`
 * `page.status_code`
 * `page.response_headers`
 * `page.save_screenshot`
@@ -105,6 +104,7 @@ and the following optional features:
 * `page.driver.scroll_to(left, top)`
 * `page.driver.basic_authorize(user, password)`
 * `element.native.send_keys(*keys)`
+* window API
 * cookie handling
 * drag-and-drop
 
@@ -130,11 +130,6 @@ If you need for some reasons base64 encoded screenshot you can simply call
 `render_base64` that will return you encoded image. Additional options are the
 same as for `save_screenshot` except the first argument which is format (:png by
 default, acceptable :png, :gif, :jpeg).
-
-### Resizing the window ###
-
-Sometimes the window size is important to how things are rendered. Poltergeist sets the window
-size to 1024x768 by default, but you can set this yourself with `page.driver.resize(width, height)`.
 
 ### Clicking precise coordinates ###
 
@@ -216,31 +211,6 @@ The following methods are used to inspect and manipulate cookies:
   `:secure`, `:httponly`, `:expires`. `:expires` should be a `Time`
   object.
 * `page.driver.remove_cookie(name)` - remove a cookie
-
-### Window switching ###
-
-The following methods can be used to execute commands inside different windows:
-
-* `page.driver.window_handles` - an array containing the names of all
-  the open windows.
-
-* `page.within_window(name) { # actions }` -  executes
-  the passed block in the context of the named window.
-
-Example:
-
-``` ruby
-find_link("Login with Facebook").trigger("click")
-
-sleep(0.1)
-
-fb_popup = page.driver.window_handles.last
-page.within_window fb_popup do
-  fill_in "email", :with => "facebook_email@email.tst"
-  fill_in "pass", :with => "my_pass"
-  click_button "Log In"
-end
-```
 
 ### Sending keys ###
 
