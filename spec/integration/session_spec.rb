@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-Capybara::SpecHelper.run_specs TestSessions::Poltergeist, 'Poltergeist', capybara_skip: [:modals]
+Capybara::SpecHelper.run_specs TestSessions::Poltergeist, 'Poltergeist'
 
 describe Capybara::Session do
   context 'with poltergeist driver' do

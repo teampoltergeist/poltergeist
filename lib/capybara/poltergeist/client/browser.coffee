@@ -30,9 +30,6 @@ class Poltergeist.Browser
       page.handle = "#{@_counter++}"
       @pages.push(page)
 
-  getPageByHandle: (handle) ->
-    @pages.filter((p) -> !p.closed && p.handle == handle)[0]
-
     @page.onAlert = (msg) =>
       @setModalMessage msg
 
@@ -50,6 +47,9 @@ class Poltergeist.Browser
 
       @setModalMessage msg
       return response
+
+  getPageByHandle: (handle) ->
+    @pages.filter((p) -> !p.closed && p.handle == handle)[0]
 
   runCommand: (name, args) ->
     @currentPage.state = 'default'
