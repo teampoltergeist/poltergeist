@@ -65,6 +65,9 @@ class PoltergeistAgent
   afterUpload: (id) ->
     this.get(id).removeAttribute('_poltergeist_selected')
 
+  clearLocalStorage: ->
+    localStorage.clear()
+
 class PoltergeistAgent.ObsoleteNode
   toString: -> "PoltergeistAgent.ObsoleteNode"
 

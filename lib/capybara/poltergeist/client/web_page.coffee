@@ -8,7 +8,8 @@ class Poltergeist.WebPage
   @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'release', 'render',
                 'renderBase64', 'goBack', 'goForward']
 
-  @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'documentSize', 'beforeUpload', 'afterUpload']
+  @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'documentSize',
+                'beforeUpload', 'afterUpload', 'clearLocalStorage']
 
   @EXTENSIONS = []
 

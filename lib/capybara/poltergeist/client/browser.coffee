@@ -17,7 +17,9 @@ class Poltergeist.Browser
     [@_counter, @pages] = [0, []]
 
     if @page?
-      @page.release() unless @page.closed
+      unless @page.closed
+        @page.clearLocalStorage() if @page.currentUrl() != 'about:blank'
+        @page.release()
       phantom.clearCookies()
 
     @page = @currentPage = new Poltergeist.WebPage

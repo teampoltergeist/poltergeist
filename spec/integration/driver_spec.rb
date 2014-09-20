@@ -689,6 +689,26 @@ module Capybara::Poltergeist
       expect(@driver.window_handles).to eq(['0', '1'])
     end
 
+    it 'clears local storage between tests' do
+      @session.visit '/'
+      @session.execute_script <<-JS
+        localStorage.setItem('key', 'value');
+      JS
+      value = @session.evaluate_script <<-JS
+        localStorage.getItem('key');
+      JS
+
+      expect(value).to eq('value')
+
+      @driver.reset!
+
+      @session.visit '/'
+      value = @session.evaluate_script <<-JS
+        localStorage.getItem('key');
+      JS
+      expect(value).to be_nil
+    end
+
     context 'basic http authentication' do
       it 'denies without credentials' do
         @session.visit '/poltergeist/basic_auth'

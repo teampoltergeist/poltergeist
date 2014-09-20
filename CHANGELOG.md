@@ -20,6 +20,7 @@
 *   Don't alter focus with send_keys if we're already in the target element
     (Adam Prescott) [Issue #493]
 *   Close dup'ed fd after using (Dmitry Vorotilin) [Issue #446, #529, #528]
+*   Clean up localStorage between tests (Dmitry Vorotilin) [Issue #525]
 
 ### 1.5.1 ###
 
