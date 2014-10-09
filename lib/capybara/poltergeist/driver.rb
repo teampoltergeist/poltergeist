@@ -329,16 +329,16 @@ module Capybara::Poltergeist
       not_found_msg += " with #{expect_text}" if expect_text
 
       begin
-        modals = browser.modal_messages
-        raise Capybara::ModalNotFound if modals.empty?
-        raise Capybara::ModalNotFound if (expect_text && !modals.include?(expect_text))
+        message = browser.shift_modal_message
+        raise Capybara::ModalNotFound if message.nil?
+        raise Capybara::ModalNotFound if (expect_text && message != expect_text)
       rescue Capybara::ModalNotFound => e
         raise e, not_found_msg if (Time.now - start_time) >= timeout_sec
         sleep(0.05)
         retry
       end
 
-      modals.first
+      message
     end
   end
 end

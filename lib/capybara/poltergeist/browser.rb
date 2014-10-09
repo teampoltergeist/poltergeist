@@ -351,8 +351,8 @@ module Capybara::Poltergeist
       command 'set_prompt_response', nil
     end
 
-    def modal_messages
-      command 'modal_messages'
+    def shift_modal_message
+      command 'shift_modal_message'
     end
 
     private
