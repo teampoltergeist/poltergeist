@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Jon Leighton']
   s.email       = ['j@jonathanleighton.com']
-  s.homepage    = 'http://github.com/jonleighton/poltergeist'
+  s.homepage    = 'http://github.com/teampoltergeist/poltergeist'
   s.summary     = 'PhantomJS driver for Capybara'
   s.description = 'Poltergeist is a driver for Capybara that allows you to '\
                   'run your tests on a headless WebKit browser, provided by '\
@@ -18,11 +18,12 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 1.9.3'
 
-  s.add_dependency 'capybara',         '~> 2.1'
+  s.add_dependency 'capybara',         '~> 2.4'
   s.add_dependency 'websocket-driver', '>= 0.2.0'
   s.add_dependency 'multi_json',       '~> 1.0'
   s.add_dependency 'cliver',           '~> 0.3.1'
 
+  s.add_development_dependency 'launchy',            '~> 2.0'
   s.add_development_dependency 'rspec',              '~> 2.12'
   s.add_development_dependency 'sinatra',            '~> 1.0'
   s.add_development_dependency 'rake',               '~> 10.0'

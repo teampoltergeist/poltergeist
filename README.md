@@ -6,10 +6,10 @@ Poltergeist is a driver for [Capybara](https://github.com/jnicklas/capybara). It
 run your Capybara tests on a headless [WebKit](http://webkit.org) browser,
 provided by [PhantomJS](http://www.phantomjs.org/).
 
-**If you're viewing this at https://github.com/jonleighton/poltergeist,
+**If you're viewing this at https://github.com/teampoltergeist/poltergeist,
 you're reading the documentation for the master branch.
 [View documentation for the latest release
-(1.5.0).](https://github.com/jonleighton/poltergeist/tree/v1.5.0)**
+(1.5.1).](https://github.com/teampoltergeist/poltergeist/tree/v1.5.1)**
 
 ## Getting help ##
 
@@ -17,7 +17,7 @@ Questions should be posted [on Stack
 Overflow, using the 'poltergeist' tag](http://stackoverflow.com/questions/tagged/poltergeist).
 
 Bug reports should be posted [on
-GitHub](https://github.com/jonleighton/poltergeist/issues) (and be sure
+GitHub](https://github.com/teampoltergeist/poltergeist/issues) (and be sure
 to read the bug reporting guidance below).
 
 ## Installation ##
@@ -43,17 +43,17 @@ dependencies* (you don't need Qt, or a running X server, etc.)
 
 * *Homebrew*: `brew install phantomjs`
 * *MacPorts*: `sudo port install phantomjs`
-* *Manual install*: [Download this](http://phantomjs.googlecode.com/files/phantomjs-1.9.2-macosx.zip)
+* *Manual install*: [Download this](https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-macosx.zip)
 
 ### Linux ###
 
-* Download the [32 bit](https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-i686.tar.bz2)
-or [64 bit](https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2)
+* Download the [32 bit](https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-i686.tar.bz2)
+or [64 bit](https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2)
 binary.
 * Extract the tarball and copy `bin/phantomjs` into your `PATH`
 
 ### Windows ###
-* Download the [precompiled binary](http://phantomjs.googlecode.com/files/phantomjs-1.9.2-windows.zip)
+* Download the [precompiled binary](https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-windows.zip)
 for Windows
 
 ### Manual compilation ###
@@ -61,7 +61,7 @@ for Windows
 Do this as a last resort if the binaries don't work for you. It will
 take quite a long time as it has to build WebKit.
 
-* Download [the source tarball](http://phantomjs.googlecode.com/files/phantomjs-1.9.2-source.zip)
+* Download [the source tarball](https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-source.zip)
 * Extract and cd in
 * `./build.sh`
 
@@ -97,7 +97,6 @@ and the following optional features:
 
 * `page.evaluate_script` and `page.execute_script`
 * `page.within_frame`
-* `page.within_window`
 * `page.status_code`
 * `page.response_headers`
 * `page.save_screenshot`
@@ -105,6 +104,7 @@ and the following optional features:
 * `page.driver.scroll_to(left, top)`
 * `page.driver.basic_authorize(user, password)`
 * `element.native.send_keys(*keys)`
+* window API
 * cookie handling
 * drag-and-drop
 
@@ -130,11 +130,6 @@ If you need for some reasons base64 encoded screenshot you can simply call
 `render_base64` that will return you encoded image. Additional options are the
 same as for `save_screenshot` except the first argument which is format (:png by
 default, acceptable :png, :gif, :jpeg).
-
-### Resizing the window ###
-
-Sometimes the window size is important to how things are rendered. Poltergeist sets the window
-size to 1024x768 by default, but you can set this yourself with `page.driver.resize(width, height)`.
 
 ### Clicking precise coordinates ###
 
@@ -217,31 +212,6 @@ The following methods are used to inspect and manipulate cookies:
   object.
 * `page.driver.remove_cookie(name)` - remove a cookie
 
-### Window switching ###
-
-The following methods can be used to execute commands inside different windows:
-
-* `page.driver.window_handles` - an array containing the names of all
-  the open windows.
-
-* `page.within_window(name) { # actions }` -  executes
-  the passed block in the context of the named window.
-
-Example:
-
-``` ruby
-find_link("Login with Facebook").trigger("click")
-
-sleep(0.1)
-
-fb_popup = page.driver.window_handles.last
-page.within_window fb_popup do
-  fill_in "email", :with => "facebook_email@email.tst"
-  fill_in "pass", :with => "my_pass"
-  click_button "Log In"
-end
-```
-
 ### Sending keys ###
 
 There's an ability to send arbitrary keys to the element:
@@ -309,7 +279,7 @@ occur sporadically and are not easily reproduced.
 
 If your crash happens every time, you should read the [PhantomJS crash
 reporting
-guide](https://github.com/ariya/phantomjs/wiki/Crash-Reporting) and file
+guide](http://phantomjs.org/crash-reporting.html) and file
 a bug against PhantomJS. Feel free to also file a bug against
 Poltergeist in case there are workarounds that can be implemented within
 Poltergeist. Also, if lots of Poltergeist users are experiencing the
@@ -412,7 +382,7 @@ the [changelog](CHANGELOG.md).
 
 ## License ##
 
-Copyright (c) 2011 Jonathan Leighton
+Copyright (c) 2011-2014 Jonathan Leighton
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

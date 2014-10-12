@@ -11,10 +11,9 @@ require 'support/test_app'
 require 'support/spec_logger'
 
 Capybara.register_driver :poltergeist do |app|
+  debug = !ENV['DEBUG'].nil?
   Capybara::Poltergeist::Driver.new(
-    app,
-    :logger    => TestSessions.logger,
-    :inspector => (ENV['DEBUG'] != nil)
+    app, logger: TestSessions.logger, inspector: debug, debug: debug
   )
 end
 
@@ -45,7 +44,9 @@ RSpec.configure do |config|
     Capybara.default_wait_time = 0
   end
 
-  config.before(:each, :requires => :js) do
-    Capybara.default_wait_time = 1
+  [:js, :modals].each do |cond|
+    config.before(:each, :requires => cond) do
+      Capybara.default_wait_time = 1
+    end
   end
 end

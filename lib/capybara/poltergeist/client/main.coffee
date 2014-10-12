@@ -79,6 +79,10 @@ class Poltergeist.StatusFailError extends Poltergeist.Error
   name: "Poltergeist.StatusFailError"
   args: -> []
 
+class Poltergeist.NoSuchWindowError extends Poltergeist.Error
+  name: "Poltergeist.NoSuchWindowError"
+  args: -> []
+
 # We're using phantom.libraryPath so that any stack traces
 # report the full path.
 phantom.injectJs("#{phantom.libraryPath}/web_page.js")

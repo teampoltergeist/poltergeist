@@ -4,7 +4,7 @@ class Poltergeist.Node
   @DELEGATES = ['allText', 'visibleText', 'getAttribute', 'value', 'set', 'setAttribute', 'isObsolete',
                 'removeAttribute', 'isMultiple', 'select', 'tagName', 'find', 'getAttributes',
                 'isVisible', 'position', 'trigger', 'parentId', 'parentIds', 'mouseEventTest',
-                'scrollIntoView', 'isDOMEqual', 'isDisabled', 'deleteText']
+                'scrollIntoView', 'isDOMEqual', 'isDisabled', 'deleteText', 'containsSelection']
 
   constructor: (@page, @id) ->
 
@@ -35,7 +35,11 @@ class Poltergeist.Node
     test = this.mouseEventTest(pos.x, pos.y)
 
     if test.status == 'success'
-      @page.mouseEvent(name, pos.x, pos.y)
+      if name == 'rightclick'
+        @page.mouseEvent('click', pos.x, pos.y, 'right')
+        this.trigger('contextmenu')
+      else
+        @page.mouseEvent(name, pos.x, pos.y)
       pos
     else
       throw new Poltergeist.MouseEventFailed(name, test.selector, pos)

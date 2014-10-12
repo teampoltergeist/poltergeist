@@ -41,7 +41,13 @@ module Capybara::Poltergeist
       @phantomjs_logger  = options[:phantomjs_logger]  || $stdout
 
       pid = Process.pid
-      at_exit { stop if Process.pid == pid }
+      at_exit do
+        # do the work in a separate thread, to avoid stomping on $!,
+        # since other libraries depend on it directly.
+        Thread.new do
+          stop if Process.pid == pid
+        end.join
+      end
     end
 
     def start
@@ -93,13 +99,13 @@ module Capybara::Poltergeist
     # it works with JRuby but I've experienced strange mistakes on Rubinius.
     def redirect_stdout
       prev = STDOUT.dup
-      prev.autoclose = false
       $stdout = @write_io
       STDOUT.reopen(@write_io)
       yield
     ensure
       STDOUT.reopen(prev)
       $stdout = STDOUT
+      prev.close
     end
 
     def kill_phantomjs

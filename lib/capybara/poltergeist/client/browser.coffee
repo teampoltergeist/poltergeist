@@ -2,117 +2,125 @@ class Poltergeist.Browser
   constructor: (@owner, width, height) ->
     @width      = width || 1024
     @height     = height || 768
-    @state      = 'default'
-    @page_stack = []
-    @page_id    = 0
+    @pages      = []
     @js_errors  = true
     @_debug     = false
+    @_counter   = 0
+
+    @processed_modal_messages = []
+    @confirm_processes = []
+    @prompt_responses = []
 
     this.resetPage()
 
   resetPage: ->
+    [@_counter, @pages] = [0, []]
+
     if @page?
-      @page.release()
+      unless @page.closed
+        @page.clearLocalStorage() if @page.currentUrl() != 'about:blank'
+        @page.release()
       phantom.clearCookies()
 
-    @page = new Poltergeist.WebPage
+    @page = @currentPage = new Poltergeist.WebPage
     @page.setViewportSize(width: @width, height: @height)
+    @page.handle = "#{@_counter++}"
+    @pages.push(@page)
 
-    @page.onLoadStarted = =>
-      this.setState 'loading' if @state == 'mouse_event'
+    @page.onAlert = (msg) =>
+      @setModalMessage msg
 
-    @page.onNavigationRequested = (url, navigation) =>
-      this.setState 'loading' if @state == 'mouse_event' && navigation == 'FormSubmitted'
+    @page.onConfirm = (msg) =>
+      process = @confirm_processes.shift()
+      process = true if process == undefined
 
-    @page.onLoadFinished = (status) =>
-      if @state == 'loading'
-        this.sendResponse(status: status, position: @last_mouse_event)
-        this.setState 'default'
-      else if @state == 'awaiting_frame_load'
-        this.sendResponse(true)
-        this.setState 'default'
+      @setModalMessage msg
+      return process
 
-    @page.onInitialized = =>
-      @page_id += 1
+    @page.onPrompt = (msg, defaultVal) =>
+      defaultVal ||= ''
+      response = @prompt_responses.shift()
+      response = defaultVal if (response == undefined || response == false)
 
-    @page.onPageCreated = (sub_page) =>
-      if @state == 'awaiting_sub_page'
-        name       = @page_name
-        @page_name = null
+      @setModalMessage msg
+      return response
 
-        this.setState 'default'
+    @page.onPageCreated = (newPage) =>
+      page = new Poltergeist.WebPage(newPage)
+      page.handle = "#{@_counter++}"
+      @pages.push(page)
 
-        # At this point subpage isn't fully initialized, so we can't check
-        # its name. Instead, we just schedule another attempt to push the
-        # window.
-        setTimeout((=> this.push_window(name)), 0)
+  getPageByHandle: (handle) ->
+    @pages.filter((p) -> !p.closed && p.handle == handle)[0]
 
   runCommand: (name, args) ->
-    this.setState "default"
+    @currentPage.state = 'default'
     this[name].apply(this, args)
 
   debug: (message) ->
     if @_debug
       console.log "poltergeist [#{new Date().getTime()}] #{message}"
 
-  setState: (state) ->
-    return if @state == state
-    this.debug "state #{@state} -> #{state}"
-    @state = state
+  setModalMessage: (msg) ->
+    @processed_modal_messages.push(msg)
 
   sendResponse: (response) ->
-    errors = @page.errors()
-    @page.clearErrors()
+    errors = @currentPage.errors
+    @currentPage.clearErrors()
 
     if errors.length > 0 && @js_errors
       @owner.sendError(new Poltergeist.JavascriptError(errors))
-    else if @page.statusCode() == null && response? && response['status'] == 'fail'
-      @owner.sendError(new Poltergeist.StatusFailError)
     else
       @owner.sendResponse(response)
 
   add_extension: (extension) ->
-    @page.injectExtension extension
+    @currentPage.injectExtension extension
     this.sendResponse 'success'
 
   node: (page_id, id) ->
-    if page_id == @page_id
-      @page.get(id)
+    if @currentPage.id == page_id
+      @currentPage.get(id)
     else
       throw new Poltergeist.ObsoleteNode
 
   visit: (url) ->
-    this.setState 'loading'
+    @currentPage.state = 'loading'
 
     # Prevent firing `page.onInitialized` event twice. Calling currentUrl
     # method before page is actually opened fires this event for the first time.
     # The second time will be in the right place after `page.open`
-    prev_url = if @page.source() is null then 'about:blank' else @page.currentUrl()
+    prevUrl = if @currentPage.source is null then 'about:blank' else @currentPage.currentUrl()
 
-    @page.open(url)
+    @currentPage.open(url)
 
-    if /#/.test(url) && prev_url.split('#')[0] == url.split('#')[0]
-      # hashchange occurred, so there will be no onLoadFinished
-      this.setState 'default'
-      this.sendResponse 'success'
+    if /#/.test(url) && prevUrl.split('#')[0] == url.split('#')[0]
+      # Hash change occurred, so there will be no onLoadFinished
+      @currentPage.state = 'default'
+      this.sendResponse(status: 'success')
+    else
+      @currentPage.waitState 'default', =>
+        if @currentPage.statusCode == null && @currentPage.status == 'fail'
+          @owner.sendError(new Poltergeist.StatusFailError)
+        else
+          this.sendResponse(status: @currentPage.status)
 
   current_url: ->
-    this.sendResponse @page.currentUrl()
+    this.sendResponse @currentPage.currentUrl()
 
   status_code: ->
-    this.sendResponse @page.statusCode()
+    this.sendResponse @currentPage.statusCode
 
   body: ->
-    this.sendResponse @page.content()
+    this.sendResponse @currentPage.content()
 
   source: ->
-    this.sendResponse @page.source()
+    this.sendResponse @currentPage.source
 
   title: ->
-    this.sendResponse @page.title()
+    this.sendResponse @currentPage.title()
 
   find: (method, selector) ->
-    this.sendResponse(page_id: @page_id, ids: @page.find(method, selector))
+    this.sendResponse(page_id: @currentPage.id, ids: @currentPage.find(method, selector))
 
   find_within: (page_id, id, method, selector) ->
     this.sendResponse this.node(page_id, id).find(method, selector)
@@ -148,9 +156,9 @@ class Poltergeist.Browser
   select_file: (page_id, id, value) ->
     node = this.node(page_id, id)
 
-    @page.beforeUpload(node.id)
-    @page.uploadFile('[_poltergeist_selected]', value)
-    @page.afterUpload(node.id)
+    @currentPage.beforeUpload(node.id)
+    @currentPage.uploadFile('[_poltergeist_selected]', value)
+    @currentPage.afterUpload(node.id)
 
     this.sendResponse(true)
 
@@ -167,10 +175,10 @@ class Poltergeist.Browser
     this.sendResponse this.node(page_id, id).isDisabled()
 
   evaluate: (script) ->
-    this.sendResponse @page.evaluate("function() { return #{script} }")
+    this.sendResponse @currentPage.evaluate("function() { return #{script} }")
 
   execute: (script) ->
-    @page.execute("function() { #{script} }")
+    @currentPage.execute("function() { #{script} }")
     this.sendResponse(true)
 
   eval_on_resource_requested: (script) ->
@@ -184,8 +192,10 @@ class Poltergeist.Browser
     if @frame_url(name) in @page.blockedUrls()
       this.sendResponse(true)
     else if @page.pushFrame(name)
-      if @page.currentUrl() == 'about:blank'
-        this.setState 'awaiting_frame_load'
+      if @currentPage.currentUrl() == 'about:blank'
+        @currentPage.state = 'awaiting_frame_load'
+        @currentPage.waitState 'default', =>
+          this.sendResponse(true)
       else
         this.sendResponse(true)
     else
@@ -194,33 +204,45 @@ class Poltergeist.Browser
       else
         @owner.sendError(new Poltergeist.FrameNotFound(name))
 
-  pages: ->
-    this.sendResponse(@page.pages())
-
   pop_frame: ->
-    this.sendResponse(@page.popFrame())
+    this.sendResponse(@currentPage.popFrame())
 
-  push_window: (name) ->
-    sub_page = @page.getPage(name)
+  window_handles: ->
+    handles = @pages.filter((p) -> !p.closed).map((p) -> p.handle)
+    this.sendResponse(handles)
 
-    if sub_page
-      if sub_page.currentUrl() == 'about:blank'
-        sub_page.onLoadFinished = =>
-          sub_page.onLoadFinished = null
-          this.push_window(name)
+  window_handle: (name = null) ->
+    handle = if name
+      page = @pages.filter((p) -> !p.closed && p.windowName() == name)[0]
+      if page then page.handle else null
+    else
+      @currentPage.handle
+
+    this.sendResponse(handle)
+
+  switch_to_window: (handle) ->
+    page = @getPageByHandle(handle)
+    if page
+      if page != @currentPage
+        page.waitState 'default', =>
+          @currentPage = page
+          this.sendResponse(true)
       else
-        @page_stack.push(@page)
-        @page = sub_page
-        @page_id += 1
         this.sendResponse(true)
     else
-      @page_name = name
-      this.setState 'awaiting_sub_page'
+      throw new Poltergeist.NoSuchWindowError
 
-  pop_window: ->
-    prev_page = @page_stack.pop()
-    @page = prev_page if prev_page
+  open_new_window: ->
+    this.execute 'window.open()'
     this.sendResponse(true)
+
+  close_window: (handle) ->
+    page = @getPageByHandle(handle)
+    if page
+      page.release()
+      this.sendResponse(true)
+    else
+      this.sendResponse(false)
 
   mouse_event: (page_id, id, name) ->
     # Get the node before changing state, in case there is an exception
@@ -228,18 +250,25 @@ class Poltergeist.Browser
 
     # If the event triggers onNavigationRequested, we will transition to the 'loading'
     # state and wait for onLoadFinished before sending a response.
-    this.setState 'mouse_event'
+    @currentPage.state = 'mouse_event'
 
     @last_mouse_event = node.mouseEvent(name)
 
     setTimeout =>
-      if @state != 'loading'
-        this.setState 'default'
-        this.sendResponse(@last_mouse_event)
+      # If the state is still the same then navigation event won't happen
+      if @currentPage.state == 'mouse_event'
+        @currentPage.state = 'default'
+        this.sendResponse(position: @last_mouse_event)
+      else
+        @currentPage.waitState 'default', =>
+          this.sendResponse(position: @last_mouse_event)
     , 5
 
   click: (page_id, id) ->
     this.mouse_event page_id, id, 'click'
+
+  right_click: (page_id, id) ->
+    this.mouse_event page_id, id, 'rightclick'
 
   double_click: (page_id, id) ->
     this.mouse_event page_id, id, 'doubleclick'
@@ -248,8 +277,8 @@ class Poltergeist.Browser
     this.mouse_event page_id, id, 'mousemove'
 
   click_coordinates: (x, y) ->
-    @page.sendEvent('click', x, y)
-    this.sendResponse({ click: { x: x, y: y } })
+    @currentPage.sendEvent('click', x, y)
+    this.sendResponse(click: { x: x, y: y })
 
   drag: (page_id, id, other_id) ->
     this.node(page_id, id).dragTo this.node(page_id, other_id)
@@ -267,62 +296,66 @@ class Poltergeist.Browser
     this.sendResponse(true)
 
   scroll_to: (left, top) ->
-    @page.setScrollPosition(left: left, top: top)
+    @currentPage.setScrollPosition(left: left, top: top)
     this.sendResponse(true)
 
   send_keys: (page_id, id, keys) ->
+    target = this.node(page_id, id)
+
     # Programmatically generated focus doesn't work for `sendKeys`.
     # That's why we need something more realistic like user behavior.
-    this.node(page_id, id).mouseEvent('click')
+    if !target.containsSelection()
+      target.mouseEvent('click')
+
     for sequence in keys
-      key = if sequence.key? then @page.native.event.key[sequence.key] else sequence
-      @page.sendEvent('keypress', key)
+      key = if sequence.key? then @currentPage.keyCode(sequence.key) else sequence
+      @currentPage.sendEvent('keypress', key)
     this.sendResponse(true)
 
   render_base64: (format, full, selector = null)->
     this.set_clip_rect(full, selector)
-    encoded_image = @page.renderBase64(format)
+    encoded_image = @currentPage.renderBase64(format)
     this.sendResponse(encoded_image)
 
   render: (path, full, selector = null) ->
     dimensions = this.set_clip_rect(full, selector)
-    @page.setScrollPosition(left: 0, top: 0)
-    @page.render(path)
-    @page.setScrollPosition(left: dimensions.left, top: dimensions.top)
+    @currentPage.setScrollPosition(left: 0, top: 0)
+    @currentPage.render(path)
+    @currentPage.setScrollPosition(left: dimensions.left, top: dimensions.top)
     this.sendResponse(true)
 
   set_clip_rect: (full, selector) ->
-    dimensions = @page.validatedDimensions()
+    dimensions = @currentPage.validatedDimensions()
     [document, viewport] = [dimensions.document, dimensions.viewport]
 
     rect = if full
       left: 0, top: 0, width: document.width, height: document.height
     else
       if selector?
-        @page.elementBounds(selector)
+        @currentPage.elementBounds(selector)
       else
         left: 0, top: 0, width: viewport.width, height: viewport.height
 
-    @page.setClipRect(rect)
+    @currentPage.setClipRect(rect)
     dimensions
 
   set_paper_size: (size) ->
-    @page.setPaperSize(size)
+    @currentPage.setPaperSize(size)
     this.sendResponse(true)
 
   set_zoom_factor: (zoom_factor) ->
-    @page.setZoomFactor(zoom_factor)
+    @currentPage.setZoomFactor(zoom_factor)
     this.sendResponse(true)
 
   resize: (width, height) ->
-    @page.setViewportSize(width: width, height: height)
+    @currentPage.setViewportSize(width: width, height: height)
     this.sendResponse(true)
 
   network_traffic: ->
-    this.sendResponse(@page.networkTraffic())
+    this.sendResponse(@currentPage.networkTraffic())
 
   clear_network_traffic: ->
-    @page.clearNetworkTraffic()
+    @currentPage.clearNetworkTraffic()
     this.sendResponse(true)
 
   blocked_urls: ->
@@ -333,29 +366,29 @@ class Poltergeist.Browser
     this.sendResponse(true)
 
   get_headers: ->
-    this.sendResponse(@page.getCustomHeaders())
+    this.sendResponse(@currentPage.getCustomHeaders())
 
   set_headers: (headers) ->
     # Workaround for https://code.google.com/p/phantomjs/issues/detail?id=745
-    @page.setUserAgent(headers['User-Agent']) if headers['User-Agent']
-    @page.setCustomHeaders(headers)
+    @currentPage.setUserAgent(headers['User-Agent']) if headers['User-Agent']
+    @currentPage.setCustomHeaders(headers)
     this.sendResponse(true)
 
   add_headers: (headers) ->
-    allHeaders = @page.getCustomHeaders()
+    allHeaders = @currentPage.getCustomHeaders()
     for name, value of headers
       allHeaders[name] = value
     this.set_headers(allHeaders)
 
   add_header: (header, permanent) ->
-    @page.addTempHeader(header) unless permanent
+    @currentPage.addTempHeader(header) unless permanent
     this.add_headers(header)
 
   response_headers: ->
-    this.sendResponse(@page.responseHeaders())
+    this.sendResponse(@currentPage.responseHeaders())
 
   cookies: ->
-    this.sendResponse(@page.cookies())
+    this.sendResponse(@currentPage.cookies())
 
   # We're using phantom.addCookie so that cookies can be set
   # before the first page load has taken place.
@@ -364,7 +397,7 @@ class Poltergeist.Browser
     this.sendResponse(true)
 
   remove_cookie: (name) ->
-    @page.deleteCookie(name)
+    @currentPage.deleteCookie(name)
     this.sendResponse(true)
 
   cookies_enabled: (flag) ->
@@ -372,7 +405,7 @@ class Poltergeist.Browser
     this.sendResponse(true)
 
   set_http_auth: (user, password) ->
-    @page.setHttpAuth(user, password)
+    @currentPage.setHttpAuth(user, password)
     this.sendResponse(true)
 
   set_js_errors: (value) ->
@@ -394,9 +427,31 @@ class Poltergeist.Browser
     throw new Error('zomg')
 
   go_back: ->
-    this.page.goBack() if this.page.canGoBack
-    this.sendResponse(true)
+    if @currentPage.canGoBack
+      @currentPage.state = 'loading'
+      @currentPage.goBack()
+      @currentPage.waitState 'default', =>
+        this.sendResponse(true)
+    else
+      this.sendResponse(false)
 
   go_forward: ->
-    this.page.goForward() if this.page.canGoForward
-    this.sendResponse(true)
+    if @currentPage.canGoForward
+      @currentPage.state = 'loading'
+      @currentPage.goForward()
+      @currentPage.waitState 'default', =>
+        this.sendResponse(true)
+    else
+      this.sendResponse(false)
+
+  set_confirm_process: (process) ->
+    @confirm_processes.push process
+    @sendResponse(true)
+
+  set_prompt_response: (response) ->
+    @prompt_responses.push response
+    @sendResponse(true)
+
+  modal_messages: ->
+    @sendResponse(@processed_modal_messages)
+    @processed_modal_messages = []

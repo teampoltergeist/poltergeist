@@ -6,6 +6,10 @@
 *   Write JSON to the logger, rather than Ruby [Issue #430]
 *   Added ability to access all of a nodes attributes (Jon Rowe)
 *   Added ability to block http requests (Alexander Adam)
+*   Capybara 2.3 window support (Dmitry Vorotilin)
+*   Added ability to manipulate modals (`window.alert()`, `window.confirm()`
+    and `window.prompt()`) that has been implemented from Capybara 2.4
+    (Wataru MIYAGUNI)
 
 #### Bug fixes ####
 
@@ -13,6 +17,18 @@
     (Pedro Carriço and Erik Ostrom) [Issue #432]
 *   Raise exception on PhantomJS "status: fail" result (i.e DNS issue) instead
     of returning minimal HTML body (Dean Holdren) [Issue #473]
+*   Render full window size when document has no height (Kevin McConnell)
+*   Don't alter focus with send_keys if we're already in the target element
+    (Adam Prescott) [Issue #493]
+*   Close dup'ed fd after using (Dmitry Vorotilin) [Issue #446, #529, #528]
+*   Clean up localStorage between tests (Dmitry Vorotilin) [Issue #525]
+
+### 1.5.1 ###
+
+#### Bug fixes ####
+
+*   Ensure process exits with correct status code and $! is propagated.
+    (Micah Geisel) [Issue #497]
 
 ### 1.5.0 ###
 

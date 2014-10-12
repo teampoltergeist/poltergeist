@@ -48,8 +48,8 @@ class PoltergeistAgent
     @elements.length - 1
 
   documentSize: ->
-    height: document.documentElement.scrollHeight,
-    width:  document.documentElement.scrollWidth
+    height: document.documentElement.scrollHeight || document.documentElement.clientHeight,
+    width:  document.documentElement.scrollWidth  || document.documentElement.clientWidth
 
   get: (id) ->
     @nodes[id] or= new PoltergeistAgent.Node(this, @elements[id])
@@ -65,6 +65,9 @@ class PoltergeistAgent
   afterUpload: (id) ->
     this.get(id).removeAttribute('_poltergeist_selected')
 
+  clearLocalStorage: ->
+    localStorage.clear()
+
 class PoltergeistAgent.ObsoleteNode
   toString: -> "PoltergeistAgent.ObsoleteNode"
 
@@ -75,7 +78,8 @@ class PoltergeistAgent.Node
   @EVENTS = {
     FOCUS: ['blur', 'focus', 'focusin', 'focusout'],
     MOUSE: ['click', 'dblclick', 'mousedown', 'mouseenter', 'mouseleave', 'mousemove',
-            'mouseover', 'mouseout', 'mouseup']
+            'mouseover', 'mouseout', 'mouseup', 'contextmenu'],
+    FORM: ['submit']
   }
 
   constructor: (@agent, @element) ->
@@ -144,10 +148,11 @@ class PoltergeistAgent.Node
     @element.textContent
 
   visibleText: ->
-    if @element.nodeName == "TEXTAREA"
-      @element.textContent
-    else
-      @element.innerText
+    if this.isVisible()
+      if @element.nodeName == "TEXTAREA"
+        @element.textContent
+      else
+        @element.innerText
 
   deleteText: ->
     range = document.createRange()
@@ -234,6 +239,16 @@ class PoltergeistAgent.Node
   isDisabled: ->
     @element.disabled || @element.tagName == 'OPTION' && @element.parentNode.disabled
 
+  containsSelection: ->
+    selectedNode = document.getSelection().focusNode
+
+    return false if !selectedNode
+
+    if selectedNode.nodeType == 3
+      selectedNode = selectedNode.parentNode
+
+    @element.contains(selectedNode)
+
   frameOffset: ->
     win    = window
     offset = { top: 0, left: 0 }
@@ -272,12 +287,18 @@ class PoltergeistAgent.Node
         false, false, false, false, 0, null
       )
     else if Node.EVENTS.FOCUS.indexOf(name) != -1
-      event = document.createEvent('HTMLEvents')
-      event.initEvent(name, true, true)
+      event = this.obtainEvent(name)
+    else if Node.EVENTS.FORM.indexOf(name) != -1
+      event = this.obtainEvent(name)
     else
       throw "Unknown event"
 
     @element.dispatchEvent(event)
+
+  obtainEvent: (name) ->
+    event = document.createEvent('HTMLEvents')
+    event.initEvent(name, true, true)
+    event
 
   mouseEventTest: (x, y) ->
     frameOffset = this.frameOffset()
@@ -351,6 +372,3 @@ document.addEventListener(
   'DOMContentLoaded',
   -> console.log('__DOMContentLoaded')
 )
-
-window.confirm = (message) -> true
-window.prompt  = (message, _default) -> _default or null

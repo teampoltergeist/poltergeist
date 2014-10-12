@@ -1,7 +1,7 @@
 module Capybara
   module Poltergeist
-    class Error < StandardError
-    end
+    class Error < StandardError; end
+    class NoSuchWindowError < Error; end
 
     class ClientError < Error
       attr_reader :response
