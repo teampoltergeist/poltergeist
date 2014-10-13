@@ -21,6 +21,7 @@
     (Adam Prescott) [Issue #493]
 *   Close dup'ed fd after using (Dmitry Vorotilin) [Issue #446, #529, #528]
 *   Clean up localStorage between tests (Dmitry Vorotilin) [Issue #525]
+*   Fix double encoded current_url [Issue #418]
 
 ### 1.5.1 ###
 

@@ -25,7 +25,7 @@ class PoltergeistAgent
         throw error
 
   currentUrl: ->
-    encodeURI(window.location.href)
+    encodeURI(decodeURI(window.location.href))
 
   find: (method, selector, within = document) ->
     try

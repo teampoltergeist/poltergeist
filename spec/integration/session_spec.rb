@@ -353,10 +353,14 @@ describe Capybara::Session do
       expect(@session.evaluate_script('window.last_hashchange')).to eq('#foo')
     end
 
-    it 'supports retrieving the URL of pages with escaped characters' do
+    it 'supports retrieving the current_path with escaped characters' do
       @session.visit '/poltergeist/arbitrary_path/200/foo%20bar'
-      expect(URI.parse(@session.current_url).path).to eq('/poltergeist/arbitrary_path/200/foo%20bar')
       expect(@session.current_path).to eq('/poltergeist/arbitrary_path/200/foo%20bar')
+    end
+
+    it 'supports retrieving the current_url with escaped characters' do
+      @session.visit '/poltergeist/arbitrary_path/200/foo?a%5Bb%5D=c'
+      expect(URI.parse(@session.current_url).request_uri).to eq('/poltergeist/arbitrary_path/200/foo?a%5Bb%5D=c')
     end
 
     context 'window switching support' do
