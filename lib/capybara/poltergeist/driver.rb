@@ -49,6 +49,12 @@ module Capybara::Poltergeist
 
     def phantomjs_options
       list = options[:phantomjs_options] || []
+
+      # PhantomJS defaults to only using SSLv3, which since POODLE (Oct 2014)
+      # many sites have dropped from their supported protocols (eg PayPal,
+      # Braintree).
+      list += ["--ssl-protocol=any"] unless list.grep(/ssl-protocol/).any?
+
       list += ["--remote-debugger-port=#{inspector.port}", "--remote-debugger-autorun=yes"] if inspector
       list
     end
@@ -162,7 +168,7 @@ module Capybara::Poltergeist
     def within_window(name, &block)
       browser.within_window(name, &block)
     end
- 
+
     def no_such_window_error
       NoSuchWindowError
     end

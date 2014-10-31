@@ -12,6 +12,26 @@ module Capybara::Poltergeist
       it 'has no inspector' do
         expect(subject.inspector).to be_nil
       end
+
+      it 'adds --ssl-protocol=any to driver options' do
+        expect(subject.phantomjs_options).to eq(%w{--ssl-protocol=any})
+      end
+    end
+
+    context 'with a phantomjs_options option' do
+      subject { Driver.new(nil, phantomjs_options: %w{--hello})}
+
+      it "is a combination of ssl-protocol and the provided options" do
+        expect(subject.phantomjs_options).to eq(%w{--hello --ssl-protocol=any})
+      end
+    end
+
+    context 'with phantomjs_options containing ssl-protocol' do
+      subject { Driver.new(nil, phantomjs_options: %w{--ssl-protocol=tlsv1})}
+
+      it "uses the provided ssl-protocol" do
+        expect(subject.phantomjs_options).to eq(%w{--ssl-protocol=tlsv1})
+      end
     end
 
     context 'with a :logger option' do

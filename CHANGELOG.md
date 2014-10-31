@@ -22,6 +22,7 @@
 *   Close dup'ed fd after using (Dmitry Vorotilin) [Issue #446, #529, #528]
 *   Clean up localStorage between tests (Dmitry Vorotilin) [Issue #525]
 *   Fix double encoded current_url [Issue #418]
+*   Default to `--ssl-protocol=any` in PhantomJS so that sites without SSLv3 still work [Issue #544]
 
 ### 1.5.1 ###
 
