@@ -19,10 +19,12 @@ class Poltergeist.WebPage
     @source          = null
     @closed          = false
     @state           = 'default'
+    @urlBlacklist    = []
     @frames          = []
     @errors          = []
     @_networkTraffic = {}
     @_tempHeaders    = {}
+    @_blockedUrls    = []
 
     for callback in WebPage.CALLBACKS
       this.bindCallback(callback)
@@ -73,17 +75,24 @@ class Poltergeist.WebPage
 
     @errors.push(message: message, stack: stackString)
 
-  onResourceRequestedNative: (request) ->
-    @lastRequestId = request.id
+  onResourceRequestedNative: (request, net) ->
+    abort = @urlBlacklist.some (blacklisted_url) ->
+      request.url.indexOf(blacklisted_url) != -1
+  
+    if abort
+      @_blockedUrls.push request.url unless request.url in @_blockedUrls
+      net.abort()
+    else
+      @lastRequestId = request.id
 
-    if request.url == @redirectURL
-      @redirectURL = null
-      @requestId   = request.id
+      if request.url == @redirectURL
+        @redirectURL = null
+        @requestId   = request.id
 
-    @_networkTraffic[request.id] = {
-      request:       request,
-      responseParts: []
-    }
+      @_networkTraffic[request.id] = {
+        request:       request,
+        responseParts: []
+      }
 
   onResourceReceivedNative: (response) ->
     @_networkTraffic[response.id]?.responseParts.push(response)
@@ -133,11 +142,22 @@ class Poltergeist.WebPage
   clearNetworkTraffic: ->
     @_networkTraffic = {}
 
+  blockedUrls: ->
+    @_blockedUrls
+
+  clearBlockedUrls: ->
+    @_blockedUrls = []
+
   content: ->
     this.native().frameContent
 
   title: ->
     this.native().frameTitle
+
+  frameUrl: (frameName) ->
+    query = (frameName) ->
+      document.querySelector("iframe[name='#{frameName}']")?.src
+    this.evaluate(query, frameName)
 
   clearErrors: ->
     @errors = []

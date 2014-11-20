@@ -156,8 +156,13 @@ class Poltergeist.Browser
     @currentPage.execute("function() { #{script} }")
     this.sendResponse(true)
 
+  frameUrl: (frame_name) ->
+    @currentPage.frameUrl(frame_name)
+
   push_frame: (name, timeout = new Date().getTime() + 2000) ->
-    if @currentPage.pushFrame(name)
+    if @frameUrl(name) in @currentPage.blockedUrls()
+      this.sendResponse(true)
+    else if @currentPage.pushFrame(name)
       if @currentPage.currentUrl() == 'about:blank'
         @currentPage.state = 'awaiting_frame_load'
         @currentPage.waitState 'default', =>
@@ -406,3 +411,7 @@ class Poltergeist.Browser
         this.sendResponse(true)
     else
       this.sendResponse(false)
+
+  set_url_blacklist: ->
+    @currentPage.urlBlacklist = Array.prototype.slice.call(arguments)
+    @sendResponse(true)
