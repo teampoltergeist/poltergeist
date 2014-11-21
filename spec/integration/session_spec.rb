@@ -374,6 +374,36 @@ describe Capybara::Session do
       expect(URI.parse(@session.current_url).request_uri).to eq('/poltergeist/arbitrary_path/200/foo?a%5Bb%5D=c')
     end
 
+    context 'dragging support' do
+      before do
+        @session.visit '/poltergeist/drag'
+      end
+
+      it 'supports drag_to' do
+        draggable = @session.find(:css, '#drag_to #draggable')
+        droppable = @session.find(:css, '#drag_to #droppable')
+
+        draggable.drag_to(droppable)
+        expect( droppable ).to have_content( "Dropped" )
+      end
+
+      it 'supports drag_by on native element' do
+        draggable = @session.find(:css, '#drag_by .draggable')
+
+        top_before = @session.evaluate_script('$("#drag_by .draggable").position().top')
+        left_before = @session.evaluate_script('$("#drag_by .draggable").position().left')
+
+        draggable.native.drag_by(10, 10)
+
+        top_after = @session.evaluate_script('$("#drag_by .draggable").position().top')
+        left_after = @session.evaluate_script('$("#drag_by .draggable").position().left')
+
+        expect( top_after ).to eq( top_before + 10 )
+        expect( left_after ).to eq( left_before + 10 )
+      end
+
+    end
+
     context 'window switching support' do
       it 'waits for the window to load' do
         @session.visit '/'

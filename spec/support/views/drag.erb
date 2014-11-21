@@ -1,0 +1,55 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <title>poltergeist drag_to and drag_by</title>
+    <script src="/poltergeist/jquery-1.6.2.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="/poltergeist/jquery-ui-1.8.14.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <style type="text/css">
+      #drag_by {
+        position: relative;
+        width: 200px;
+        height: 100px;
+      }
+      #svg-with-circle{ position: absolute; }
+      #drag_by div{ position: absolute; left: 0; }
+      #draggable { width: 60px; height: 60px; padding: 0.2em; }
+      #droppable { width: 100px; height: 100px; padding: 0.2em; }
+    </style>
+
+    <script>
+    $(function() {
+      $( ".draggable" ).draggable();
+      $( "#droppable" ).droppable({
+        drop: function( event, ui ) {
+          $( this )
+            .addClass( "dropped" )
+            .find( "p" )
+              .html( "Dropped!" );
+        }
+      });
+    });
+    </script>
+  </head>
+
+
+  <body>
+
+    <div id="drag_to">
+      <div id="draggable" class="draggable">
+        <p>Drag me</p>
+      </div>
+
+      <div id="droppable">
+        <p>Drop here</p>
+      </div>
+    </div>
+
+    <div id="drag_by">
+      <svg id='svg-with-circle' class="draggable">
+        <circle cx="15" cy="15" r="10"/>
+      </svg>
+    </div>
+
+  </body>
+</html>
