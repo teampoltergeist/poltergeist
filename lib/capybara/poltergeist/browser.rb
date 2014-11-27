@@ -278,6 +278,10 @@ module Capybara::Poltergeist
       command 'remove_cookie', name
     end
 
+    def clear_cookies
+      command 'clear_cookies'
+    end
+
     def cookies_enabled=(flag)
       command 'cookies_enabled', !!flag
     end
