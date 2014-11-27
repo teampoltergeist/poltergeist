@@ -211,6 +211,7 @@ The following methods are used to inspect and manipulate cookies:
   `:secure`, `:httponly`, `:expires`. `:expires` should be a `Time`
   object.
 * `page.driver.remove_cookie(name)` - remove a cookie
+* `page.driver.clear_cookies` - clear all cookies
 
 ### Sending keys ###
 
