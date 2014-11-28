@@ -621,6 +621,18 @@ module Capybara::Poltergeist
         expect(@driver.body).to_not include('test_cookie')
       end
 
+      it 'can clear cookies' do
+        @session.visit('/set_cookie')
+
+        @session.visit('/get_cookie')
+        expect(@driver.body).to include('test_cookie')
+
+        @driver.clear_cookies
+
+        @session.visit('/get_cookie')
+        expect(@driver.body).to_not include('test_cookie')
+      end
+
       it 'can set cookies with an expires time' do
         time = Time.at(Time.now.to_i + 10000)
         @session.visit '/'

@@ -9,6 +9,7 @@
 *   Added ability to manipulate modals (`window.alert()`, `window.confirm()`
     and `window.prompt()`) that has been implemented from Capybara 2.4
     (Wataru MIYAGUNI)
+*   Added ability to clear all cookies with clear_cookies method (unmanbearpig)
 
 #### Bug fixes ####
 
