@@ -136,6 +136,10 @@ module Capybara::Poltergeist
       browser.evaluate(script)
     end
 
+    def eval_on_resource_requested(script)
+      browser.eval_on_resource_requested(script)
+    end
+
     def execute_script(script)
       browser.execute(script)
       nil
