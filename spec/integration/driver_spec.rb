@@ -768,6 +768,20 @@ module Capybara::Poltergeist
       end
     end
 
+    context 'blacklisting urls for resource requests' do
+      it 'blocks unwanted urls' do
+        @driver.browser.url_blacklist = ['unwanted']
+        
+        @session.visit '/poltergeist/url_blacklist'
+
+        expect(@session.status_code).to eq(200)
+        expect(@session).to have_content('We are loading some unwanted action here')
+        @session.within_frame 'framename' do
+          expect(@session.html).not_to include('We shouldn\'t see this.')
+        end
+      end
+    end
+
     context 'has ability to send keys' do
       before { @session.visit('/poltergeist/send_keys') }
 

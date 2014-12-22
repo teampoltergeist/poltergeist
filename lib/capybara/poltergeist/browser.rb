@@ -300,6 +300,10 @@ module Capybara::Poltergeist
       end
     end
 
+    def url_blacklist=(blacklist)
+      command 'set_url_blacklist', *blacklist
+    end
+
     def debug=(val)
       @debug = val
       command 'set_debug', !!val
