@@ -440,6 +440,6 @@ class Poltergeist.Browser
     @prompt_responses.push response
     @sendResponse(true)
 
-  modal_messages: ->
-    @sendResponse(@processed_modal_messages)
-    @processed_modal_messages = []
+  shift_modal_message: ->
+    message = @processed_modal_messages.shift()
+    @sendResponse(message)
