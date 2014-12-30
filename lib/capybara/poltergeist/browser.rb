@@ -24,7 +24,9 @@ module Capybara::Poltergeist
       server.restart
       client.restart
 
-      self.debug = @debug if @debug
+      self.debug = @debug if defined?(@debug)
+      self.js_errors = @js_errors if defined?(@js_errors)
+      self.extensions = @extensions if @extensions
     end
 
     def visit(url)
@@ -291,10 +293,12 @@ module Capybara::Poltergeist
     end
 
     def js_errors=(val)
+      @js_errors = val
       command 'set_js_errors', !!val
     end
 
     def extensions=(names)
+      @extensions = names
       Array(names).each do |name|
         command 'add_extension', name
       end
