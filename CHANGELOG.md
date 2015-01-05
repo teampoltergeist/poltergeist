@@ -10,6 +10,7 @@
     and `window.prompt()`) that has been implemented from Capybara 2.4
     (Wataru MIYAGUNI)
 *   Added ability to clear all cookies with clear_cookies method (unmanbearpig)
+*   Move from `phantom.args` to `system.args` to support PhantomJS 2.0 (Filip Spiridonov) [Issue 566]
 
 #### Bug fixes ####
 
