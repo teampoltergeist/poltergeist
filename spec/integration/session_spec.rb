@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-Capybara::SpecHelper.run_specs TestSessions::Poltergeist, 'Poltergeist'
+Capybara::SpecHelper.run_specs TestSessions::Poltergeist, 'Poltergeist', capybara_skip: [:modals]
 
 describe Capybara::Session do
   context 'with poltergeist driver' do
@@ -199,6 +199,17 @@ describe Capybara::Session do
       @session.visit '/poltergeist/table'
       @session.click_link 'Link'
       expect(@session).to have_content('Hello world')
+    end
+
+    it 'handles window.confirm(), returning true unconditionally' do
+      @session.visit '/'
+      expect(@session.evaluate_script("window.confirm('foo')")).to be_true
+    end
+
+    it 'handles window.prompt(), returning the default value or null' do
+      @session.visit '/'
+      expect(@session.evaluate_script('window.prompt()')).to be_nil
+      expect(@session.evaluate_script("window.prompt('foo', 'default')")).to eq('default')
     end
 
     it 'handles evaluate_script values properly' do
