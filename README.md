@@ -263,6 +263,8 @@ end
     to be passed to PhantomJS, e.g. `['--load-images=no', '--ignore-ssl-errors=yes']`
 *   `:extensions` (Array) - An array of JS files to be preloaded into
     the phantomjs browser. Useful for faking unsupported APIs.
+*   `:poltergeist_extensions` (Array) - An array of JS files to be preloaded into
+    the phantomjs environment. Useful for extending poltergeist.
 *   `:port` (Fixnum) - The port which should be used to communicate
     with the PhantomJS process. Defaults to a random open port.
 

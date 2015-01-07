@@ -8,6 +8,7 @@
 *   Capybara 2.3 window support (Dmitry Vorotilin)
 *   Added ability to clear all cookies with clear_cookies method (unmanbearpig)
 *   Move from `phantom.args` to `system.args` to support PhantomJS 2.0 (Filip Spiridonov) [Issue 566]
+*   Allow extending poltergeist JS with driver option `poltergeist_extensions`
 
 #### Bug fixes ####
 

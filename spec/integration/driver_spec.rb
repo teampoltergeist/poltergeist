@@ -387,6 +387,29 @@ module Capybara::Poltergeist
       end
     end
 
+    context 'extending poltergeist javascript' do
+      before do
+        @extended_driver = Capybara::Poltergeist::Driver.new(
+          @session.app,
+          logger: TestSessions.logger,
+          inspector: ENV['DEBUG'] != nil,
+          poltergeist_extensions: %W% #{File.expand_path '../../support/abort_requests.js', __FILE__ } %
+        )
+      end
+
+      it 'supports extending the poltergesit world' do
+        begin
+          @extended_driver.visit(session_url('/poltergeist/with_js'))
+          expect(@extended_driver.network_traffic.length).to eq(4)
+          response_lengths = @extended_driver.network_traffic.
+            map {|n| n.response_parts.length }
+          expect(response_lengths).to eq([2,2,2,1])
+        ensure
+          @extended_driver.quit
+        end
+      end
+    end
+
     context 'extending browser javascript' do
       before do
         @extended_driver = Capybara::Poltergeist::Driver.new(
