@@ -29,7 +29,8 @@ module Capybara::Poltergeist
       end
     end
 
-    attr_reader :pid, :server, :path, :window_size, :phantomjs_options
+    attr_reader :pid, :server, :path, :window_size, :phantomjs_options,
+      :poltergeist_extensions
 
     def initialize(server, options = {})
       @server            = server
@@ -39,6 +40,7 @@ module Capybara::Poltergeist
       @window_size       = options[:window_size]       || [1024, 768]
       @phantomjs_options = options[:phantomjs_options] || []
       @phantomjs_logger  = options[:phantomjs_logger]  || $stdout
+      @poltergeist_extensions = options[:poltergeist_extensions] || []
 
       pid = Process.pid
       at_exit do
@@ -85,6 +87,7 @@ module Capybara::Poltergeist
       parts = [path]
       parts.concat phantomjs_options
       parts << PHANTOMJS_SCRIPT
+      parts.concat poltergeist_extensions
       parts << server.port
       parts.concat window_size
       parts

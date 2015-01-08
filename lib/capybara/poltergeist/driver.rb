@@ -43,7 +43,8 @@ module Capybara::Poltergeist
         :path              => options[:phantomjs],
         :window_size       => options[:window_size],
         :phantomjs_options => phantomjs_options,
-        :phantomjs_logger  => phantomjs_logger
+        :phantomjs_logger  => phantomjs_logger,
+        :poltergeist_extensions => options[:poltergeist_extensions]
       )
     end
 

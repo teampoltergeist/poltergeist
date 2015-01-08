@@ -91,4 +91,11 @@ phantom.injectJs("#{phantom.libraryPath}/connection.js")
 phantom.injectJs("#{phantom.libraryPath}/browser.js")
 
 system = require 'system'
-new Poltergeist(system.args[1], system.args[2], system.args[3])
+args = []
+for arg in system.args.slice(1)
+  if /.js$/.test(arg)
+    phantom.injectJs(arg)
+  else
+    args.push(arg)
+
+new Poltergeist(args[0], args[1], args[2])
