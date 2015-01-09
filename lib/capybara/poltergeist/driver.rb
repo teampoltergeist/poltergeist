@@ -255,6 +255,10 @@ module Capybara::Poltergeist
       browser.remove_cookie(name)
     end
 
+    def clear_cookies
+      browser.clear_cookies
+    end
+
     def cookies_enabled=(flag)
       browser.cookies_enabled = flag
     end
@@ -299,52 +303,6 @@ module Capybara::Poltergeist
 
     def go_forward
       browser.go_forward
-    end
-
-    def accept_modal(type, options = {})
-      case type
-      when :confirm
-        browser.accept_confirm
-      when :prompt
-        browser.accept_prompt options[:with]
-      end
-
-      yield if block_given?
-      find_modal(options)
-    end
-
-    def dismiss_modal(type, options = {})
-      case type
-      when :confirm
-        browser.dismiss_confirm
-      when :prompt
-        browser.dismiss_prompt
-      end
-
-      yield if block_given?
-      find_modal(options)
-    end
-
-    private
-
-    def find_modal(options)
-      start_time    = Time.now
-      timeout_sec   = options[:wait] || Capybara.default_wait_time
-      expect_text   = options[:text]
-      not_found_msg = 'Unable to find modal dialog'
-      not_found_msg += " with #{expect_text}" if expect_text
-
-      begin
-        modals = browser.modal_messages
-        raise Capybara::ModalNotFound if modals.empty?
-        raise Capybara::ModalNotFound if (expect_text && !modals.include?(expect_text))
-      rescue Capybara::ModalNotFound => e
-        raise e, not_found_msg if (Time.now - start_time) >= timeout_sec
-        sleep(0.05)
-        retry
-      end
-
-      modals.first
     end
   end
 end

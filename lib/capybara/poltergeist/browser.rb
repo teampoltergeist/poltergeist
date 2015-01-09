@@ -282,6 +282,10 @@ module Capybara::Poltergeist
       command 'remove_cookie', name
     end
 
+    def clear_cookies
+      command 'clear_cookies'
+    end
+
     def cookies_enabled=(flag)
       command 'cookies_enabled', !!flag
     end
@@ -331,32 +335,6 @@ module Capybara::Poltergeist
 
     def go_forward
       command 'go_forward'
-    end
-
-    def accept_confirm
-      command 'set_confirm_process', true
-    end
-
-    def dismiss_confirm
-      command 'set_confirm_process', false
-    end
-
-    #
-    # press "OK" with text (response) or default value
-    #
-    def accept_prompt(response)
-      command 'set_prompt_response', response || false
-    end
-
-    #
-    # press "Cancel"
-    #
-    def dismiss_prompt
-      command 'set_prompt_response', nil
-    end
-
-    def modal_messages
-      command 'modal_messages'
     end
 
     private
