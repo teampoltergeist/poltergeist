@@ -2,6 +2,12 @@
 
 #### Features ####
 
+#### Bug fixes ####
+
+### 1.6.0 ###
+
+#### Features ####
+
 *   Added ability to block resource requests (Alexander Adam & Kelvin Stinghen)
 *   Added ability to set zoom_factor (Dmytro Budnyk)
 *   Write JSON to the logger, rather than Ruby [Issue #430]
