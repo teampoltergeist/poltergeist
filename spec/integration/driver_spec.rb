@@ -926,5 +926,23 @@ module Capybara::Poltergeist
         expect(input.text).to eq('replacement text')
       end
     end
+
+    context 'date_fields' do
+      before { @session.visit('/poltergeist/date_fields') }
+
+      it 'sets a date' do
+        input = @session.find(:css, '#date_field')
+
+        input.set('2016-02-14')
+
+        expect(input.value).to eq('2016-02-14')
+      end
+
+      it 'fills a date' do
+        @session.fill_in 'date_field', with: '2016-02-14'
+
+        expect(@session.find(:css, '#date_field').value).to eq('2016-02-14')
+      end
+    end
   end
 end
