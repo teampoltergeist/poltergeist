@@ -266,6 +266,31 @@ end
 *   `:port` (Fixnum) - The port which should be used to communicate
     with the PhantomJS process. Defaults to a random open port.
 
+### URL Blacklisting ###
+
+The latest version of Poltergeist supports URL blacklisting, which allows you to prevent scripts from running on designated domains. If you are experiencing slower run times, consider creating a URL blacklist of domains that are not essential to your testing environment, such as ad networks or analytics.
+
+To utilize URL blacklisting, modify your Gemfile to use the latest version of Poltergeist:
+
+``` ruby
+gem 'poltergeist', git: 'https://github.com/teampoltergeist/poltergeist.git', branch: 'master'
+```
+
+To set up blacklisting, modify your `spec_helper.rb` file to include the Blacklist before your RSpec tests are run:
+
+``` ruby
+require 'rspec/rails'
+require 'capybara/poltergeist'
+
+RSpec.configure do |config|
+  config.before(:each, js: true) do
+    page.driver.browser.url_blacklist = [ 'http://www.example.com ']
+  end
+end
+```
+
+Since blacklisting only benefits feature specs, it may make sense to further isolate this code into a separate helper. In this case, copy the above code into a `features_helper.rb` file and `require 'features_helper'` for all of your feature specs.
+
 ## Troubleshooting ##
 
 Unfortunately, the nature of full-stack testing is that things can and
