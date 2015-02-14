@@ -115,7 +115,15 @@ class PoltergeistAgent.Node
   changed: ->
     event = document.createEvent('HTMLEvents')
     event.initEvent('change', true, false)
-    @element.dispatchEvent(event)
+
+    # In the case of an OPTION tag, the change event should come
+    # from the parent SELECT
+    if @element.nodeName == 'OPTION'
+      element = @element.parentNode
+    else
+      element = @element
+
+    element.dispatchEvent(event)
 
   input: ->
     event = document.createEvent('HTMLEvents')
