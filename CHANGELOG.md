@@ -8,6 +8,7 @@
 
 #### Features ####
 
+*   Add support for key modifiers for send_keys [Issue #420] (Sarah Mogin)
 *   Added ability to block resource requests (Alexander Adam & Kelvin Stinghen)
 *   Added ability to set zoom_factor (Dmytro Budnyk)
 *   Write JSON to the logger, rather than Ruby [Issue #430]

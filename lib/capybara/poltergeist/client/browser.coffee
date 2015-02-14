@@ -280,7 +280,13 @@ class Poltergeist.Browser
 
     for sequence in keys
       key = if sequence.key? then @currentPage.keyCode(sequence.key) else sequence
-      @currentPage.sendEvent('keypress', key)
+
+      if sequence.modifier?
+        modifier = @currentPage.keyModifierCode(sequence.modifier)
+        @currentPage.sendEvent('keypress', key, null, null, modifier)
+      else
+        @currentPage.sendEvent('keypress', key)
+
     this.sendResponse(true)
 
   render_base64: (format, full, selector = null)->

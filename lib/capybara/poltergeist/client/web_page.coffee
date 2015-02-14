@@ -126,6 +126,11 @@ class Poltergeist.WebPage
   keyCode: (name) ->
     this.native().event.key[name]
 
+  keyModifierCode: (names) ->
+    modifiers = this.native().event.modifier
+    names = names.split(',').map ((name) -> modifiers[name])
+    names[0] | names[1] # return codes for 1 or 2 modifiers
+
   waitState: (state, callback) ->
     if @state == state
       callback.call()
