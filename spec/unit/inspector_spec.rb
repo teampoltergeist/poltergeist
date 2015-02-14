@@ -14,12 +14,12 @@ module Capybara::Poltergeist
 
     it 'has a url' do
       subject = Inspector.new(nil, 1234)
-      expect(subject.url).to eq('//localhost:1234/')
+      expect(subject.url).to eq('http://localhost:1234/')
     end
 
     it 'can be opened' do
       subject = Inspector.new('chromium', 1234)
-      Process.should_receive(:spawn).with('chromium', '//localhost:1234/')
+      Process.should_receive(:spawn).with('chromium', 'http://localhost:1234/')
       subject.open
     end
 

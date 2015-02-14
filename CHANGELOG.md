@@ -4,6 +4,8 @@
 
 #### Bug fixes ####
 
+* Include protocol in Capybara::Poltergeist::Inspect#url [Issue #579] (Brian Buchalter)
+
 ### 1.6.0 ###
 
 #### Features ####
