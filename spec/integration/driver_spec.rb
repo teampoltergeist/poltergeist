@@ -859,11 +859,28 @@ module Capybara::Poltergeist
         expect(input.value).to eq('Submitted')
       end
 
-      it 'raises error on modifier' do
+      it 'sends sequences with modifiers and letters' do
         input = @session.find(:css, '#empty_input')
 
-        expect { input.native.send_keys([:Shift, 's'], 'tring') }
-          .to raise_error(Capybara::Poltergeist::Error)
+        input.native.send_keys([:Shift, 's'], 't', 'r', 'i', 'n', 'g')
+
+        expect(input.value).to eq('String')
+      end
+
+      it 'sends sequences with modifiers and symbols' do
+        input = @session.find(:css, '#empty_input')
+
+        input.native.send_keys('t', 'r', 'i', 'n', 'g', [:Ctrl, :Left], 's')
+
+        expect(input.value).to eq('string')
+      end
+
+      it 'sends sequences with multiple modifiers and symbols' do
+        input = @session.find(:css, '#empty_input')
+
+        input.native.send_keys('t', 'r', 'i', 'n', 'g', [:Ctrl, :Shift, :Left], 's')
+
+        expect(input.value).to eq('s')
       end
 
       it 'has an alias' do
