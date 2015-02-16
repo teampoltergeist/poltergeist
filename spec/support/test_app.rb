@@ -73,6 +73,10 @@ class TestApp
     params['remaining_path']
   end
 
+  post '/poltergeist/fail' do
+    params['file'] ? 'file uploaded' : 'fail'
+  end
+
   protected
 
   def render_view(view)
