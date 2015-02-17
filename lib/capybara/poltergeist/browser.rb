@@ -35,6 +35,10 @@ module Capybara::Poltergeist
       command 'current_url'
     end
 
+    def set_proxy(host, port)
+      command 'set_proxy', host, port
+    end
+
     def status_code
       command 'status_code'
     end
