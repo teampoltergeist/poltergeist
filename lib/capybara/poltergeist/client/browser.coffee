@@ -82,6 +82,10 @@ class Poltergeist.Browser
   current_url: ->
     this.sendResponse @currentPage.currentUrl()
 
+  set_proxy: (host, port) ->
+    phantom.setProxy(host, port, 'manual', '', '')
+    this.sendResponse(true)
+
   status_code: ->
     this.sendResponse @currentPage.statusCode
 
