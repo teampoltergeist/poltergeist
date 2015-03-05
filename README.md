@@ -4,7 +4,7 @@
 
 Poltergeist is a driver for [Capybara](https://github.com/jnicklas/capybara). It allows you to
 run your Capybara tests on a headless [WebKit](http://webkit.org) browser,
-provided by [PhantomJS](http://www.phantomjs.org/).
+provided by [PhantomJS](http://phantomjs.org/).
 
 **If you're viewing this at https://github.com/teampoltergeist/poltergeist,
 you're reading the documentation for the master branch.
