@@ -25,7 +25,7 @@ class PoltergeistAgent
         throw error
 
   currentUrl: ->
-    encodeURI(decodeURI(window.location.href))
+    window.location.href
 
   find: (method, selector, within = document) ->
     try
@@ -257,7 +257,7 @@ class PoltergeistAgent.Node
       rect  = win.frameElement.getClientRects()[0]
       style = win.getComputedStyle(win.frameElement)
       win   = win.parent
-      
+
       offset.top  += rect.top + parseInt(style.getPropertyValue("padding-top"), 10)
       offset.left += rect.left + parseInt(style.getPropertyValue("padding-left"), 10)
 
