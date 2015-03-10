@@ -244,7 +244,7 @@ module Capybara::Poltergeist
         if @started
           URI.parse(browser.current_url).host
         else
-          Capybara.app_host || "127.0.0.1"
+          URI.parse(Capybara.app_host).host || "127.0.0.1"
         end
       end
 
