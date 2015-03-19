@@ -88,6 +88,10 @@ module Capybara::Poltergeist
       command 'attribute', page_id, id, name.to_s
     end
 
+    def set_attribute(page_id, id, name, value)
+      command 'set_attribute', page_id, id, name.to_s, value.to_s
+    end
+
     def value(page_id, id)
       command 'value', page_id, id
     end
