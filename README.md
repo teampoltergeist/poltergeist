@@ -27,6 +27,7 @@ Add `poltergeist` to your Gemfile, and in your test setup add:
 ``` ruby
 require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
+Capybara.default_driver = :poltergeist
 ```
 
 If you were previously using the `:rack_test` driver, be aware that
