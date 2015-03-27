@@ -2,6 +2,7 @@
 
 #### Features ####
 *   Implement support for Capybara Window#size and Window#resize_to (Thomas Walpole)
+*   Add access to properties of node's native element (Mike Souza)
 
 #### Bug fixes ####
 
