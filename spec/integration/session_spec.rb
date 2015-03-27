@@ -602,6 +602,20 @@ describe Capybara::Session do
       end
     end
 
+    context 'supports accessing element properties' do
+      before do
+        @session.visit '/poltergeist/property'
+      end
+
+      it 'gets property innerHTML' do
+        expect(@session.find(:css,'.some_class').native.property('innerHTML')).to eq '<p>foobar</p>'
+      end
+
+      it 'gets property outerHTML' do
+        expect(@session.find(:css,'.some_class').native.property('outerHTML')).to eq '<div class="some_class"><p>foobar</p></div>'
+      end
+    end
+
     it 'allows access to element attributes' do
       @session.visit '/poltergeist/attributes'
       expect(@session.find(:css,'#my_link').native.attributes).to eq(

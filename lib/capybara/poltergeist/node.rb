@@ -50,6 +50,10 @@ module Capybara::Poltergeist
       filter_text command(:visible_text)
     end
 
+    def property(name)
+      command :property, name
+    end
+
     def [](name)
       command :attribute, name
     end
