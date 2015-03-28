@@ -25,6 +25,7 @@ module Capybara::Poltergeist
       client.restart
 
       self.debug = @debug if @debug
+      self.js_errors = @js_errors unless @js_errors.nil?
     end
 
     def visit(url)
@@ -295,6 +296,7 @@ module Capybara::Poltergeist
     end
 
     def js_errors=(val)
+      @js_errors = val
       command 'set_js_errors', !!val
     end
 

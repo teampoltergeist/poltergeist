@@ -6,6 +6,8 @@
 
 #### Bug fixes ####
 
+*   Retain js_errors value on driver restart (Titas Norkūnas)
+
 ### 1.6.0 ###
 
 #### Features ####
