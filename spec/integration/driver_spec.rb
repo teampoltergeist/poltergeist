@@ -476,15 +476,28 @@ module Capybara::Poltergeist
         expect { @session.visit '/poltergeist/js_error' }.to raise_error(JavascriptError)
       end
 
-      it 'does not propagate a Javascript error to ruby if error raising disabled' do
-        begin
-          driver = Capybara::Poltergeist::Driver.new(@session.app, js_errors: false, logger: TestSessions.logger)
-          driver.visit session_url('/poltergeist/js_error')
-          driver.execute_script 'setTimeout(function() { omg }, 0)'
-          sleep 0.1
-          expect(driver.body).to include('hello')
-        ensure
-          driver.quit if driver
+      context 'Javscript error raising disabled' do
+        before do
+          @test = Proc.new do |block|
+            begin
+              driver = Capybara::Poltergeist::Driver.new(@session.app, js_errors: false, logger: TestSessions.logger)
+              block.call(driver) if block
+              driver.visit session_url('/poltergeist/js_error')
+              driver.execute_script 'setTimeout(function() { omg }, 0)'
+              sleep 0.1
+              expect(driver.body).to include('hello')
+            ensure
+              driver.quit if driver
+            end
+          end
+        end
+
+        it 'does not propagate a Javascript error to ruby' do
+          @test.call
+        end
+
+        it 'does not propagate a Javascript error to ruby if driver is restarted' do
+          @test.call(lambda { |driver| driver.restart })
         end
       end
     end
