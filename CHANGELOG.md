@@ -1,4 +1,5 @@
 ### Next release ###
+*   Persist browser state on Ruby side [Issue #564] (Brian Ledbetter)
 
 #### Features ####
 *   Add support for key modifiers for send_keys [Issue #420] (Sarah Mogin)
