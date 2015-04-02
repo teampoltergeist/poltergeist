@@ -397,7 +397,7 @@ the [changelog](CHANGELOG.md).
 
 ## License ##
 
-Copyright (c) 2011-2014 Jonathan Leighton
+Copyright (c) 2011-2015 Jonathan Leighton
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
