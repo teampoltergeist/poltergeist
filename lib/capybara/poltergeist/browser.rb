@@ -59,7 +59,7 @@ module Capybara::Poltergeist
 
     def find(method, selector)
       result = command('find', method, selector)
-      result['ids'].map { |id| [result['page_id'], id] }
+      (result['ids'] || [0]).map { |id| [result['page_id'], id] }
     end
 
     def find_within(page_id, id, method, selector)
@@ -362,12 +362,12 @@ module Capybara::Poltergeist
       keys.map do |key|
         case key
         when Array
-          # [:Shift, "s"] => { modifier: "shift", key: "S" }   
+          # [:Shift, "s"] => { modifier: "shift", key: "S" }
           # [:Ctrl, :Left] => { modifier: "ctrl", key: :Left }
           # [:Ctrl, :Shift, :Left] => { modifier: "ctrl,shift", key: :Left }
           letter = key.pop
           symbol = key.map { |k| k.to_s.downcase }.join(',')
-          
+
           { modifier: symbol.to_s.downcase, key: letter.capitalize }
         when Symbol
           { key: key } # Return a known sequence for PhantomJS
