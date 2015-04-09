@@ -219,8 +219,12 @@ class PoltergeistAgent.Node
     if value == false && !@element.parentNode.multiple
       false
     else
+      this.trigger('focus', @element.parentNode)
+
       @element.selected = value
       this.changed()
+
+      this.trigger('blur', @element.parentNode)
       true
 
   tagName: ->
@@ -279,7 +283,7 @@ class PoltergeistAgent.Node
 
     pos
 
-  trigger: (name) ->
+  trigger: (name, element = @element) ->
     if Node.EVENTS.MOUSE.indexOf(name) != -1
       event = document.createEvent('MouseEvent')
       event.initMouseEvent(
@@ -293,7 +297,7 @@ class PoltergeistAgent.Node
     else
       throw "Unknown event"
 
-    @element.dispatchEvent(event)
+    element.dispatchEvent(event)
 
   obtainEvent: (name) ->
     event = document.createEvent('HTMLEvents')

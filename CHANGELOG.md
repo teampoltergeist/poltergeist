@@ -4,6 +4,7 @@
 #### Features ####
 *   Add support for key modifiers for send_keys [Issue #420] (Sarah Mogin)
 *   Drag by offset support in native element (phoenixek12)
+*   Fire focus related events on selecting a select box option [Issue #607] (Rumen Paletov)
 
 #### Bug fixes ####
 
