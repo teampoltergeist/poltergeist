@@ -102,6 +102,25 @@ describe Capybara::Session do
       end
     end
 
+    describe 'Node#select' do
+      before do
+        @session.visit('/poltergeist/with_js')
+        @session.find(:select, 'browser').find(:option, 'Safari').select_option
+      end
+
+      it 'fires the focus event' do
+        expect(@session.find(:css, '#changes_on_focus').text).to eq('PhantomJS')
+      end
+
+      it 'fire the change event' do
+        expect(@session.find(:css, '#changes').text).to eq('Safari')
+      end
+
+      it 'fires the blur event' do
+        expect(@session.find(:css, '#changes_on_blur').text).to eq('Safari')
+      end
+    end
+
     describe 'Node#set' do
       before do
         @session.visit('/poltergeist/with_js')
