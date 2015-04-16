@@ -1,6 +1,8 @@
 require 'spec_helper'
 
-Capybara::SpecHelper.run_specs TestSessions::Poltergeist, 'Poltergeist', capybara_skip: [:modals]
+skip = [:modals]
+skip << :windows if ENV['TRAVIS']
+Capybara::SpecHelper.run_specs TestSessions::Poltergeist, 'Poltergeist', capybara_skip: skip
 
 describe Capybara::Session do
   context 'with poltergeist driver' do
@@ -383,14 +385,33 @@ describe Capybara::Session do
       expect(@session.evaluate_script('window.last_hashchange')).to eq('#foo')
     end
 
-    it 'supports retrieving the current_path with escaped characters' do
-      @session.visit '/poltergeist/arbitrary_path/200/foo%20bar'
-      expect(@session.current_path).to eq('/poltergeist/arbitrary_path/200/foo%20bar')
-    end
+    context 'current_url' do
+      let(:request_uri) { URI.parse(@session.current_url).request_uri }
 
-    it 'supports retrieving the current_url with escaped characters' do
-      @session.visit '/poltergeist/arbitrary_path/200/foo?a%5Bb%5D=c'
-      expect(URI.parse(@session.current_url).request_uri).to eq('/poltergeist/arbitrary_path/200/foo?a%5Bb%5D=c')
+      it 'supports whitespace characters' do
+        @session.visit '/poltergeist/arbitrary_path/200/foo%20bar%20baz'
+        expect(@session.current_path).to eq('/poltergeist/arbitrary_path/200/foo%20bar%20baz')
+      end
+
+      it 'supports escaped characters' do
+        @session.visit '/poltergeist/arbitrary_path/200/foo?a%5Bb%5D=c'
+        expect(request_uri).to eq('/poltergeist/arbitrary_path/200/foo?a%5Bb%5D=c')
+      end
+
+      it 'supports allowed characters' do
+        @session.visit '/poltergeist/arbitrary_path/200/foo?a[b]=c'
+        expect(request_uri).to eq('/poltergeist/arbitrary_path/200/foo?a%5Bb%5D=c')
+      end
+
+      it 'supports url in parameter' do
+        @session.visit "/poltergeist/arbitrary_path/200/foo%20asd?a=http://example.com/asd%20asd"
+        expect(request_uri).to eq('/poltergeist/arbitrary_path/200/foo%20asd?a=http://example.com/asd%20asd')
+      end
+
+      it 'supports restricted characters " []:/+&="' do
+        @session.visit "/poltergeist/arbitrary_path/200/foo?a=%20%5B%5D%3A%2F%2B%26%3D"
+        expect(request_uri).to eq('/poltergeist/arbitrary_path/200/foo?a=%20%5B%5D%3A%2F%2B%26%3D')
+      end
     end
 
     context 'dragging support' do

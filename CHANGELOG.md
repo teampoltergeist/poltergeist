@@ -4,10 +4,12 @@
 *   Persist browser state on Ruby side (Brian Ledbetter) [Issue #564]
 *   Add support for key modifiers for send_keys (Sarah Mogin) [Issue #420]
 *   Drag by offset support in native element (phoenixek12)
-*   Fire focus related events on selecting a select box option (Rumen Paletov) [Issue #607]
+*   Fire focus related events on selecting a select box option
+    (Rumen Paletov) [Issue #607]
 
 #### Bug fixes ####
 *   Support reading text from SVG elements (Oliver Searle-Barnes)
+*   Whitespace character in `current_url` remained unencoded [Issue #418]
 
 ### 1.6.0 ###
 
