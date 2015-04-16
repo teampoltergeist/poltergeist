@@ -1,10 +1,10 @@
 ### Next release ###
-*   Persist browser state on Ruby side (Brian Ledbetter) [Issue #564] 
 
 #### Features ####
+*   Persist browser state on Ruby side (Brian Ledbetter) [Issue #564]
 *   Add support for key modifiers for send_keys (Sarah Mogin) [Issue #420]
 *   Drag by offset support in native element (phoenixek12)
-*   Fire focus related events on selecting a select box option (Rumen Paletov) [Issue #607] 
+*   Fire focus related events on selecting a select box option (Rumen Paletov) [Issue #607]
 
 #### Bug fixes ####
 *   Support reading text from SVG elements (Oliver Searle-Barnes)
@@ -19,7 +19,8 @@
 *   Added ability to access all of a nodes attributes (Jon Rowe)
 *   Capybara 2.3 window support (Dmitry Vorotilin)
 *   Added ability to clear all cookies with clear_cookies method (unmanbearpig)
-*   Move from `phantom.args` to `system.args` to support PhantomJS 2.0 (Filip Spiridonov) [Issue 566]
+*   Move from `phantom.args` to `system.args` to support PhantomJS 2.0
+    (Filip Spiridonov) [Issue 566]
 
 #### Bug fixes ####
 
@@ -33,7 +34,8 @@
 *   Close dup'ed fd after using (Dmitry Vorotilin) [Issue #446, #529, #528]
 *   Clean up localStorage between tests (Dmitry Vorotilin) [Issue #525]
 *   Fix double encoded current_url [Issue #418]
-*   Default to `--ssl-protocol=any` in PhantomJS so that sites without SSLv3 still work [Issue #544]
+*   Default to `--ssl-protocol=any` in PhantomJS so that sites without SSLv3
+    still work [Issue #544]
 
 ### 1.5.1 ###
 
