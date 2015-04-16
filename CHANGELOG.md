@@ -1,5 +1,5 @@
 ### Next release ###
-*   Persist browser state on Ruby side [Issue #564] (Brian Ledbetter)
+*   Persist browser state on Ruby side (Brian Ledbetter) [Issue #564] 
 
 #### Features ####
 *   Add support for key modifiers for send_keys (Sarah Mogin) [Issue #420]
@@ -169,13 +169,13 @@
 #### Bug fixes ####
 
 *   Fix timing issue when using `within_frame` that could cause errors.
-    [Issue #183, #211] (@errm, @motemen)
+    (@errm, @motemen) [Issue #183, #211]
 *   Fix bug with `within_frame` not properly switching the context back
     after the block has executed. [Issue #242]
 *   Fix calculation of click position when clicking within a frame.
     [Issue #222, #225]
 *   Fix error raising when calling `expires` if not set on cookie.
-    [Issue #203] (@arnvald)
+    (@arnvald) [Issue #203]
 *   Fix the `:js_errors` option. Previously errors were not being
     reported, but would still cause commands to fail. [Issue #229]
 *   Fix incorrect time zone handling when setting cookie expiry time
