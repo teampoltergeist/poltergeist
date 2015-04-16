@@ -2,9 +2,9 @@
 *   Persist browser state on Ruby side [Issue #564] (Brian Ledbetter)
 
 #### Features ####
-*   Add support for key modifiers for send_keys [Issue #420] (Sarah Mogin)
+*   Add support for key modifiers for send_keys (Sarah Mogin) [Issue #420]
 *   Drag by offset support in native element (phoenixek12)
-*   Fire focus related events on selecting a select box option [Issue #607] (Rumen Paletov)
+*   Fire focus related events on selecting a select box option (Rumen Paletov) [Issue #607] 
 
 #### Bug fixes ####
 
