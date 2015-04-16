@@ -7,6 +7,7 @@
 *   Fire focus related events on selecting a select box option (Rumen Paletov) [Issue #607] 
 
 #### Bug fixes ####
+*   Support reading text from SVG elements (Oliver Searle-Barnes)
 
 ### 1.6.0 ###
 
