@@ -33,5 +33,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'pdf-reader',         '~> 1.3.3'
   s.add_development_dependency 'coffee-script',      '~> 2.2.0'
   s.add_development_dependency 'guard-coffeescript', '~> 1.0.0'
-  s.add_development_dependency 'rspec-rerun',        '~> 0.1'
 end
