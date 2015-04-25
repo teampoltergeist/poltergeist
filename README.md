@@ -268,7 +268,7 @@ end
 
 ### URL Blacklisting ###
 
-The latest version of Poltergeist supports URL blacklisting, which allows you
+Poltergeist supports URL blacklisting which allows you
 to prevent scripts from running on designated domains. If you are experiencing
 slower run times, consider creating a URL blacklist of domains that are not
 essential to your testing environment, such as ad networks or analytics.
@@ -397,7 +397,7 @@ the [changelog](CHANGELOG.md).
 
 ## License ##
 
-Copyright (c) 2011-2014 Jonathan Leighton
+Copyright (c) 2011-2015 Jonathan Leighton
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

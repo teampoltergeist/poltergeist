@@ -3,32 +3,29 @@ require 'rspec/core/rake_task'
 
 require 'capybara/poltergeist/version'
 require 'coffee-script'
-require 'rspec-rerun'
 
-task :autocompile do
-  system "guard"
-end
+RSpec::Core::RakeTask.new('test')
+task default: [:compile, :test]
+
+task(:autocompile) { system 'guard' }
 
 task :compile do
-  Dir.glob("lib/capybara/poltergeist/client/*.coffee").each do |f|
-    compiled = "lib/capybara/poltergeist/client/compiled/#{f.split("/").last.split(".").first}.js"
-    File.open(compiled, "w") do |out|
+  path = 'lib/capybara/poltergeist/client'
+  Dir["#{path}/*.coffee"].each do |f|
+    compiled = "#{path}/compiled/#{File.basename(f, '.coffee')}.js"
+    File.open(compiled, 'w') do |out|
       puts "Compiling #{f}"
-      out << CoffeeScript.compile(File.read(f), :bare => true)
+      out << CoffeeScript.compile(File.read(f), bare: true)
     end
   end
 end
 
-RSpec::Core::RakeTask.new('test')
-
-task :default => [:compile, :test]
-task :ci => 'rspec-rerun:spec'
-
 task :release do
-  puts "Releasing #{Capybara::Poltergeist::VERSION}, y/n?"
-  exit(1) unless STDIN.gets.chomp == "y"
-  sh "gem build poltergeist.gemspec && " \
-     "gem push poltergeist-#{Capybara::Poltergeist::VERSION}.gem && " \
-     "git tag v#{Capybara::Poltergeist::VERSION} && " \
-     "git push --tags"
+  version = Capybara::Poltergeist::VERSION
+  puts "Releasing #{version}, y/n?"
+  exit(1) unless STDIN.gets.chomp == 'y'
+  sh 'gem build poltergeist.gemspec && ' \
+     "gem push poltergeist-#{version}.gem && " \
+     "git tag v#{version} && " \
+     'git push --tags'
 end

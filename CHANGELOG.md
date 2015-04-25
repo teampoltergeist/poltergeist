@@ -1,11 +1,16 @@
 ### Next release ###
 
 #### Features ####
-*   Add support for key modifiers for send_keys [Issue #420] (Sarah Mogin)
+*   Persist browser state on Ruby side (Brian Ledbetter) [Issue #564]
+*   Add support for key modifiers for send_keys (Sarah Mogin) [Issue #420]
 *   Drag by offset support in native element (phoenixek12)
+*   Fire focus related events on selecting a select box option
+    (Rumen Paletov) [Issue #607]
 *   Add access to properties of node's native element (Mike Souza)
 
 #### Bug fixes ####
+*   Support reading text from SVG elements (Oliver Searle-Barnes)
+*   Whitespace character in `current_url` remained unencoded [Issue #418]
 
 ### 1.6.0 ###
 
@@ -17,7 +22,8 @@
 *   Added ability to access all of a nodes attributes (Jon Rowe)
 *   Capybara 2.3 window support (Dmitry Vorotilin)
 *   Added ability to clear all cookies with clear_cookies method (unmanbearpig)
-*   Move from `phantom.args` to `system.args` to support PhantomJS 2.0 (Filip Spiridonov) [Issue 566]
+*   Move from `phantom.args` to `system.args` to support PhantomJS 2.0
+    (Filip Spiridonov) [Issue 566]
 
 #### Bug fixes ####
 
@@ -31,7 +37,8 @@
 *   Close dup'ed fd after using (Dmitry Vorotilin) [Issue #446, #529, #528]
 *   Clean up localStorage between tests (Dmitry Vorotilin) [Issue #525]
 *   Fix double encoded current_url [Issue #418]
-*   Default to `--ssl-protocol=any` in PhantomJS so that sites without SSLv3 still work [Issue #544]
+*   Default to `--ssl-protocol=any` in PhantomJS so that sites without SSLv3
+    still work [Issue #544]
 
 ### 1.5.1 ###
 
@@ -168,13 +175,13 @@
 #### Bug fixes ####
 
 *   Fix timing issue when using `within_frame` that could cause errors.
-    [Issue #183, #211] (@errm, @motemen)
+    (@errm, @motemen) [Issue #183, #211]
 *   Fix bug with `within_frame` not properly switching the context back
     after the block has executed. [Issue #242]
 *   Fix calculation of click position when clicking within a frame.
     [Issue #222, #225]
 *   Fix error raising when calling `expires` if not set on cookie.
-    [Issue #203] (@arnvald)
+    (@arnvald) [Issue #203]
 *   Fix the `:js_errors` option. Previously errors were not being
     reported, but would still cause commands to fail. [Issue #229]
 *   Fix incorrect time zone handling when setting cookie expiry time
