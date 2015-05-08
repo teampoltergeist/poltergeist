@@ -487,6 +487,19 @@ module Capybara::Poltergeist
           driver.quit if driver
         end
       end
+      
+      it 'does not propagate a Javascript error to ruby if error raising disabled and client restarted' do
+        begin
+          driver = Capybara::Poltergeist::Driver.new(@session.app, js_errors: false, logger: TestSessions.logger)
+          driver.restart
+          driver.visit session_url('/poltergeist/js_error')
+          driver.execute_script 'setTimeout(function() { omg }, 0)'
+          sleep 0.1
+          expect(driver.body).to include('hello')
+        ensure
+          driver.quit if driver
+        end
+      end
     end
 
     context "phantomjs {'status': 'fail'} responses" do
@@ -911,6 +924,24 @@ module Capybara::Poltergeist
         input.set('replacement text')
 
         expect(input.text).to eq('replacement text')
+      end
+    end
+
+    context 'date_fields' do
+      before { @session.visit('/poltergeist/date_fields') }
+
+      it 'sets a date' do
+        input = @session.find(:css, '#date_field')
+
+        input.set('2016-02-14')
+
+        expect(input.value).to eq('2016-02-14')
+      end
+
+      it 'fills a date' do
+        @session.fill_in 'date_field', with: '2016-02-14'
+
+        expect(@session.find(:css, '#date_field').value).to eq('2016-02-14')
       end
     end
   end

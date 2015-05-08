@@ -4,7 +4,7 @@
 
 Poltergeist is a driver for [Capybara](https://github.com/jnicklas/capybara). It allows you to
 run your Capybara tests on a headless [WebKit](http://webkit.org) browser,
-provided by [PhantomJS](http://www.phantomjs.org/).
+provided by [PhantomJS](http://phantomjs.org/).
 
 **If you're viewing this at https://github.com/teampoltergeist/poltergeist,
 you're reading the documentation for the master branch.
@@ -266,6 +266,20 @@ end
 *   `:port` (Fixnum) - The port which should be used to communicate
     with the PhantomJS process. Defaults to a random open port.
 
+### URL Blacklisting ###
+
+Poltergeist supports URL blacklisting which allows you
+to prevent scripts from running on designated domains. If you are experiencing
+slower run times, consider creating a URL blacklist of domains that are not
+essential to your testing environment, such as ad networks or analytics.
+
+```ruby
+page.driver.browser.url_blacklist = ['http://www.example.com']
+```
+
+Make sure you set it before each running test, because this setting's cleaned
+up when capybara does reset.
+
 ## Troubleshooting ##
 
 Unfortunately, the nature of full-stack testing is that things can and
@@ -383,7 +397,7 @@ the [changelog](CHANGELOG.md).
 
 ## License ##
 
-Copyright (c) 2011-2014 Jonathan Leighton
+Copyright (c) 2011-2015 Jonathan Leighton
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

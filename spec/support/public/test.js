@@ -26,11 +26,22 @@ $(function() {
     })
     .keypress(function() {
       $('#changes_on_keypress').text(increment)
-    })    
+    })
     .focus(function(event) {
       $('#changes_on_focus').text('Focus')
     })
     .blur(function() {
       $('#changes_on_blur').text('Blur')
+    })
+
+  $('#browser')
+    .change(function() {
+      $('#changes').text($(this).val())
+    })
+    .focus(function() {
+      $('#changes_on_focus').text($(this).val())
+    })
+    .blur(function() {
+      $('#changes_on_blur').text($(this).val())
     })
 })

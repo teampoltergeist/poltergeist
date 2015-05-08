@@ -24,8 +24,11 @@ class PoltergeistAgent
       else
         throw error
 
+  # Somehow PhantomJS returns all characters(brackets, etc) properly encoded
+  # except whitespace character in pathname part of the location. This hack
+  # is intended to fix this up.
   currentUrl: ->
-    encodeURI(decodeURI(window.location.href))
+    window.location.href.replace(/\ /g, '%20')
 
   find: (method, selector, within = document) ->
     try
@@ -152,7 +155,7 @@ class PoltergeistAgent.Node
       if @element.nodeName == "TEXTAREA"
         @element.textContent
       else
-        @element.innerText
+        @element.innerText || @element.textContent
 
   deleteText: ->
     range = document.createRange()
@@ -219,8 +222,12 @@ class PoltergeistAgent.Node
     if value == false && !@element.parentNode.multiple
       false
     else
+      this.trigger('focus', @element.parentNode)
+
       @element.selected = value
       this.changed()
+
+      this.trigger('blur', @element.parentNode)
       true
 
   tagName: ->
@@ -257,7 +264,7 @@ class PoltergeistAgent.Node
       rect  = win.frameElement.getClientRects()[0]
       style = win.getComputedStyle(win.frameElement)
       win   = win.parent
-      
+
       offset.top  += rect.top + parseInt(style.getPropertyValue("padding-top"), 10)
       offset.left += rect.left + parseInt(style.getPropertyValue("padding-left"), 10)
 
@@ -279,7 +286,7 @@ class PoltergeistAgent.Node
 
     pos
 
-  trigger: (name) ->
+  trigger: (name, element = @element) ->
     if Node.EVENTS.MOUSE.indexOf(name) != -1
       event = document.createEvent('MouseEvent')
       event.initMouseEvent(
@@ -293,7 +300,7 @@ class PoltergeistAgent.Node
     else
       throw "Unknown event"
 
-    @element.dispatchEvent(event)
+    element.dispatchEvent(event)
 
   obtainEvent: (name) ->
     event = document.createEvent('HTMLEvents')
