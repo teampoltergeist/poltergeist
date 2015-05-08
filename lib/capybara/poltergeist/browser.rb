@@ -37,6 +37,10 @@ module Capybara::Poltergeist
       command 'current_url'
     end
 
+    def set_proxy(host, port)
+      command 'set_proxy', host, port
+    end
+
     def status_code
       command 'status_code'
     end
@@ -84,6 +88,10 @@ module Capybara::Poltergeist
 
     def attribute(page_id, id, name)
       command 'attribute', page_id, id, name.to_s
+    end
+
+    def set_attribute(page_id, id, name, value)
+      command 'set_attribute', page_id, id, name.to_s, value.to_s
     end
 
     def value(page_id, id)

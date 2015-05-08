@@ -54,6 +54,10 @@ module Capybara::Poltergeist
       command :attribute, name
     end
 
+    def []=(name, value)
+      command :set_attribute, name, value
+    end
+
     def attributes
       command :attributes
     end
