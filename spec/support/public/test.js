@@ -35,8 +35,9 @@ $(function() {
     })
 
   $('#browser')
-    .change(function() {
+    .change(function(event) {
       $('#changes').text($(this).val())
+      $('#target_on_select').text(event.target.nodeName)
     })
     .focus(function() {
       $('#changes_on_focus').text($(this).val())

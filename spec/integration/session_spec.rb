@@ -121,6 +121,10 @@ describe Capybara::Session do
       it 'fires the blur event' do
         expect(@session.find(:css, '#changes_on_blur').text).to eq('Safari')
       end
+
+      it 'fires the change event with the correct target' do
+        expect(@session.find(:css, '#target_on_select').text).to eq('SELECT')
+      end
     end
 
     describe 'Node#set' do

@@ -11,6 +11,8 @@
 *   Support reading text from SVG elements (Oliver Searle-Barnes)
 *   Whitespace character in `current_url` remained unencoded [Issue #418]
 
+*   Fix event.target for change events on SELECT elements. (Jonathan Baudanza) [Issue #204]
+
 ### 1.6.0 ###
 
 #### Features ####
