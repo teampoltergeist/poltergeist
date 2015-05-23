@@ -235,7 +235,7 @@ See more about [sendEvent](http://phantomjs.org/api/webpage/method/send-event.ht
 
 ## Customization ##
 
-You can customize the way that Capybara sets up Poltegeist via the following code in your
+You can customize the way that Capybara sets up Poltergeist via the following code in your
 test setup:
 
 ``` ruby
