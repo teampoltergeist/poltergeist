@@ -79,6 +79,27 @@ class Poltergeist.Browser
         else
           this.sendResponse(status: @currentPage.status)
 
+  post: (url, params) ->
+    @currentPage.state = 'loading'
+
+    # Prevent firing `page.onInitialized` event twice. Calling currentUrl
+    # method before page is actually opened fires this event for the first time.
+    # The second time will be in the right place after `page.open`
+    prevUrl = if @currentPage.source is null then 'about:blank' else @currentPage.currentUrl()
+
+    @currentPage.open(url, 'post', params)
+
+    if /#/.test(url) && prevUrl.split('#')[0] == url.split('#')[0]
+      # Hash change occurred, so there will be no onLoadFinished
+      @currentPage.state = 'default'
+      this.sendResponse(status: 'success')
+    else
+      @currentPage.waitState 'default', =>
+        if @currentPage.statusCode == null && @currentPage.status == 'fail'
+          @owner.sendError(new Poltergeist.StatusFailError)
+        else
+          this.sendResponse(status: @currentPage.status)
+
   current_url: ->
     this.sendResponse @currentPage.currentUrl()
 
