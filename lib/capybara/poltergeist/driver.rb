@@ -4,7 +4,7 @@ module Capybara::Poltergeist
   class Driver < Capybara::Driver::Base
     DEFAULT_TIMEOUT = 30
 
-    attr_reader :app, :server, :client, :browser, :options
+    attr_reader :app, :options
 
     def initialize(app, options = {})
       @app       = app
