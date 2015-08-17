@@ -35,7 +35,7 @@ module Capybara::Poltergeist
           tries += 1
         end
 
-        expect(File.exist?(file)).to be_true
+        expect(File.exist?(file)).to be true
       ensure
         driver.quit if driver
       end
@@ -185,7 +185,7 @@ module Capybara::Poltergeist
 
         @driver.save_screenshot(file)
 
-        expect(File.exist?(file)).to be_true
+        expect(File.exist?(file)).to be true
       end
 
       it 'supports rendering the page with a nonstring path' do
@@ -194,7 +194,7 @@ module Capybara::Poltergeist
 
         @driver.save_screenshot(Pathname(file))
 
-        expect(File.exist?(file)).to be_true
+        expect(File.exist?(file)).to be true
       end
 
       shared_examples 'when #zoom_factor= is set' do
@@ -487,7 +487,7 @@ module Capybara::Poltergeist
           driver.quit if driver
         end
       end
-      
+
       it 'does not propagate a Javascript error to ruby if error raising disabled and client restarted' do
         begin
           driver = Capybara::Poltergeist::Driver.new(@session.app, js_errors: false, logger: TestSessions.logger)
@@ -599,8 +599,8 @@ module Capybara::Poltergeist
         expect(cookie.value).to eq('test_cookie')
         expect(cookie.domain).to eq('127.0.0.1')
         expect(cookie.path).to eq('/')
-        expect(cookie.secure?).to be_false
-        expect(cookie.httponly?).to be_false
+        expect(cookie.secure?).to be false
+        expect(cookie.httponly?).to be false
         expect(cookie.expires).to be_nil
       end
 
@@ -784,7 +784,7 @@ module Capybara::Poltergeist
     context 'blacklisting urls for resource requests' do
       it 'blocks unwanted urls' do
         @driver.browser.url_blacklist = ['unwanted']
-        
+
         @session.visit '/poltergeist/url_blacklist'
 
         expect(@session.status_code).to eq(200)
