@@ -228,7 +228,7 @@ describe Capybara::Session do
 
     it 'handles window.confirm(), returning true unconditionally' do
       @session.visit '/'
-      expect(@session.evaluate_script("window.confirm('foo')")).to be_true
+      expect(@session.evaluate_script("window.confirm('foo')")).to be_truthy
     end
 
     it 'handles window.prompt(), returning the default value or null' do
@@ -239,8 +239,8 @@ describe Capybara::Session do
 
     it 'handles evaluate_script values properly' do
       expect(@session.evaluate_script('null')).to be_nil
-      expect(@session.evaluate_script('false')).to be_false
-      expect(@session.evaluate_script('true')).to be_true
+      expect(@session.evaluate_script('false')).to be_falsey
+      expect(@session.evaluate_script('true')).to be_truthy
       expect(@session.evaluate_script("{foo: 'bar'}")).to eq({'foo' => 'bar'})
     end
 
