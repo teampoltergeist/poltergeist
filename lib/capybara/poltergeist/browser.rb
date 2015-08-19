@@ -33,6 +33,10 @@ module Capybara::Poltergeist
       command 'visit', url
     end
 
+    def post(url, params)
+      command 'post', url, params
+    end
+
     def current_url
       command 'current_url'
     end
