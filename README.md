@@ -43,17 +43,17 @@ dependencies* (you don't need Qt, or a running X server, etc.)
 
 * *Homebrew*: `brew install phantomjs`
 * *MacPorts*: `sudo port install phantomjs`
-* *Manual install*: [Download this](https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-macosx.zip)
+* *Manual install*: [Download this](https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-macosx.zip)
 
 ### Linux ###
 
-* Download the [32 bit](https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-i686.tar.bz2)
-or [64 bit](https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2)
+* Download the [32 bit](https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-i686.tar.bz2)
+or [64 bit](https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2)
 binary.
 * Extract the tarball and copy `bin/phantomjs` into your `PATH`
 
 ### Windows ###
-* Download the [precompiled binary](https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-windows.zip)
+* Download the [precompiled binary](https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-windows.zip)
 for Windows
 
 ### Manual compilation ###
@@ -61,7 +61,7 @@ for Windows
 Do this as a last resort if the binaries don't work for you. It will
 take quite a long time as it has to build WebKit.
 
-* Download [the source tarball](https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-source.zip)
+* Download [the source tarball](https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-source.zip)
 * Extract and cd in
 * `./build.sh`
 
@@ -235,7 +235,7 @@ See more about [sendEvent](http://phantomjs.org/api/webpage/method/send-event.ht
 
 ## Customization ##
 
-You can customize the way that Capybara sets up Poltegeist via the following code in your
+You can customize the way that Capybara sets up Poltergeist via the following code in your
 test setup:
 
 ``` ruby
