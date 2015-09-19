@@ -18,15 +18,15 @@ module Capybara::Poltergeist
       @browser ||= self.class.detect_browser
     end
 
-    def url
-      "//localhost:#{port}/"
+    def url(scheme)
+      "#{scheme}://localhost:#{port}/"
     end
 
-    def open
+    def open(scheme)
       if browser
-        Process.spawn(browser, url)
+        Process.spawn(browser, url(scheme))
       else
-        raise Error, "Could not find a browser executable to open #{url}. " \
+        raise Error, "Could not find a browser executable to open #{url(scheme)}. " \
                      "You can specify one manually using e.g. `:inspector => 'chromium'` " \
                      "as a configuration option for Poltergeist."
       end

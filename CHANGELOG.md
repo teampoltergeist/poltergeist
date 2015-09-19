@@ -17,6 +17,10 @@
 *   Fix click checking when svg element is overlapping (Thomas Walpole) [Issue #616]
 *   Fix null status code when some pages redirect (Thomas Walpole) [Issue #524]
 *   Fix cases where page isn't always scrolled when needed for a mouse click (Thomas Walpole) [Issue #520]
+*   Add scheme to URL passed to browser by inspector to support the "open"
+    command (Nuru) [Issue #579]
+*   Support resuming from debug pause by sending a signal (Nuru) [Issue #654]
+
 
 ### 1.7.0 ###
 
