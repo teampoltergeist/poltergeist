@@ -5,6 +5,8 @@
 
 #### Bug fixes ####
 
+*   Fix event.target for change events on SELECT elements with OPTGROUP. (Jonathan Tron)
+
 ### 1.7.0 ###
 
 #### Features ####

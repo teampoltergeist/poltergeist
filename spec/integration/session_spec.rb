@@ -107,23 +107,50 @@ describe Capybara::Session do
     describe 'Node#select' do
       before do
         @session.visit('/poltergeist/with_js')
-        @session.find(:select, 'browser').find(:option, 'Safari').select_option
       end
 
-      it 'fires the focus event' do
-        expect(@session.find(:css, '#changes_on_focus').text).to eq('PhantomJS')
+      context 'when selected option is not in optgroup' do
+        before do
+          @session.find(:select, 'browser').find(:option, 'Firefox').select_option
+        end
+
+        it 'fires the focus event' do
+          expect(@session.find(:css, '#changes_on_focus').text).to eq('PhantomJS')
+        end
+
+        it 'fire the change event' do
+          expect(@session.find(:css, '#changes').text).to eq('Firefox')
+        end
+
+        it 'fires the blur event' do
+          expect(@session.find(:css, '#changes_on_blur').text).to eq('Firefox')
+        end
+
+        it 'fires the change event with the correct target' do
+          expect(@session.find(:css, '#target_on_select').text).to eq('SELECT')
+        end
       end
 
-      it 'fire the change event' do
-        expect(@session.find(:css, '#changes').text).to eq('Safari')
-      end
+      context 'when selected option is in optgroup' do
+        before do
+          @session.find(:select, 'browser').find(:option, 'Safari').select_option
+        end
 
-      it 'fires the blur event' do
-        expect(@session.find(:css, '#changes_on_blur').text).to eq('Safari')
-      end
+        it 'fires the focus event' do
+          expect(@session.find(:css, '#changes_on_focus').text).to eq('PhantomJS')
+        end
 
-      it 'fires the change event with the correct target' do
-        expect(@session.find(:css, '#target_on_select').text).to eq('SELECT')
+        it 'fire the change event' do
+          expect(@session.find(:css, '#changes').text).to eq('Safari')
+        end
+
+        it 'fires the blur event' do
+          expect(@session.find(:css, '#changes_on_blur').text).to eq('Safari')
+        end
+
+        it 'fires the change event with the correct target' do
+          expect(@session.find(:css, '#target_on_select').text).to eq('SELECT')
+        end
       end
     end
 
