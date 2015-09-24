@@ -5,7 +5,7 @@ skip << :windows if ENV['TRAVIS']
 Capybara::SpecHelper.run_specs TestSessions::Poltergeist, 'Poltergeist', capybara_skip: skip
 
 describe Capybara::Session do
-  context 'with poltergeist driver' do
+  context 'with poltergeist driver', focus: true do
     before do
       @session = TestSessions::Poltergeist
     end
@@ -431,7 +431,7 @@ describe Capybara::Session do
         expect( droppable ).to have_content( "Dropped" )
       end
 
-      it 'supports drag_by on native element' do
+      it 'supports drag_by on native element', requires: [:js] do
         draggable = @session.find(:css, '#drag_by .draggable')
 
         top_before = @session.evaluate_script('$("#drag_by .draggable").position().top')
