@@ -149,6 +149,9 @@ class Poltergeist.Browser
   disabled: (page_id, id) ->
     this.sendResponse this.node(page_id, id).isDisabled()
 
+  path: (page_id, id) ->
+    this.sendResponse this.node(page_id, id).path()
+
   evaluate: (script) ->
     this.sendResponse @currentPage.evaluate("function() { return #{script} }")
 

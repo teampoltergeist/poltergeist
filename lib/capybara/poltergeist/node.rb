@@ -149,6 +149,10 @@ module Capybara::Poltergeist
     end
     alias_method :send_key, :send_keys
 
+    def path
+      command :path
+    end
+
     private
 
     def filter_text(text)
