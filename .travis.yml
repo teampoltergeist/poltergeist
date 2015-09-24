@@ -1,5 +1,9 @@
 script: bundle exec rake
 before_script: phantomjs --version
+before_install:
+   - mkdir travis-phantomjs2
+   - wget https://s3.amazonaws.com/travis-phantomjs/phantomjs-2.0.0-ubuntu-12.04.tar.bz2 -O $PWD/travis-phantomjs2/phantomjs-2.0.0-ubuntu-12.04.tar.bz2
+   - tar -xvf $PWD/travis-phantomjs2/phantomjs-2.0.0-ubuntu-12.04.tar.bz2 -C $PWD/travis-phantomjs2
 rvm:
   - 2.2.2
   - 2.1.6
@@ -10,3 +14,9 @@ rvm:
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+matrix:
+  include:
+    - rvm: 2.2.2
+      env: USE_PHANTOMJS2=true
+  allow_failures:
+    - env: USE_PHANTOMJS2=true

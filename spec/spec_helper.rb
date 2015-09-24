@@ -12,8 +12,16 @@ require 'support/spec_logger'
 
 Capybara.register_driver :poltergeist do |app|
   debug = !ENV['DEBUG'].nil?
+  options = {
+    logger: TestSessions.logger,
+    inspector: debug,
+    debug: debug
+  }
+
+  options[:phantomjs] = ENV['TRAVIS_BUILD_DIR'] + '/travis-phantomjs2/phantomjs' if ENV['TRAVIS'] && ENV['USE_PHANTOMJS2']
+
   Capybara::Poltergeist::Driver.new(
-    app, logger: TestSessions.logger, inspector: debug, debug: debug
+    app, options
   )
 end
 
