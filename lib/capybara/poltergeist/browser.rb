@@ -362,15 +362,15 @@ module Capybara::Poltergeist
       keys.map do |key|
         case key
         when Array
-          # [:Shift, "s"] => { modifier: "shift", key: "S" }   
+          # [:Shift, "s"] => { modifier: "shift", key: "S" }
           # [:Ctrl, :Left] => { modifier: "ctrl", key: :Left }
           # [:Ctrl, :Shift, :Left] => { modifier: "ctrl,shift", key: :Left }
           letter = key.pop
           symbol = key.map { |k| k.to_s.downcase }.join(',')
-          
+
           { modifier: symbol.to_s.downcase, key: letter.capitalize }
         when Symbol
-          { key: key } # Return a known sequence for PhantomJS
+          { key: key.capitalize } # Return a known sequence for PhantomJS
         when String
           key # Plain string, nothing to do
         end

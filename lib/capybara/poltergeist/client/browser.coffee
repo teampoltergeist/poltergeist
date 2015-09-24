@@ -284,10 +284,12 @@ class Poltergeist.Browser
 
     for sequence in keys
       key = if sequence.key? then @currentPage.keyCode(sequence.key) else sequence
-
       if sequence.modifier?
-        modifier = @currentPage.keyModifierCode(sequence.modifier)
-        @currentPage.sendEvent('keypress', key, null, null, modifier)
+        modifier_keys = @currentPage.keyModifierKeys(sequence.modifier)
+        modifier_code = @currentPage.keyModifierCode(sequence.modifier)
+        @currentPage.sendEvent('keydown', modifier_key) for modifier_key in modifier_keys
+        @currentPage.sendEvent('keypress', key, null, null, modifier_code)
+        @currentPage.sendEvent('keyup', modifier_key) for modifier_key in modifier_keys
       else
         @currentPage.sendEvent('keypress', key)
 

@@ -78,7 +78,7 @@ class Poltergeist.WebPage
   onResourceRequestedNative: (request, net) ->
     abort = @urlBlacklist.some (blacklisted_url) ->
       request.url.indexOf(blacklisted_url) != -1
-  
+
     if abort
       @_blockedUrls.push request.url unless request.url in @_blockedUrls
       net.abort()
@@ -130,6 +130,10 @@ class Poltergeist.WebPage
     modifiers = this.native().event.modifier
     names = names.split(',').map ((name) -> modifiers[name])
     names[0] | names[1] # return codes for 1 or 2 modifiers
+
+  keyModifierKeys: (names) ->
+    names.split(',').map (name) =>
+      this.keyCode(name.charAt(0).toUpperCase() + name.substring(1))
 
   waitState: (state, callback) ->
     if @state == state
