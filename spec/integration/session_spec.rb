@@ -79,7 +79,7 @@ describe Capybara::Session do
         context 'and is then brought in' do
           before do
             @session.execute_script "$('#off-the-left').animate({left: '10'});"
-            Capybara.default_wait_time = 1 #we need capybara to retry until animation finished
+            Poltergeist::SpecHelper.set_capybara_wait_time(1)
           end
 
           it 'clicks properly' do
@@ -87,7 +87,7 @@ describe Capybara::Session do
           end
 
           after do
-            Capybara.default_wait_time = 0
+            Poltergeist::SpecHelper.set_capybara_wait_time(0)
           end
         end
       end
