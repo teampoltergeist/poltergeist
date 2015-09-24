@@ -25,6 +25,18 @@ module TestSessions
   Poltergeist = Capybara::Session.new(:poltergeist, TestApp)
 end
 
+module Poltergeist
+  module SpecHelper
+    class << self
+      def set_capybara_wait_time(t)
+        Capybara.default_max_wait_time = t
+      rescue
+        Capybara.default_wait_time = t
+      end
+    end
+  end
+end
+
 RSpec.configure do |config|
   config.before do
     TestSessions.logger.reset
@@ -41,10 +53,10 @@ RSpec.configure do |config|
   Capybara::SpecHelper.configure(config)
 
   config.before(:each) do
-    Capybara.default_wait_time = 0
+    Poltergeist::SpecHelper.set_capybara_wait_time(0)
   end
 
   config.before(:each, :requires => :js) do
-    Capybara.default_wait_time = 1
+    Poltergeist::SpecHelper.set_capybara_wait_time(1)
   end
 end
