@@ -58,8 +58,13 @@ class Poltergeist.Node
 
     position      = this.mouseEventPosition()
 
-    @page.mouseEvent('mousedown', position.x,      position.y)
-    @page.mouseEvent('mouseup',   position.x + x - 5,  position.y + y - 5)
+    final_pos =
+      x: position.x + x
+      y: position.y + y
+
+    @page.mouseEvent('mousedown', position.x, position.y)
+    @page.mouseEvent('mouseup', final_pos.x, final_pos.y)
+
 
   isEqual: (other) ->
     @page == other.page && this.isDOMEqual(other.id)
