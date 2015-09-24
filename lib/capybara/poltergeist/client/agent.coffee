@@ -254,6 +254,14 @@ class PoltergeistAgent.Node
   isDisabled: ->
     @element.disabled || @element.tagName == 'OPTION' && @element.parentNode.disabled
 
+  path: ->
+    elements = @parentIds().reverse().map((id) => @agent.get(id))
+    elements.push(this)
+    selectors = elements.map (el)->
+      prev_siblings = el.find('xpath', "./preceding-sibling::#{el.tagName()}")
+      "#{el.tagName()}[#{prev_siblings.length + 1}]"
+    "//" + selectors.join('/')
+
   containsSelection: ->
     selectedNode = document.getSelection().focusNode
 
