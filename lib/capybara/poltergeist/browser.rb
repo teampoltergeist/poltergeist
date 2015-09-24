@@ -374,7 +374,7 @@ module Capybara::Poltergeist
 
           { modifier: symbol.to_s.downcase, key: letter.capitalize }
         when Symbol
-          { key: key } # Return a known sequence for PhantomJS
+          { key: key.capitalize } # Return a known sequence for PhantomJS
         when String
           key # Plain string, nothing to do
         end
