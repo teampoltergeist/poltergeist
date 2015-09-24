@@ -227,7 +227,9 @@ class PoltergeistAgent.Node
     @element.removeAttribute(name)
 
   select: (value) ->
-    if value == false && !@element.parentNode.multiple
+    if @isDisabled()
+      false
+    else if value == false && !@element.parentNode.multiple
       false
     else
       this.trigger('focus', @element.parentNode)
