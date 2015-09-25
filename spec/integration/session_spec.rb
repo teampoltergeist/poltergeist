@@ -1,8 +1,6 @@
 require 'spec_helper'
 
-skip = [:modals]
-skip << :windows if ENV['TRAVIS']
-Capybara::SpecHelper.run_specs TestSessions::Poltergeist, 'Poltergeist', capybara_skip: skip
+Capybara::SpecHelper.run_specs TestSessions::Poltergeist, 'Poltergeist'
 
 describe Capybara::Session do
   context 'with poltergeist driver' do
