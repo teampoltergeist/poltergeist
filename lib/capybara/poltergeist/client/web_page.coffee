@@ -1,5 +1,5 @@
 class Poltergeist.WebPage
-  @CALLBACKS = ['onAlert', 'onConfirm', 'onPrompt', 'onConsoleMessage',
+  @CALLBACKS = ['onConsoleMessage',
                 'onLoadFinished', 'onInitialized', 'onLoadStarted',
                 'onResourceRequested', 'onResourceReceived', 'onError',
                 'onNavigationRequested', 'onUrlChanged', 'onPageCreated',

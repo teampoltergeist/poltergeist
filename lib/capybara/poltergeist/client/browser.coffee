@@ -27,18 +27,22 @@ class Poltergeist.Browser
     @page.handle = "#{@_counter++}"
     @pages.push(@page)
 
-    @page.onAlert = (msg) =>
-      @setModalMessage msg
+    @processed_modal_messages = []
+    @confirm_processes = []
+    @prompt_responses = []
 
-    @page.onConfirm = (msg) =>
+
+    @page.native().onAlert = (msg) =>
+      @setModalMessage msg
+      return
+
+    @page.native().onConfirm = (msg) =>
       process = @confirm_processes.shift()
       process = true if process == undefined
-
       @setModalMessage msg
       return process
 
-    @page.onPrompt = (msg, defaultVal) =>
-      defaultVal ||= ''
+    @page.native().onPrompt = (msg, defaultVal) =>
       response = @prompt_responses.shift()
       response = defaultVal if (response == undefined || response == false)
 

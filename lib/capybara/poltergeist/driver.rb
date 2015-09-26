@@ -314,6 +314,7 @@ module Capybara::Poltergeist
       end
 
       yield if block_given?
+
       find_modal(options)
     end
 
@@ -333,7 +334,7 @@ module Capybara::Poltergeist
 
     def find_modal(options)
       start_time    = Time.now
-      timeout_sec   = options[:wait] || Capybara.default_wait_time
+      timeout_sec   = options[:wait] || begin Capybara.default_max_wait_time rescue Capybara.default_wait_time end
       expect_text   = options[:text]
       not_found_msg = 'Unable to find modal dialog'
       not_found_msg += " with #{expect_text}" if expect_text
