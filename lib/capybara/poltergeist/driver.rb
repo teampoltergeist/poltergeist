@@ -276,7 +276,13 @@ module Capybara::Poltergeist
 
     def debug
       if @options[:inspector]
-        inspector.open
+        scheme = nil
+        begin
+          scheme = URI.parse(browser.current_url).scheme
+        rescue
+          # Fall back to default if browser is nil, current_url is nil, or current_url is not a valid URI
+        end
+        inspector.open(scheme)
         pause
       else
         raise Error, "To use the remote debugging, you have to launch the driver " \
@@ -285,8 +291,23 @@ module Capybara::Poltergeist
     end
 
     def pause
-      STDERR.puts "Poltergeist execution paused. Press enter to continue."
-      STDIN.gets
+      # STDIN is not necessarily connected to a keyboard. It might even be closed.
+      # So we need a method other than keypress to continue.
+      STDERR.puts "Poltergeist execution paused. Press enter (or run 'kill -CONT #{Process::pid}') to continue."
+
+      signal = false
+      old_trap = trap('SIGCONT') { signal = true; STDERR.puts "\nSignal SIGCONT received" }
+      keyboard = IO.select([STDIN],nil,nil,1) until keyboard || signal # wait for data on STDIN or signal SIGCONT received
+
+      begin
+        input = STDIN.read_nonblock(80) # clear out the read buffer
+        puts unless input && input =~ /\n\z/
+      rescue EOFError, IO::WaitReadable # Ignore problems reading from STDIN.
+      end unless signal
+
+      trap('SIGCONT', old_trap) # Restore the previuos signal handler, if there was one.
+
+      STDERR.puts 'Continuing'
     end
 
     def wait?

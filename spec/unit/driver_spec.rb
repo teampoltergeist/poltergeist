@@ -66,6 +66,33 @@ module Capybara::Poltergeist
         expect(subject.inspector).to be_a(Inspector)
         expect(subject.inspector.browser).to eq('foo')
       end
+
+
+      it 'can pause indefinitely' do
+        expect {
+          Timeout::timeout(3) do
+            subject.pause
+          end
+        }.to raise_error(Timeout::Error)
+      end
+
+      it 'can pause and resume with keyboard input' do
+        IO.pipe() do |read_io, write_io|
+          stub_const('STDIN', read_io)
+          write_io.write "\n"
+          Timeout::timeout(3) do
+            subject.pause
+          end
+        end
+      end
+
+      it 'can pause and resume with signal' do
+        Thread.new { sleep(2); Process.kill('CONT', Process.pid); }
+        Timeout::timeout(4) do
+          subject.pause
+        end
+      end
+
     end
 
     context 'with a :timeout option' do

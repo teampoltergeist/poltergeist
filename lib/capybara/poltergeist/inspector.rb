@@ -22,9 +22,12 @@ module Capybara::Poltergeist
       "//localhost:#{port}/"
     end
 
-    def open
+    def open(scheme = nil)
       if browser
-        Process.spawn(browser, url)
+        scheme = 'http' unless scheme == 'https' # scheme could be 'file' or 'about' or something else
+        uri = URI.parse(url)
+        uri.scheme = scheme unless uri.scheme
+        Process.spawn(browser, uri.to_s)
       else
         raise Error, "Could not find a browser executable to open #{url}. " \
                      "You can specify one manually using e.g. `:inspector => 'chromium'` " \

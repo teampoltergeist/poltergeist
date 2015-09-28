@@ -6,6 +6,8 @@
 *   Drag by offset support in native element (phoenixek12)
 *   Fire focus related events on selecting a select box option
     (Rumen Paletov) [Issue #607]
+*   Add scheme to URL passed to browser by inspector to support the "open" command [Issue #579]
+*   Support resuming from debug pause by sending a signal [Issue #654]
 
 #### Bug fixes ####
 *   Support reading text from SVG elements (Oliver Searle-Barnes)
