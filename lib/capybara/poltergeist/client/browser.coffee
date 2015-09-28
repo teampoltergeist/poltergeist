@@ -103,7 +103,7 @@ class Poltergeist.Browser
       command = @current_command
       @currentPage.waitState 'default', =>
         if @currentPage.statusCode == null && @currentPage.status == 'fail'
-          command.sendError(new Poltergeist.StatusFailError)
+          command.sendError(new Poltergeist.StatusFailError(url))
         else
           command.sendResponse(status: @currentPage.status)
 
