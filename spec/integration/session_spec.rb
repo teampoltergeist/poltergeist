@@ -669,5 +669,22 @@ describe Capybara::Session do
         expect(@session.find(:css, 'tspan').text).to eq 'svg foo'
       end
     end
+
+    context 'modals' do
+      before do
+        @session.visit '/poltergeist/with_js'
+      end
+
+      it 'works with nested modals' do
+        expect {
+          @session.dismiss_confirm 'Are you really sure?' do
+            @session.accept_confirm 'Are you sure?' do
+              @session.click_link('Open check twice')
+            end
+          end
+        }.not_to raise_error
+        expect(@session).to have_xpath("//a[@id='open-twice' and @confirmed='false']")
+      end
+    end
   end
 end

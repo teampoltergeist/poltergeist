@@ -37,13 +37,13 @@ class Poltergeist.Browser
       return
 
     @page.native().onConfirm = (msg) =>
-      process = @confirm_processes.shift()
+      process = @confirm_processes.pop()
       process = true if process == undefined
       @setModalMessage msg
       return process
 
     @page.native().onPrompt = (msg, defaultVal) =>
-      response = @prompt_responses.shift()
+      response = @prompt_responses.pop()
       response = defaultVal if (response == undefined || response == false)
 
       @setModalMessage msg
@@ -89,6 +89,11 @@ class Poltergeist.Browser
 
   visit: (url) ->
     @currentPage.state = 'loading'
+    #reset modal processing state when changing page
+    @processed_modal_messages = []
+    @confirm_processes = []
+    @prompt_responses = []
+
 
     # Prevent firing `page.onInitialized` event twice. Calling currentUrl
     # method before page is actually opened fires this event for the first time.
@@ -468,6 +473,5 @@ class Poltergeist.Browser
     @prompt_responses.push response
     @sendResponse(true)
 
-  modal_messages: ->
-    @sendResponse(@processed_modal_messages)
-    @processed_modal_messages = []
+  modal_message: ->
+    @sendResponse(@processed_modal_messages.shift())
