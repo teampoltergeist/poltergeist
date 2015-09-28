@@ -64,7 +64,7 @@ RSpec.configure do |config|
     Poltergeist::SpecHelper.set_capybara_wait_time(0)
   end
 
-  [:js, :modals].each do |cond|
+  [:js, :modals, :windows].each do |cond|
     config.before(:each, :requires => cond) do
       Poltergeist::SpecHelper.set_capybara_wait_time(1)
     end
