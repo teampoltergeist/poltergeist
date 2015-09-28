@@ -231,6 +231,10 @@ module Capybara::Poltergeist
       command 'send_keys', page_id, id, normalize_keys(keys)
     end
 
+    def path(page_id, id)
+      command 'path', page_id, id
+    end
+
     def network_traffic
       command('network_traffic').values.map do |event|
         NetworkTraffic::Request.new(
@@ -345,6 +349,32 @@ module Capybara::Poltergeist
       command 'go_forward'
     end
 
+    def accept_confirm
+      command 'set_confirm_process', true
+    end
+
+    def dismiss_confirm
+      command 'set_confirm_process', false
+    end
+
+    #
+    # press "OK" with text (response) or default value
+    #
+    def accept_prompt(response)
+      command 'set_prompt_response', response || false
+    end
+
+    #
+    # press "Cancel"
+    #
+    def dismiss_prompt
+      command 'set_prompt_response', nil
+    end
+
+    def modal_messages
+      command 'modal_messages'
+    end
+
     private
 
     def log(message)
@@ -362,15 +392,15 @@ module Capybara::Poltergeist
       keys.map do |key|
         case key
         when Array
-          # [:Shift, "s"] => { modifier: "shift", key: "S" }   
+          # [:Shift, "s"] => { modifier: "shift", key: "S" }
           # [:Ctrl, :Left] => { modifier: "ctrl", key: :Left }
           # [:Ctrl, :Shift, :Left] => { modifier: "ctrl,shift", key: :Left }
           letter = key.pop
           symbol = key.map { |k| k.to_s.downcase }.join(',')
-          
+
           { modifier: symbol.to_s.downcase, key: letter.capitalize }
         when Symbol
-          { key: key } # Return a known sequence for PhantomJS
+          { key: key.capitalize } # Return a known sequence for PhantomJS
         when String
           key # Plain string, nothing to do
         end

@@ -7,6 +7,10 @@ class Poltergeist.Browser
     @_debug     = false
     @_counter   = 0
 
+    @processed_modal_messages = []
+    @confirm_processes = []
+    @prompt_responses = []
+
     this.resetPage()
 
   resetPage: ->
@@ -23,6 +27,28 @@ class Poltergeist.Browser
     @page.handle = "#{@_counter++}"
     @pages.push(@page)
 
+    @processed_modal_messages = []
+    @confirm_processes = []
+    @prompt_responses = []
+
+
+    @page.native().onAlert = (msg) =>
+      @setModalMessage msg
+      return
+
+    @page.native().onConfirm = (msg) =>
+      process = @confirm_processes.shift()
+      process = true if process == undefined
+      @setModalMessage msg
+      return process
+
+    @page.native().onPrompt = (msg, defaultVal) =>
+      response = @prompt_responses.shift()
+      response = defaultVal if (response == undefined || response == false)
+
+      @setModalMessage msg
+      return response
+
     @page.onPageCreated = (newPage) =>
       page = new Poltergeist.WebPage(newPage)
       page.handle = "#{@_counter++}"
@@ -38,6 +64,9 @@ class Poltergeist.Browser
   debug: (message) ->
     if @_debug
       console.log "poltergeist [#{new Date().getTime()}] #{message}"
+
+  setModalMessage: (msg) ->
+    @processed_modal_messages.push(msg)
 
   sendResponse: (response) ->
     errors = @currentPage.errors
@@ -148,6 +177,9 @@ class Poltergeist.Browser
 
   disabled: (page_id, id) ->
     this.sendResponse this.node(page_id, id).isDisabled()
+
+  path: (page_id, id) ->
+    this.sendResponse this.node(page_id, id).path()
 
   evaluate: (script) ->
     this.sendResponse @currentPage.evaluate("function() { return #{script} }")
@@ -284,10 +316,12 @@ class Poltergeist.Browser
 
     for sequence in keys
       key = if sequence.key? then @currentPage.keyCode(sequence.key) else sequence
-
       if sequence.modifier?
-        modifier = @currentPage.keyModifierCode(sequence.modifier)
-        @currentPage.sendEvent('keypress', key, null, null, modifier)
+        modifier_keys = @currentPage.keyModifierKeys(sequence.modifier)
+        modifier_code = @currentPage.keyModifierCode(sequence.modifier)
+        @currentPage.sendEvent('keydown', modifier_key) for modifier_key in modifier_keys
+        @currentPage.sendEvent('keypress', key, null, null, modifier_code)
+        @currentPage.sendEvent('keyup', modifier_key) for modifier_key in modifier_keys
       else
         @currentPage.sendEvent('keypress', key)
 
@@ -425,3 +459,15 @@ class Poltergeist.Browser
   set_url_blacklist: ->
     @currentPage.urlBlacklist = Array.prototype.slice.call(arguments)
     @sendResponse(true)
+
+  set_confirm_process: (process) ->
+    @confirm_processes.push process
+    @sendResponse(true)
+
+  set_prompt_response: (response) ->
+    @prompt_responses.push response
+    @sendResponse(true)
+
+  modal_messages: ->
+    @sendResponse(@processed_modal_messages)
+    @processed_modal_messages = []
