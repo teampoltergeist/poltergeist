@@ -26,6 +26,8 @@
 *   Fix event.target for change events on SELECT elements.
     (Jonathan Baudanza) [Issue #204]
 
+* Include protocol in Capybara::Poltergeist::Inspect#url [Issue #579] (Brian Buchalter)
+
 ### 1.6.0 ###
 
 #### Features ####
