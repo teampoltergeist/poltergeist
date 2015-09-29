@@ -1,17 +1,30 @@
 ### Next release ###
 
 #### Features ####
+#### Bug fixes ####
+
+### 1.7.0 ###
+
+#### Features ####
 *   Persist browser state on Ruby side (Brian Ledbetter) [Issue #564]
 *   Add support for key modifiers for send_keys (Sarah Mogin) [Issue #420]
 *   Drag by offset support in native element (phoenixek12)
 *   Fire focus related events on selecting a select box option
     (Rumen Paletov) [Issue #607]
+*   Added ability to manipulate modals (`window.alert()`, `window.confirm()`
+    and `window.prompt()`) that has been implemented from Capybara 2.4
+    (Wataru MIYAGUNI and Thomas Walpole)
+*   Don't select disabled options (Thomas Walpole)
+*   Support lowercase key symbols as expected by Capybara (Thomas Walpole)
+*   Modifier keys should generate up/down events (Thomas Walpole)
+*   Add Node#path support for Capybara 2.5 (Thomas Walpole)
+*   Make modal support work with multiple/nested modals (Thomas Walpole)
 
 #### Bug fixes ####
 *   Support reading text from SVG elements (Oliver Searle-Barnes)
 *   Whitespace character in `current_url` remained unencoded [Issue #418]
-
-*   Fix event.target for change events on SELECT elements. (Jonathan Baudanza) [Issue #204]
+*   Fix event.target for change events on SELECT elements.
+    (Jonathan Baudanza) [Issue #204]
 
 ### 1.6.0 ###
 
@@ -22,9 +35,6 @@
 *   Write JSON to the logger, rather than Ruby [Issue #430]
 *   Added ability to access all of a nodes attributes (Jon Rowe)
 *   Capybara 2.3 window support (Dmitry Vorotilin)
-*   Added ability to manipulate modals (`window.alert()`, `window.confirm()`
-    and `window.prompt()`) that has been implemented from Capybara 2.4
-    (Wataru MIYAGUNI)
 *   Added ability to clear all cookies with clear_cookies method (unmanbearpig)
 *   Move from `phantom.args` to `system.args` to support PhantomJS 2.0
     (Filip Spiridonov) [Issue 566]
