@@ -45,4 +45,13 @@ $(function() {
     .blur(function() {
       $('#changes_on_blur').text($(this).val())
     })
+
+  $('#open-twice')
+    .click(function() {
+      if (confirm('Are you sure?')) {
+        if (!confirm('Are you really sure?')) {
+          $(this).attr('confirmed', 'false');
+        }
+      }
+    })
 })
