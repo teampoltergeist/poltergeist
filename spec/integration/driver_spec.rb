@@ -714,6 +714,28 @@ module Capybara::Poltergeist
       expect(@driver.window_handles).to eq(['0', '1'])
     end
 
+    it 'resizes windows' do
+      @session.visit '/'
+
+      popup1 = @session.window_opened_by do
+        @session.execute_script <<-JS
+          window.open('/poltergeist/simple', 'popup1')
+        JS
+      end
+
+      popup2 = @session.window_opened_by do
+        @session.execute_script <<-JS
+          window.open('/poltergeist/simple', 'popup2')
+        JS
+      end
+
+      popup1.resize_to(100,200)
+      popup2.resize_to(200,100)
+
+      expect(popup1.size).to eq([100,200])
+      expect(popup2.size).to eq([200,100])
+    end
+
     it 'clears local storage between tests' do
       @session.visit '/'
       @session.execute_script <<-JS

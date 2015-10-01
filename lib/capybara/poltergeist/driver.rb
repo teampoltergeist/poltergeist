@@ -200,6 +200,18 @@ module Capybara::Poltergeist
     end
     alias_method :resize_window, :resize
 
+    def resize_window_to(handle, width, height)
+      within_window(handle) do
+        resize(width, height)
+      end
+    end
+
+    def window_size(handle)
+      within_window(handle) do
+        evaluate_script('[window.innerWidth, window.innerHeight]')
+      end
+    end
+
     def scroll_to(left, top)
       browser.scroll_to(left, top)
     end

@@ -154,11 +154,17 @@ module Capybara::Poltergeist
       command 'close_window', handle
     end
 
-    def within_window(name, &block)
+    def find_window_handle(locator)
+      return locator if window_handles.include? locator
+
+      handle = command 'window_handle', locator
+      raise noSuchWindowError unless handle
+      return handle
+    end
+
+    def within_window(locator, &block)
       original = window_handle
-      handle = command 'window_handle', name
-      handle = name if handle.nil? && window_handles.include?(name)
-      raise NoSuchWindowError unless handle
+      handle = find_window_handle(locator)
       switch_to_window(handle)
       yield
     ensure
