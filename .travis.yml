@@ -1,3 +1,4 @@
+sudo: false
 script: bundle exec rake
 before_script: phantomjs --version
 before_install:
