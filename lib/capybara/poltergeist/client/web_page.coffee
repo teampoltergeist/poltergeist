@@ -164,10 +164,10 @@ class Poltergeist.WebPage
   title: ->
     this.native().frameTitle
 
-  frameUrl: (frameName) ->
-    query = (frameName) ->
-      document.querySelector("iframe[name='#{frameName}']")?.src
-    this.evaluate(query, frameName)
+  frameUrl: (frameNameOrId) ->
+    query = (frameNameOrId) ->
+      document.querySelector("iframe[name='#{frameNameOrId}'], iframe[id='#{frameNameOrId}']")?.src
+    this.evaluate(query, frameNameOrId)
 
   clearErrors: ->
     @errors = []
@@ -238,7 +238,16 @@ class Poltergeist.WebPage
       @frames.push(name)
       true
     else
-      false
+      frame_no = this.native().evaluate(
+        (frame_name) ->
+          frames = document.querySelectorAll("iframe, frame")
+          (idx for f, idx in frames when f?['name'] == frame_name or f?['id'] == frame_name)[0]
+        , name)
+      if frame_no? and this.native().switchToFrame(frame_no)
+        @frames.push(name)
+        true
+      else
+        false
 
   popFrame: ->
     @frames.pop()

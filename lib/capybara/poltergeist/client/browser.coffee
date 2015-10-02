@@ -191,6 +191,13 @@ class Poltergeist.Browser
     @currentPage.frameUrl(frame_name)
 
   pushFrame: (command, name, timeout) ->
+    if Array.isArray(name)
+      frame = this.node(name...)
+      name = frame.getAttribute('name') || frame.getAttribute('id')
+      unless name
+        frame.setAttribute('name', "_random_name_#{new Date().getTime()}")
+        name = frame.getAttribute('name')
+
     if @frameUrl(name) in @currentPage.blockedUrls()
       command.sendResponse(true)
     else if @currentPage.pushFrame(name)
@@ -202,7 +209,7 @@ class Poltergeist.Browser
         command.sendResponse(true)
     else
       if new Date().getTime() < timeout
-        setTimeout((=> @pushFrame(command, name, timeout)), 1000)
+        setTimeout((=> @pushFrame(command, name, timeout)), 50)
       else
         command.sendError(new Poltergeist.FrameNotFound(name))
 
