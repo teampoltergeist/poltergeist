@@ -199,8 +199,8 @@ class PoltergeistAgent.Node
     if (@element.maxLength >= 0)
       value = value.substr(0, @element.maxLength)
 
-    @element.value = ''
     this.trigger('focus')
+    @element.value = ''
 
     if @element.type == 'number'
       @element.value = value
