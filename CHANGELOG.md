@@ -1,6 +1,8 @@
 ### Next release ###
 
 #### Features ####
+*   Implement support for Capybara Window#size and Window#resize_to (Thomas Walpole)
+
 #### Bug fixes ####
 
 ### 1.7.0 ###
