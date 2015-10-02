@@ -159,7 +159,7 @@ module Capybara::Poltergeist
 
       it 'ignores :selector in #save_screenshot if full: true' do
         @session.visit('/poltergeist/long_page')
-        @driver.browser.should_receive(:warn).with(/Ignoring :selector/)
+        expect(@driver.browser).to receive(:warn).with(/Ignoring :selector/)
 
         create_screenshot file, full: true, selector: '#penultimate'
 

@@ -13,7 +13,7 @@ module Capybara::Poltergeist
       it 'logs requests and responses to the client' do
         request = %({"name":"where is","args":["the love?"]})
         response = %({"response":"<3"})
-        server.stub(:send).with(request).and_return(response)
+        allow(server).to receive(:send).with(request).and_return(response)
 
         subject.command('where is', 'the love?')
 

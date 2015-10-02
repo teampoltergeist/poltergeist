@@ -45,12 +45,14 @@ module Poltergeist
   end
 end
 
+RSpec::Expectations.configuration.warn_about_potential_false_positives = false if ENV['TRAVIS']
+
 RSpec.configure do |config|
   config.before do
     TestSessions.logger.reset
   end
 
-  config.after do
+  config.after do |example|
     if ENV['DEBUG']
       puts TestSessions.logger.messages
     elsif ENV['TRAVIS'] && example.exception
