@@ -120,6 +120,8 @@ class PoltergeistAgent.Node
     # from the parent SELECT
     if @element.nodeName == 'OPTION'
       element = @element.parentNode
+      element = element.parentNode if element.nodeName == 'OPTGROUP'
+      element
     else
       element = @element
 
