@@ -37,7 +37,7 @@ module Capybara::Poltergeist
       end
 
       def stub_version(version)
-        Cliver::ShellCapture.any_instance.stub(
+        allow_any_instance_of(Cliver::ShellCapture).to receive_messages(
           stdout: "#{version}\n",
           command_found: true
         )
@@ -48,16 +48,16 @@ module Capybara::Poltergeist
       it 'forcibly kills the child if it does not respond to SIGTERM' do
         client = Client.new(server)
 
-        Process.stub(spawn: 5678)
-        Process.stub(:wait) do
+        allow(Process).to receive_messages(spawn: 5678)
+        allow(Process).to receive(:wait) do
           @count = @count.to_i + 1
           @count == 1 ? sleep(3) : 0
         end
 
         client.start
 
-        Process.should_receive(:kill).with('TERM', 5678).ordered
-        Process.should_receive(:kill).with('KILL', 5678).ordered
+        expect(Process).to receive(:kill).with('TERM', 5678).ordered
+        expect(Process).to receive(:kill).with('KILL', 5678).ordered
 
         client.stop
       end
