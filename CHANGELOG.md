@@ -7,6 +7,7 @@
 
 *   Fix event.target for change events on SELECT elements with OPTGROUP. (Jonathan Tron)
 *   Trigger focus before clearing element in #set. (Soutaro Matsumoto) [Issue #666]
+*   Link command and response together with an id. (Thomas Walpole) [Issue #653, #482]
 
 ### 1.7.0 ###
 
