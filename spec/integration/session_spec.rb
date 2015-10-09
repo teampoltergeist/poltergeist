@@ -230,6 +230,24 @@ describe Capybara::Session do
       end
     end
 
+    describe 'Node#visible' do
+      before do
+        @session.visit('/poltergeist/visible')
+      end
+
+      it 'considers display: none to not be visible' do
+        expect(@session.find(:css, 'li', text: 'Display None', visible: false).visible?).to be false
+      end
+
+      it 'considers visibility: hidden to not be visible' do
+        expect(@session.find(:css, 'li', text: 'Hidden', visible: false).visible?).to be false
+      end
+
+      it 'considers opacity: 0 to not be visible' do
+        expect(@session.find(:css, 'li', text: 'Transparent', visible: false).visible?).to be false
+      end
+    end
+
     it 'has no trouble clicking elements when the size of a document changes' do
       @session.visit('/poltergeist/long_page')
       @session.find(:css, '#penultimate').click
