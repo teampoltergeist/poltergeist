@@ -6,6 +6,7 @@
 #### Bug fixes ####
 
 *   Fix event.target for change events on SELECT elements with OPTGROUP. (Jonathan Tron)
+*   Trigger focus before clearing element in #set. (Soutaro Matsumoto) [Issue #666]
 
 ### 1.7.0 ###
 
