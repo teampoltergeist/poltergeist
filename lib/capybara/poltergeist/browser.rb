@@ -60,7 +60,7 @@ module Capybara::Poltergeist
 
     def find(method, selector)
       result = command('find', method, selector)
-      result['ids'].map { |id| [result['page_id'], id] }
+      (result['ids'] || [0]).map { |id| [result['page_id'], id] }
     end
 
     def find_within(page_id, id, method, selector)
