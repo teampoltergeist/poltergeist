@@ -1,4 +1,5 @@
 require "capybara/poltergeist/errors"
+require "capybara/poltergeist/command"
 require 'multi_json'
 require 'time'
 
@@ -328,10 +329,10 @@ module Capybara::Poltergeist
     end
 
     def command(name, *args)
-      message = JSON.dump({ 'name' => name, 'args' => args })
-      log message
+      cmd = Command.new(name, *args)
+      log cmd.message
 
-      response = server.send(message)
+      response = server.send(cmd)
       log response
 
       json = JSON.load(response)

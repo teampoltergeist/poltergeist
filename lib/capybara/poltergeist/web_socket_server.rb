@@ -51,11 +51,14 @@ module Capybara::Poltergeist
     # and use that to initialize a Web Socket.
     def accept
       @socket   = server.accept
-      @messages = []
+      @messages = {}
 
       @driver = ::WebSocket::Driver.server(self)
       @driver.on(:connect) { |event| @driver.start }
-      @driver.on(:message) { |event| @messages << event.data }
+      @driver.on(:message) do |event|
+        command_id = JSON.load(event.data)['command_id']
+        @messages[command_id] = event.data
+      end
     end
 
     def write(data)
@@ -64,10 +67,10 @@ module Capybara::Poltergeist
 
     # Block until the next message is available from the Web Socket.
     # Raises Errno::EWOULDBLOCK if timeout is reached.
-    def receive
+    def receive(cmd_id)
       start = Time.now
 
-      until @messages.any?
+      until @messages.has_key?(cmd_id)
         raise Errno::EWOULDBLOCK if (Time.now - start) >= timeout
         IO.select([socket], [], [], timeout) or raise Errno::EWOULDBLOCK
         data = socket.recv(RECV_SIZE)
@@ -75,14 +78,14 @@ module Capybara::Poltergeist
         driver.parse(data)
       end
 
-      @messages.shift
+      @messages.delete(cmd_id)
     end
 
     # Send a message and block until there is a response
-    def send(message)
+    def send(cmd_id, message)
       accept unless connected?
       driver.text(message)
-      receive
+      receive(cmd_id)
     rescue Errno::EWOULDBLOCK
       raise TimeoutError.new(message)
     end
