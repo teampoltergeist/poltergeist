@@ -246,14 +246,16 @@ class PoltergeistAgent.Node
     @element.tagName
 
   isVisible: (element) ->
-    element = @element unless element
+    element ||= @element
 
-    if window.getComputedStyle(element).display == 'none'
-      false
-    else if element.parentElement
-      this.isVisible element.parentElement
-    else
-      true
+    while (element)
+      style = window.getComputedStyle(element)
+      return false if style.display == 'none' or
+                      style.visibility == 'hidden' or
+                      parseFloat(style.opacity) == 0
+      element = element.parentElement
+
+    return true
 
   isDisabled: ->
     @element.disabled || @element.tagName == 'OPTION' && @element.parentNode.disabled
