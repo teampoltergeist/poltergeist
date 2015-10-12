@@ -536,7 +536,7 @@ describe Capybara::Session do
       end
     end
 
-    context 'frame support' do
+    context 'frame support', focus: true do
       it 'supports selection by index' do
         @session.visit '/poltergeist/frames'
 
@@ -547,10 +547,28 @@ describe Capybara::Session do
 
       it 'supports selection by element' do
         @session.visit '/poltergeist/frames'
-        frame = @session.find(:css, 'iframe')
+        frame = @session.find(:css, 'iframe[name]')
 
         @session.within_frame(frame) do
           expect(@session.current_path).to eq('/poltergeist/slow')
+        end
+      end
+
+      it 'supports selection by element without name or id' do
+        @session.visit '/poltergeist/frames'
+        frame = @session.find(:css, 'iframe:not([name]):not([id])')
+
+        @session.within_frame(frame) do
+          expect(@session.current_path).to eq('/poltergeist/headers')
+        end
+      end
+
+      it 'supports selection by element with id but no name' do
+        @session.visit '/poltergeist/frames'
+        frame = @session.find(:css, 'iframe[id]:not([name])')
+
+        @session.within_frame(frame) do
+          expect(@session.current_path).to eq('/poltergeist/get_cookie')
         end
       end
 
