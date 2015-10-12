@@ -536,7 +536,7 @@ describe Capybara::Session do
       end
     end
 
-    context 'frame support', focus: true do
+    context 'frame support' do
       it 'supports selection by index' do
         @session.visit '/poltergeist/frames'
 
