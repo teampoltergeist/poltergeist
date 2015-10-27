@@ -675,6 +675,23 @@ module Capybara::Poltergeist
         @session.visit('/set_cookie')
         expect(@driver.cookies).to_not be_empty
       end
+
+      it 'sets cookies correctly when Capybara.app_host is set' do
+        old_app_host = Capybara.app_host
+        begin
+          Capybara.app_host = 'http://localhost/poltergeist'
+          @driver.set_cookie 'capybara', 'app_host'
+
+          port = @session.server.port
+          @session.visit("http://localhost:#{port}/poltergeist/get_cookie")
+          expect(@driver.body).to include('app_host')
+
+          @session.visit("http://127.0.0.1:#{port}/poltergeist/get_cookie")
+          expect(@driver.body).not_to include('app_host')
+        ensure
+          Capybara.app_host = old_app_host
+        end
+      end
     end
 
     it 'allows the driver to have a fixed port' do
