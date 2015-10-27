@@ -514,10 +514,11 @@ module Capybara::Poltergeist
       end
 
       it 'has a descriptive message when DNS incorrect' do
+        url = "http://nope:#{@port}/"
         begin
-          @session.visit("http://nope:#{@port}/")
+          @session.visit(url)
         rescue StatusFailError => e
-          expect(e.message).to include('Request failed to reach server, check DNS and/or server status')
+          expect(e.message).to include("Request to '#{url}' failed to reach server, check DNS and/or server status")
         else
           raise 'expected StatusFailError'
         end
