@@ -339,30 +339,30 @@ describe Capybara::Session do
             @session.find(:css, '#one').click
           }.to raise_error(Capybara::Poltergeist::MouseEventFailed)
 
-          begin
+          expect {
             @session.find(:css, '#one').click
-          rescue => error
+          }.to raise_error(Capybara::Poltergeist::MouseEventFailed) { |error|
             expect(error.selector).to eq('html body div#two.box')
             expect(error.message).to include('[200, 200]')
-          end
+          }
         end
 
         it 'clicks in the centre of an element' do
-          begin
+          expect {
             @session.find(:css, '#one').click
-          rescue => error
+          }.to raise_error(Capybara::Poltergeist::MouseEventFailed) { |error|
             expect(error.position).to eq([200, 200])
-          end
+          }
         end
 
         it 'clicks in the centre of an element within the viewport, if part is outside the viewport' do
           @session.driver.resize(200, 200)
 
-          begin
+          expect {
             @session.find(:css, '#one').click
-          rescue => error
+          }.to raise_error(Capybara::Poltergeist::MouseEventFailed) { |error|
             expect(error.position.first).to eq(150)
-          end
+          }
         end
       end
 

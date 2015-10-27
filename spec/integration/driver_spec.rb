@@ -378,12 +378,7 @@ module Capybara::Poltergeist
         expect(Process.kill(0, pid)).to eq(1)
         driver.quit
 
-        begin
-          Process.kill(0, pid)
-        rescue Errno::ESRCH
-        else
-          raise 'process is still alive'
-        end
+        expect { Process.kill(0, pid) }.to raise_error(Errno::ESRCH)
       end
     end
 
@@ -416,57 +411,34 @@ module Capybara::Poltergeist
 
     context 'javascript errors' do
       it 'propagates a Javascript error inside Poltergeist to a ruby exception' do
-        expect { @driver.browser.command 'browser_error' }.to raise_error(BrowserError)
-
-        begin
+        expect {
           @driver.browser.command 'browser_error'
-        rescue BrowserError => e
+        }.to raise_error(BrowserError) { |e|
           expect(e.message).to include('Error: zomg')
           expect(e.message).to include('compiled/browser.js')
-        else
-          raise 'BrowserError expected'
-        end
+        }
       end
 
       it 'propagates an asynchronous Javascript error on the page to a ruby exception' do
-        @driver.execute_script 'setTimeout(function() { omg }, 0)'
-        sleep 0.01
-        expect { @driver.execute_script '' }.to raise_error(JavascriptError)
-
-        begin
+        expect {
           @driver.execute_script 'setTimeout(function() { omg }, 0)'
           sleep 0.01
           @driver.execute_script ''
-        rescue JavascriptError => e
-          expect(e.message).to include('omg')
-          expect(e.message).to include('ReferenceError')
-        else
-          raise 'expected JavascriptError'
-        end
+        }.to raise_error(JavascriptError, /ReferenceError.*omg/)
       end
 
       it 'propagates a synchronous Javascript error on the page to a ruby exception' do
-        expect { @driver.execute_script 'omg' }.to raise_error(JavascriptError)
-
-        begin
+        expect {
           @driver.execute_script 'omg'
-        rescue JavascriptError => e
-          expect(e.message).to include('omg')
-          expect(e.message).to include('ReferenceError')
-        else
-          raise 'expected JavascriptError'
-        end
+        }.to raise_error(JavascriptError, /ReferenceError.*omg/)
       end
 
       it 'does not re-raise a Javascript error if it is rescued' do
-        begin
+        expect {
           @driver.execute_script 'setTimeout(function() { omg }, 0)'
           sleep 0.01
           @driver.execute_script ''
-        rescue JavascriptError
-        else
-          raise 'expected JavascriptError'
-        end
+        }.to raise_error(JavascriptError)
 
         # should not raise again
         expect(@driver.evaluate_script('1+1')).to eq(2)
@@ -515,13 +487,9 @@ module Capybara::Poltergeist
 
       it 'has a descriptive message when DNS incorrect' do
         url = "http://nope:#{@port}/"
-        begin
+        expect {
           @session.visit(url)
-        rescue StatusFailError => e
-          expect(e.message).to include("Request to '#{url}' failed to reach server, check DNS and/or server status")
-        else
-          raise 'expected StatusFailError'
-        end
+        }.to raise_error(StatusFailError, "Request to '#{url}' failed to reach server, check DNS and/or server status")
       end
     end
 
