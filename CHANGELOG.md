@@ -11,6 +11,7 @@
 *   Consider css visibility and opacity in #visible. (Thomas Walpole) [Issue #618]
 *   Enable changing to frames that have no name or id attributes. (Thomas Walpole) [Issue #630, #559]
 *   Fix domain setting of cookies when Capybara.app_host is set. (John Paul Ashenfelter, Thomas Walpole) [Issue #593]
+*   Fix click checking when svg element is overlapping (Thomas Walpole) [Issue #616]
 
 ### 1.7.0 ###
 
