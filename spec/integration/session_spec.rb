@@ -290,6 +290,10 @@ describe Capybara::Session do
       expect(@session.evaluate_script("{foo: 'bar'}")).to eq({'foo' => 'bar'})
     end
 
+    it 'can evaluate a statement ending with a semicolon' do
+      expect(@session.evaluate_script('3;')).to eq(3)
+    end
+
     it 'synchronises page loads properly' do
       @session.visit '/poltergeist/index'
       @session.click_link 'JS redirect'
@@ -337,10 +341,6 @@ describe Capybara::Session do
         it 'detects if an element is obscured when clicking' do
           expect {
             @session.find(:css, '#one').click
-          }.to raise_error(Capybara::Poltergeist::MouseEventFailed)
-
-          expect {
-            @session.find(:css, '#one').click
           }.to raise_error(Capybara::Poltergeist::MouseEventFailed) { |error|
             expect(error.selector).to eq('html body div#two.box')
             expect(error.message).to include('[200, 200]')
@@ -366,8 +366,24 @@ describe Capybara::Session do
         end
       end
 
-      it 'can evaluate a statement ending with a semicolon' do
-        expect(@session.evaluate_script('3;')).to eq(3)
+      context 'with #svg overlapping #one' do
+        before do
+          @session.execute_script <<-JS
+            var two = document.getElementById('svg')
+            two.style.position = 'absolute'
+            two.style.left     = '0px'
+            two.style.top      = '0px'
+          JS
+        end
+
+        it 'detects if an element is obscured when clicking' do
+          expect {
+            @session.find(:css, '#one').click
+          }.to raise_error(Capybara::Poltergeist::MouseEventFailed) { |error|
+            expect(error.selector).to eq('html body svg#svg.box')
+            expect(error.message).to include('[200, 200]')
+          }
+        end
       end
     end
 
