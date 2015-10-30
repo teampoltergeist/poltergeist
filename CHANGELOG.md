@@ -3,6 +3,8 @@
 #### Features ####
 *   Implement support for Capybara Window#size and Window#resize_to (Thomas Walpole)
 *   Add access to properties of node's native element (Mike Souza)
+*   Node#[] now prefers element properties over attributes when the property exists and is
+    not an object.  This is similar to the selenium driver behavior. (Thomas Walpole)
 
 #### Bug fixes ####
 

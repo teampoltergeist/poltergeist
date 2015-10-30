@@ -257,6 +257,42 @@ describe Capybara::Session do
       end
     end
 
+    describe 'Node#checked?' do
+      before do
+        @session.visit '/poltergeist/attributes_properties'
+      end
+
+      it 'is a boolean' do
+        expect(@session.find_field('checked').checked?).to be true
+        expect(@session.find_field('unchecked').checked?).to be false
+      end
+    end
+
+    describe 'Node#[]' do
+      before do
+        @session.visit '/poltergeist/attributes_properties'
+      end
+
+      it 'gets normalized href' do
+        expect(@session.find(:link, 'Loop')['href']).to eq("http://#{@session.server.host}:#{@session.server.port}/poltergeist/attributes_properties")
+      end
+
+      it 'gets innerHTML' do
+        expect(@session.find(:css,'.some_other_class')['innerHTML']).to eq '<p>foobar</p>'
+      end
+
+      it 'gets attribute' do
+        link = @session.find(:link, 'Loop')
+        expect(link['data-random']).to eq '42'
+        expect(link['onclick']).to eq "return false;"
+      end
+
+      it 'gets boolean attributes as booleans' do
+        expect(@session.find_field('checked')['checked']).to be true
+        expect(@session.find_field('unchecked')['checked']).to be false
+      end
+    end
+
     it 'has no trouble clicking elements when the size of a document changes' do
       @session.visit('/poltergeist/long_page')
       @session.find(:css, '#penultimate').click
@@ -737,20 +773,20 @@ describe Capybara::Session do
 
     context 'supports accessing element properties' do
       before do
-        @session.visit '/poltergeist/property'
+        @session.visit '/poltergeist/attributes_properties'
       end
 
       it 'gets property innerHTML' do
-        expect(@session.find(:css,'.some_class').native.property('innerHTML')).to eq '<p>foobar</p>'
+        expect(@session.find(:css,'.some_other_class').native.property('innerHTML')).to eq '<p>foobar</p>'
       end
 
       it 'gets property outerHTML' do
-        expect(@session.find(:css,'.some_class').native.property('outerHTML')).to eq '<div class="some_class"><p>foobar</p></div>'
+        expect(@session.find(:css,'.some_other_class').native.property('outerHTML')).to eq '<div class="some_other_class"><p>foobar</p></div>'
       end
     end
 
     it 'allows access to element attributes' do
-      @session.visit '/poltergeist/attributes'
+      @session.visit '/poltergeist/attributes_properties'
       expect(@session.find(:css,'#my_link').native.attributes).to eq(
         'href' => '#', 'id' => 'my_link', 'class' => 'some_class', 'data' => 'rah!'
       )
