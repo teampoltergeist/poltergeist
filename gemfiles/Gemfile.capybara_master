@@ -1,0 +1,11 @@
+source 'https://rubygems.org'
+
+gemspec :path => '..'
+
+gem 'capybara', github: 'jnicklas/capybara'
+
+platforms :rbx do
+  gem 'rubysl'
+  gem 'racc'
+  gem 'json'
+end
