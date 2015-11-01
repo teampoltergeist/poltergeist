@@ -308,7 +308,7 @@ class Poltergeist.WebPage
     else
       # The JSON.stringify happens twice because the second time we are essentially
       # escaping the string.
-      "(#{fn.toString()}).apply(this, JSON.parse(#{JSON.stringify(JSON.stringify(args))}))"
+      "(#{fn.toString()}).apply(this, PoltergeistAgent.JSON.parse(#{JSON.stringify(JSON.stringify(args))}))"
 
   # For some reason phantomjs seems to have trouble with doing 'fat arrow' binding here,
   # hence the 'that' closure.

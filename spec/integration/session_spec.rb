@@ -67,6 +67,15 @@ describe Capybara::Session do
         end
       end
 
+      context 'when someone messes with JSON' do
+        # mootools <= 1.2.4 replaced the native JSON with it's own JSON that didn't have stringify or parse methods
+        it 'works correctly' do
+          @session.visit('/poltergeist/index')
+          @session.execute_script('JSON = {};')
+          expect { @session.find(:link, 'JS redirect') }.not_to raise_error
+        end
+      end
+
       context 'when the element is not in the viewport' do
         before do
           @session.visit('/poltergeist/with_js')

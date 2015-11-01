@@ -1,6 +1,10 @@
 # This is injected into each page that is loaded
 
 class PoltergeistAgent
+  # Since this code executes in the sites browser space - copy needed JSON functions
+  # in case user code messes with JSON (early mootools for instance)
+  @.JSON ||= { parse: JSON.parse, stringify: JSON.stringify }
+
   constructor: ->
     @elements = []
     @nodes    = {}
@@ -13,7 +17,7 @@ class PoltergeistAgent
 
   @stringify: (object) ->
     try
-      JSON.stringify object, (key, value) ->
+      PoltergeistAgent.JSON.stringify object, (key, value) ->
         if Array.isArray(this[key])
           return this[key]
         else
