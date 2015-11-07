@@ -162,8 +162,13 @@ class Poltergeist.Browser
     @currentPage.beforeUpload(node.id)
     @currentPage.uploadFile('[_poltergeist_selected]', value)
     @currentPage.afterUpload(node.id)
-
-    @current_command.sendResponse(true)
+    if phantom.version.major == 2
+      # In phantomjs 2 - uploadFile only fully works if executed within a user action
+      # It does however setup the filenames to be uploaded, so if we then click on the
+      # file input element the filenames will get set
+      @click(page_id, id)
+    else
+      @current_command.sendResponse(true)
 
   select: (page_id, id, value) ->
     @current_command.sendResponse this.node(page_id, id).select(value)
