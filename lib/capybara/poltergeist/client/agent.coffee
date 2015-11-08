@@ -178,6 +178,9 @@ class PoltergeistAgent.Node
     window.getSelection().addRange(range)
     window.getSelection().deleteFromDocument()
 
+  getProperty: (name) ->
+    @element[name]
+
   getAttributes: ->
     attrs = {}
     for attr, i in @element.attributes

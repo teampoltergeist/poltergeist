@@ -137,6 +137,9 @@ class Poltergeist.Browser
   delete_text: (page_id, id) ->
     @current_command.sendResponse this.node(page_id, id).deleteText()
 
+  property: (page_id, id, name) ->
+    @current_command.sendResponse this.node(page_id, id).getProperty(name)
+
   attribute: (page_id, id, name) ->
     @current_command.sendResponse this.node(page_id, id).getAttribute(name)
 
