@@ -24,6 +24,7 @@ module Capybara::Poltergeist
     def initialize(port = nil, timeout = nil)
       @timeout = timeout
       @server  = start_server(port)
+      @receive_mutex = Mutex.new
     end
 
     def start_server(port)
@@ -72,12 +73,19 @@ module Capybara::Poltergeist
 
       until @messages.has_key?(cmd_id)
         raise Errno::EWOULDBLOCK if (Time.now - start) >= timeout
-        IO.select([socket], [], [], timeout) or raise Errno::EWOULDBLOCK
-        data = socket.recv(RECV_SIZE)
-        break if data.empty?
-        driver.parse(data)
+        if @receive_mutex.try_lock
+          begin
+            IO.select([socket], [], [], timeout) or raise Errno::EWOULDBLOCK
+            data = socket.recv(RECV_SIZE)
+            break if data.empty?
+            driver.parse(data)
+          ensure
+            @receive_mutex.unlock
+          end
+        else
+          sleep(0.05)
+        end
       end
-
       @messages.delete(cmd_id)
     end
 
