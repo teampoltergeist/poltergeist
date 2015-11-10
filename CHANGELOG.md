@@ -15,6 +15,7 @@
 *   Enable changing to frames that have no name or id attributes. (Thomas Walpole) [Issue #630, #559]
 *   Fix domain setting of cookies when Capybara.app_host is set. (John Paul Ashenfelter, Thomas Walpole) [Issue #593]
 *   Fix click checking when svg element is overlapping (Thomas Walpole) [Issue #616]
+*   Fix null status code when some pages redirect (Thomas Walpole) [Issue #524]
 
 ### 1.7.0 ###
 

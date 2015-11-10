@@ -86,7 +86,7 @@ class Poltergeist.WebPage
     else
       @lastRequestId = request.id
 
-      if request.url == @redirectURL
+      if @normalizeURL(request.url) == @redirectURL
         @redirectURL = null
         @requestId   = request.id
 
@@ -100,7 +100,7 @@ class Poltergeist.WebPage
 
     if @requestId == response.id
       if response.redirectURL
-        @redirectURL = response.redirectURL
+        @redirectURL = @normalizeURL(response.redirectURL)
       else
         @statusCode = response.status
         @_responseHeaders = response.headers
@@ -348,3 +348,8 @@ class Poltergeist.WebPage
 
   canGoForward: ->
     this.native().canGoForward
+
+  normalizeURL: (url) ->
+    parser = document.createElement('a')
+    parser.href = url
+    return parser.href
