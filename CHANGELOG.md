@@ -16,6 +16,7 @@
 *   Fix domain setting of cookies when Capybara.app_host is set. (John Paul Ashenfelter, Thomas Walpole) [Issue #593]
 *   Fix click checking when svg element is overlapping (Thomas Walpole) [Issue #616]
 *   Fix null status code when some pages redirect (Thomas Walpole) [Issue #524]
+*   Fix cases where page isn't always scrolled when needed for a mouse click (Thomas Walpole) [Issue #520]
 
 ### 1.7.0 ###
 

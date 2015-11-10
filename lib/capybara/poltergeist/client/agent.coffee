@@ -195,6 +195,10 @@ class PoltergeistAgent.Node
 
   scrollIntoView: ->
     @element.scrollIntoViewIfNeeded()
+    #Sometimes scrollIntoViewIfNeeded doesn't seem to work, not really sure why.
+    #Just calling scrollIntoView doesnt work either, however calling scrollIntoView
+    #after scrollIntoViewIfNeeded when element is not in the viewport does appear to work
+    @element.scrollIntoView() unless this.isInViewport()
 
   value: ->
     if @element.tagName == 'SELECT' && @element.multiple
@@ -263,6 +267,14 @@ class PoltergeistAgent.Node
       element = element.parentElement
 
     return true
+
+  isInViewport: ->
+    rect = @element.getBoundingClientRect();
+
+    rect.top >= 0 &&
+    rect.left >= 0 &&
+    rect.bottom <= window.innerHeight &&
+    rect.right <= window.innerWidth
 
   isDisabled: ->
     @element.disabled || @element.tagName == 'OPTION' && @element.parentNode.disabled
