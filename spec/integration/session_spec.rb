@@ -509,11 +509,6 @@ describe Capybara::Session do
         expect(request_uri).to eq('/poltergeist/arbitrary_path/200/foo?a%5Bb%5D=c')
       end
 
-      it 'supports allowed characters' do
-        @session.visit '/poltergeist/arbitrary_path/200/foo?a[b]=c'
-        expect(request_uri).to eq('/poltergeist/arbitrary_path/200/foo?a%5Bb%5D=c')
-      end
-
       it 'supports url in parameter' do
         @session.visit "/poltergeist/arbitrary_path/200/foo%20asd?a=http://example.com/asd%20asd"
         expect(request_uri).to eq('/poltergeist/arbitrary_path/200/foo%20asd?a=http://example.com/asd%20asd')
