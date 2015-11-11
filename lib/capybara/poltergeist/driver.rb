@@ -200,6 +200,18 @@ module Capybara::Poltergeist
     end
     alias_method :resize_window, :resize
 
+    def resize_window_to(handle, width, height)
+      within_window(handle) do
+        resize(width, height)
+      end
+    end
+
+    def window_size(handle)
+      within_window(handle) do
+        evaluate_script('[window.innerWidth, window.innerHeight]')
+      end
+    end
+
     def scroll_to(left, top)
       browser.scroll_to(left, top)
     end
@@ -244,7 +256,7 @@ module Capybara::Poltergeist
         if @started
           URI.parse(browser.current_url).host
         else
-          Capybara.app_host || "127.0.0.1"
+          URI.parse(Capybara.app_host || '').host || "127.0.0.1"
         end
       end
 
@@ -303,6 +315,52 @@ module Capybara::Poltergeist
 
     def go_forward
       browser.go_forward
+    end
+
+    def accept_modal(type, options = {})
+      case type
+      when :confirm
+        browser.accept_confirm
+      when :prompt
+        browser.accept_prompt options[:with]
+      end
+
+      yield if block_given?
+
+      find_modal(options)
+    end
+
+    def dismiss_modal(type, options = {})
+      case type
+      when :confirm
+        browser.dismiss_confirm
+      when :prompt
+        browser.dismiss_prompt
+      end
+
+      yield if block_given?
+      find_modal(options)
+    end
+
+    private
+
+    def find_modal(options)
+      start_time    = Time.now
+      timeout_sec   = options[:wait] || begin Capybara.default_max_wait_time rescue Capybara.default_wait_time end
+      expect_text   = options[:text]
+      not_found_msg = 'Unable to find modal dialog'
+      not_found_msg += " with #{expect_text}" if expect_text
+
+      begin
+        modal_text = browser.modal_message
+        raise Capybara::ModalNotFound if modal_text.nil?
+        raise Capybara::ModalNotFound if (expect_text && (modal_text != expect_text))
+      rescue Capybara::ModalNotFound => e
+        raise e, not_found_msg if (Time.now - start_time) >= timeout_sec
+        sleep(0.05)
+        retry
+      end
+      modal_text
     end
   end
 end

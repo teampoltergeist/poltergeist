@@ -1,8 +1,9 @@
 class Poltergeist.WebPage
-  @CALLBACKS = ['onAlert', 'onConsoleMessage', 'onLoadFinished',
-                'onInitialized', 'onLoadStarted', 'onResourceRequested',
-                'onResourceReceived', 'onError', 'onNavigationRequested',
-                'onUrlChanged', 'onPageCreated', 'onClosing']
+  @CALLBACKS = ['onConsoleMessage',
+                'onLoadFinished', 'onInitialized', 'onLoadStarted',
+                'onResourceRequested', 'onResourceReceived', 'onError',
+                'onNavigationRequested', 'onUrlChanged', 'onPageCreated',
+                'onClosing']
 
   @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'release', 'render',
                 'renderBase64', 'goBack', 'goForward']
@@ -78,14 +79,14 @@ class Poltergeist.WebPage
   onResourceRequestedNative: (request, net) ->
     abort = @urlBlacklist.some (blacklisted_url) ->
       request.url.indexOf(blacklisted_url) != -1
-  
+
     if abort
       @_blockedUrls.push request.url unless request.url in @_blockedUrls
       net.abort()
     else
       @lastRequestId = request.id
 
-      if request.url == @redirectURL
+      if @normalizeURL(request.url) == @redirectURL
         @redirectURL = null
         @requestId   = request.id
 
@@ -99,7 +100,7 @@ class Poltergeist.WebPage
 
     if @requestId == response.id
       if response.redirectURL
-        @redirectURL = response.redirectURL
+        @redirectURL = @normalizeURL(response.redirectURL)
       else
         @statusCode = response.status
         @_responseHeaders = response.headers
@@ -131,6 +132,10 @@ class Poltergeist.WebPage
     names = names.split(',').map ((name) -> modifiers[name])
     names[0] | names[1] # return codes for 1 or 2 modifiers
 
+  keyModifierKeys: (names) ->
+    names.split(',').map (name) =>
+      this.keyCode(name.charAt(0).toUpperCase() + name.substring(1))
+
   waitState: (state, callback) ->
     if @state == state
       callback.call()
@@ -159,10 +164,10 @@ class Poltergeist.WebPage
   title: ->
     this.native().frameTitle
 
-  frameUrl: (frameName) ->
-    query = (frameName) ->
-      document.querySelector("iframe[name='#{frameName}']")?.src
-    this.evaluate(query, frameName)
+  frameUrl: (frameNameOrId) ->
+    query = (frameNameOrId) ->
+      document.querySelector("iframe[name='#{frameNameOrId}'], iframe[id='#{frameNameOrId}']")?.src
+    this.evaluate(query, frameNameOrId)
 
   clearErrors: ->
     @errors = []
@@ -233,7 +238,16 @@ class Poltergeist.WebPage
       @frames.push(name)
       true
     else
-      false
+      frame_no = this.native().evaluate(
+        (frame_name) ->
+          frames = document.querySelectorAll("iframe, frame")
+          (idx for f, idx in frames when f?['name'] == frame_name or f?['id'] == frame_name)[0]
+        , name)
+      if frame_no? and this.native().switchToFrame(frame_no)
+        @frames.push(name)
+        true
+      else
+        false
 
   popFrame: ->
     @frames.pop()
@@ -294,7 +308,7 @@ class Poltergeist.WebPage
     else
       # The JSON.stringify happens twice because the second time we are essentially
       # escaping the string.
-      "(#{fn.toString()}).apply(this, JSON.parse(#{JSON.stringify(JSON.stringify(args))}))"
+      "(#{fn.toString()}).apply(this, PoltergeistAgent.JSON.parse(#{JSON.stringify(JSON.stringify(args))}))"
 
   # For some reason phantomjs seems to have trouble with doing 'fat arrow' binding here,
   # hence the 'that' closure.
@@ -334,3 +348,8 @@ class Poltergeist.WebPage
 
   canGoForward: ->
     this.native().canGoForward
+
+  normalizeURL: (url) ->
+    parser = document.createElement('a')
+    parser.href = url
+    return parser.href

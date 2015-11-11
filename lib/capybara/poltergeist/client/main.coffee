@@ -1,6 +1,6 @@
 class Poltergeist
   constructor: (port, width, height) ->
-    @browser    = new Poltergeist.Browser(this, width, height)
+    @browser    = new Poltergeist.Browser(width, height)
     @connection = new Poltergeist.Connection(this, port)
 
     # The QtWebKit bridge doesn't seem to like Function.prototype.bind
@@ -11,20 +11,21 @@ class Poltergeist
 
   runCommand: (command) ->
     @running = true
-
+    command = new Poltergeist.Cmd(this, command.id, command.name, command.args)
     try
-      @browser.runCommand(command.name, command.args)
+      command.run(@browser)
     catch error
       if error instanceof Poltergeist.Error
-        this.sendError(error)
+        this.sendError(command.id, error)
       else
-        this.sendError(new Poltergeist.BrowserError(error.toString(), error.stack))
+        this.sendError(command.id, new Poltergeist.BrowserError(error.toString(), error.stack))
 
-  sendResponse: (response) ->
-    this.send(response: response)
+  sendResponse: (command_id, response) ->
+    this.send(command_id: command_id, response: response)
 
-  sendError: (error) ->
+  sendError: (command_id, error) ->
     this.send(
+      command_id: command_id,
       error:
         name: error.name || 'Generic',
         args: error.args && error.args() || [error.toString()]
@@ -76,8 +77,9 @@ class Poltergeist.BrowserError extends Poltergeist.Error
   args: -> [@message, @stack]
 
 class Poltergeist.StatusFailError extends Poltergeist.Error
+  constructor: (@url) ->
   name: "Poltergeist.StatusFailError"
-  args: -> []
+  args: -> [@url]
 
 class Poltergeist.NoSuchWindowError extends Poltergeist.Error
   name: "Poltergeist.NoSuchWindowError"
@@ -88,6 +90,7 @@ class Poltergeist.NoSuchWindowError extends Poltergeist.Error
 phantom.injectJs("#{phantom.libraryPath}/web_page.js")
 phantom.injectJs("#{phantom.libraryPath}/node.js")
 phantom.injectJs("#{phantom.libraryPath}/connection.js")
+phantom.injectJs("#{phantom.libraryPath}/cmd.js")
 phantom.injectJs("#{phantom.libraryPath}/browser.js")
 
 system = require 'system'

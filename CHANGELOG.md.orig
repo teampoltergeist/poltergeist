@@ -25,6 +25,9 @@
 *   Drag by offset support in native element (phoenixek12)
 *   Fire focus related events on selecting a select box option
     (Rumen Paletov) [Issue #607]
+<<<<<<< HEAD
+*   Add access to properties of node's native element (Mike Souza)
+=======
 *   Added ability to manipulate modals (`window.alert()`, `window.confirm()`
     and `window.prompt()`) that has been implemented from Capybara 2.4
     (Wataru MIYAGUNI and Thomas Walpole)
@@ -33,6 +36,7 @@
 *   Modifier keys should generate up/down events (Thomas Walpole)
 *   Add Node#path support for Capybara 2.5 (Thomas Walpole)
 *   Make modal support work with multiple/nested modals (Thomas Walpole)
+>>>>>>> refs/remotes/teampoltergeist/master
 
 #### Bug fixes ####
 *   Support reading text from SVG elements (Oliver Searle-Barnes)

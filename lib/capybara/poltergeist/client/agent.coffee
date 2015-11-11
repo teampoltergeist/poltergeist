@@ -1,6 +1,10 @@
 # This is injected into each page that is loaded
 
 class PoltergeistAgent
+  # Since this code executes in the sites browser space - copy needed JSON functions
+  # in case user code messes with JSON (early mootools for instance)
+  @.JSON ||= { parse: JSON.parse, stringify: JSON.stringify }
+
   constructor: ->
     @elements = []
     @nodes    = {}
@@ -13,7 +17,7 @@ class PoltergeistAgent
 
   @stringify: (object) ->
     try
-      JSON.stringify object, (key, value) ->
+      PoltergeistAgent.JSON.stringify object, (key, value) ->
         if Array.isArray(this[key])
           return this[key]
         else
@@ -120,6 +124,8 @@ class PoltergeistAgent.Node
     # from the parent SELECT
     if @element.nodeName == 'OPTION'
       element = @element.parentNode
+      element = element.parentNode if element.nodeName == 'OPTGROUP'
+      element
     else
       element = @element
 
@@ -202,8 +208,8 @@ class PoltergeistAgent.Node
     if (@element.maxLength >= 0)
       value = value.substr(0, @element.maxLength)
 
-    @element.value = ''
     this.trigger('focus')
+    @element.value = ''
 
     if @element.type == 'number'
       @element.value = value
@@ -230,7 +236,9 @@ class PoltergeistAgent.Node
     @element.removeAttribute(name)
 
   select: (value) ->
-    if value == false && !@element.parentNode.multiple
+    if @isDisabled()
+      false
+    else if value == false && !@element.parentNode.multiple
       false
     else
       this.trigger('focus', @element.parentNode)
@@ -245,17 +253,27 @@ class PoltergeistAgent.Node
     @element.tagName
 
   isVisible: (element) ->
-    element = @element unless element
+    element ||= @element
 
-    if window.getComputedStyle(element).display == 'none'
-      false
-    else if element.parentElement
-      this.isVisible element.parentElement
-    else
-      true
+    while (element)
+      style = window.getComputedStyle(element)
+      return false if style.display == 'none' or
+                      style.visibility == 'hidden' or
+                      parseFloat(style.opacity) == 0
+      element = element.parentElement
+
+    return true
 
   isDisabled: ->
     @element.disabled || @element.tagName == 'OPTION' && @element.parentNode.disabled
+
+  path: ->
+    elements = @parentIds().reverse().map((id) => @agent.get(id))
+    elements.push(this)
+    selectors = elements.map (el)->
+      prev_siblings = el.find('xpath', "./preceding-sibling::#{el.tagName()}")
+      "#{el.tagName()}[#{prev_siblings.length + 1}]"
+    "//" + selectors.join('/')
 
   containsSelection: ->
     selectedNode = document.getSelection().focusNode
@@ -333,12 +351,14 @@ class PoltergeistAgent.Node
         el = el.parentNode
 
     { status: 'failure', selector: origEl && this.getSelector(origEl) }
-
   getSelector: (el) ->
     selector = if el.tagName != 'HTML' then this.getSelector(el.parentNode) + ' ' else ''
     selector += el.tagName.toLowerCase()
     selector += "##{el.id}" if el.id
-    for className in el.classList
+
+    #PhantomJS < 2.0 doesn't support classList for SVG elements - so get classes manually
+    classes = el.classList || (el.getAttribute('class')?.trim()?.split(/\s+/)) || []
+    for className in classes when className != ''
       selector += ".#{className}"
     selector
 
@@ -390,6 +410,3 @@ document.addEventListener(
   'DOMContentLoaded',
   -> console.log('__DOMContentLoaded')
 )
-
-window.confirm = (message) -> true
-window.prompt  = (message, _default) -> _default or null

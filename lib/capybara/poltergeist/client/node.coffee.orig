@@ -5,7 +5,11 @@ class Poltergeist.Node
                 'removeAttribute', 'isMultiple', 'select', 'tagName', 'find', 'getAttributes',
                 'isVisible', 'position', 'trigger', 'parentId', 'parentIds', 'mouseEventTest',
                 'scrollIntoView', 'isDOMEqual', 'isDisabled', 'deleteText', 'containsSelection',
+<<<<<<< HEAD
+                'getProperty']
+=======
                 'path', 'getProperty']
+>>>>>>> refs/remotes/teampoltergeist/master
 
   constructor: (@page, @id) ->
 

@@ -2,8 +2,12 @@
 <html>
 <body>
 <iframe name="frame"></iframe>
+<iframe></iframe>
+<iframe id="id_frame"></iframe>
 </body>
 <script type="text/javascript">
 document.getElementsByName('frame')[0].src = 'http://localhost:' + location.port + '/poltergeist/slow';
+document.querySelector('iframe:not([name]):not([id])').src = 'http://localhost:' + location.port + '/poltergeist/headers';
+document.querySelector('#id_frame').src = 'http://localhost:' + location.port + '/poltergeist/get_cookie';
 </script>
 </html>

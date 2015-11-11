@@ -56,10 +56,16 @@
 
     <select id="browser">
       <option value="PhantomJS" selected="selected">PhantomJS</option>
-      <option value="Chrome">Chrome</option>
       <option value="Firefox">Firefox</option>
-      <option value="Safari">Safari</option>
+      <optgroup label="Wekbit">
+        <option value="Chrome">Chrome</option>
+        <option value="Safari">Safari</option>
+      </optgroup>
       <option value="IE">IE</option>
     </select>
+
+    <p>
+      <a href="#" id="open-twice">Open check twice</a>
+    </p>
   </body>
 </html>

@@ -11,7 +11,11 @@
         width: 200px;
         height: 100px;
       }
-      #svg-with-circle{ position: absolute; }
+      #drag_by .draggable {
+         position: absolute;
+         width: 100px;
+         height: 50px;
+       }
       #drag_by div{ position: absolute; left: 0; }
       #draggable { width: 60px; height: 60px; padding: 0.2em; }
       #droppable { width: 100px; height: 100px; padding: 0.2em; }
@@ -46,9 +50,9 @@
     </div>
 
     <div id="drag_by">
-      <svg id='svg-with-circle' class="draggable">
-        <circle cx="15" cy="15" r="10"/>
-      </svg>
+      <div class="draggable">
+        <p>Drag me by</p>
+      </div>
     </div>
 
   </body>

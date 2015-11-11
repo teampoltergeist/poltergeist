@@ -12,8 +12,16 @@ require 'support/spec_logger'
 
 Capybara.register_driver :poltergeist do |app|
   debug = !ENV['DEBUG'].nil?
+  options = {
+    logger: TestSessions.logger,
+    inspector: debug,
+    debug: debug
+  }
+
+  options[:phantomjs] = ENV['TRAVIS_BUILD_DIR'] + '/travis-phantomjs2/phantomjs' if ENV['TRAVIS'] && ENV['USE_PHANTOMJS2']
+
   Capybara::Poltergeist::Driver.new(
-    app, logger: TestSessions.logger, inspector: debug, debug: debug
+    app, options
   )
 end
 
@@ -25,12 +33,26 @@ module TestSessions
   Poltergeist = Capybara::Session.new(:poltergeist, TestApp)
 end
 
+module Poltergeist
+  module SpecHelper
+    class << self
+      def set_capybara_wait_time(t)
+        Capybara.default_max_wait_time = t
+      rescue
+        Capybara.default_wait_time = t
+      end
+    end
+  end
+end
+
+RSpec::Expectations.configuration.warn_about_potential_false_positives = false if ENV['TRAVIS']
+
 RSpec.configure do |config|
   config.before do
     TestSessions.logger.reset
   end
 
-  config.after do
+  config.after do |example|
     if ENV['DEBUG']
       puts TestSessions.logger.messages
     elsif ENV['TRAVIS'] && example.exception
@@ -41,10 +63,12 @@ RSpec.configure do |config|
   Capybara::SpecHelper.configure(config)
 
   config.before(:each) do
-    Capybara.default_wait_time = 0
+    Poltergeist::SpecHelper.set_capybara_wait_time(0)
   end
 
-  config.before(:each, :requires => :js) do
-    Capybara.default_wait_time = 1
+  [:js, :modals, :windows].each do |cond|
+    config.before(:each, :requires => cond) do
+      Poltergeist::SpecHelper.set_capybara_wait_time(1)
+    end
   end
 end

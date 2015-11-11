@@ -29,8 +29,8 @@ module Capybara::Poltergeist
       start
     end
 
-    def send(message)
-      @socket.send(message) or raise DeadClient.new(message)
+    def send(command)
+      @socket.send(command.id, command.message) or raise DeadClient.new(command.message)
     end
   end
 end
