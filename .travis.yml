@@ -24,6 +24,8 @@ matrix:
       env: USE_PHANTOMJS2=true
     - rvm: 2.2.2
       gemfile: gemfiles/Gemfile.capybara_master
+    - rvm: 2.2.2
+      gemfile: gemfiles/Gemfile.capybara_master
+      env: USE_PHANTOMJS2=true
   allow_failures:
-    - env: USE_PHANTOMJS2=true
     - gemfile: gemfiles/Gemfile.capybara_master
