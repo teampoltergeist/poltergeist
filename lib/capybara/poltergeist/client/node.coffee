@@ -3,7 +3,7 @@
 class Poltergeist.Node
   @DELEGATES = ['allText', 'visibleText', 'getAttribute', 'value', 'set', 'setAttribute', 'isObsolete',
                 'removeAttribute', 'isMultiple', 'select', 'tagName', 'find', 'getAttributes',
-                'isVisible', 'position', 'trigger', 'parentId', 'parentIds', 'mouseEventTest',
+                'isVisible', 'isInViewport', 'position', 'trigger', 'parentId', 'parentIds', 'mouseEventTest',
                 'scrollIntoView', 'isDOMEqual', 'isDisabled', 'deleteText', 'containsSelection',
                 'path', 'getProperty']
 
@@ -32,7 +32,8 @@ class Poltergeist.Node
   mouseEvent: (name) ->
     this.scrollIntoView()
 
-    pos  = this.mouseEventPosition()
+    pos = this.mouseEventPosition()
+
     test = this.mouseEventTest(pos.x, pos.y)
 
     if test.status == 'success'
@@ -69,3 +70,4 @@ class Poltergeist.Node
 
   isEqual: (other) ->
     @page == other.page && this.isDOMEqual(other.id)
+
