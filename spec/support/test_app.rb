@@ -24,12 +24,12 @@ class TestApp
     File.read("#{POLTERGEIST_PUBLIC}/test.js")
   end
 
-  get '/poltergeist/jquery-1.6.2.min.js' do
-    File.read("#{POLTERGEIST_PUBLIC}/jquery-1.6.2.min.js")
+  get '/poltergeist/jquery.min.js' do
+    File.read("#{POLTERGEIST_PUBLIC}/jquery-1.11.3.min.js")
   end
 
-  get '/poltergeist/jquery-ui-1.8.14.min.js' do
-    File.read("#{POLTERGEIST_PUBLIC}/jquery-ui-1.8.14.min.js")
+  get '/poltergeist/jquery-ui.min.js' do
+    File.read("#{POLTERGEIST_PUBLIC}/jquery-ui-1.11.4.min.js")
   end
 
   get '/poltergeist/unexist.png' do

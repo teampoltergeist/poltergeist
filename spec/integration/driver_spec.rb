@@ -502,8 +502,8 @@ module Capybara::Poltergeist
         @session.visit('/poltergeist/with_js')
         urls = @driver.network_traffic.map(&:url)
 
-        expect(urls.grep(%r{/poltergeist/jquery-1.6.2.min.js$}).size).to eq(1)
-        expect(urls.grep(%r{/poltergeist/jquery-ui-1.8.14.min.js$}).size).to eq(1)
+        expect(urls.grep(%r{/poltergeist/jquery.min.js$}).size).to eq(1)
+        expect(urls.grep(%r{/poltergeist/jquery-ui.min.js$}).size).to eq(1)
         expect(urls.grep(%r{/poltergeist/test.js$}).size).to eq(1)
       end
 
