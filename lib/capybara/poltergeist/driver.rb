@@ -302,14 +302,20 @@ module Capybara::Poltergeist
     def pause
       # STDIN is not necessarily connected to a keyboard. It might even be closed.
       # So we need a method other than keypress to continue.
+
+      # In jRuby - STDIN returns immediately from select
+      # see https://github.com/jruby/jruby/issues/1783
+      read, write = IO.pipe
+      Thread.new { IO.copy_stream(STDIN, write); write.close }
+
       STDERR.puts "Poltergeist execution paused. Press enter (or run 'kill -CONT #{Process.pid}') to continue."
 
       signal = false
       old_trap = trap('SIGCONT') { signal = true; STDERR.puts "\nSignal SIGCONT received" }
-      keyboard = IO.select([STDIN], nil, nil, 1) until keyboard || signal # wait for data on STDIN or signal SIGCONT received
+      keyboard = IO.select([read], nil, nil, 1) until keyboard || signal # wait for data on STDIN or signal SIGCONT received
 
       begin
-        input = STDIN.read_nonblock(80) # clear out the read buffer
+        input = read.read_nonblock(80) # clear out the read buffer
         puts unless input && input =~ /\n\z/
       rescue EOFError, IO::WaitReadable # Ignore problems reading from STDIN.
       end unless signal
