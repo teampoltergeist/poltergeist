@@ -2,6 +2,8 @@ require 'spec_helper'
 
 module Capybara::Poltergeist
   describe Driver do
+    let(:default_phantomjs_options) { %w[--ignore-ssl-errors=yes --ssl-protocol=TLSv1] }
+
     context 'with no options' do
       subject { Driver.new(nil) }
 
@@ -13,24 +15,30 @@ module Capybara::Poltergeist
         expect(subject.inspector).to be_nil
       end
 
-      it 'adds --ssl-protocol=any to driver options' do
-        expect(subject.phantomjs_options).to eq(%w{--ssl-protocol=any})
+      it 'adds default phantomjs options to driver options' do
+        expect(subject.phantomjs_options).to eq(default_phantomjs_options)
       end
     end
 
     context 'with a phantomjs_options option' do
       subject { Driver.new(nil, phantomjs_options: %w{--hello})}
 
-      it "is a combination of ssl-protocol and the provided options" do
-        expect(subject.phantomjs_options).to eq(%w{--hello --ssl-protocol=any})
+      it "is a combination of ssl settings and the provided options" do
+        expect(subject.phantomjs_options).to eq(%w{--hello --ignore-ssl-errors=yes --ssl-protocol=TLSv1})
       end
     end
 
-    context 'with phantomjs_options containing ssl-protocol' do
-      subject { Driver.new(nil, phantomjs_options: %w{--ssl-protocol=tlsv1})}
+    context 'with phantomjs_options containing ssl-protocol settings' do
+      subject { Driver.new(nil, phantomjs_options: %w{--ssl-protocol=any --ignore-ssl-errors=no})}
 
       it "uses the provided ssl-protocol" do
-        expect(subject.phantomjs_options).to eq(%w{--ssl-protocol=tlsv1})
+        expect(subject.phantomjs_options).to include('--ssl-protocol=any')
+        expect(subject.phantomjs_options).not_to include('--ssl-protocol=TLSv1')
+      end
+
+      it "uses the provided ssl-errors" do
+        expect(subject.phantomjs_options).to include('--ignore-ssl-errors=no')
+        expect(subject.phantomjs_options).not_to include('--ignore-ssl-errors=yes')
       end
     end
 

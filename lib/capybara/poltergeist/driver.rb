@@ -53,8 +53,8 @@ module Capybara::Poltergeist
       # PhantomJS defaults to only using SSLv3, which since POODLE (Oct 2014)
       # many sites have dropped from their supported protocols (eg PayPal,
       # Braintree).
-      list += ["--ssl-protocol=any"] unless list.grep(/ssl-protocol/).any?
-
+      list += ["--ignore-ssl-errors=yes"] unless list.grep(/ignore-ssl-errors/).any?
+      list += ["--ssl-protocol=TLSv1"] unless list.grep(/ssl-protocol/).any?
       list += ["--remote-debugger-port=#{inspector.port}", "--remote-debugger-autorun=yes"] if inspector
       list
     end
