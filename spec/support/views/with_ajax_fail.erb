@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+    <title>poltergeist with_js</title>
+    <script src="/poltergeist/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+  </head>
+  <body>
+    <h1>Here</h1>
+    <script>
+      $.ajax('/poltergeist/unexist.png', {
+        complete: function(){$('h1').text('Done');}
+      });
+    </script>
+  </body>
+</html>

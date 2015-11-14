@@ -250,7 +250,8 @@ module Capybara::Poltergeist
       command('network_traffic').values.map do |event|
         NetworkTraffic::Request.new(
           event['request'],
-          event['responseParts'].map { |response| NetworkTraffic::Response.new(response) }
+          event['responseParts'].map { |response| NetworkTraffic::Response.new(response) },
+          event['error'] ? NetworkTraffic::Error.new(event['error']) : nil
         )
       end
     end
