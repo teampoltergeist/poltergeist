@@ -1,7 +1,7 @@
 class Poltergeist.WebPage
-  @CALLBACKS = ['onConsoleMessage',
+  @CALLBACKS = ['onConsoleMessage','onError',
                 'onLoadFinished', 'onInitialized', 'onLoadStarted',
-                'onResourceRequested', 'onResourceReceived', 'onError',
+                'onResourceRequested', 'onResourceReceived', 'onResourceError',
                 'onNavigationRequested', 'onUrlChanged', 'onPageCreated',
                 'onClosing']
 
@@ -93,6 +93,7 @@ class Poltergeist.WebPage
       @_networkTraffic[request.id] = {
         request:       request,
         responseParts: []
+        error: null
       }
 
   onResourceReceivedNative: (response) ->
@@ -104,6 +105,9 @@ class Poltergeist.WebPage
       else
         @statusCode = response.status
         @_responseHeaders = response.headers
+
+  onResourceErrorNative: (errorResponse) ->
+    @_networkTraffic[errorResponse.id]?.error = errorResponse
 
   injectAgent: ->
     if this.native().evaluate(-> typeof __poltergeist) == "undefined"

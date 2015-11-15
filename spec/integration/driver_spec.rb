@@ -514,6 +514,14 @@ module Capybara::Poltergeist
         expect(request.response_parts.last.status).to eq(200)
       end
 
+      it 'captures errors' do
+        @session.visit('/poltergeist/with_ajax_fail')
+        expect(@session).to have_css('h1', text: 'Done')
+        error = @driver.network_traffic.last.error
+
+        expect(error).to be
+      end
+
       it 'keeps a running list between multiple web page views' do
         @session.visit('/poltergeist/with_js')
         expect(@driver.network_traffic.length).to eq(4)
