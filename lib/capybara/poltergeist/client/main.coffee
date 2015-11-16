@@ -38,6 +38,8 @@ class Poltergeist
     if @running
       @connection.send(data)
       @running = false
+      return true
+    return false
 
 # This is necessary because the remote debugger will wrap the
 # script in a function, causing the Poltergeist variable to

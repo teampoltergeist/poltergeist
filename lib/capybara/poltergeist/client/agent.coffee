@@ -256,9 +256,7 @@ class PoltergeistAgent.Node
   tagName: ->
     @element.tagName
 
-  isVisible: (element) ->
-    element ||= @element
-
+  isVisible: (element = @element) ->
     while (element)
       style = window.getComputedStyle(element)
       return false if style.display == 'none' or
