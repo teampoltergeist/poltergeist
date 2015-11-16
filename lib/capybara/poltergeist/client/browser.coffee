@@ -54,6 +54,8 @@ class Poltergeist.Browser
       page.handle = "#{@_counter++}"
       @pages.push(page)
 
+    return
+
   getPageByHandle: (handle) ->
     @pages.filter((p) -> !p.closed && p.handle == handle)[0]
 
@@ -68,6 +70,7 @@ class Poltergeist.Browser
 
   setModalMessage: (msg) ->
     @processed_modal_messages.push(msg)
+    return
 
   add_extension: (extension) ->
     @currentPage.injectExtension extension
@@ -106,6 +109,7 @@ class Poltergeist.Browser
           command.sendError(new Poltergeist.StatusFailError(url))
         else
           command.sendResponse(status: @currentPage.status)
+      return
 
   current_url: ->
     @current_command.sendResponse @currentPage.currentUrl()

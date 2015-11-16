@@ -75,6 +75,7 @@ class Poltergeist.WebPage
       stackString += " in #{frame.function}" if frame.function && frame.function != ''
 
     @errors.push(message: message, stack: stackString)
+    return true
 
   onResourceRequestedNative: (request, net) ->
     abort = @urlBlacklist.some (blacklisted_url) ->
@@ -95,6 +96,7 @@ class Poltergeist.WebPage
         responseParts: []
         error: null
       }
+    return true
 
   onResourceReceivedNative: (response) ->
     @_networkTraffic[response.id]?.responseParts.push(response)
@@ -105,15 +107,19 @@ class Poltergeist.WebPage
       else
         @statusCode = response.status
         @_responseHeaders = response.headers
+    return true
 
   onResourceErrorNative: (errorResponse) ->
     @_networkTraffic[errorResponse.id]?.error = errorResponse
+    return true
 
   injectAgent: ->
     if this.native().evaluate(-> typeof __poltergeist) == "undefined"
       this.native().injectJs "#{phantom.libraryPath}/agent.js"
       for extension in WebPage.EXTENSIONS
         this.native().injectJs extension
+      return true
+    return false
 
   injectExtension: (file) ->
     WebPage.EXTENSIONS.push file
@@ -149,18 +155,21 @@ class Poltergeist.WebPage
   setHttpAuth: (user, password) ->
     this.native().settings.userName = user
     this.native().settings.password = password
+    return true
 
   networkTraffic: ->
     @_networkTraffic
 
   clearNetworkTraffic: ->
     @_networkTraffic = {}
+    return true
 
   blockedUrls: ->
     @_blockedUrls
 
   clearBlockedUrls: ->
     @_blockedUrls = []
+    return true
 
   content: ->
     this.native().frameContent
@@ -175,6 +184,7 @@ class Poltergeist.WebPage
 
   clearErrors: ->
     @errors = []
+    return true
 
   responseHeaders: ->
     headers = {}
@@ -214,8 +224,9 @@ class Poltergeist.WebPage
 
   elementBounds: (selector) ->
     this.native().evaluate(
-      (selector) -> document.querySelector(selector).getBoundingClientRect(),
-      selector
+      (selector) ->
+        document.querySelector(selector).getBoundingClientRect()
+      , selector
     )
 
   setUserAgent: (userAgent) ->
@@ -230,6 +241,7 @@ class Poltergeist.WebPage
   addTempHeader: (header) ->
     for name, value of header
       @_tempHeaders[name] = value
+    @_tempHeaders
 
   removeTempHeaders: ->
     allHeaders = this.getCustomHeaders()
@@ -240,7 +252,7 @@ class Poltergeist.WebPage
   pushFrame: (name) ->
     if this.native().switchToFrame(name)
       @frames.push(name)
-      true
+      return true
     else
       frame_no = this.native().evaluate(
         (frame_name) ->
@@ -249,9 +261,9 @@ class Poltergeist.WebPage
         , name)
       if frame_no? and this.native().switchToFrame(frame_no)
         @frames.push(name)
-        true
+        return true
       else
-        false
+        return false
 
   popFrame: ->
     @frames.pop()
@@ -324,6 +336,7 @@ class Poltergeist.WebPage
 
       if result != false && that[name]? # For externally set callbacks
         that[name].apply(that, arguments)
+    return true
 
   # Any error raised here or inside the evaluate will get reported to
   # phantom.onError. If result is null, that means there was an error
