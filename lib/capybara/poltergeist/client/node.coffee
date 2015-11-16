@@ -31,11 +31,8 @@ class Poltergeist.Node
 
   mouseEvent: (name) ->
     this.scrollIntoView()
-
     pos = this.mouseEventPosition()
-
     test = this.mouseEventTest(pos.x, pos.y)
-
     if test.status == 'success'
       if name == 'rightclick'
         @page.mouseEvent('click', pos.x, pos.y, 'right')

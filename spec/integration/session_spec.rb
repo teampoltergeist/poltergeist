@@ -378,6 +378,10 @@ describe Capybara::Session do
         @session.click_link 'some link'
       end
 
+      it 'can click an element inside an svg' do
+        expect { @session.find(:css, '#myrect').click }.not_to raise_error
+      end
+
       context 'with #two overlapping #one' do
         before do
           @session.execute_script <<-JS
@@ -436,6 +440,8 @@ describe Capybara::Session do
         end
       end
     end
+
+
 
     context 'double click tests' do
       before do
