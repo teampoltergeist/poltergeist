@@ -107,13 +107,13 @@ class PoltergeistAgent.Node
 
   isObsolete: ->
     obsolete = (element) =>
-      if element.parentNode?
-        if element.parentNode == document
-          false
+      if (parent = element.parentNode)?
+        if parent == document
+          return false
         else
-          obsolete element.parentNode
+          obsolete parent
       else
-        true
+        return true
     obsolete @element
 
   changed: ->
@@ -312,7 +312,8 @@ class PoltergeistAgent.Node
     offset
 
   position: ->
-    rect = @element.getClientRects()[0]
+    # Elements inside an SVG return underfined for getClientRects???
+    rect = @element.getClientRects()[0] || @element.getBoundingClientRect()
     throw new PoltergeistAgent.ObsoleteNode unless rect
     frameOffset = this.frameOffset()
 
