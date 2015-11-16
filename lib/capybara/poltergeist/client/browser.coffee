@@ -268,7 +268,6 @@ class Poltergeist.Browser
   mouse_event: (page_id, id, name) ->
     # Get the node before changing state, in case there is an exception
     node = this.node(page_id, id)
-
     # If the event triggers onNavigationRequested, we will transition to the 'loading'
     # state and wait for onLoadFinished before sending a response.
     @currentPage.state = 'mouse_event'
