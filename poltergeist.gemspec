@@ -26,7 +26,8 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'cliver',           '~> 0.3.1'
 
   s.add_development_dependency 'launchy',            '~> 2.0'
-  s.add_development_dependency 'rspec',              '~> 3.3.0'
+  s.add_development_dependency 'rspec',              '~> 3.4.0'
+  s.add_development_dependency 'rspec-core',         '!= 3.4.0' # 3.4.0 has an issue with rbx and ripper
   s.add_development_dependency 'sinatra',            '~> 1.0'
   s.add_development_dependency 'rake',               '~> 10.0'
   s.add_development_dependency 'image_size',         '~> 1.0'

@@ -29,14 +29,15 @@ module Capybara
         response['name']
       end
 
-      def javascript_error
-        JSErrorItem.new(*response['args'])
+      def error_parameters
+        response['args'].join("\n")
       end
 
       def message
         "There was an error inside the PhantomJS portion of Poltergeist. " \
-          "This is probably a bug, so please report it. " \
-          "\n\n#{javascript_error}"
+          "If this is the error returned, and not the cause of a more detailed error response, " \
+          "this is probably a bug, so please report it. " \
+          "\n\n#{name}: #{error_parameters}"
       end
     end
 
