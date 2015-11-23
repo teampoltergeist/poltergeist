@@ -9,9 +9,7 @@ rvm:
   - 2.2.2
   - 2.1.6
   - 2.0.0
-  - 1.9.3
   - rbx-2
-  - jruby-19mode
 gemfile:
   - Gemfile
 env:
@@ -19,6 +17,10 @@ env:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
 matrix:
   include:
+    - rvm: 1.9.3
+      gemfile: gemfiles/Gemfile.1_9_3
+    - rvm: jruby-19mode
+      gemfile: gemfiles/Gemfile.1_9_3
     - rvm: 2.2.2
       gemfile: Gemfile
       env: USE_PHANTOMJS2=true
