@@ -3,6 +3,13 @@
 #### Features ####
 #### Bug fixes ####
 
+### 1.8.1 ###
+
+#### Bug fixes ####
+*   Fix display of exception cause information in RSpec 3.4 (Thomas Walpole) [Issue #702]
+*   Fix clicking on elements inside an SVG element (Thomas Walpole) [Issue #331]
+*   Error information is returned with network traffic (Thomas Walpole)
+
 ### 1.8.0 ###
 
 #### Features ####
