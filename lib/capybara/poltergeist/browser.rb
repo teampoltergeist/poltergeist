@@ -324,6 +324,10 @@ module Capybara::Poltergeist
       end
     end
 
+    def url_whitelist=(whitelist)
+      command 'set_url_whitelist', *whitelist
+    end
+
     def url_blacklist=(blacklist)
       command 'set_url_blacklist', *blacklist
     end

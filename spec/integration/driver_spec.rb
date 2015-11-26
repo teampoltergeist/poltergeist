@@ -811,6 +811,42 @@ module Capybara::Poltergeist
       end
     end
 
+    context 'whitelisting urls for resource requests' do
+      it 'allows whitelisted urls' do
+        @driver.browser.url_whitelist = ['url_whitelist', 'wanted']
+
+        @session.visit '/poltergeist/url_whitelist'
+
+        expect(@session.status_code).to eq(200)
+        expect(@session).to have_content('We are loading some wanted action here')
+        @session.within_frame 'framename' do
+          expect(@session).to have_content('We should see this.')
+        end
+      end
+
+      it 'blocks overruled urls' do
+        @driver.browser.url_whitelist = ['url_whitelist']
+        @driver.browser.url_blacklist = ['url_whitelist']
+
+        @session.visit '/poltergeist/url_whitelist'
+
+        expect(@session.status_code).to eq(nil)
+        expect(@session).not_to have_content('We are loading some wanted action here')
+      end
+
+      it 'allows urls when the whitelist is empty' do
+        @driver.browser.url_whitelist = []
+
+        @session.visit '/poltergeist/url_whitelist'
+
+        expect(@session.status_code).to eq(200)
+        expect(@session).to have_content('We are loading some wanted action here')
+        @session.within_frame 'framename' do
+          expect(@session).to have_content('We should see this.')
+        end
+      end
+    end
+
     context 'has ability to send keys' do
       before { @session.visit('/poltergeist/send_keys') }
 
