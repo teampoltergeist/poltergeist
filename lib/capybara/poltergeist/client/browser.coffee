@@ -481,6 +481,10 @@ class Poltergeist.Browser
     else
       command.sendResponse(false)
 
+  set_url_whitelist: ->
+    @currentPage.urlWhitelist = Array.prototype.slice.call(arguments)
+    @current_command.sendResponse(true)
+
   set_url_blacklist: ->
     @currentPage.urlBlacklist = Array.prototype.slice.call(arguments)
     @current_command.sendResponse(true)

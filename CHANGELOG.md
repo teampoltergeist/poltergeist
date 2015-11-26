@@ -1,6 +1,8 @@
 ### Next release ###
 
 #### Features ####
+*   Implement support for URL whitelisting (Justin Case) [Issue #588]
+
 #### Bug fixes ####
 
 ### 1.8.1 ###

@@ -20,6 +20,7 @@ class Poltergeist.WebPage
     @source          = null
     @closed          = false
     @state           = 'default'
+    @urlWhitelist    = []
     @urlBlacklist    = []
     @frames          = []
     @errors          = []
@@ -78,8 +79,21 @@ class Poltergeist.WebPage
     return true
 
   onResourceRequestedNative: (request, net) ->
-    abort = @urlBlacklist.some (blacklisted_url) ->
+    useWhitelist = @urlWhitelist.length > 0
+
+    whitelisted = @urlWhitelist.some (whitelisted_url) ->
+      request.url.indexOf(whitelisted_url) != -1
+
+    blacklisted = @urlBlacklist.some (blacklisted_url) ->
       request.url.indexOf(blacklisted_url) != -1
+
+    abort = false
+
+    if useWhitelist && !whitelisted
+      abort = true
+
+    if blacklisted
+      abort = true
 
     if abort
       @_blockedUrls.push request.url unless request.url in @_blockedUrls
