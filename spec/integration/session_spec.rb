@@ -386,6 +386,19 @@ describe Capybara::Session do
         expect { @session.find(:css, '#myrect').click }.not_to raise_error
       end
 
+      it 'can click an element with a :before pseudo element' do
+        @session.click_on 'The Link'
+        expect(@session).to have_link('Clicked Link')
+      end
+
+      # This works with phantomjs 2 but phantomjs < 2 appears to not consider pseudo elements part of the
+      # element they are connected to
+      it 'can click an element that is only a :before pseudo element' do
+        skip "Phantomjs < 2 doesn't support this" unless phantom_version_is? '>= 2.0.0', @session.driver
+        @session.click_on 'pseudo_link'
+        expect(@session).to have_link('Pseudo clicked')
+      end
+
       context 'with #two overlapping #one' do
         before do
           @session.execute_script <<-JS

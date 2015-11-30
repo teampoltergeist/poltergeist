@@ -138,6 +138,9 @@ class Poltergeist.WebPage
   injectAgent: ->
     if this.native().evaluate(-> typeof __poltergeist) == "undefined"
       this.native().injectJs "#{phantom.libraryPath}/agent.js"
+      this.native().evaluate (version)->
+        __poltergeist.phantomjs_version = version
+      , phantom.version
       for extension in WebPage.EXTENSIONS
         this.native().injectJs extension
       return true

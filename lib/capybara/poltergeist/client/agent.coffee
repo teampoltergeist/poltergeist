@@ -319,10 +319,25 @@ class PoltergeistAgent.Node
     offset
 
   position: ->
-    # Elements inside an SVG return underfined for getClientRects???
-    rect = @element.getClientRects()[0] || @element.getBoundingClientRect()
-    throw new PoltergeistAgent.ObsoleteNode unless rect
     frameOffset = this.frameOffset()
+    rects = @element.getClientRects()
+
+    rect = if __poltergeist.phantomjs_version.major == 1
+      #PhantomJS 1.9.8 returns rects for pseudo elements, but then does not consider them to be children
+      #of the element when attempting to click.  Search through the client rects to find one that will
+      #resolve to the element if possible
+
+      midpoint = (r) -> [(r.left+r.right)/2 + frameOffset.left, (r.top+r.bottom)/2 + frameOffset.top]
+      valid_rects = (r for r in rects when @mouseEventTest(midpoint(r)...).status == 'success')
+      #if no valid ones found - maybe the element is covered - return the first rect
+      rect = valid_rects[0] || rects[0]
+    else
+      rects[0]
+
+    # Elements inside an SVG return no rects for getClientRects???
+    rect ||= @element.getBoundingClientRect()
+
+    throw new PoltergeistAgent.ObsoleteNode unless rect
 
     pos = {
       top:    rect.top    + frameOffset.top,
@@ -371,6 +386,7 @@ class PoltergeistAgent.Node
         el = el.parentNode
 
     { status: 'failure', selector: origEl && this.getSelector(origEl) }
+
   getSelector: (el) ->
     selector = if el.tagName != 'HTML' then this.getSelector(el.parentNode) + ' ' else ''
     selector += el.tagName.toLowerCase()
