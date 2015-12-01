@@ -22,7 +22,13 @@ to read the bug reporting guidance below).
 
 ## Installation ##
 
-Add `poltergeist` to your Gemfile, and in your test setup add:
+Add this line to your Gemfile and run `bundle install`:
+
+``` ruby
+gem 'poltergeist'
+```
+
+In your test setup add:
 
 ``` ruby
 require 'capybara/poltergeist'
@@ -82,7 +88,7 @@ was 1.0.2, so you should use that if you still need Ruby 1.8 support.
 There are no special steps to take. You don't need Xvfb or any running X
 server at all.
 
-[Travis CI](https://travis-ci.org/) has PhantomJS pre-installed.
+[Travis CI](https://travis-ci.org/) and [Codeship](https://codeship.com/) has PhantomJS pre-installed.
 
 Depending on your tests, one thing that you may need is some fonts. If
 you're getting errors on a CI that don't occur during development then
