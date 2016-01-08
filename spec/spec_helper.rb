@@ -18,7 +18,7 @@ Capybara.register_driver :poltergeist do |app|
     debug: debug
   }
 
-  options[:phantomjs] = ENV['TRAVIS_BUILD_DIR'] + '/travis-phantomjs2/phantomjs' if ENV['TRAVIS'] && ENV['USE_PHANTOMJS2']
+  options[:phantomjs] = ENV['PHANTOMJS'] if ENV['TRAVIS'] && ENV['PHANTOMJS']
 
   Capybara::Poltergeist::Driver.new(
     app, options

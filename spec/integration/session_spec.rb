@@ -440,7 +440,7 @@ describe Capybara::Session do
         end
       end
 
-      context "with image maps", focus: true do
+      context "with image maps" do
         before do
           @session.visit('/poltergeist/image_map')
         end
