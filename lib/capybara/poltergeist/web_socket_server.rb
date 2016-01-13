@@ -68,14 +68,15 @@ module Capybara::Poltergeist
 
     # Block until the next message is available from the Web Socket.
     # Raises Errno::EWOULDBLOCK if timeout is reached.
-    def receive(cmd_id)
+    def receive(cmd_id, receive_timeout=nil)
+      receive_timeout ||= timeout
       start = Time.now
 
       until @messages.has_key?(cmd_id)
-        raise Errno::EWOULDBLOCK if (Time.now - start) >= timeout
+        raise Errno::EWOULDBLOCK if (Time.now - start) >= receive_timeout
         if @receive_mutex.try_lock
           begin
-            IO.select([socket], [], [], timeout) or raise Errno::EWOULDBLOCK
+            IO.select([socket], [], [], receive_timeout) or raise Errno::EWOULDBLOCK
             data = socket.recv(RECV_SIZE)
             break if data.empty?
             driver.parse(data)
@@ -90,10 +91,10 @@ module Capybara::Poltergeist
     end
 
     # Send a message and block until there is a response
-    def send(cmd_id, message)
+    def send(cmd_id, message, accept_timeout=nil)
       accept unless connected?
       driver.text(message)
-      receive(cmd_id)
+      receive(cmd_id, accept_timeout)
     rescue Errno::EWOULDBLOCK
       raise TimeoutError.new(message)
     end

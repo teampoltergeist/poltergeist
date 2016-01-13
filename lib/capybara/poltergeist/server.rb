@@ -30,7 +30,12 @@ module Capybara::Poltergeist
     end
 
     def send(command)
-      @socket.send(command.id, command.message) or raise DeadClient.new(command.message)
+      receive_timeout = nil # default
+      if command.name == 'visit'
+        command.args.push(timeout) # set the client set visit timeout parameter
+        receive_timeout = timeout + 5 # Add a couple of seconds to let the client timeout first
+      end
+      @socket.send(command.id, command.message, receive_timeout) or raise DeadClient.new(command.message)
     end
   end
 end

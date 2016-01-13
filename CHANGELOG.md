@@ -3,7 +3,8 @@
 #### Features ####
 *   Implement support for URL whitelisting (Justin Case) [Issue #588]
 *   Default phantomjs_options are now --ignore-ssl-errors=yes --ssl-protocol=TLSv1 (Thomas Walpole)
-*   Support for PhantomJS 2.1.1 (Thomas Walpole)
+*   Support for PhantomJS 2.1.1 (Thomas Walpole) [Issue #725]
+*   Track open resource requests and report if #visit times out (Thomas Walpole) [Issue #713]
 
 #### Bug fixes ####
 *   Fix clicking on &lt;area> element in an image map (Thomas Walpole)

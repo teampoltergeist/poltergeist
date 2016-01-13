@@ -27,6 +27,7 @@ class Poltergeist.WebPage
     @_networkTraffic = {}
     @_tempHeaders    = {}
     @_blockedUrls    = []
+    @_requestedResources = {}
 
     for callback in WebPage.CALLBACKS
       this.bindCallback(callback)
@@ -62,6 +63,7 @@ class Poltergeist.WebPage
   onLoadStartedNative: ->
     @state = 'loading'
     @requestId = @lastRequestId
+    @_requestedResources = {}
 
   onLoadFinishedNative: (@status) ->
     @state = 'default'
@@ -110,10 +112,15 @@ class Poltergeist.WebPage
         responseParts: []
         error: null
       }
+
+      @_requestedResources[request.id] = request.url
     return true
 
   onResourceReceivedNative: (response) ->
     @_networkTraffic[response.id]?.responseParts.push(response)
+
+    if response.stage == 'end'
+      delete @_requestedResources[response.id]
 
     if @requestId == response.id
       if response.redirectURL
@@ -125,6 +132,7 @@ class Poltergeist.WebPage
 
   onResourceErrorNative: (errorResponse) ->
     @_networkTraffic[errorResponse.id]?.error = errorResponse
+    delete @_requestedResources[errorResponse.id]
     return true
 
   injectAgent: ->
@@ -160,11 +168,25 @@ class Poltergeist.WebPage
     names.split(',').map (name) =>
       this.keyCode(name.charAt(0).toUpperCase() + name.substring(1))
 
-  waitState: (state, callback) ->
+  _waitState_until: (state, callback, timeout, timeout_callback) ->
+    if (@state == state)
+      callback.call()
+    else
+      d = new Date()
+      if d.getTime() > timeout
+        timeout_callback.call()
+      else
+        setTimeout (=> @_waitState_until(state, callback, timeout, timeout_callback)), 100
+
+  waitState: (state, callback, max_wait=0, timeout_callback) ->
     if @state == state
       callback.call()
     else
-      setTimeout (=> @waitState(state, callback)), 100
+      if max_wait != 0
+        timeout = (new Date).getTime() + (max_wait*1000)
+        setTimeout (=> @_waitState_until(state, callback, timeout, timeout_callback)), 100
+      else
+        setTimeout (=> @waitState(state, callback)), 100
 
   setHttpAuth: (user, password) ->
     this.native().settings.userName = user
@@ -184,6 +206,9 @@ class Poltergeist.WebPage
   clearBlockedUrls: ->
     @_blockedUrls = []
     return true
+
+  openResourceRequests: ->
+    url for own id, url of @_requestedResources
 
   content: ->
     this.native().frameContent

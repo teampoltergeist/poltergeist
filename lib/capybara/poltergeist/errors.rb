@@ -60,8 +60,14 @@ module Capybara
         response['args'].first
       end
 
+      def details
+        response['args'][1]
+      end
+
       def message
-        "Request to '#{url}' failed to reach server, check DNS and/or server status"
+        msg = "Request to '#{url}' failed to reach server, check DNS and/or server status"
+        msg += " - #{details}" if details
+        msg
       end
     end
 

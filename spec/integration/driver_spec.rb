@@ -492,6 +492,32 @@ module Capybara::Poltergeist
           @session.visit(url)
         }.to raise_error(StatusFailError, "Request to '#{url}' failed to reach server, check DNS and/or server status")
       end
+
+      it 'reports open resource requests' do
+        old_timeout = @session.driver.timeout
+        begin
+          @session.driver.timeout = 2
+          expect{
+            @session.visit('/poltergeist/visit_timeout')
+          }.to raise_error(StatusFailError, /resources still waiting http:\/\/.*\/poltergeist\/really_slow/)
+        ensure
+          @session.driver.timeout = old_timeout
+        end
+      end
+
+      it 'doesnt report open resources where there are none' do
+        old_timeout = @session.driver.timeout
+        begin
+          @session.driver.timeout = 2
+          expect{
+            @session.visit('/poltergeist/really_slow')
+          }.to raise_error(StatusFailError) {|error|
+            expect(error.message).not_to include('resources still waiting')
+          }
+        ensure
+          @session.driver.timeout = old_timeout
+        end
+      end
     end
 
     context 'network traffic' do
