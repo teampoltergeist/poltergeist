@@ -257,6 +257,12 @@ class PoltergeistAgent.Node
     @element.tagName
 
   isVisible: (element = @element) ->
+    #if an area element, check visibility of relevant image
+    if element.tagName == 'AREA'
+      map_name = document.evaluate('./ancestor::map/@name', element, null, XPathResult.STRING_TYPE, null).stringValue
+      element = document.querySelector("img[usemap='##{map_name}']")
+      return false unless element?
+
     while (element)
       style = window.getComputedStyle(element)
       return false if style.display == 'none' or
