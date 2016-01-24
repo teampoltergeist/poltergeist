@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style type="text/css">
+    img {
+      display: block;
+      height: 100px;
+      width: 100px;
+    }
+  </style>
+  <script>
+  function log_msg(msg) {
+    document.getElementById('log').textContent = msg;
+  }
+  </script>
+</head>
+<body>
+  <img usemap="#testmap" src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=" />
+  <map name="testmap">
+    <area shape="rect" coords="10,10,55,55" href="#" onclick="log_msg('rect clicked')">
+    <area shape="circle" coords="70,70,10" href="#" onclick="log_msg('circle clicked')">
+  </map>
+
+  <img usemap="#testmap2" style="display: none;" src="data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA="/>>
+  <map name="testmap2">
+    <area shape="rect" coords="10,10,55,55" href="#" onclick="log_msg('rect2 clicked')">
+    <area shape="circle" coords="70,70,10" href="#" onclick="log_msg('circle2 clicked')">
+  </map>
+  <div id="log">
+  </div>
+</body>
+</html>

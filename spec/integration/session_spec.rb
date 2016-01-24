@@ -439,9 +439,29 @@ describe Capybara::Session do
           }
         end
       end
+
+      context "with image maps", focus: true do
+        before do
+          @session.visit('/poltergeist/image_map')
+        end
+
+        it 'can click' do
+          @session.find(:css, 'map[name=testmap] area[shape=circle]').click
+          expect(@session).to have_css('#log', text: 'circle clicked')
+          @session.find(:css, 'map[name=testmap] area[shape=rect]').click
+          expect(@session).to have_css('#log', text: 'rect clicked')
+        end
+
+        it "doesn't click if the associated img is hidden" do
+          expect {
+            @session.find(:css, 'map[name=testmap2] area[shape=circle]').click
+          }.to raise_error(Capybara::ElementNotFound)
+          expect {
+            @session.find(:css, 'map[name=testmap2] area[shape=circle]', visible: false).click
+          }.to raise_error(Capybara::Poltergeist::MouseEventFailed)
+        end
+      end
     end
-
-
 
     context 'double click tests' do
       before do
