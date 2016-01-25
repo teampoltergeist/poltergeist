@@ -415,7 +415,8 @@ module Capybara::Poltergeist
           @driver.browser.command 'browser_error'
         }.to raise_error(BrowserError) { |e|
           expect(e.message).to include('Error: zomg')
-          expect(e.message).to include('compiled/browser.js')
+          # PhantomJS 2.1 refers to files as being in code subdirectory
+          expect(e.message).to include('compiled/browser.js').or include('code/browser.js')
         }
       end
 
