@@ -5,6 +5,7 @@
 *   Default phantomjs_options are now --ignore-ssl-errors=yes --ssl-protocol=TLSv1 (Thomas Walpole)
 
 #### Bug fixes ####
+*   Fix clicking on &lt;area> element in an image map (Thomas Walpole)
 
 ### 1.8.1 ###
 
