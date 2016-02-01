@@ -7,6 +7,7 @@
 
 #### Bug fixes ####
 *   Fix clicking on &lt;area> element in an image map (Thomas Walpole)
+*   Node#selected? now returns false rather than nil when an option element is not selected (Thomas Walpole)
 
 ### 1.8.1 ###
 
