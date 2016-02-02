@@ -120,7 +120,7 @@ module Capybara::Poltergeist
     end
 
     def selected?
-      self[:selected]
+      !!self[:selected]
     end
 
     def disabled?
