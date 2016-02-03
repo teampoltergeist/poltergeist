@@ -82,8 +82,7 @@ class Poltergeist.Browser
     else
       throw new Poltergeist.ObsoleteNode
 
-  visit: (url) ->
-
+  visit: (url, max_wait=0) ->
     @currentPage.state = 'loading'
     #reset modal processing state when changing page
     @processed_modal_messages = []
@@ -109,6 +108,11 @@ class Poltergeist.Browser
           command.sendError(new Poltergeist.StatusFailError(url))
         else
           command.sendResponse(status: @currentPage.status)
+      , max_wait, =>
+        resources = @currentPage.openResourceRequests()
+        msg = if resources.length
+          "Timed out with the following resources still waiting #{@currentPage.openResourceRequests().join(',')}"
+        command.sendError(new Poltergeist.StatusFailError(url,msg))
       return
 
   current_url: ->

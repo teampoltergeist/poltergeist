@@ -850,6 +850,5 @@ describe Capybara::Session do
         expect(@session).to have_xpath("//a[@id='open-twice' and @confirmed='false']")
       end
     end
-
   end
 end

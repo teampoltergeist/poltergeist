@@ -79,9 +79,9 @@ class Poltergeist.BrowserError extends Poltergeist.Error
   args: -> [@message, @stack]
 
 class Poltergeist.StatusFailError extends Poltergeist.Error
-  constructor: (@url) ->
+  constructor: (@url, @details) ->
   name: "Poltergeist.StatusFailError"
-  args: -> [@url]
+  args: -> [@url, @details]
 
 class Poltergeist.NoSuchWindowError extends Poltergeist.Error
   name: "Poltergeist.NoSuchWindowError"

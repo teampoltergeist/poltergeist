@@ -54,6 +54,11 @@ class TestApp
     "slow page"
   end
 
+  get '/poltergeist/really_slow' do
+    sleep 3
+    "really slow page"
+  end
+
   get '/poltergeist/basic_auth' do
     requires_credentials('login', 'pass')
     render_view :basic_auth
