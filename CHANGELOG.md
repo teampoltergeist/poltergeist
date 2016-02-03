@@ -1,5 +1,7 @@
 ### Next release ###
 
+### 1.9.0 ###
+
 #### Features ####
 *   Implement support for URL whitelisting (Justin Case) [Issue #588]
 *   Default phantomjs_options are now --ignore-ssl-errors=yes --ssl-protocol=TLSv1 (Thomas Walpole)
