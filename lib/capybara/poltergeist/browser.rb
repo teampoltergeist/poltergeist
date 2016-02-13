@@ -1,6 +1,6 @@
 require "capybara/poltergeist/errors"
 require "capybara/poltergeist/command"
-require 'multi_json'
+require 'json'
 require 'time'
 
 module Capybara::Poltergeist

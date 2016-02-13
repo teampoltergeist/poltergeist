@@ -22,7 +22,6 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'capybara',         '~> 2.1'
   s.add_runtime_dependency 'websocket-driver', '>= 0.2.0'
-  s.add_runtime_dependency 'multi_json',       '~> 1.0'
   s.add_runtime_dependency 'cliver',           '~> 0.3.1'
 
   s.add_development_dependency 'launchy',            '~> 2.0'
