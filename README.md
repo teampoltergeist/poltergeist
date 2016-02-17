@@ -262,7 +262,7 @@ end
 *   `:timeout` (Numeric) - The number of seconds we'll wait for a response
     when communicating with PhantomJS. Default is 30.
 *   `:inspector` (Boolean, String) - See 'Remote Debugging', above.
-*   `:js_errors` (Boolean) - When false, Javascript errors do not get re-raised in Ruby.
+*   `:js_errors` (Boolean) - When false, JavaScript errors do not get re-raised in Ruby.
 *   `:window_size` (Array) - The dimensions of the browser window in which to test, expressed
     as a 2-element array, e.g. [1024, 768]. Default: [1024, 768]
 *   `:phantomjs_options` (Array) - Additional [command line options](http://phantomjs.org/api/command-line.html)
@@ -358,7 +358,7 @@ test to allow sufficient time for the page to settle.
 
 If you have these types of problems, read through the [Capybara
 documentation on asynchronous
-Javascript](https://github.com/jnicklas/capybara#asynchronous-javascript-ajax-and-friends)
+JavaScript](https://github.com/jnicklas/capybara#asynchronous-javascript-ajax-and-friends)
 which explains the tools that Capybara provides for dealing with this.
 
 ### Memory leak ###
@@ -392,7 +392,7 @@ Include as much information as possible. For example:
   better)
 * The output obtained from running Poltergeist with `:debug` turned on
 * Screenshots
-* Stack traces if there are any Ruby on Javascript exceptions generated
+* Stack traces if there are any Ruby on JavaScript exceptions generated
 * The Poltergeist and PhantomJS version numbers used
 * The operating system name and version used
 
