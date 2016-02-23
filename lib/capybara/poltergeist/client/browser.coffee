@@ -359,11 +359,16 @@ class Poltergeist.Browser
     @current_command.sendResponse(true)
 
   render_base64: (format, { full = false, selector = null } = {})->
-    this.set_clip_rect(full, selector)
+    window_scroll_position = @currentPage.native().evaluate("function(){ return [window.pageXOffset, window.pageYOffset] }")
+    dimensions = this.set_clip_rect(full, selector)
     encoded_image = @currentPage.renderBase64(format)
+    @currentPage.setScrollPosition(left: dimensions.left, top: dimensions.top)
+    @currentPage.native().evaluate("window.scrollTo", window_scroll_position...)
+
     @current_command.sendResponse(encoded_image)
 
   render: (path, { full = false, selector = null, format = null, quality = null } = {} ) ->
+    window_scroll_position = @currentPage.native().evaluate("function(){ return [window.pageXOffset, window.pageYOffset] }")
     dimensions = this.set_clip_rect(full, selector)
     options = {}
     options["format"] = format if format?
@@ -371,6 +376,8 @@ class Poltergeist.Browser
     @currentPage.setScrollPosition(left: 0, top: 0)
     @currentPage.render(path, options)
     @currentPage.setScrollPosition(left: dimensions.left, top: dimensions.top)
+    @currentPage.native().evaluate("window.scrollTo", window_scroll_position...)
+
     @current_command.sendResponse(true)
 
   set_clip_rect: (full, selector) ->
