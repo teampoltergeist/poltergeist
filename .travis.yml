@@ -20,14 +20,11 @@ gemfile:
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+    - PHANTOMJS=$PWD/travis-phantomjs21/phantomjs
 
 matrix:
   include:
-    - rvm: 2.2.2
-      gemfile: Gemfile
-      env: PHANTOMJS=$PWD/travis-phantomjs21/phantomjs
     - rvm: 2.3.1
       gemfile: gemfiles/Gemfile.capybara_master
-      env: PHANTOMJS=$PWD/travis-phantomjs21/phantomjs
   allow_failures:
     - gemfile: gemfiles/Gemfile.capybara_master
