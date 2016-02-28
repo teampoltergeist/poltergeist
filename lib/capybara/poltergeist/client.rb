@@ -5,7 +5,7 @@ require 'cliver'
 module Capybara::Poltergeist
   class Client
     PHANTOMJS_SCRIPT  = File.expand_path('../client/compiled/main.js', __FILE__)
-    PHANTOMJS_VERSION = ['>= 1.8.1', '< 3.0']
+    PHANTOMJS_VERSION = ['>= 2.1.1', '< 3.0']
     PHANTOMJS_NAME    = 'phantomjs'
 
     KILL_TIMEOUT = 2 # seconds

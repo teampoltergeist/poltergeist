@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.files         = Dir.glob('{lib}/**/*') + %w(LICENSE README.md)
 
-  s.required_ruby_version = '>= 1.9.3'
+  s.required_ruby_version = '>= 2.0.0'
 
   s.add_runtime_dependency 'capybara',         '~> 2.1'
   s.add_runtime_dependency 'websocket-driver', '>= 0.2.0'

@@ -10,11 +10,11 @@ class Poltergeist.Node
   constructor: (@page, @id) ->
 
   parent: ->
-    new Poltergeist.Node(@page, this.parentId())
+    new Poltergeist.Node(@page, @parentId())
 
   for name in @DELEGATES
     do (name) =>
-      this.prototype[name] = (args...) ->
+      @prototype[name] = (args...) ->
         @page.nodeCall(@id, name, args)
 
   mouseEventPosition: ->
@@ -29,7 +29,7 @@ class Poltergeist.Node
         pos.top = pos.top + area_offset.y
         pos.bottom = pos.top + area_offset.height
     else
-      pos = this.position()
+      pos = @position()
 
     middle = (start, end, size) ->
       start + ((Math.min(end, size) - start) / 2)
@@ -45,12 +45,12 @@ class Poltergeist.Node
       area_image.scrollIntoView()
     else
       @scrollIntoView()
-    pos = this.mouseEventPosition()
-    test = this.mouseEventTest(pos.x, pos.y)
+    pos = @mouseEventPosition()
+    test = @mouseEventTest(pos.x, pos.y)
     if test.status == 'success'
       if name == 'rightclick'
         @page.mouseEvent('click', pos.x, pos.y, 'right')
-        this.trigger('contextmenu')
+        @trigger('contextmenu')
       else
         @page.mouseEvent(name, pos.x, pos.y)
       pos
@@ -58,18 +58,18 @@ class Poltergeist.Node
       throw new Poltergeist.MouseEventFailed(name, test.selector, pos)
 
   dragTo: (other) ->
-    this.scrollIntoView()
+    @scrollIntoView()
 
-    position      = this.mouseEventPosition()
+    position      = @mouseEventPosition()
     otherPosition = other.mouseEventPosition()
 
     @page.mouseEvent('mousedown', position.x,      position.y)
     @page.mouseEvent('mouseup',   otherPosition.x, otherPosition.y)
 
   dragBy: (x, y) ->
-    this.scrollIntoView()
+    @scrollIntoView()
 
-    position      = this.mouseEventPosition()
+    position      = @mouseEventPosition()
 
     final_pos =
       x: position.x + x
@@ -80,7 +80,7 @@ class Poltergeist.Node
 
 
   isEqual: (other) ->
-    @page == other.page && this.isDOMEqual(other.id)
+    @page == other.page && @isDOMEqual(other.id)
 
   _getAreaOffsetRect: ->
     # get the offset of the center of selected area

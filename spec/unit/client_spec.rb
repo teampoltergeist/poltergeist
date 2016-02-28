@@ -8,13 +8,13 @@ module Capybara::Poltergeist
 
     context '#initialize' do
       it 'raises an error if phantomjs is too old' do
-        stub_version('1.3.0')
+        stub_version('2.0.0')
         expect { subject }.to raise_error(Cliver::Dependency::VersionMismatch)
       end
 
       it 'does not raise an error if phantomjs is too new' do
         begin
-          stub_version('1.10.0 (development)')
+          stub_version('2.10.0 (development)')
           expect { subject }.to_not raise_error
         ensure
           subject.stop # process has been spawned, stopping
@@ -22,9 +22,9 @@ module Capybara::Poltergeist
       end
 
       it 'shows the detected version in the version error message' do
-        stub_version('1.3.0')
+        stub_version('2.0.1')
         expect { subject }.to raise_error(Cliver::Dependency::VersionMismatch) do |e|
-          expect(e.message).to include('1.3.0')
+          expect(e.message).to include('2.1.1')
         end
       end
 

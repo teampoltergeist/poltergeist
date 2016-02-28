@@ -16,15 +16,15 @@ class Poltergeist
       command.run(@browser)
     catch error
       if error instanceof Poltergeist.Error
-        this.sendError(command.id, error)
+        @sendError(command.id, error)
       else
-        this.sendError(command.id, new Poltergeist.BrowserError(error.toString(), error.stack))
+        @sendError(command.id, new Poltergeist.BrowserError(error.toString(), error.stack))
 
   sendResponse: (command_id, response) ->
-    this.send(command_id: command_id, response: response)
+    @send(command_id: command_id, response: response)
 
   sendError: (command_id, error) ->
-    this.send(
+    @send(
       command_id: command_id,
       error:
         name: error.name || 'Generic',
@@ -51,7 +51,7 @@ class Poltergeist.Error
 class Poltergeist.ObsoleteNode extends Poltergeist.Error
   name: "Poltergeist.ObsoleteNode"
   args: -> []
-  toString: -> this.name
+  toString: -> @name
 
 class Poltergeist.InvalidSelector extends Poltergeist.Error
   constructor: (@method, @selector) ->
