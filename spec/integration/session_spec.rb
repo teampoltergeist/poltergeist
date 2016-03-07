@@ -260,6 +260,10 @@ describe Capybara::Session do
       it 'considers opacity: 0 to not be visible' do
         expect(@session.find(:css, 'li', text: 'Transparent', visible: false).visible?).to be false
       end
+
+      it 'element with all children hidden returns empty text' do
+        expect(@session.find(:css, 'div').text).to eq('')
+      end
     end
 
     describe 'Node#checked?' do
