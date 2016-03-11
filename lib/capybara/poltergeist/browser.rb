@@ -260,6 +260,13 @@ module Capybara::Poltergeist
       command('clear_network_traffic')
     end
 
+    def set_proxy(ip, port, type, user, password)
+      args = [ip, port, type]
+      args << user if user
+      args << password if password
+      command('set_proxy', *args)
+    end
+
     def equals(page_id, id, other_id)
       command('equals', page_id, id, other_id)
     end

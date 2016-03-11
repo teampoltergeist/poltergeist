@@ -224,6 +224,10 @@ module Capybara::Poltergeist
       browser.clear_network_traffic
     end
 
+    def set_proxy(ip, port, type = "http", user = nil, password = nil)
+      browser.set_proxy(ip, port, type, user, password)
+    end
+
     def headers
       browser.get_headers
     end

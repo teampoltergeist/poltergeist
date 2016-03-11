@@ -1,5 +1,8 @@
 ### Next release ###
 
+#### Features ####
+*   Added ability to set proxy at runtime (Dmitry Vorotilin)
+
 ### 1.9.0 ###
 
 #### Features ####

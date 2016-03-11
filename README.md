@@ -110,6 +110,7 @@ and the following optional features:
 * `page.driver.scroll_to(left, top)`
 * `page.driver.basic_authorize(user, password)`
 * `element.native.send_keys(*keys)`
+* `page.driver.set_proxy(ip, port, type, user, password)`
 * window API
 * cookie handling
 * drag-and-drop

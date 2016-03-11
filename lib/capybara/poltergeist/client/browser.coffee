@@ -400,6 +400,10 @@ class Poltergeist.Browser
     @currentPage.clearNetworkTraffic()
     @current_command.sendResponse(true)
 
+  set_proxy: (ip, port, type, user, password) ->
+    phantom.setProxy(ip, port, type, user, password)
+    @current_command.sendResponse(true)
+
   get_headers: ->
     @current_command.sendResponse(@currentPage.getCustomHeaders())
 
