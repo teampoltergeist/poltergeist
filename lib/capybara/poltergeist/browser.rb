@@ -344,6 +344,10 @@ module Capybara::Poltergeist
       command 'set_debug', !!val
     end
 
+    def clear_memory_cache
+      command 'clear_memory_cache'
+    end
+
     def command(name, *args)
       cmd = Command.new(name, *args)
       log cmd.message

@@ -409,3 +409,6 @@ class Poltergeist.WebPage
     parser = document.createElement('a')
     parser.href = url
     return parser.href
+  
+  clearMemoryCache: ->
+    this.native().clearMemoryCache()
