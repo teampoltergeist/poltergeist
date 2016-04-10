@@ -507,3 +507,7 @@ class Poltergeist.Browser
 
   modal_message: ->
     @current_command.sendResponse(@processed_modal_messages.shift())
+
+  clear_memory_cache: ->
+    @currentPage.clearMemoryCache()
+    @current_command.sendResponse(true)
