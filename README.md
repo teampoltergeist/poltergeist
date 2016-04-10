@@ -273,16 +273,26 @@ end
 *   `:port` (Fixnum) - The port which should be used to communicate
     with the PhantomJS process. Defaults to a random open port.
 
-### URL Blacklisting ###
+### URL Blacklisting & Whitelisting ###
 
-Poltergeist supports URL blacklisting which allows you
-to prevent scripts from running on designated domains. If you are experiencing
-slower run times, consider creating a URL blacklist of domains that are not
-essential to your testing environment, such as ad networks or analytics.
+Poltergeist supports URL blacklisting, which allows you
+to prevent scripts from running on designated domains:
 
 ```ruby
 page.driver.browser.url_blacklist = ['http://www.example.com']
 ```
+
+and also URL whitelisting, which allows scripts to only run
+on designated domains:
+
+```ruby
+page.driver.browser.url_whitelist = ['http://www.example.com']
+```
+
+If you are experiencing slower run times, consider creating a
+URL whitelist of domains that are essential or a blacklist of
+domains that are not essential, such as ad networks or analytics,
+to your testing environment.
 
 Make sure you set it before each running test, because this setting's cleaned
 up when capybara does reset.
