@@ -197,6 +197,21 @@ module Capybara::Poltergeist
         expect(File.exist?(file)).to be true
       end
 
+      it 'supports rendering the page to file without extension when format is specified' do
+        FileUtils.rm_f file
+        begin
+          file = POLTERGEIST_ROOT + "/spec/tmp/screenshot"
+          FileUtils.rm_f file
+          @session.visit('/')
+
+          @driver.save_screenshot(file, format: 'jpg')
+
+          expect(File.exist?(file)).to be true
+        ensure
+          FileUtils.rm_f file
+        end
+      end
+
       shared_examples 'when #zoom_factor= is set' do
         let(:format) { :xbm }
 
