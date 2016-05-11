@@ -10,7 +10,8 @@ module Capybara::Poltergeist
       'Poltergeist.FrameNotFound'   => FrameNotFound,
       'Poltergeist.InvalidSelector' => InvalidSelector,
       'Poltergeist.StatusFailError' => StatusFailError,
-      'Poltergeist.NoSuchWindowError' => NoSuchWindowError
+      'Poltergeist.NoSuchWindowError' => NoSuchWindowError,
+      'Poltergeist.UnsupportedFeature' => UnsupportedFeature
     }
 
     attr_reader :server, :client, :logger

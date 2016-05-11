@@ -115,6 +115,24 @@ module Capybara
       end
     end
 
+    class UnsupportedFeature < ClientError
+      def name
+        response['name']
+      end
+
+      def unsupported_message
+        response['args'][0]
+      end
+
+      def version
+        response['args'][1].values_at(*%w(major minor patch)).join '.'
+      end
+
+      def message
+        "Running version of PhantomJS #{version} does not support some feature: #{unsupported_message}"
+      end
+    end
+
     class MouseEventFailed < NodeError
       def name
         response['args'][0]
