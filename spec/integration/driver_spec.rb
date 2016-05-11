@@ -575,6 +575,25 @@ module Capybara::Poltergeist
 
         expect(@driver.network_traffic.length).to eq(0)
       end
+
+      it 'no network traffic for cached in memory' do
+        @driver.clear_memory_cache
+
+        @session.visit('/poltergeist/cacheable')
+        first_request = @driver.network_traffic.last
+        expect(@driver.network_traffic.length).to eq(1)
+        expect(first_request.response_parts.last.status).to eq(200)
+
+        @session.visit('/poltergeist/cacheable')
+        expect(@driver.network_traffic.length).to eq(1)
+
+        @driver.clear_memory_cache
+
+        @session.visit('/poltergeist/cacheable')
+        another_request = @driver.network_traffic.last
+        expect(@driver.network_traffic.length).to eq(2)
+        expect(another_request.response_parts.last.status).to eq(200)
+      end
     end
 
     context 'status code support' do
@@ -1023,5 +1042,6 @@ module Capybara::Poltergeist
         expect(@session.find(:css, '#date_field').value).to eq('2016-02-14')
       end
     end
+
   end
 end
