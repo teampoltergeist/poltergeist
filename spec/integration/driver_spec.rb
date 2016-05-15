@@ -16,6 +16,12 @@ module Capybara::Poltergeist
       "http://#{server.host}:#{server.port}#{path}"
     end
 
+    def phantom_version_is?(version_to_match)
+      (@phantom_version_matches ||= Hash.new { |hash, ver_spec|
+             hash[ver_spec] = Cliver.detect(@driver.options[:phantomjs] || Client::PHANTOMJS_NAME, ver_spec) }
+      )[version_to_match]
+    end
+
     it 'supports a custom phantomjs path' do
       begin
         file = POLTERGEIST_ROOT + '/spec/support/custom_phantomjs_called'
@@ -575,8 +581,17 @@ module Capybara::Poltergeist
 
         expect(@driver.network_traffic.length).to eq(0)
       end
+    end
 
-      it 'no network traffic for cached in memory' do
+    context "memory cache clearing" do
+
+      before do
+        @driver.restart
+      end
+
+      it "can clear memory cache when supported (phantomjs >=2.0.0)" do
+        skip "clear_memory_cache is not supported by tested PhantomJS" unless phantom_version_is? ">= 2.0.0"
+
         @driver.clear_memory_cache
 
         @session.visit('/poltergeist/cacheable')
@@ -593,6 +608,20 @@ module Capybara::Poltergeist
         another_request = @driver.network_traffic.last
         expect(@driver.network_traffic.length).to eq(2)
         expect(another_request.response_parts.last.status).to eq(200)
+      end
+
+      it "raises error when it is unsupported (phantomjs <2.0.0)" do
+        skip "clear_memory_cache is supported by tested PhantomJS" if phantom_version_is? ">= 2.0.0"
+
+        @session.visit('/poltergeist/cacheable')
+        first_request = @driver.network_traffic.last
+        expect(@driver.network_traffic.length).to eq(1)
+        expect(first_request.response_parts.last.status).to eq(200)
+
+        expect{@driver.clear_memory_cache}.to raise_error(Capybara::Poltergeist::UnsupportedFeature)
+
+        @session.visit('/poltergeist/cacheable')
+        expect(@driver.network_traffic.length).to eq(2)
       end
     end
 
