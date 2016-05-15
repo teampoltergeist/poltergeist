@@ -10,7 +10,8 @@ module Capybara::Poltergeist
       'Poltergeist.FrameNotFound'   => FrameNotFound,
       'Poltergeist.InvalidSelector' => InvalidSelector,
       'Poltergeist.StatusFailError' => StatusFailError,
-      'Poltergeist.NoSuchWindowError' => NoSuchWindowError
+      'Poltergeist.NoSuchWindowError' => NoSuchWindowError,
+      'Poltergeist.UnsupportedFeature' => UnsupportedFeature
     }
 
     attr_reader :server, :client, :logger
@@ -342,6 +343,10 @@ module Capybara::Poltergeist
     def debug=(val)
       @debug = val
       command 'set_debug', !!val
+    end
+
+    def clear_memory_cache
+      command 'clear_memory_cache'
     end
 
     def command(name, *args)
