@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gemspec :path => '..'
 
 gem 'capybara', github: 'jnicklas/capybara'
+gem "listen", "3.0.6"
 
 platforms :rbx do
   gem 'rubysl'
