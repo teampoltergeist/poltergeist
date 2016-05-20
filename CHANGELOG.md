@@ -2,6 +2,7 @@
 
 #### Features ####
 *   Added ability to set proxy at runtime (Dmitry Vorotilin)
+*   Implement basic support for `SameSite` cookies (Reed Loden)
 
 ### 1.9.0 ###
 

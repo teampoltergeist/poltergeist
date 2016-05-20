@@ -28,6 +28,10 @@ module Capybara::Poltergeist
       @attributes['httponly']
     end
 
+    def samesite
+      @attributes['samesite']
+    end
+
     def expires
       Time.at @attributes['expiry'] if @attributes['expiry']
     end
