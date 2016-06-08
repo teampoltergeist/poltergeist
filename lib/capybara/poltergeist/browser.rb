@@ -418,8 +418,8 @@ module Capybara::Poltergeist
           # [:Shift, "s"] => { modifier: "shift", key: "S" }
           # [:Ctrl, :Left] => { modifier: "ctrl", key: :Left }
           # [:Ctrl, :Shift, :Left] => { modifier: "ctrl,shift", key: :Left }
-          letter = key.pop
-          symbol = key.map { |k| k.to_s.downcase }.join(',')
+          letter = key.first
+          symbol = key.drop(1).map { |k| k.to_s.downcase }.join(',')
 
           { modifier: symbol.to_s.downcase, key: letter.capitalize }
         when Symbol
