@@ -686,6 +686,68 @@ describe Capybara::Session do
         expect(@session.current_path).to eq('/poltergeist/frames')
       end
 
+      context "with src == about:blank" do
+        it "doesn't hang if no document created" do
+          @session.visit '/'
+          @session.execute_script <<-JS
+            document.body.innerHTML += '<iframe src="about:blank" name="frame">'
+          JS
+          @session.within_frame 'frame' do
+            expect(@session).to have_no_css(:xpath, '/html/body/*')
+          end
+        end
+
+        it "doesn't hang if built by JS" do
+          @session.visit '/'
+          @session.execute_script <<-JS
+            document.body.innerHTML += '<iframe src="about:blank" name="frame">';
+            var iframeDocument = document.querySelector('iframe[name="frame"]').contentWindow.document;
+            var content = '<html><body><p>Hello Frame</p></body></html>';
+            iframeDocument.open('text/html', 'replace');
+            iframeDocument.write(content);
+            iframeDocument.close();
+          JS
+
+          @session.within_frame 'frame' do
+            expect(@session).to have_content('Hello Frame')
+          end
+        end
+      end
+
+      context "with no src attribute" do
+        if ENV['TRAVIS'] && ENV['PHANTOMJS']
+          # srcdoc attribute isn't supported by phantomjs < 2
+          it "doesn't hang if the srcdoc attribute is used" do
+            @session.visit '/'
+            @session.execute_script <<-JS
+              document.body.innerHTML += '<iframe srcdoc="<p>Hello Frame</p>" name="frame">'
+            JS
+
+            @session.within_frame 'frame' do
+              expect(@session).to have_content('Hello Frame', wait: false)
+            end
+          end
+        end
+
+        it "doesn't hang if the frame is filled by JS" do
+          @session.visit '/'
+          @session.execute_script <<-JS
+            document.body.innerHTML += '<iframe id="frame" name="frame">'
+          JS
+          @session.execute_script <<-JS
+            var iframeDocument = document.querySelector('#frame').contentWindow.document;
+            var content = '<html><body><p>Hello Frame</p></body></html>';
+            iframeDocument.open('text/html', 'replace');
+            iframeDocument.write(content);
+            iframeDocument.close();
+          JS
+
+          @session.within_frame 'frame' do
+            expect(@session).to have_content('Hello Frame', wait: false)
+          end
+        end
+      end
+
       it 'supports clicking in a frame' do
         @session.visit '/'
 
