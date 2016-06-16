@@ -3,6 +3,9 @@
 #### Features ####
 *   Added ability to set proxy at runtime (Dmitry Vorotilin)
 
+#### Bug fixes ####
+*   Fix within_frame when called on a frame whose src attribute is about:blank (Thomas Walpole) [Issue #772]
+
 ### 1.9.0 ###
 
 #### Features ####

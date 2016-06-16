@@ -214,10 +214,11 @@ class Poltergeist.Browser
         frame.setAttribute('name', "_random_name_#{new Date().getTime()}")
         name = frame.getAttribute('name')
 
-    if @frameUrl(name) in @currentPage.blockedUrls()
+    frame_url = @frameUrl(name)
+    if frame_url in @currentPage.blockedUrls()
       command.sendResponse(true)
     else if @currentPage.pushFrame(name)
-      if @currentPage.currentUrl() == 'about:blank'
+      if frame_url && (frame_url != 'about:blank') && (@currentPage.currentUrl() == 'about:blank')
         @currentPage.state = 'awaiting_frame_load'
         @currentPage.waitState 'default', =>
           command.sendResponse(true)
