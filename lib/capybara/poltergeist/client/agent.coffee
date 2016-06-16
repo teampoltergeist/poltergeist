@@ -169,7 +169,10 @@ class PoltergeistAgent.Node
       if @element.nodeName == "TEXTAREA"
         @element.textContent
       else
-        @element.innerText || @element.textContent
+        if @element instanceof SVGElement
+          @element.textContent
+        else
+          @element.innerText
 
   deleteText: ->
     range = document.createRange()
