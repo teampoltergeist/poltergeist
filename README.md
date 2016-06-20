@@ -212,11 +212,11 @@ The following methods are used to inspect and manipulate cookies:
 * `page.driver.cookies` - a hash of cookies accessible to the current
   page. The keys are cookie names. The values are `Cookie` objects, with
   the following methods: `name`, `value`, `domain`, `path`, `secure?`,
-  `httponly?`, `expires`.
+  `httponly?`, `samesite`, `expires`.
 * `page.driver.set_cookie(name, value, options = {})` - set a cookie.
   The options hash can take the following keys: `:domain`, `:path`,
-  `:secure`, `:httponly`, `:expires`. `:expires` should be a `Time`
-  object.
+  `:secure`, `:httponly`, `:samesite`, `:expires`. `:expires` should be a
+  `Time` object.
 * `page.driver.remove_cookie(name)` - remove a cookie
 * `page.driver.clear_cookies` - clear all cookies
 

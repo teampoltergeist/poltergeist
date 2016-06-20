@@ -653,6 +653,7 @@ module Capybara::Poltergeist
         expect(cookie.path).to eq('/')
         expect(cookie.secure?).to be false
         expect(cookie.httponly?).to be false
+        expect(cookie.samesite).to be_nil
         expect(cookie.expires).to be_nil
       end
 
