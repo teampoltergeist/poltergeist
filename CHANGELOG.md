@@ -8,6 +8,7 @@
 #### Bug fixes ####
 *   Fix within_frame when called on a frame whose src attribute is about:blank (Thomas Walpole) [Issue #772]
 *   Elements with no visible children should not return text (Peter Oxenham) [Issue #749]
+*   Fix error type returned by #within_window when window not found (oieioi)
 
 ### 1.9.0 ###
 
