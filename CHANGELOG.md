@@ -2,7 +2,8 @@
 
 #### Features ####
 *   Added ability to set proxy at runtime (Dmitry Vorotilin)
-*   Implement basic support for `SameSite` cookies (Reed Loden)
+*   Implement basic support for accessing `SameSite` attribute of cookies (Reed Loden)
+*   Add clear_memory_cache to the driver (Piotr Gaertig)
 
 #### Bug fixes ####
 *   Fix within_frame when called on a frame whose src attribute is about:blank (Thomas Walpole) [Issue #772]
