@@ -164,7 +164,7 @@ module Capybara::Poltergeist
       return locator if window_handles.include? locator
 
       handle = command 'window_handle', locator
-      raise noSuchWindowError unless handle
+      raise NoSuchWindowError unless handle
       return handle
     end
 
