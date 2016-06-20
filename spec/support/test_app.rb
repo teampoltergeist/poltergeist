@@ -69,6 +69,12 @@ class TestApp
     'Authorized POST request'
   end
 
+  get '/poltergeist/cacheable' do
+    cache_control :public, max_age: 60
+    etag "deadbeef"
+    'Cacheable request'
+  end
+
   get '/poltergeist/:view' do |view|
     render_view view
   end

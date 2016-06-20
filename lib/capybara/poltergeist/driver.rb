@@ -279,6 +279,10 @@ module Capybara::Poltergeist
       browser.cookies_enabled = flag
     end
 
+    def clear_memory_cache
+      browser.clear_memory_cache
+    end
+
     # * PhantomJS with set settings doesn't send `Authorize` on POST request
     # * With manually set header PhantomJS makes next request with
     # `Authorization: Basic Og==` header when settings are empty and the

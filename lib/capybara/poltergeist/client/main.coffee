@@ -87,6 +87,11 @@ class Poltergeist.NoSuchWindowError extends Poltergeist.Error
   name: "Poltergeist.NoSuchWindowError"
   args: -> []
 
+class Poltergeist.UnsupportedFeature extends Poltergeist.Error
+  constructor: (@message) ->
+  name: "Poltergeist.UnsupportedFeature"
+  args: -> [@message, phantom.version]
+
 # We're using phantom.libraryPath so that any stack traces
 # report the full path.
 phantom.injectJs("#{phantom.libraryPath}/web_page.js")
