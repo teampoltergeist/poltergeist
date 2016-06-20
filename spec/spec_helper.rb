@@ -72,3 +72,8 @@ RSpec.configure do |config|
     end
   end
 end
+
+def phantom_version_is?(ver_spec, driver)
+  Cliver.detect(driver.options[:phantomjs] || Capybara::Poltergeist::Client::PHANTOMJS_NAME, ver_spec)
+end
+

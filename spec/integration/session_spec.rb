@@ -719,17 +719,15 @@ describe Capybara::Session do
       end
 
       context "with no src attribute" do
-        if ENV['TRAVIS'] && ENV['PHANTOMJS']
-          # srcdoc attribute isn't supported by phantomjs < 2
-          it "doesn't hang if the srcdoc attribute is used" do
-            @session.visit '/'
-            @session.execute_script <<-JS
-              document.body.innerHTML += '<iframe srcdoc="<p>Hello Frame</p>" name="frame">'
-            JS
+        it "doesn't hang if the srcdoc attribute is used" do
+          skip "srcdoc attribute not supported by tested PhantomJS version" unless phantom_version_is? ">= 2.0.0", @session.driver
+          @session.visit '/'
+          @session.execute_script <<-JS
+            document.body.innerHTML += '<iframe srcdoc="<p>Hello Frame</p>" name="frame">'
+          JS
 
-            @session.within_frame 'frame' do
-              expect(@session).to have_content('Hello Frame', wait: false)
-            end
+          @session.within_frame 'frame' do
+            expect(@session).to have_content('Hello Frame', wait: false)
           end
         end
 
