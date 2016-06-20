@@ -181,12 +181,13 @@ module Capybara::Poltergeist
       let(:format) { :png }
       let(:file) { POLTERGEIST_ROOT + "/spec/tmp/screenshot.#{format}" }
 
+      before(:each) { FileUtils.rm_f file }
+
       def create_screenshot(file, *args)
         @driver.save_screenshot(file, *args)
       end
 
       it 'supports rendering the page' do
-        FileUtils.rm_f file
         @session.visit('/')
 
         @driver.save_screenshot(file)
@@ -195,7 +196,6 @@ module Capybara::Poltergeist
       end
 
       it 'supports rendering the page with a nonstring path' do
-        FileUtils.rm_f file
         @session.visit('/')
 
         @driver.save_screenshot(Pathname(file))
@@ -204,7 +204,6 @@ module Capybara::Poltergeist
       end
 
       it 'supports rendering the page to file without extension when format is specified' do
-        FileUtils.rm_f file
         begin
           file = POLTERGEIST_ROOT + "/spec/tmp/screenshot"
           FileUtils.rm_f file
@@ -215,6 +214,23 @@ module Capybara::Poltergeist
           expect(File.exist?(file)).to be true
         ensure
           FileUtils.rm_f file
+        end
+      end
+
+      it 'supports rendering the page with different quality settings' do
+        file2 = POLTERGEIST_ROOT + "/spec/tmp/screenshot2.#{format}"
+        file3 = POLTERGEIST_ROOT + "/spec/tmp/screenshot3.#{format}"
+        FileUtils.rm_f [file2, file3]
+
+        begin
+          @session.visit('/')
+          @driver.save_screenshot(file, quality: 0)
+          @driver.save_screenshot(file2) # phantomjs defaults to a quality of 75
+          @driver.save_screenshot(file3, quality: 100)
+          expect(File.size(file)).to be < File.size(file2)
+          expect(File.size(file2)).to be < File.size(file3)
+        ensure
+          FileUtils.rm_f [file2, file3]
         end
       end
 

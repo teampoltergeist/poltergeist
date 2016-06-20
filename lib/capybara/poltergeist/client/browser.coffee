@@ -355,16 +355,16 @@ class Poltergeist.Browser
 
     @current_command.sendResponse(true)
 
-  render_base64: (format, full, selector = null)->
+  render_base64: (format, { full = false, selector = null } = {})->
     this.set_clip_rect(full, selector)
     encoded_image = @currentPage.renderBase64(format)
     @current_command.sendResponse(encoded_image)
 
-  render: (path, full, selector = null, format = null, quality = null) ->
+  render: (path, { full = false, selector = null, format = null, quality = null } = {} ) ->
     dimensions = this.set_clip_rect(full, selector)
     options = {}
-    options["format"] = format if format
-    options["quality"] = quality if quality
+    options["format"] = format if format?
+    options["quality"] = quality if quality?
     @currentPage.setScrollPosition(left: 0, top: 0)
     @currentPage.render(path, options)
     @currentPage.setScrollPosition(left: dimensions.left, top: dimensions.top)

@@ -218,14 +218,15 @@ module Capybara::Poltergeist
     end
 
     def render(path, options = {})
-      format, quality = options.values_at(:format, :quality)
       check_render_options!(options)
-      command 'render', path.to_s, !!options[:full], options[:selector], format, quality
+      options[:full] = !!options[:full]
+      command 'render', path.to_s, options
     end
 
     def render_base64(format, options = {})
       check_render_options!(options)
-      command 'render_base64', format.to_s, !!options[:full], options[:selector]
+      options[:full] = !!options[:full]
+      command 'render_base64', format.to_s, options
     end
 
     def set_zoom_factor(zoom_factor)
