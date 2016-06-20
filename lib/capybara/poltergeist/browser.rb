@@ -218,8 +218,9 @@ module Capybara::Poltergeist
     end
 
     def render(path, options = {})
+      format, quality = options.values_at(:format, :quality)
       check_render_options!(options)
-      command 'render', path.to_s, !!options[:full], options[:selector]
+      command 'render', path.to_s, !!options[:full], options[:selector], format, quality
     end
 
     def render_base64(format, options = {})
