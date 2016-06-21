@@ -5,6 +5,7 @@
 *   Implement basic support for accessing `SameSite` attribute of cookies (Reed Loden)
 *   Add clear_memory_cache to the driver (Piotr Gaertig)
 *   Allowing passing format and quality options to save_screenshot (Josef Šimánek, Thomas Walpole)
+*   Allow configuring default url_blacklist and url_whitelist in the driver configuration (Thomas Walpole)
 
 #### Bug fixes ####
 *   Fix within_frame when called on a frame whose src attribute is about:blank (Thomas Walpole) [Issue #772]

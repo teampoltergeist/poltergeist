@@ -910,6 +910,28 @@ module Capybara::Poltergeist
           expect(@session.html).not_to include('We shouldn\'t see this.')
         end
       end
+
+      it 'can be configured in the driver and survive reset' do
+        Capybara.register_driver :poltergeist_blacklist do |app|
+          Capybara::Poltergeist::Driver.new(app, @driver.options.merge(url_blacklist: ['unwanted']))
+        end
+
+        session = Capybara::Session.new(:poltergeist_blacklist, @session.app)
+
+        session.visit '/poltergeist/url_blacklist'
+        expect(session).to have_content('We are loading some unwanted action here')
+        session.within_frame 'framename' do
+          expect(session.html).not_to include('We shouldn\'t see this.')
+        end
+
+        session.reset!
+
+        session.visit '/poltergeist/url_blacklist'
+        expect(session).to have_content('We are loading some unwanted action here')
+        session.within_frame 'framename' do
+          expect(session.html).not_to include('We shouldn\'t see this.')
+        end
+      end
     end
 
     context 'whitelisting urls for resource requests' do
@@ -944,6 +966,37 @@ module Capybara::Poltergeist
         expect(@session).to have_content('We are loading some wanted action here')
         @session.within_frame 'framename' do
           expect(@session).to have_content('We should see this.')
+        end
+      end
+
+      it 'can be configured in the driver and survive reset' do
+        Capybara.register_driver :poltergeist_whitelist do |app|
+          Capybara::Poltergeist::Driver.new(app, @driver.options.merge(url_whitelist: ['url_whitelist', '/poltergeist/wanted']))
+        end
+
+        session = Capybara::Session.new(:poltergeist_whitelist, @session.app)
+
+        session.visit '/poltergeist/url_whitelist'
+        expect(session).to have_content('We are loading some wanted action here')
+        session.within_frame 'framename' do
+          expect(session).to have_content('We should see this.')
+        end
+
+        session.within_frame 'unwantedframe' do
+          #make sure non whitelisted urls are blocked
+          expect(session).not_to have_content("We shouldn't see this.")
+        end
+
+        session.reset!
+
+        session.visit '/poltergeist/url_whitelist'
+        expect(session).to have_content('We are loading some wanted action here')
+        session.within_frame 'framename' do
+          expect(session).to have_content('We should see this.')
+        end
+        session.within_frame 'unwantedframe' do
+          #make sure non whitelisted urls are blocked
+          expect(session).not_to have_content("We shouldn't see this.")
         end
       end
     end
