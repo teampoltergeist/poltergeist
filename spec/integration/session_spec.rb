@@ -697,7 +697,7 @@ describe Capybara::Session do
             document.body.innerHTML += '<iframe src="about:blank" name="frame">'
           JS
           @session.within_frame 'frame' do
-            expect(@session).to have_no_css(:xpath, '/html/body/*')
+            expect(@session).to have_no_xpath('/html/body/*')
           end
         end
 
