@@ -21,15 +21,15 @@ class TestApp
   end
 
   get '/poltergeist/test.js' do
-    send_file("#{POLTERGEIST_PUBLIC}/test.js")
+    File.read("#{POLTERGEIST_PUBLIC}/test.js")
   end
 
   get '/poltergeist/jquery.min.js' do
-    send_file "#{POLTERGEIST_PUBLIC}/jquery-1.11.3.min.js"
+    File.read("#{POLTERGEIST_PUBLIC}/jquery-1.11.3.min.js")
   end
 
   get '/poltergeist/jquery-ui.min.js' do
-    send_file "#{POLTERGEIST_PUBLIC}/jquery-ui-1.11.4.min.js"
+    File.read("#{POLTERGEIST_PUBLIC}/jquery-ui-1.11.4.min.js")
   end
 
   get '/poltergeist/unexist.png' do
