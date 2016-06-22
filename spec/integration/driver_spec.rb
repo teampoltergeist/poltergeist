@@ -809,6 +809,22 @@ module Capybara::Poltergeist
       expect(@driver.window_handles).to eq(['0', '1'])
     end
 
+    it 'inherits settings in new windows' do
+      @session.visit '/'
+
+      new_tab = @session.window_opened_by do
+        @session.execute_script <<-JS
+          window.open('/poltergeist/simple')
+        JS
+      end
+
+      @session.within_window(new_tab) do
+        expect(
+          @driver.evaluate_script('[window.innerWidth, window.innerHeight]')
+        ).to eq([1024, 768])
+      end
+    end
+
     it 'resizes windows' do
       @session.visit '/'
 
