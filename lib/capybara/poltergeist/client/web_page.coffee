@@ -409,10 +409,10 @@ class Poltergeist.WebPage
     parser = document.createElement('a')
     parser.href = url
     return parser.href
-  
+
   clearMemoryCache: ->
-    clearMemoryCache = this.native().clearMemoryCache 
+    clearMemoryCache = this.native().clearMemoryCache
     if typeof clearMemoryCache == "function"
       clearMemoryCache()
-    else 
+    else
       throw new Poltergeist.UnsupportedFeature("clearMemoryCache is supported since PhantomJS 2.0.0")

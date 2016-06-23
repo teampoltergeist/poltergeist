@@ -54,7 +54,7 @@ class Poltergeist.Browser
       page.handle = "#{@_counter++}"
       page.urlBlacklist = @page.urlBlacklist
       page.urlWhitelist = @page.urlWhitelist
-      page.setViewportSize(width: @width, height: @height)
+      page.setViewportSize(@page.viewportSize())
       @pages.push(page)
 
     return
