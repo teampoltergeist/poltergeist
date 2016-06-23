@@ -11,6 +11,8 @@
 *   Fix within_frame when called on a frame whose src attribute is about:blank (Thomas Walpole) [Issue #772]
 *   Elements with no visible children should not return text (Peter Oxenham) [Issue #749]
 *   Fix error type returned by #within_window when window not found (oieioi)
+*   New windows inherit the size of the window they were opened from (StefanH, Thomas Walpole) [Issue #597]
+*   New windows inherit the blacklist/whitelist setting of the window they were opened from as expected (StefanH, Thomas Walpole)
 
 ### 1.9.0 ###
 
