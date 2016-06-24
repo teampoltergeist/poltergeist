@@ -68,8 +68,7 @@ class Poltergeist.Browser
     this[command.name].apply(this, command.args)
 
   debug: (message) ->
-    if @_debug
-      console.log "poltergeist [#{new Date().getTime()}] #{message}"
+    console.log "poltergeist [#{new Date().getTime()}] #{message}" if @_debug
 
   setModalMessage: (msg) ->
     @processed_modal_messages.push(msg)
@@ -106,15 +105,16 @@ class Poltergeist.Browser
       @current_command.sendResponse(status: 'success')
     else
       command = @current_command
-      @currentPage.waitState 'default', =>
-        if @currentPage.statusCode == null && @currentPage.status == 'fail'
+      loading_page = @currentPage
+      @currentPage.waitState 'default', ->
+        if @statusCode == null && @status == 'fail'
           command.sendError(new Poltergeist.StatusFailError(url))
         else
-          command.sendResponse(status: @currentPage.status)
-      , max_wait, =>
-        resources = @currentPage.openResourceRequests()
+          command.sendResponse(status: @status)
+      , max_wait, ->
+        resources = @openResourceRequests()
         msg = if resources.length
-          "Timed out with the following resources still waiting #{@currentPage.openResourceRequests().join(',')}"
+          "Timed out with the following resources still waiting #{resources.join(',')}"
         command.sendError(new Poltergeist.StatusFailError(url,msg))
       return
 
@@ -223,7 +223,7 @@ class Poltergeist.Browser
     else if @currentPage.pushFrame(name)
       if frame_url && (frame_url != 'about:blank') && (@currentPage.currentUrl() == 'about:blank')
         @currentPage.state = 'awaiting_frame_load'
-        @currentPage.waitState 'default', =>
+        @currentPage.waitState 'default', ->
           command.sendResponse(true)
       else
         command.sendResponse(true)
@@ -254,11 +254,11 @@ class Poltergeist.Browser
 
   switch_to_window: (handle) ->
     command = @current_command
-    page = @getPageByHandle(handle)
-    if page
-      if page != @currentPage
-        page.waitState 'default', =>
-          @currentPage = page
+    new_page = @getPageByHandle(handle)
+    if new_page
+      if new_page != @currentPage
+        new_page.waitState 'default', =>
+          @currentPage = new_page
           command.sendResponse(true)
       else
         command.sendResponse(true)
@@ -284,18 +284,18 @@ class Poltergeist.Browser
     # state and wait for onLoadFinished before sending a response.
     @currentPage.state = 'mouse_event'
 
-    @last_mouse_event = node.mouseEvent(name)
-
+    last_mouse_event = node.mouseEvent(name)
+    event_page = @currentPage
     command = @current_command
 
-    setTimeout =>
+    setTimeout ->
       # If the state is still the same then navigation event won't happen
-      if @currentPage.state == 'mouse_event'
-        @currentPage.state = 'default'
-        command.sendResponse(position: @last_mouse_event)
+      if event_page.state == 'mouse_event'
+        event_page.state = 'default'
+        command.sendResponse(position: last_mouse_event)
       else
-        @currentPage.waitState 'default', =>
-          command.sendResponse(position: @last_mouse_event)
+        event_page.waitState 'default', ->
+          command.sendResponse(position: last_mouse_event)
     , 5
 
   click: (page_id, id) ->
@@ -481,7 +481,7 @@ class Poltergeist.Browser
     if @currentPage.canGoBack
       @currentPage.state = 'loading'
       @currentPage.goBack()
-      @currentPage.waitState 'default', =>
+      @currentPage.waitState 'default', ->
         command.sendResponse(true)
     else
       command.sendResponse(false)
@@ -491,7 +491,7 @@ class Poltergeist.Browser
     if @currentPage.canGoForward
       @currentPage.state = 'loading'
       @currentPage.goForward()
-      @currentPage.waitState 'default', =>
+      @currentPage.waitState 'default', ->
         command.sendResponse(true)
     else
       command.sendResponse(false)

@@ -170,20 +170,20 @@ class Poltergeist.WebPage
 
   _waitState_until: (state, callback, timeout, timeout_callback) ->
     if (@state == state)
-      callback.call()
+      callback.call(this)
     else
-      d = new Date()
-      if d.getTime() > timeout
-        timeout_callback.call()
+      if new Date().getTime() > timeout
+        timeout_callback.call(this)
       else
         setTimeout (=> @_waitState_until(state, callback, timeout, timeout_callback)), 100
 
   waitState: (state, callback, max_wait=0, timeout_callback) ->
+    # callback and timeout_callback will be called with this == the current page
     if @state == state
-      callback.call()
+      callback.call(this)
     else
       if max_wait != 0
-        timeout = (new Date).getTime() + (max_wait*1000)
+        timeout = new Date().getTime() + (max_wait*1000)
         setTimeout (=> @_waitState_until(state, callback, timeout, timeout_callback)), 100
       else
         setTimeout (=> @waitState(state, callback)), 100
