@@ -52,6 +52,9 @@ class Poltergeist.Browser
     @page.onPageCreated = (newPage) =>
       page = new Poltergeist.WebPage(newPage)
       page.handle = "#{@_counter++}"
+      page.urlBlacklist = @page.urlBlacklist
+      page.urlWhitelist = @page.urlWhitelist
+      page.setViewportSize(@page.viewportSize())
       @pages.push(page)
 
     return

@@ -26,6 +26,8 @@ module Capybara::Poltergeist
         browser.js_errors  = options[:js_errors] if options.key?(:js_errors)
         browser.extensions = options.fetch(:extensions, [])
         browser.debug      = true if options[:debug]
+        browser.url_blacklist = options[:url_blacklist] if options.key?(:url_blacklist)
+        browser.url_whitelist = options[:url_whitelist] if options.key?(:url_whitelist)
         browser
       end
     end
@@ -175,6 +177,8 @@ module Capybara::Poltergeist
 
     def reset!
       browser.reset
+      browser.url_blacklist = options[:url_blacklist] if options.key?(:url_blacklist)
+      browser.url_whitelist = options[:url_whitelist] if options.key?(:url_whitelist)
       @started = false
     end
 

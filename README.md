@@ -272,9 +272,10 @@ end
     the phantomjs browser. Useful for faking unsupported APIs.
 *   `:port` (Fixnum) - The port which should be used to communicate
     with the PhantomJS process. Defaults to a random open port.
+*   `:url_blacklist` (Array) - Default session url blacklist - expressed as an array of strings to match against requested URLs.
+*   `:url_whitelist` (Array) - Default session url whitelist - expressed as an array of strings to match against requested URLs.
 
 ### URL Blacklisting & Whitelisting ###
-
 Poltergeist supports URL blacklisting, which allows you
 to prevent scripts from running on designated domains:
 
@@ -294,8 +295,6 @@ URL whitelist of domains that are essential or a blacklist of
 domains that are not essential, such as ad networks or analytics,
 to your testing environment.
 
-Make sure you set it before each running test, because this setting's cleaned
-up when capybara does reset.
 
 ## Troubleshooting ##
 
