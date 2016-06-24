@@ -83,11 +83,11 @@ class Poltergeist.WebPage
   onResourceRequestedNative: (request, net) ->
     useWhitelist = @urlWhitelist.length > 0
 
-    whitelisted = @urlWhitelist.some (whitelisted_url) ->
-      request.url.indexOf(whitelisted_url) != -1
+    whitelisted = @urlWhitelist.some (whitelisted_regex) ->
+      whitelisted_regex.test request.url
 
-    blacklisted = @urlBlacklist.some (blacklisted_url) ->
-      request.url.indexOf(blacklisted_url) != -1
+    blacklisted = @urlBlacklist.some (blacklisted_regex) ->
+      blacklisted_regex.test request.url
 
     abort = false
 

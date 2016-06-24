@@ -496,12 +496,12 @@ class Poltergeist.Browser
     else
       command.sendResponse(false)
 
-  set_url_whitelist: ->
-    @currentPage.urlWhitelist = Array.prototype.slice.call(arguments)
+  set_url_whitelist: (wildcards...)->
+    @currentPage.urlWhitelist = (@_wildcardToRegexp(wc) for wc in wildcards)
     @current_command.sendResponse(true)
 
-  set_url_blacklist: ->
-    @currentPage.urlBlacklist = Array.prototype.slice.call(arguments)
+  set_url_blacklist: (wildcards...)->
+    @currentPage.urlBlacklist = (@_wildcardToRegexp(wc) for wc in wildcards)
     @current_command.sendResponse(true)
 
   set_confirm_process: (process) ->
@@ -518,3 +518,10 @@ class Poltergeist.Browser
   clear_memory_cache: ->
     @currentPage.clearMemoryCache()
     @current_command.sendResponse(true)
+
+  _wildcardToRegexp: (wildcard)->
+    wildcard = wildcard.replace(/[\-\[\]\/\{\}\(\)\+\.\\\^\$\|]/g, "\\$&")
+    wildcard = wildcard.replace(/\*/g, ".*")
+    wildcard = wildcard.replace(/\?/g, ".")
+    new RegExp(wildcard, "i")
+
