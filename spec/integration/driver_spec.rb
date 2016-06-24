@@ -952,6 +952,21 @@ module Capybara::Poltergeist
         end
       end
 
+      it 'supports wildcards' do
+        @driver.browser.url_blacklist = ['*wanted']
+
+        @session.visit '/poltergeist/url_whitelist'
+
+        expect(@session.status_code).to eq(200)
+        expect(@session).to have_content('We are loading some wanted action here')
+        @session.within_frame 'framename' do
+          expect(@session).not_to have_content('We should see this.')
+        end
+        @session.within_frame 'unwantedframe' do
+          expect(@session).not_to have_content("We shouldn't see this.")
+        end
+      end
+
       it 'can be configured in the driver and survive reset' do
         Capybara.register_driver :poltergeist_blacklist do |app|
           Capybara::Poltergeist::Driver.new(app, @driver.options.merge(url_blacklist: ['unwanted']))
@@ -977,7 +992,7 @@ module Capybara::Poltergeist
 
     context 'whitelisting urls for resource requests' do
       it 'allows whitelisted urls' do
-        @driver.browser.url_whitelist = ['url_whitelist', 'wanted']
+        @driver.browser.url_whitelist = ['url_whitelist', '/wanted']
 
         @session.visit '/poltergeist/url_whitelist'
 
@@ -985,6 +1000,24 @@ module Capybara::Poltergeist
         expect(@session).to have_content('We are loading some wanted action here')
         @session.within_frame 'framename' do
           expect(@session).to have_content('We should see this.')
+        end
+        @session.within_frame 'unwantedframe' do
+          expect(@session).not_to have_content("We shouldn't see this.")
+        end
+      end
+
+      it 'supports wildcards' do
+        @driver.browser.url_whitelist = ['url_whitelist', '/*wanted']
+
+        @session.visit '/poltergeist/url_whitelist'
+
+        expect(@session.status_code).to eq(200)
+        expect(@session).to have_content('We are loading some wanted action here')
+        @session.within_frame 'framename' do
+          expect(@session).to have_content('We should see this.')
+        end
+        @session.within_frame 'unwantedframe' do
+          expect(@session).to have_content("We shouldn't see this.")
         end
       end
 
