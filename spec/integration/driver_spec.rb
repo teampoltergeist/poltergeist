@@ -169,6 +169,17 @@ module Capybara::Poltergeist
           )
         end
       end
+
+      it 'resets element positions after' do
+        @session.visit('poltergeist/long_page')
+        el = @session.find(:css, '#middleish')
+        #make the page scroll an element into view
+        el.click
+        position_script = 'document.querySelector("#middleish").getBoundingClientRect()'
+        offset = @session.evaluate_script(position_script)
+        create_screenshot file
+        expect(@session.evaluate_script(position_script)).to eq offset
+      end
     end
 
     describe '#save_screenshot' do
