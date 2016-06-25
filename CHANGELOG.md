@@ -14,6 +14,7 @@
 *   Fix error type returned by #within_window when window not found (oieioi)
 *   New windows inherit the size of the window they were opened from (StefanH, Thomas Walpole) [Issue #597]
 *   New windows inherit the blacklist/whitelist setting of the window they were opened from as expected (StefanH, Thomas Walpole)
+*   Scroll positions are restored after a screenshot (Thomas Walpole) [Issue #738]
 
 ### 1.9.0 ###
 
