@@ -33,8 +33,10 @@ module Capybara::Poltergeist
 
     def initialize(server, options = {})
       @server            = server
-      @path              = Cliver::detect!((options[:path] || PHANTOMJS_NAME),
-                                           *PHANTOMJS_VERSION)
+      @path              = Cliver::detect((options[:path] || PHANTOMJS_NAME), *['>=2.1.0', '< 3.0'])
+      @path            ||= Cliver::detect!((options[:path] || PHANTOMJS_NAME), *PHANTOMJS_VERSION).tap do
+        warn "You're running an old version of PhantomJS, update to >= 2.1.1 for a better experience."
+      end
 
       @window_size       = options[:window_size]       || [1024, 768]
       @phantomjs_options = options[:phantomjs_options] || []
