@@ -375,9 +375,7 @@ class PoltergeistAgent.Node
     selector += el.tagName.toLowerCase()
     selector += "##{el.id}" if el.id
 
-    #PhantomJS < 2.0 doesn't support classList for SVG elements - so get classes manually
-    classes = el.classList || (el.getAttribute('class')?.trim()?.split(/\s+/)) || []
-    for className in classes when className != ''
+    for className in el.classList when className != ''
       selector += ".#{className}"
     selector
 
