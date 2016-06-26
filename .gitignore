@@ -1,6 +1,7 @@
 /Gemfile.lock
 /spec/support/custom_phantomjs_called
 /ci/Gemfile.*.lock
+/gemfiles/Gemfile.*.lock
 /spec/tmp
 /rspec.failures
 /vendor

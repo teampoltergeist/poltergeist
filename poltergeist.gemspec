@@ -28,9 +28,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec',              '~> 3.4.0'
   s.add_development_dependency 'rspec-core',         '!= 3.4.0' # 3.4.0 has an issue with rbx and ripper
   s.add_development_dependency 'sinatra',            '~> 1.0'
-  s.add_development_dependency 'rake',               '~> 10.0'
+  s.add_development_dependency 'rake'
   s.add_development_dependency 'image_size',         '~> 1.0'
-  s.add_development_dependency 'pdf-reader',         '~> 1.3.3'
+  s.add_development_dependency 'pdf-reader',         '~> 1.3', '>= 1.3.3'
   s.add_development_dependency 'coffee-script',      '~> 2.2'
   s.add_development_dependency 'guard-coffeescript', '~> 2.0.0'
   s.add_development_dependency 'coffee-script-source', '~>1.10.0'
