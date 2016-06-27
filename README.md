@@ -9,7 +9,7 @@ provided by [PhantomJS](http://phantomjs.org/).
 **If you're viewing this at https://github.com/teampoltergeist/poltergeist,
 you're reading the documentation for the master branch.
 [View documentation for the latest release
-(1.9.0).](https://github.com/teampoltergeist/poltergeist/tree/v1.9.0)**
+(1.10.0).](https://github.com/teampoltergeist/poltergeist/tree/v1.10.0)**
 
 ## Getting help ##
 
