@@ -1,6 +1,12 @@
 ### Next release ###
 
 #### Features ####
+
+#### Bug fixes ####
+
+### 1.10.0 ###
+
+#### Features ####
 *   Added ability to set proxy at runtime (Dmitry Vorotilin)
 *   Implement basic support for accessing `SameSite` attribute of cookies (Reed Loden)
 *   Add clear_memory_cache to the driver (Piotr Gaertig)
