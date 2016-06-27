@@ -1,6 +1,7 @@
 ### Next release ###
 
 #### Features ####
+*   Add Window#maximize support - defaults to 1366x768 can be overridden with :screen_size option in driver registration (Thomas Walpole)
 
 #### Bug fixes ####
 
