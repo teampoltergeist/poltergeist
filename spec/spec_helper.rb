@@ -62,6 +62,11 @@ RSpec.configure do |config|
 
   Capybara::SpecHelper.configure(config)
 
+  config.filter_run_excluding :full_description => lambda { |description, metadata|
+    #test is marked pending in Capybara but Poltergeist passes - disable here - have our own test in driver spec
+    description =~ /Capybara::Session Poltergeist node #set should allow me to change the contents of a contenteditable elements child/
+  }
+
   config.before(:each) do
     Poltergeist::SpecHelper.set_capybara_wait_time(0)
   end

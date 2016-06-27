@@ -1234,6 +1234,12 @@ module Capybara::Poltergeist
 
         expect(input.text).to eq('replacement text')
       end
+
+      it "sets a content editable childs content" do
+        @session.visit('/with_js')
+        @session.find(:css,'#existing_content_editable_child').set('WYSIWYG')
+        expect(@session.find(:css,'#existing_content_editable_child').text).to eq('WYSIWYG')
+      end
     end
 
     context 'date_fields' do
