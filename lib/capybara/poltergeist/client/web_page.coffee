@@ -408,4 +408,4 @@ class Poltergeist.WebPage
     return parser.href
 
   clearMemoryCache: ->
-    this.native().clearMemoryCache
+    @native().clearMemoryCache()
