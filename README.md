@@ -266,6 +266,8 @@ end
 *   `:js_errors` (Boolean) - When false, JavaScript errors do not get re-raised in Ruby.
 *   `:window_size` (Array) - The dimensions of the browser window in which to test, expressed
     as a 2-element array, e.g. [1024, 768]. Default: [1024, 768]
+*   `:screen_size` (Array) - The dimensions the window size will be set to when Window#maximize is called.  Expressed
+    as a 2-element array, e.g. [1600, 1200]. Default: [1366, 768]
 *   `:phantomjs_options` (Array) - Additional [command line options](http://phantomjs.org/api/command-line.html)
     to be passed to PhantomJS, e.g. `['--load-images=no', '--ignore-ssl-errors=yes']`
 *   `:extensions` (Array) - An array of JS files to be preloaded into

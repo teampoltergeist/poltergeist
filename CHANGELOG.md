@@ -1,8 +1,10 @@
 ### Next release ###
 
 #### Features ####
+*   Add Window#maximize support - defaults to 1366x768 can be overridden with :screen_size option in driver registration (Thomas Walpole)
 
 #### Bug fixes ####
+*   Check isContentEditable property instead of contenteditable attribute so contenteditable children can be modified
 
 ### 1.10.0 ###
 

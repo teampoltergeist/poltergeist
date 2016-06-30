@@ -82,6 +82,23 @@ module Capybara::Poltergeist
       ).to eq([200, 400])
     end
 
+    it 'defaults viewport maximization to 1366x768' do
+      @session.visit('/')
+      @session.current_window.maximize
+      expect(@session.current_window.size).to eq([1366, 768])
+    end
+
+    it 'allows custom maximization size' do
+      begin
+        @driver.options[:screen_size] = [1600, 1200]
+        @session.visit('/')
+        @session.current_window.maximize
+        expect(@session.current_window.size).to eq([1600, 1200])
+     ensure
+        @driver.options.delete(:screen_size)
+      end
+    end
+
     it 'allows the page to be scrolled' do
       @session.visit('/poltergeist/long_page')
       @driver.resize(10, 10)
@@ -1200,6 +1217,12 @@ module Capybara::Poltergeist
         input.set('replacement text')
 
         expect(input.text).to eq('replacement text')
+      end
+
+      it "sets a content editable childs content" do
+        @session.visit('/with_js')
+        @session.find(:css,'#existing_content_editable_child').set('WYSIWYG')
+        expect(@session.find(:css,'#existing_content_editable_child').text).to eq('WYSIWYG')
       end
     end
 

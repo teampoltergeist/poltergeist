@@ -92,7 +92,7 @@ module Capybara::Poltergeist
         end
       elsif tag_name == 'textarea'
         command :set, value.to_s
-      elsif self[:contenteditable] == 'true'
+      elsif self[:isContentEditable]
         command :delete_text
         send_keys(value.to_s)
       end

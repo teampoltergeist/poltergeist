@@ -210,6 +210,10 @@ module Capybara::Poltergeist
       end
     end
 
+    def maximize_window(handle)
+      resize_window_to(handle, *screen_size)
+    end
+
     def window_size(handle)
       within_window(handle) do
         evaluate_script('[window.innerWidth, window.innerHeight]')
@@ -379,6 +383,10 @@ module Capybara::Poltergeist
     end
 
     private
+
+    def screen_size
+      options[:screen_size] || [1366,768]
+    end
 
     def find_modal(options)
       start_time    = Time.now
