@@ -130,7 +130,7 @@ view). To render the entire page, use `save_screenshot('/path/to/file.png',
 :full => true)`.
 
 You also have an ability to render selected element. Pass option `selector` with
-any valid element selector to make a screenshot bounded by that element
+any valid CSS element selector to make a screenshot bounded by that element
 `save_screenshot('/path/to/file.png', :selector => '#id')`.
 
 If you need for some reasons base64 encoded screenshot you can simply call
