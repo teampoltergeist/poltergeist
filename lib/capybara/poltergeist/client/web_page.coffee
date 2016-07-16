@@ -304,9 +304,13 @@ class Poltergeist.WebPage
       else
         return false
 
-  popFrame: ->
-    @frames.pop()
-    this.native().switchToParentFrame()
+  popFrame: (pop_all = false)->
+    if pop_all
+      @frames = []
+      this.native().switchToMainFrame()
+    else
+      @frames.pop()
+      this.native().switchToParentFrame()
 
   dimensions: ->
     scroll   = this.scrollPosition()
