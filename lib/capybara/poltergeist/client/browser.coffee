@@ -236,8 +236,8 @@ class Poltergeist.Browser
   push_frame: (name, timeout = (new Date().getTime()) + 2000) ->
     @pushFrame(@current_command, name, timeout)
 
-  pop_frame: ->
-    @current_command.sendResponse(@currentPage.popFrame())
+  pop_frame: (pop_all = false)->
+    @current_command.sendResponse(@currentPage.popFrame(pop_all))
 
   window_handles: ->
     handles = @pages.filter((p) -> !p.closed).map((p) -> p.handle)

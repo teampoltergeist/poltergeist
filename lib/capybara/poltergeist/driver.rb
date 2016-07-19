@@ -147,6 +147,10 @@ module Capybara::Poltergeist
       browser.within_frame(name, &block)
     end
 
+    def switch_to_frame(locator, &block)
+      browser.switch_to_frame(locator, &block)
+    end
+
     def current_window_handle
       browser.window_handle
     end

@@ -140,6 +140,17 @@ module Capybara::Poltergeist
       command 'pop_frame'
     end
 
+    def switch_to_frame(handle, &block)
+      case handle
+      when Capybara::Node::Base
+        command 'push_frame', [handle.native.page_id, handle.native.id]
+      when :parent
+        command 'pop_frame'
+      when :top
+        command 'pop_frame', true
+      end
+    end
+
     def window_handle
       command 'window_handle'
     end
