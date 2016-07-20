@@ -22,7 +22,6 @@ class Poltergeist.WebPage
     @state           = 'default'
     @urlWhitelist    = []
     @urlBlacklist    = []
-    @frames          = []
     @errors          = []
     @_networkTraffic = {}
     @_tempHeaders    = {}
@@ -289,27 +288,20 @@ class Poltergeist.WebPage
     this.setCustomHeaders(allHeaders)
 
   pushFrame: (name) ->
-    if this.native().switchToFrame(name)
-      @frames.push(name)
-      return true
-    else
-      frame_no = this.native().evaluate(
-        (frame_name) ->
-          frames = document.querySelectorAll("iframe, frame")
-          (idx for f, idx in frames when f?['name'] == frame_name or f?['id'] == frame_name)[0]
-        , name)
-      if frame_no? and this.native().switchToFrame(frame_no)
-        @frames.push(name)
-        return true
-      else
-        return false
+    return true if this.native().switchToFrame(name)
+
+    # if switch by name fails - find index and try again
+    frame_no = this.native().evaluate(
+      (frame_name) ->
+        frames = document.querySelectorAll("iframe, frame")
+        (idx for f, idx in frames when f?['name'] == frame_name or f?['id'] == frame_name)[0]
+      , name)
+    frame_no? and this.native().switchToFrame(frame_no)
 
   popFrame: (pop_all = false)->
     if pop_all
-      @frames = []
       this.native().switchToMainFrame()
     else
-      @frames.pop()
       this.native().switchToParentFrame()
 
   dimensions: ->
