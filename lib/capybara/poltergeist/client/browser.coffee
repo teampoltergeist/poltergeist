@@ -346,7 +346,10 @@ class Poltergeist.Browser
       target.mouseEvent('click')
 
     for sequence in keys
-      key = if sequence.key? then @currentPage.keyCode(sequence.key) else sequence
+      key = if sequence.key?
+        @currentPage.keyCode(sequence.key) || sequence.key
+      else
+        sequence
       if sequence.modifier?
         modifier_keys = @currentPage.keyModifierKeys(sequence.modifier)
         modifier_code = @currentPage.keyModifierCode(sequence.modifier)
