@@ -14,7 +14,7 @@
     <form id="without_submit_button">
       <input type="text">
     </form>
-
+    <div id="key-events-output"></div>
     <script>
       function processForm(e) {
           if (e.preventDefault) e.preventDefault();
@@ -24,6 +24,12 @@
 
       var form = document.getElementById("without_submit_button");
       form.addEventListener("submit", processForm);
+
+      var input = document.getElementById("empty_input");
+      input.addEventListener("keydown", function(e){
+        var log = document.getElementById("key-events-output");
+        log.textContent = log.textContent + "keydown:"+e.keyCode+" ";
+      })
     </script>
   </body>
 </html>

@@ -1212,6 +1212,14 @@ module Capybara::Poltergeist
 
         expect(input.value).to eq('S')
       end
+
+      it 'generates correct events with keyCodes for modified puncation' do
+        input = @session.find(:css, '#empty_input')
+
+        input.send_keys([:shift, '.'], [:shift, 't'])
+
+        expect(@session.find(:css, '#key-events-output')).to have_text("keydown:16 keydown:190 keydown:16 keydown:84")
+      end
     end
 
     context 'set' do
