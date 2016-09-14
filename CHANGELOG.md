@@ -2,9 +2,11 @@
 
 #### Features ####
 *   Add Window#maximize support - defaults to 1366x768 can be overridden with :screen_size option in driver registration (Thomas Walpole)
+*   Add Capybara::Poltergeist::Driver#switch_to_frame for future compatibility with Capybara 2.8+ (Thomas Walpole)
 
 #### Bug fixes ####
 *   Check isContentEditable property instead of contenteditable attribute so contenteditable children can be modified
+*   In send_keys default to key string if no keyCode provided by PhantomJS when using modifier (Thomas Walpole)[Issue #807]
 
 ### 1.10.0 ###
 
