@@ -361,16 +361,10 @@ class Poltergeist.WebPage
       # escaping the string.
       "(#{fn.toString()}).apply(this, PoltergeistAgent.JSON.parse(#{JSON.stringify(JSON.stringify(args))}))"
 
-  # For some reason phantomjs seems to have trouble with doing 'fat arrow' binding here,
-  # hence the 'that' closure.
   bindCallback: (name) ->
-    that = this
-    this.native()[name] = ->
-      if that[name + 'Native']? # For internal callbacks
-        result = that[name + 'Native'].apply(that, arguments)
-
-      if result != false && that[name]? # For externally set callbacks
-        that[name].apply(that, arguments)
+    @native()[name] = =>
+      result = @[name + 'Native'].apply(@, arguments) if @[name + 'Native']? # For internal callbacks
+      @[name].apply(@, arguments) if result != false && @[name]? # For externally set callbacks
     return true
 
   # Any error raised here or inside the evaluate will get reported to
