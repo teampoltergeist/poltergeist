@@ -5,18 +5,8 @@ class Poltergeist
 
     phantom.onError = (message, stack) => @onError(message, stack)
 
-    @running = false
-
   runCommand: (command) ->
-    @running = true
-    command = new Poltergeist.Cmd(this, command.id, command.name, command.args)
-    try
-      command.run(@browser)
-    catch error
-      if error instanceof Poltergeist.Error
-        this.sendError(command.id, error)
-      else
-        this.sendError(command.id, new Poltergeist.BrowserError(error.toString(), error.stack))
+    new Poltergeist.Cmd(this, command.id, command.name, command.args).run(@browser)
 
   sendResponse: (command_id, response) ->
     this.send(command_id: command_id, response: response)
@@ -30,14 +20,8 @@ class Poltergeist
     )
 
   send: (data) ->
-    # Prevents more than one response being sent for a single
-    # command. This can happen in some scenarios where an error
-    # is raised but the script can still continue.
-    if @running
-      @connection.send(data)
-      @running = false
-      return true
-    return false
+    @connection.send(data)
+    return true
 
 # This is necessary because the remote debugger will wrap the
 # script in a function, causing the Poltergeist variable to
