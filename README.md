@@ -109,7 +109,7 @@ and the following optional features:
 * `page.driver.render_base64(format, options)`
 * `page.driver.scroll_to(left, top)`
 * `page.driver.basic_authorize(user, password)`
-* `element.native.send_keys(*keys)`
+* `element.send_keys(*keys)`
 * `page.driver.set_proxy(ip, port, type, user, password)`
 * window API
 * cookie handling
@@ -226,14 +226,14 @@ There's an ability to send arbitrary keys to the element:
 
 ``` ruby
 element = find('input#id')
-element.native.send_key('String')
+element.send_keys('String')
 ```
 
 or even more complicated:
 
 ``` ruby
-element.native.send_keys('H', 'elo', :Left, 'l') # => 'Hello'
-element.native.send_key(:Enter) # triggers Enter key
+element.send_keys('H', 'elo', :left, 'l') # => 'Hello'
+element.send_keys(:enter) # triggers Enter key
 ```
 Since it's implemented natively in PhantomJS this will exactly imitate user
 behavior.
