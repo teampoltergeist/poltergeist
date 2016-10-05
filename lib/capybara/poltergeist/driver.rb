@@ -396,13 +396,13 @@ module Capybara::Poltergeist
       start_time    = Time.now
       timeout_sec   = options[:wait] || begin Capybara.default_max_wait_time rescue Capybara.default_wait_time end
       expect_text   = options[:text]
+      expect_regexp = expect_text.is_a?(Regexp) ? expect_text : Regexp.escape(expect_text.to_s)
       not_found_msg = 'Unable to find modal dialog'
       not_found_msg += " with #{expect_text}" if expect_text
 
       begin
         modal_text = browser.modal_message
-        raise Capybara::ModalNotFound if modal_text.nil?
-        raise Capybara::ModalNotFound if (expect_text && (modal_text != expect_text))
+        raise Capybara::ModalNotFound if modal_text.nil? || (expect_text && !modal_text.match(expect_regexp))
       rescue Capybara::ModalNotFound => e
         raise e, not_found_msg if (Time.now - start_time) >= timeout_sec
         sleep(0.05)

@@ -7,6 +7,7 @@
 #### Bug fixes ####
 *   Check isContentEditable property instead of contenteditable attribute so contenteditable children can be modified
 *   In send_keys default to key string if no keyCode provided by PhantomJS when using modifier (Thomas Walpole)[Issue #807]
+*   Add support for partial string and regular expression matches for modal dialogs (Sean Fisk) [Issue #815]
 
 ### 1.10.0 ###
 

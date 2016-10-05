@@ -46,6 +46,13 @@ $(function() {
       $('#changes_on_blur').text($(this).val())
     })
 
+  $('#open-match')
+    .click(function() {
+      if (confirm('{T}ext \\w|th [reg.exp] (chara©+er$)?')) {
+        $(this).attr('confirmed', 'true');
+      }
+    })
+
   $('#open-twice')
     .click(function() {
       if (confirm('Are you sure?')) {
