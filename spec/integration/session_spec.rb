@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'spec_helper'
 
 skip = []
@@ -903,6 +904,24 @@ describe Capybara::Session do
     context 'modals' do
       before do
         @session.visit '/poltergeist/with_js'
+      end
+
+      it 'matches on partial strings' do
+        expect {
+          @session.accept_confirm '[reg.exp] (chara©+er$)' do
+            @session.click_link('Open for match')
+          end
+        }.not_to raise_error
+        expect(@session).to have_xpath("//a[@id='open-match' and @confirmed='true']")
+      end
+
+      it 'matches on regular expressions' do
+        expect {
+          @session.accept_confirm(/^.t.ext.*\[\w{3}\.\w{3}\]/i) do
+            @session.click_link('Open for match')
+          end
+        }.not_to raise_error
+        expect(@session).to have_xpath("//a[@id='open-match' and @confirmed='true']")
       end
 
       it 'works with nested modals' do
