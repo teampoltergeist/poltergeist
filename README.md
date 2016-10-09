@@ -1,6 +1,6 @@
 # Poltergeist - A PhantomJS driver for Capybara #
 
-[![Build Status](https://secure.travis-ci.org/teampoltergeist/poltergeist.png)](http://travis-ci.org/teampoltergeist/poltergeist)
+[![Build Status](https://secure.travis-ci.org/teampoltergeist/poltergeist.svg)](http://travis-ci.org/teampoltergeist/poltergeist)
 
 Poltergeist is a driver for [Capybara](https://github.com/jnicklas/capybara). It allows you to
 run your Capybara tests on a headless [WebKit](http://webkit.org) browser,
