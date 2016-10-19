@@ -41,15 +41,6 @@ module Capybara::Poltergeist
       @window_size       = options[:window_size]       || [1024, 768]
       @phantomjs_options = options[:phantomjs_options] || []
       @phantomjs_logger  = options[:phantomjs_logger]  || $stdout
-
-      pid = Process.pid
-      at_exit do
-        # do the work in a separate thread, to avoid stomping on $!,
-        # since other libraries depend on it directly.
-        Thread.new do
-          stop if Process.pid == pid
-        end.join
-      end
     end
 
     def start
