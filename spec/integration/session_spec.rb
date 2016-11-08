@@ -509,11 +509,13 @@ describe Capybara::Session do
       code = <<-JS
         (function() {
           var a = {}
+          var b = {}
           a.a = a
+          a.b = b
           return a
         })()
       JS
-      expect(@session.evaluate_script(code)).to eq('(cyclic structure)')
+      expect(@session.evaluate_script(code)).to eq({"a" => nil, "b" => {}})
     end
 
     it 'returns BR as a space in #text' do
@@ -875,6 +877,10 @@ describe Capybara::Session do
 
       it 'gets property outerHTML' do
         expect(@session.find(:css,'.some_other_class').native.property('outerHTML')).to eq '<div class="some_other_class"><p>foobar</p></div>'
+      end
+
+      it 'gets non existent property' do
+        expect(@session.find(:css,'.some_other_class').native.property('does_not_exist')).to eq nil
       end
     end
 

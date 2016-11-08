@@ -341,25 +341,14 @@ class Poltergeist.WebPage
 
   evaluate: (fn, args...) ->
     this.injectAgent()
-    JSON.parse this.sanitize(this.native().evaluate("function() { return PoltergeistAgent.stringify(#{this.stringifyCall(fn, args)}) }"))
-
-  sanitize: (potential_string) ->
-    if typeof(potential_string) == "string"
-      # JSON doesn't like \r or \n in strings unless escaped
-      potential_string.replace("\n","\\n").replace("\r","\\r")
-    else
-      potential_string
+    this.native().evaluate("function() { result = #{this.stringifyCall(fn)};
+      return (result == null) ? undefined : result; }", args...)
 
   execute: (fn, args...) ->
-    this.native().evaluate("function() { #{this.stringifyCall(fn, args)} }")
+    this.native().evaluate("function() { #{this.stringifyCall(fn)} }", args...)
 
-  stringifyCall: (fn, args) ->
-    if args.length == 0
-      "(#{fn.toString()})()"
-    else
-      # The JSON.stringify happens twice because the second time we are essentially
-      # escaping the string.
-      "(#{fn.toString()}).apply(this, PoltergeistAgent.JSON.parse(#{JSON.stringify(JSON.stringify(args))}))"
+  stringifyCall: (fn) ->
+    "(#{fn.toString()}).apply(this, arguments)"
 
   bindCallback: (name) ->
     @native()[name] = =>
