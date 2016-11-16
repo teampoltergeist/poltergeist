@@ -1,10 +1,5 @@
 # This is injected into each page that is loaded
-
 class PoltergeistAgent
-  # Since this code executes in the sites browser space - copy needed JSON functions
-  # in case user code messes with JSON (early mootools for instance)
-  @.JSON ||= { parse: JSON.parse, stringify: JSON.stringify }
-
   constructor: ->
     @elements = []
     @nodes    = {}
@@ -14,19 +9,6 @@ class PoltergeistAgent
       { value: this[name].apply(this, args) }
     catch error
       { error: { message: error.toString(), stack: error.stack } }
-
-  @stringify: (object) ->
-    try
-      PoltergeistAgent.JSON.stringify object, (key, value) ->
-        if Array.isArray(this[key])
-          return this[key]
-        else
-          return value
-    catch error
-      if error instanceof TypeError
-        '"(cyclic structure)"'
-      else
-        throw error
 
   # Somehow PhantomJS returns all characters(brackets, etc) properly encoded
   # except whitespace character in pathname part of the location. This hack
@@ -194,7 +176,7 @@ class PoltergeistAgent.Node
     if name == 'checked' || name == 'selected'
       @element[name]
     else
-      @element.getAttribute(name)
+      @element.getAttribute(name) ? undefined
 
   scrollIntoView: ->
     @element.scrollIntoViewIfNeeded()
