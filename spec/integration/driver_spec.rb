@@ -415,7 +415,7 @@ module Capybara::Poltergeist
         var b = 2
         window.result = a + b
       JS
-      expect(@driver.evaluate_script('result')).to eq(3)
+      expect(@driver.evaluate_script('window.result')).to eq(3)
     end
 
     it 'operates a timeout when communicating with phantomjs' do

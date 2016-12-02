@@ -27,6 +27,7 @@ class Poltergeist.WebPage
     @_tempHeaders    = {}
     @_blockedUrls    = []
     @_requestedResources = {}
+    @_responseHeaders = []
 
     for callback in WebPage.CALLBACKS
       this.bindCallback(callback)
@@ -344,8 +345,8 @@ class Poltergeist.WebPage
 
   evaluate: (fn, args...) ->
     this.injectAgent()
-    this.native().evaluate("function() { result = #{this.stringifyCall(fn)};
-      return (result == null) ? undefined : result; }", args...)
+    this.native().evaluate("function() { var _result = #{this.stringifyCall(fn)};
+      return (_result == null) ? undefined : _result; }", args...)
 
   execute: (fn, args...) ->
     this.native().evaluate("function() { #{this.stringifyCall(fn)} }", args...)

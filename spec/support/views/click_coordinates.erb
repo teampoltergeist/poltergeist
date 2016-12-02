@@ -16,7 +16,7 @@
   window.onload = function() {
     var log = document.querySelector('#log')
     var boxes = document.querySelector('#box')
-    boxes.onclick = function() {
+    boxes.onclick = function(event) {
       var text = "x: " + event.pageX + ", y: " + event.pageY;
       log.textContent = text
     }
