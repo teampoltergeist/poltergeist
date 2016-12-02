@@ -1,3 +1,13 @@
+### Edge ###
+
+#### Features ####
+*   Driver#evaluate_script/#execute_script no longer depend on the browser context JSON object.
+    Side effect of this is that objects returned with cyclic references now have the cycles broken with nil rather than "(cyclic structure)" (Thomas Walpole)
+
+#### Bug Fixes ####
+*   Fixed memory leak in Capybara::Poltergeist::Client (Tony Novak)[Issue #817]
+*   Driver#evaluate_script no longer has a side effect of setting global browser variable 'result' (Thomas Walpole)
+
 ### 1.11.0 ###
 
 #### Features ####
