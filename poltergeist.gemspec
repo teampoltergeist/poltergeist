@@ -32,7 +32,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'pdf-reader',         '~> 1.3', '>= 1.3.3'
   s.add_development_dependency 'coffee-script',      '~> 2.2'
   s.add_development_dependency 'guard-coffeescript', '~> 2.0.0'
-  s.add_development_dependency 'coffee-script-source', '~>1.10.0'
+  s.add_development_dependency 'coffee-script-source', '~>1.11.1'
   s.add_development_dependency 'listen', '~> 3.0.6'  # listen is required by guard and listen 3.1.0 requires ruby 2.2+
   s.add_development_dependency 'erubis'  # required by rbx
 end
