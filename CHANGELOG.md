@@ -1,4 +1,4 @@
-### Edge ###
+### 1.12.0 ###
 
 #### Features ####
 *   Driver#evaluate_script/#execute_script no longer depend on the browser context JSON object.
