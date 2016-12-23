@@ -134,12 +134,12 @@ module Capybara::Poltergeist
       browser.click_coordinates(x, y)
     end
 
-    def evaluate_script(script)
-      browser.evaluate(script)
+    def evaluate_script(script, *args)
+      browser.evaluate(script, *args)
     end
 
-    def execute_script(script)
-      browser.execute(script)
+    def execute_script(script, *args)
+      browser.execute(script, *args)
       nil
     end
 

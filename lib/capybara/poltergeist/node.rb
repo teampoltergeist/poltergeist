@@ -168,6 +168,16 @@ module Capybara::Poltergeist
       command :path
     end
 
+    # @api private
+    def to_json(*)
+      JSON.generate as_json
+    end
+
+    # @api private
+    def as_json(*)
+      { ELEMENT: {page_id: @page_id, id: @id} }
+    end
+
     private
 
     def filter_text(text)

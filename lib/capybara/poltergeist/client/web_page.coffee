@@ -345,11 +345,23 @@ class Poltergeist.WebPage
 
   evaluate: (fn, args...) ->
     this.injectAgent()
-    this.native().evaluate("function() { var _result = #{this.stringifyCall(fn)};
+    this.native().evaluate("function() {
+      for(var i=0; i < arguments.length; i++){
+        if ((typeof(arguments[i]) == 'object') && (typeof(arguments[i]['ELEMENT']) == 'object')){
+          arguments[i] = window.__poltergeist.get(arguments[i]['ELEMENT']['id']).element;
+        }
+      }
+      var _result = #{this.stringifyCall(fn)};
       return (_result == null) ? undefined : _result; }", args...)
 
   execute: (fn, args...) ->
-    this.native().evaluate("function() { #{this.stringifyCall(fn)} }", args...)
+    this.native().evaluate("function() {
+      for(var i=0; i < arguments.length; i++){
+        if ((typeof(arguments[i]) == 'object') && (typeof(arguments[i]['ELEMENT']) == 'object')){
+          arguments[i] = window.__poltergeist.get(arguments[i]['ELEMENT']['id']).element;
+        }
+      }
+      #{this.stringifyCall(fn)} }", args...)
 
   stringifyCall: (fn) ->
     "(#{fn.toString()}).apply(this, arguments)"

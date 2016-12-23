@@ -120,12 +120,12 @@ module Capybara::Poltergeist
       command 'click_coordinates', x, y
     end
 
-    def evaluate(script)
-      command 'evaluate', script
+    def evaluate(script, *args)
+      command 'evaluate', script, *args
     end
 
-    def execute(script)
-      command 'execute', script
+    def execute(script, *args)
+      command 'execute', script, *args
     end
 
     def within_frame(handle, &block)
