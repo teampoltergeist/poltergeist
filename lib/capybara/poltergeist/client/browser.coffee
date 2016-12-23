@@ -199,11 +199,15 @@ class Poltergeist.Browser
   path: (page_id, id) ->
     @current_command.sendResponse this.node(page_id, id).path()
 
-  evaluate: (script) ->
-    @current_command.sendResponse @currentPage.evaluate("function() { return #{script} }")
+  evaluate: (script, args...) ->
+    for arg in args when @_isElementArgument(arg)
+      throw new Poltergeist.ObsoleteNode if arg["ELEMENT"]["page_id"] != @currentPage.id
+    @current_command.sendResponse @currentPage.evaluate("function() { return #{script} }", args...)
 
-  execute: (script) ->
-    @currentPage.execute("function() { #{script} }")
+  execute: (script, args...) ->
+    for arg in args when @_isElementArgument(arg)
+      throw new Poltergeist.ObsoleteNode if arg["ELEMENT"]["page_id"] != @currentPage.id
+    @currentPage.execute("function() { #{script} }", args...)
     @current_command.sendResponse(true)
 
   frameUrl: (frame_name) ->
@@ -535,3 +539,5 @@ class Poltergeist.Browser
     wildcard = wildcard.replace(/\?/g, ".")
     new RegExp(wildcard, "i")
 
+  _isElementArgument: (arg)->
+    typeof(arg) == "object" and typeof(arg['ELEMENT']) == "object"
