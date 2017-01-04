@@ -266,7 +266,12 @@ class PoltergeistAgent.Node
     rect.right <= window.innerWidth
 
   isDisabled: ->
-    @element.disabled || @element.tagName == 'OPTION' && @element.parentNode.disabled
+    xpath = 'parent::optgroup[@disabled] | \
+             ancestor::select[@disabled] | \
+             parent::fieldset[@disabled] | \
+             ancestor::*[not(self::legend) or preceding-sibling::legend][parent::fieldset[@disabled]]'
+
+    @element.disabled || document.evaluate(xpath, @element, null, XPathResult.BOOLEAN_TYPE, null).booleanValue
 
   path: ->
     elements = @parentIds().reverse().map((id) => @agent.get(id))
