@@ -135,11 +135,11 @@ module Capybara::Poltergeist
     end
 
     def evaluate_script(script, *args)
-      browser.evaluate(script, *args)
+      browser.evaluate(script, *args.map { |arg| arg.is_a?(Capybara::Poltergeist::Node) ?  arg.native : arg})
     end
 
     def execute_script(script, *args)
-      browser.execute(script, *args)
+      browser.execute(script, *args.map { |arg| arg.is_a?(Capybara::Poltergeist::Node) ?  arg.native : arg})
       nil
     end
 
