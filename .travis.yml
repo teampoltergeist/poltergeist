@@ -15,7 +15,6 @@ rvm:
   - 2.3.0
   - 2.2.2
   - 2.1.6
-  - 2.0.0
   - rbx
 gemfile:
   - Gemfile
@@ -29,6 +28,8 @@ matrix:
       gemfile: gemfiles/Gemfile.1_9_3
     - rvm: jruby-19mode
       gemfile: gemfiles/Gemfile.1_9_3
+    - rvm: 2.0.0
+      gemfile: gemfiles/Gemfile.2_0_0
     - rvm: 2.2.2
       gemfile: Gemfile
       env: PHANTOMJS=$PWD/travis-phantomjs2/phantomjs

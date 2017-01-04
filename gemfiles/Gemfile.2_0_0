@@ -2,9 +2,6 @@ source 'https://rubygems.org'
 
 gemspec :path => '..'
 
-gem 'mime-types', '< 3.0'
-gem 'addressable', '< 2.5.0' # 2.5 requires public_suffix which requires ruby 2.0
-
 platforms :rbx do
   gem 'rubysl'
   gem 'racc'
