@@ -349,21 +349,24 @@ class Poltergeist.Browser
     if !target.containsSelection()
       target.mouseEvent('click')
 
+    @_send_keys_with_modifiers(keys)
+    @current_command.sendResponse(true)
+
+  _send_keys_with_modifiers: (keys, current_modifier_code = 0) ->
     for sequence in keys
       key = if sequence.key?
         @currentPage.keyCode(sequence.key) || sequence.key
       else
         sequence
+
       if sequence.modifier?
         modifier_keys = @currentPage.keyModifierKeys(sequence.modifier)
-        modifier_code = @currentPage.keyModifierCode(sequence.modifier)
+        modifier_code = @currentPage.keyModifierCode(sequence.modifier) | current_modifier_code
         @currentPage.sendEvent('keydown', modifier_key) for modifier_key in modifier_keys
-        @currentPage.sendEvent('keypress', key, null, null, modifier_code)
+        @_send_keys_with_modifiers([].concat(key), modifier_code)
         @currentPage.sendEvent('keyup', modifier_key) for modifier_key in modifier_keys
       else
-        @currentPage.sendEvent('keypress', key)
-
-    @current_command.sendResponse(true)
+        @currentPage.sendEvent('keypress', key, null, null, current_modifier_code)
 
   render_base64: (format, { full = false, selector = null } = {})->
     window_scroll_position = @currentPage.native().evaluate("function(){ return [window.pageXOffset, window.pageYOffset] }")

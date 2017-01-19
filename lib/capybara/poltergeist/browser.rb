@@ -429,19 +429,49 @@ module Capybara::Poltergeist
       end
     end
 
+    KEY_ALIASES = {
+      command:   :Meta,
+      equals:    :Equal,
+      Control:   :Ctrl,
+      control:   :Ctrl,
+      mulitply:  'numpad*',
+      add:       'numpad+',
+      divide:    'numpad/',
+      subtract:  'numpad-',
+      decimal:   'numpad.'
+    }
+
     def normalize_keys(keys)
       keys.map do |key|
         case key
         when Array
           # [:Shift, "s"] => { modifier: "shift", key: "S" }
+          # [:Shift, "string"] => { modifier: "shift", key: "STRING" }
           # [:Ctrl, :Left] => { modifier: "ctrl", key: :Left }
           # [:Ctrl, :Shift, :Left] => { modifier: "ctrl,shift", key: :Left }
-          letter = key.last
-          symbol = key[0...-1].map { |k| k.to_s.downcase }.join(',')
-
-          { modifier: symbol.to_s.downcase, key: letter.capitalize }
+          # [:Ctrl, :Left, :Left] => { modifier: "ctrl", key: [:Left, :Left] }
+          _keys = key.chunk {|k| k.is_a?(Symbol) && %w(shift ctrl control alt meta command).include?(k.to_s.downcase) }
+          modifiers = if _keys.peek[0]
+            _keys.next[1].map do |k|
+              k = k.to_s.downcase
+              k = 'ctrl' if k == 'control'
+              k = 'meta' if k == 'command'
+              k
+            end.join(',')
+          else
+            ''
+          end
+          letter = normalize_keys(_keys.next[1].map {|k| k.is_a?(String) ? k.upcase : k })
+          { modifier: modifiers, key: letter }
         when Symbol
-          { key: key.capitalize } # Return a known sequence for PhantomJS
+          # Return a known sequence for PhantomJS
+          key = KEY_ALIASES.fetch(key, key)
+          if match = key.to_s.match(/numpad(.)/)
+            res = { key: match[1], modifier: 'keypad' }
+          elsif key !~ /^[A-Z]/
+            key = key.to_s.split('_').map{|e| e.capitalize}.join
+          end
+          res || { key: key }
         when String
           key # Plain string, nothing to do
         end

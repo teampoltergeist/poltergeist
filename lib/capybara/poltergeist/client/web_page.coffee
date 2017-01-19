@@ -160,16 +160,17 @@ class Poltergeist.WebPage
     this.native().windowName
 
   keyCode: (name) ->
+    name = "Control" if name == "Ctrl"
     this.native().event.key[name]
 
   keyModifierCode: (names) ->
     modifiers = this.native().event.modifier
-    names = names.split(',').map ((name) -> modifiers[name])
-    names[0] | names[1] # return codes for 1 or 2 modifiers
+    names.split(',').map((name) -> modifiers[name]).reduce((n1,n2) -> n1 | n2)
 
   keyModifierKeys: (names) ->
-    names.split(',').map (name) =>
-      this.keyCode(name.charAt(0).toUpperCase() + name.substring(1))
+    for name in names.split(',') when name isnt 'keypad'
+      name = name.charAt(0).toUpperCase() + name.substring(1)
+      this.keyCode(name)
 
   _waitState_until: (state, callback, timeout, timeout_callback) ->
     if (@state == state)

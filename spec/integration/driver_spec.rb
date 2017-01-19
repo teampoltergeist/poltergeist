@@ -1205,6 +1205,22 @@ module Capybara::Poltergeist
         expect(input.value).to eq('s')
       end
 
+      it 'sends modifiers with sequences' do
+        input = @session.find(:css, '#empty_input')
+
+        input.native.send_keys('s', [:Shift, 'tring'])
+
+        expect(input.value).to eq('sTRING')
+      end
+
+      it 'sends modifiers with multiple keys' do
+        input = @session.find(:css, '#empty_input')
+
+        input.native.send_keys('poltre', [:Shift, :Left, :Left], 'ergeist')
+
+        expect(input.value).to eq('poltergeist')
+      end
+
       it 'has an alias' do
         input = @session.find(:css, '#empty_input')
 
@@ -1219,6 +1235,30 @@ module Capybara::Poltergeist
         input.send_keys([:shift, '.'], [:shift, 't'])
 
         expect(@session.find(:css, '#key-events-output')).to have_text("keydown:16 keydown:190 keydown:16 keydown:84")
+      end
+
+      it 'suuports snake_case sepcified keys (Capybara standard)' do
+        input = @session.find(:css, '#empty_input')
+        input.send_keys(:PageUp, :page_up)
+        expect(@session.find(:css, '#key-events-output')).to have_text("keydown:33", count: 2)
+      end
+
+      it 'supports :control alias for :Ctrl' do
+        input = @session.find(:css, '#empty_input')
+        input.send_keys([:Ctrl, 'a'], [:control, 'a'])
+        expect(@session.find(:css, '#key-events-output')).to have_text("keydown:17 keydown:65", count: 2)
+      end
+
+      it 'supports :command alias for :Meta' do
+        input = @session.find(:css, '#empty_input')
+        input.send_keys([:Meta, 'z'], [:command, 'z'])
+        expect(@session.find(:css, '#key-events-output')).to have_text("keydown:91 keydown:90", count: 2)
+      end
+
+      it 'supports Capybara specified numpad keys' do
+        input = @session.find(:css, '#empty_input')
+        input.send_keys(:numpad2, :numpad8, :divide, :decimal)
+        expect(@session.find(:css, '#key-events-output')).to have_text("keydown:98 keydown:104 keydown:111 keydown:110")
       end
     end
 
