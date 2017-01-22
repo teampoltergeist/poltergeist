@@ -1,3 +1,13 @@
+### 1.13.0 ###
+
+#### Features ####
+*   Driver#evaluate_script/#execute_script accept parameters to be passed to the functions executed (Thomas Walpole)
+
+#### Bug Fixes ####
+*   Node#send_keys now generates the correct key events when using the :Ctrl key and supports more of the Capybara specified key symbols (Thomas Walpole)
+*   No longer clear local storage if local storage doesn't exist (Thomas Walpole)
+*   Form fields that should be disabled in disabled fieldsets are now considered disabled (Thomas Walpole)
+
 ### 1.12.0 ###
 
 #### Features ####
@@ -7,6 +17,7 @@
 #### Bug Fixes ####
 *   Fixed memory leak in Capybara::Poltergeist::Client (Tony Novak)[Issue #817]
 *   Driver#evaluate_script no longer has a side effect of setting global browser variable 'result' (Thomas Walpole)
+
 
 ### 1.11.0 ###
 
