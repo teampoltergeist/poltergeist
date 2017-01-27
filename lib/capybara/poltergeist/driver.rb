@@ -135,7 +135,9 @@ module Capybara::Poltergeist
     end
 
     def evaluate_script(script, *args)
-      browser.evaluate(script, *args.map { |arg| arg.is_a?(Capybara::Poltergeist::Node) ?  arg.native : arg})
+      result = browser.evaluate(script, *args.map { |arg| arg.is_a?(Capybara::Poltergeist::Node) ?  arg.native : arg})
+      result = Capybara::Poltergeist::Node.new(self, result['ELEMENT']['page_id'], result['ELEMENT']['id']) if result.is_a?(Hash) && result['ELEMENT']
+      result
     end
 
     def execute_script(script, *args)

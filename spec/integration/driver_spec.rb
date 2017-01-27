@@ -1307,5 +1307,13 @@ module Capybara::Poltergeist
         expect(@session.find(:css, '#date_field').value).to eq('2016-02-14')
       end
     end
+
+    context 'evaluate_script' do
+      it 'can return an element' do
+        @session.visit('/poltergeist/send_keys')
+        element = @session.driver.evaluate_script('document.getElementById("empty_input")')
+        expect(element).to eq(@session.find(:id, 'empty_input').native)
+      end
+    end
   end
 end

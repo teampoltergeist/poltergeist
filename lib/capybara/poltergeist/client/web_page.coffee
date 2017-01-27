@@ -346,14 +346,20 @@ class Poltergeist.WebPage
 
   evaluate: (fn, args...) ->
     this.injectAgent()
-    this.native().evaluate("function() {
+    result = this.native().evaluate("function() {
       for(var i=0; i < arguments.length; i++){
         if ((typeof(arguments[i]) == 'object') && (typeof(arguments[i]['ELEMENT']) == 'object')){
           arguments[i] = window.__poltergeist.get(arguments[i]['ELEMENT']['id']).element;
         }
       }
       var _result = #{this.stringifyCall(fn)};
+
+      if (_result && _result.nodeType == 1 && _result['tagName']) {
+        _result = {'ELEMENT': { id: window.__poltergeist.register(_result) } };
+      }
       return (_result == null) ? undefined : _result; }", args...)
+    result['ELEMENT']['page_id'] = @id if result?['ELEMENT']
+    result
 
   execute: (fn, args...) ->
     this.native().evaluate("function() {
