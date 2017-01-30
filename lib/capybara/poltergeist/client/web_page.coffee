@@ -347,18 +347,18 @@ class Poltergeist.WebPage
   evaluate: (fn, args...) ->
     this.injectAgent()
     result = this.native().evaluate("function() {
-      for(var i=0; i < arguments.length; i++){
+      var page_id = arguments[0];
+      var args = [];
+
+      for(var i=1; i < arguments.length; i++){
         if ((typeof(arguments[i]) == 'object') && (typeof(arguments[i]['ELEMENT']) == 'object')){
-          arguments[i] = window.__poltergeist.get(arguments[i]['ELEMENT']['id']).element;
+          args.push(window.__poltergeist.get(arguments[i]['ELEMENT']['id']).element);
+        } else {
+          args.push(arguments[i])
         }
       }
-      var _result = #{this.stringifyCall(fn)};
-
-      if (_result && _result.nodeType == 1 && _result['tagName']) {
-        _result = {'ELEMENT': { id: window.__poltergeist.register(_result) } };
-      }
-      return (_result == null) ? undefined : _result; }", args...)
-    result['ELEMENT']['page_id'] = @id if result?['ELEMENT']
+      var _result = #{this.stringifyCall(fn, "args")};
+      return window.__poltergeist.wrapResults(_result, page_id); }", @id, args...)
     result
 
   execute: (fn, args...) ->
@@ -370,8 +370,8 @@ class Poltergeist.WebPage
       }
       #{this.stringifyCall(fn)} }", args...)
 
-  stringifyCall: (fn) ->
-    "(#{fn.toString()}).apply(this, arguments)"
+  stringifyCall: (fn, args_name = "arguments") ->
+    "(#{fn.toString()}).apply(this, #{args_name})"
 
   bindCallback: (name) ->
     @native()[name] = =>
@@ -388,18 +388,17 @@ class Poltergeist.WebPage
       name, args
     )
 
-    if result != null
-      if result.error?
-        switch result.error.message
-          when 'PoltergeistAgent.ObsoleteNode'
-            throw new Poltergeist.ObsoleteNode
-          when 'PoltergeistAgent.InvalidSelector'
-            [method, selector] = args
-            throw new Poltergeist.InvalidSelector(method, selector)
-          else
-            throw new Poltergeist.BrowserError(result.error.message, result.error.stack)
-      else
-        result.value
+    if result?.error?
+      switch result.error.message
+        when 'PoltergeistAgent.ObsoleteNode'
+          throw new Poltergeist.ObsoleteNode
+        when 'PoltergeistAgent.InvalidSelector'
+          [method, selector] = args
+          throw new Poltergeist.InvalidSelector(method, selector)
+        else
+          throw new Poltergeist.BrowserError(result.error.message, result.error.stack)
+    else
+      result?.value
 
   canGoBack: ->
     this.native().canGoBack

@@ -508,14 +508,17 @@ describe Capybara::Session do
     it 'ignores cyclic structure errors in evaluate_script' do
       code = <<-JS
         (function() {
-          var a = {}
-          var b = {}
-          a.a = a
-          a.b = b
-          return a
+          var a = {};
+          var b = {};
+          var c = {};
+          c.a = a;
+          a.a = a;
+          a.b = b;
+          a.c = c;
+          return a;
         })()
       JS
-      expect(@session.evaluate_script(code)).to eq({"a" => nil, "b" => {}})
+      expect(@session.evaluate_script(code)).to eq({"a"=>"(cyclic structure)", "b"=>{}, "c"=>{"a"=>"(cyclic structure)"}})
     end
 
     it 'returns BR as a space in #text' do

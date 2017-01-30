@@ -57,6 +57,26 @@ class PoltergeistAgent
   clearLocalStorage: ->
     localStorage?.clear()
 
+  wrapResults: (result, page_id)->
+    @_visitedObjects ||= [];
+    switch
+      when result in @_visitedObjects
+        '(cyclic structure)'
+      when Array.isArray(result) || (result instanceof NodeList)
+        @wrapResults(res, page_id) for res in result
+      when result && result.nodeType == 1 && result['tagName']
+        {'ELEMENT': { id: @register(result), page_id: page_id } };
+      when not result?
+        undefined
+      when typeof result == 'object'
+        @_visitedObjects.push(result);
+        obj = {}
+        obj[key] = @wrapResults(val, page_id) for own key, val of result
+        @_visitedObjects.pop();
+        obj
+      else
+        result
+
 class PoltergeistAgent.ObsoleteNode
   toString: -> "PoltergeistAgent.ObsoleteNode"
 

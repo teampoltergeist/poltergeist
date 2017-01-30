@@ -136,8 +136,7 @@ module Capybara::Poltergeist
 
     def evaluate_script(script, *args)
       result = browser.evaluate(script, *args.map { |arg| arg.is_a?(Capybara::Poltergeist::Node) ?  arg.native : arg})
-      result = Capybara::Poltergeist::Node.new(self, result['ELEMENT']['page_id'], result['ELEMENT']['id']) if result.is_a?(Hash) && result['ELEMENT']
-      result
+      unwrap_script_result(result)
     end
 
     def execute_script(script, *args)
@@ -411,6 +410,18 @@ module Capybara::Poltergeist
         retry
       end
       modal_text
+    end
+
+    def unwrap_script_result(arg)
+      case arg
+      when Array
+        arg.map { |e| unwrap_script_result(e) }
+      when Hash
+        return Capybara::Poltergeist::Node.new(self, arg['ELEMENT']['page_id'], arg['ELEMENT']['id']) if arg['ELEMENT']
+        arg.each { |k, v| arg[k] = unwrap_script_result(v) }
+      else
+        arg
+      end
     end
   end
 end
