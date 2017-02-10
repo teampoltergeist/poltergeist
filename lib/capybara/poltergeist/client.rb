@@ -27,11 +27,14 @@ module Capybara::Poltergeist
             Process.kill('KILL', pid)
           else
             Process.kill('TERM', pid)
-            begin
-              Timeout.timeout(KILL_TIMEOUT) { Process.wait(pid) }
-            rescue Timeout::Error
-              Process.kill('KILL', pid)
-              Process.wait(pid)
+            start = Time.now
+            while Process.wait(pid, Process::WNOHANG).nil?
+              sleep 0.05
+              if (Time.now - start) > KILL_TIMEOUT
+                Process.kill('KILL', pid)
+                Process.wait(pid)
+                break
+              end
             end
           end
         rescue Errno::ESRCH, Errno::ECHILD

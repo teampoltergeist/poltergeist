@@ -49,10 +49,7 @@ module Capybara::Poltergeist
         client = Client.new(server)
 
         allow(Process).to receive_messages(spawn: 5678)
-        allow(Process).to receive(:wait) do
-          @count = @count.to_i + 1
-          @count == 1 ? sleep(3) : 0
-        end
+        allow(Process).to receive(:wait).and_return(nil)
 
         client.start
 
