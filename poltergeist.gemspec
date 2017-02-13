@@ -34,5 +34,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'guard-coffeescript', '~> 2.0.0'
   s.add_development_dependency 'coffee-script-source', '~>1.12.2'
   s.add_development_dependency 'listen', '~> 3.0.6'  # listen is required by guard and listen 3.1.0 requires ruby 2.2+
-  s.add_development_dependency 'erubis'  # required by rbx
+  s.add_development_dependency 'erubi'  # required by rbx
 end

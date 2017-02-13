@@ -41,18 +41,40 @@ module Capybara::Poltergeist
       end
     end
 
-    it 'supports capturing console.log' do
-      begin
-        output = StringIO.new
+    context 'output redirection' do
+      let(:logger) { StringIO.new }
+      let(:session) { Capybara::Session.new(:poltergeist_with_logger, TestApp) }
+
+      before do
         Capybara.register_driver :poltergeist_with_logger do |app|
-          Capybara::Poltergeist::Driver.new(app, phantomjs_logger: output)
+          Capybara::Poltergeist::Driver.new(app, phantomjs_logger: logger)
+        end
+      end
+
+      after do
+        session.driver.quit
+      end
+
+      it 'supports capturing console.log' do
+        session.visit('/poltergeist/console_log')
+        expect(logger.string).to include('Hello world')
+      end
+
+      it 'is threadsafe in how it captures console.log' do
+        pending("JRuby and Rubinius do not support the :out parameter to Process.spawn, so there is no threadsafe way to redirect output") unless Capybara::Poltergeist.mri?
+
+        # Write something to STDOUT right before Process.spawn is called
+        allow(Process).to receive(:spawn).and_wrap_original do |m,*args|
+          STDOUT.puts "1"
+          $stdout.puts "2"
+          m.call(*args)
         end
 
-        session = Capybara::Session.new(:poltergeist_with_logger, TestApp)
-        session.visit('/poltergeist/console_log')
-        expect(output.string).to include('Hello world')
-      ensure
-        session.driver.quit
+        expect {
+          session.visit('/poltergeist/console_log')
+        }.to output("1\n2\n").to_stdout_from_any_process
+
+        expect(logger.string).not_to match /\d/
       end
     end
 
