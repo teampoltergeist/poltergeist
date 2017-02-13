@@ -42,6 +42,10 @@ matrix:
     - rvm: 2.3.1
       gemfile: gemfiles/Gemfile.capybara_master
       env: PHANTOMJS=$PWD/travis-phantomjs21/phantomjs
+    - rvm: jruby-9.1.7.0
+      gemfile: Gemfile
+      env: PHANTOMJS=$PWD/travis-phantomjs21/phantomjs
   allow_failures:
     - gemfile: gemfiles/Gemfile.capybara_master
     - rvm: rbx
+    - rvm: jruby-9.1.7.0
