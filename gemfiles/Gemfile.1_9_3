@@ -12,3 +12,4 @@ platforms :rbx do
 end
 
 gem 'nokogiri', '< 1.7.0' # 1.7.0 requires ruby 2.1+
+gem 'ttfunk', '<1.5.0', #1.5.0 requires ruby 2.1+
