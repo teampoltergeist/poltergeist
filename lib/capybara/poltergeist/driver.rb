@@ -341,8 +341,8 @@ module Capybara::Poltergeist
       rescue EOFError, IO::WaitReadable # Ignore problems reading from STDIN.
       end unless signal
 
-      trap('SIGCONT', old_trap) # Restore the previuos signal handler, if there was one.
-
+    ensure
+      trap('SIGCONT', old_trap) # Restore the previous signal handler, if there was one.
       STDERR.puts 'Continuing'
     end
 

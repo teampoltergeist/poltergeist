@@ -87,8 +87,13 @@ module Capybara::Poltergeist
         IO.pipe do |read_io, write_io|
           stub_const('STDIN', read_io)
           write_io.write "\n"
-          Timeout::timeout(3) do
-            subject.pause
+
+          begin
+            Timeout::timeout(3) do
+              subject.pause
+            end
+          ensure
+            write_io.close # without manual close JRuby 9.1.7.0 hangs here
           end
         end
       end
