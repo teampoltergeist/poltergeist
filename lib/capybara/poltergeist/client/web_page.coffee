@@ -28,6 +28,7 @@ class Poltergeist.WebPage
     @_blockedUrls    = []
     @_requestedResources = {}
     @_responseHeaders = []
+    @_tempHeadersToRemoveOnRedirect = {}
 
     for callback in WebPage.CALLBACKS
       this.bindCallback(callback)
@@ -49,8 +50,9 @@ class Poltergeist.WebPage
     @id += 1
     @source = null
     @injectAgent()
-    this.removeTempHeaders()
-    this.setScrollPosition(left: 0, top: 0)
+    @removeTempHeaders()
+    @removeTempHeadersForRedirect()
+    @setScrollPosition(left: 0, top: 0)
 
   onClosingNative: ->
     @handle = null
@@ -107,6 +109,7 @@ class Poltergeist.WebPage
       @lastRequestId = request.id
 
       if @normalizeURL(request.url) == @redirectURL
+        @removeTempHeadersForRedirect()
         @redirectURL = null
         @requestId   = request.id
 
@@ -127,6 +130,7 @@ class Poltergeist.WebPage
 
     if @requestId == response.id
       if response.redirectURL
+        @removeTempHeadersForRedirect()
         @redirectURL = @normalizeURL(response.redirectURL)
       else
         @statusCode = response.status
@@ -286,11 +290,22 @@ class Poltergeist.WebPage
       @_tempHeaders[name] = value
     @_tempHeaders
 
+  addTempHeaderToRemoveOnRedirect: (header) ->
+    for name, value of header
+      @_tempHeadersToRemoveOnRedirect[name] = value
+    @_tempHeadersToRemoveOnRedirect
+
+  removeTempHeadersForRedirect: ->
+    allHeaders = @getCustomHeaders()
+    for name, value of @_tempHeadersToRemoveOnRedirect
+      delete allHeaders[name]
+    @setCustomHeaders(allHeaders)
+
   removeTempHeaders: ->
-    allHeaders = this.getCustomHeaders()
+    allHeaders = @getCustomHeaders()
     for name, value of @_tempHeaders
       delete allHeaders[name]
-    this.setCustomHeaders(allHeaders)
+    @setCustomHeaders(allHeaders)
 
   pushFrame: (name) ->
     return true if this.native().switchToFrame(name)

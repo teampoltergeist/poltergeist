@@ -2,6 +2,8 @@
 
 #### Features ####
 *   Driver#evaluate_script/#execute_script accept parameters to be passed to the functions executed (Thomas Walpole)
+*   Driver#add_header can now accept ":no_redirect" for the "permanent" option
+    which removes the header on redirects or subsequent requests.
 
 #### Bug Fixes ####
 *   Node#send_keys now generates the correct key events when using the :Ctrl key and supports more of the Capybara specified key symbols (Thomas Walpole)

@@ -88,7 +88,7 @@ was 1.0.2, so you should use that if you still need Ruby 1.8 support.
 There are no special steps to take. You don't need Xvfb or any running X
 server at all.
 
-[Travis CI](https://travis-ci.org/), [CircleCI](https://circleci.com/) 
+[Travis CI](https://travis-ci.org/), [CircleCI](https://circleci.com/)
 and [Codeship](https://codeship.com/) has PhantomJS pre-installed.
 
 Depending on your tests, one thing that you may need is some fonts. If
@@ -195,6 +195,8 @@ page.driver.headers # => { "User-Agent" => "Poltergeist" }
 
 This way your temporary headers will be sent only for the initial request, all
 subsequent request will only contain your permanent headers.
+However the temporary headers will still be sent on 30x redirects. If the
+headers should not be sent on redirects, specify `permanent: :no_redirect`.
 
 ### Inspecting network traffic ###
 
