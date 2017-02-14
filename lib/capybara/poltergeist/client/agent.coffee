@@ -109,7 +109,7 @@ class PoltergeistAgent.Node
 
   isObsolete: ->
     obsolete = (element) =>
-      if (parent = element.parentNode)?
+      if (parent = element?.parentNode)?
         if parent == document
           return false
         else
