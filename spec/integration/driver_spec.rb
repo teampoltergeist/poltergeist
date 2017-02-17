@@ -980,6 +980,14 @@ module Capybara::Poltergeist
         end
       end
 
+      it 'tracks blocked urls' do
+        @driver.browser.url_blacklist = ['unwanted']
+
+        @session.visit '/poltergeist/url_blacklist'
+
+        expect(@driver.browser.blocked_urls).to include(/unwanted/)
+      end
+
       it 'supports wildcards' do
         @driver.browser.url_blacklist = ['*wanted']
 
@@ -1032,6 +1040,15 @@ module Capybara::Poltergeist
         @session.within_frame 'unwantedframe' do
           expect(@session).not_to have_content("We shouldn't see this.")
         end
+      end
+
+      it 'tracks blocked urls' do
+        @driver.browser.url_whitelist = ['url_whitelist', '/wanted']
+
+        @session.visit '/poltergeist/url_whitelist'
+
+        expect(@driver.browser.blocked_urls).to_not include(/url_whitelist/, /\/wanted/)
+        expect(@driver.browser.blocked_urls).to include(/unwanted/)
       end
 
       it 'supports wildcards' do

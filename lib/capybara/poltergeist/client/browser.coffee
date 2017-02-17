@@ -424,6 +424,9 @@ class Poltergeist.Browser
     @currentPage.clearNetworkTraffic()
     @current_command.sendResponse(true)
 
+  blocked_urls: ->
+    @current_command.sendResponse(@currentPage.blockedUrls())
+
   set_proxy: (ip, port, type, user, password) ->
     phantom.setProxy(ip, port, type, user, password)
     @current_command.sendResponse(true)
