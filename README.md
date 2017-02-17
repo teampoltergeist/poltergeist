@@ -298,6 +298,8 @@ URL whitelist of domains that are essential or a blacklist of
 domains that are not essential, such as ad networks or analytics,
 to your testing environment.
 
+You can access a unique array of blocked URLs by calling
+`page.driver.browser.blocked_urls`.
 
 ## Troubleshooting ##
 

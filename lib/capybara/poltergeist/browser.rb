@@ -274,6 +274,10 @@ module Capybara::Poltergeist
       command('clear_network_traffic')
     end
 
+    def blocked_urls
+      command 'blocked_urls'
+    end
+
     def set_proxy(ip, port, type, user, password)
       args = [ip, port, type]
       args << user if user
