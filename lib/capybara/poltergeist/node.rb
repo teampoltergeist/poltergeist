@@ -156,7 +156,7 @@ module Capybara::Poltergeist
     end
 
     def ==(other)
-      command :equals, other.id
+      (page_id == other.page_id) && command(:equals, other.id)
     end
 
     def send_keys(*keys)

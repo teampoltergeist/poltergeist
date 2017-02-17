@@ -303,6 +303,17 @@ describe Capybara::Session do
       end
     end
 
+    describe 'Node#==' do
+      it "doesn't equal a node from another page" do
+        @session.visit('/poltergeist/simple')
+        @elem1 = @session.find(:css, '#nav')
+        @session.visit('/poltergeist/set')
+        @elem2 = @session.find(:css, '#filled_div')
+        expect(@elem2 == @elem1).to be false
+        expect(@elem1 == @elem2).to be false
+      end
+    end
+
     it 'has no trouble clicking elements when the size of a document changes' do
       @session.visit('/poltergeist/long_page')
       @session.find(:css, '#penultimate').click
