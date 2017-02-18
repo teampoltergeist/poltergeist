@@ -593,6 +593,16 @@ module Capybara::Poltergeist
         expect(urls.grep(%r{/poltergeist/test.js$}).size).to eq(1)
       end
 
+      it 'keeps track of blocked network traffic' do
+        @driver.browser.url_blacklist = ['unwanted']
+
+        @session.visit '/poltergeist/url_blacklist'
+
+        blocked_urls = @driver.network_traffic(:blocked).map(&:url)
+
+        expect(blocked_urls).to include(/unwanted/)
+      end
+
       it 'captures responses' do
         @session.visit('/poltergeist/with_js')
         request = @driver.network_traffic.last
@@ -633,6 +643,18 @@ module Capybara::Poltergeist
         @driver.clear_network_traffic
 
         expect(@driver.network_traffic.length).to eq(0)
+      end
+
+      it 'blocked requests get cleared along with network traffic' do
+        @driver.browser.url_blacklist = ['unwanted']
+
+        @session.visit '/poltergeist/url_blacklist'
+
+        expect(@driver.network_traffic(:blocked).length).to eq(2)
+
+        @driver.clear_network_traffic
+
+        expect(@driver.network_traffic(:blocked).length).to eq(0)
       end
     end
 

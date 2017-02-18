@@ -260,13 +260,19 @@ module Capybara::Poltergeist
       command 'path', page_id, id
     end
 
-    def network_traffic
-      command('network_traffic').values.map do |event|
-        NetworkTraffic::Request.new(
-          event['request'],
-          event['responseParts'].map { |response| NetworkTraffic::Response.new(response) },
-          event['error'] ? NetworkTraffic::Error.new(event['error']) : nil
-        )
+    def network_traffic(type = nil)
+      if type == :blocked
+        command('blocked_requests').values.map do |event|
+          NetworkTraffic::Request.new(event['request'])
+        end
+      else
+        command('network_traffic').values.map do |event|
+          NetworkTraffic::Request.new(
+            event['request'],
+            event['responseParts'].map { |response| NetworkTraffic::Response.new(response) },
+            event['error'] ? NetworkTraffic::Error.new(event['error']) : nil
+          )
+        end
       end
     end
 
