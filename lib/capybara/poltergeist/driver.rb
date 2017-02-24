@@ -309,10 +309,7 @@ module Capybara::Poltergeist
 
     def debug
       if @options[:inspector]
-        # Fall back to default scheme
-        scheme = URI.parse(browser.current_url).scheme rescue nil
-        scheme = 'http' if scheme != 'https'
-        inspector.open(scheme)
+        inspector.open('http')
         pause
       else
         raise Error, "To use the remote debugging, you have to launch the driver " \
