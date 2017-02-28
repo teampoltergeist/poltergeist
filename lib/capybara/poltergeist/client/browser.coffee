@@ -417,16 +417,12 @@ class Poltergeist.Browser
     @currentPage.setViewportSize(width: width, height: height)
     @current_command.sendResponse(true)
 
-  network_traffic: ->
-    @current_command.sendResponse(@currentPage.networkTraffic())
+  network_traffic: (type) ->
+    @current_command.sendResponse(@currentPage.networkTraffic(type))
 
   clear_network_traffic: ->
     @currentPage.clearNetworkTraffic()
-    @currentPage.clearBlockedRequests()
     @current_command.sendResponse(true)
-
-  blocked_requests: ->
-    @current_command.sendResponse(@currentPage.blockedRequests())
 
   set_proxy: (ip, port, type, user, password) ->
     phantom.setProxy(ip, port, type, user, password)

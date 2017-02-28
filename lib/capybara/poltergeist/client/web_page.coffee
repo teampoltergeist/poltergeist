@@ -26,7 +26,6 @@ class Poltergeist.WebPage
     @_networkTraffic = {}
     @_tempHeaders    = {}
     @_blockedUrls    = []
-    @_blockedRequests = {}
     @_requestedResources = {}
     @_responseHeaders = []
 
@@ -85,28 +84,15 @@ class Poltergeist.WebPage
     return true
 
   onResourceRequestedNative: (request, net) ->
-    useWhitelist = @urlWhitelist.length > 0
+    @_networkTraffic[request.id] = {
+      request:       request,
+      responseParts: []
+      error: null
+    }
 
-    whitelisted = @urlWhitelist.some (whitelisted_regex) ->
-      whitelisted_regex.test request.url
-
-    blacklisted = @urlBlacklist.some (blacklisted_regex) ->
-      blacklisted_regex.test request.url
-
-    abort = false
-
-    if useWhitelist && !whitelisted
-      abort = true
-
-    if blacklisted
-      abort = true
-
-    if abort
+    if @_blockRequest(request.url)
+      @_networkTraffic[request.id].blocked = true
       @_blockedUrls.push request.url unless request.url in @_blockedUrls
-
-      @_blockedRequests[request.id] = {
-        request: request
-      }
 
       net.abort()
     else
@@ -115,12 +101,6 @@ class Poltergeist.WebPage
       if @normalizeURL(request.url) == @redirectURL
         @redirectURL = null
         @requestId   = request.id
-
-      @_networkTraffic[request.id] = {
-        request:       request,
-        responseParts: []
-        error: null
-      }
 
       @_requestedResources[request.id] = request.url
     return true
@@ -203,8 +183,14 @@ class Poltergeist.WebPage
     this.native().settings.password = password
     return true
 
-  networkTraffic: ->
-    @_networkTraffic
+  networkTraffic: (type) ->
+    switch type
+      when 'all'
+        request for own id, request of @_networkTraffic
+      when 'blocked'
+        request for own id, request of @_networkTraffic when request.blocked
+      else
+        request for own id, request of @_networkTraffic when not request.blocked
 
   clearNetworkTraffic: ->
     @_networkTraffic = {}
@@ -215,13 +201,6 @@ class Poltergeist.WebPage
 
   clearBlockedUrls: ->
     @_blockedUrls = []
-    return true
-
-  blockedRequests: ->
-    @_blockedRequests
-
-  clearBlockedRequests: ->
-    @_blockedRequests = {}
     return true
 
   openResourceRequests: ->
@@ -430,6 +409,23 @@ class Poltergeist.WebPage
       clearMemoryCache()
     else
       throw new Poltergeist.UnsupportedFeature("clearMemoryCache is supported since PhantomJS 2.0.0")
+
+  _blockRequest: (url) ->
+    useWhitelist = @urlWhitelist.length > 0
+
+    whitelisted = @urlWhitelist.some (whitelisted_regex) ->
+      whitelisted_regex.test url
+
+    blacklisted = @urlBlacklist.some (blacklisted_regex) ->
+      blacklisted_regex.test url
+
+    if useWhitelist && !whitelisted
+      return true
+
+    if blacklisted
+      return true
+
+    false
 
   _overrideNativeEvaluate: ->
     # PhantomJS 1.9.x WebPage#evaluate depends on the browser context  JSON, this replaces it
