@@ -26,6 +26,7 @@ class Poltergeist.WebPage
     @_networkTraffic = {}
     @_tempHeaders    = {}
     @_blockedUrls    = []
+    @_blockedRequests = {}
     @_requestedResources = {}
     @_responseHeaders = []
 
@@ -102,6 +103,11 @@ class Poltergeist.WebPage
 
     if abort
       @_blockedUrls.push request.url unless request.url in @_blockedUrls
+
+      @_blockedRequests[request.id] = {
+        request: request
+      }
+
       net.abort()
     else
       @lastRequestId = request.id
@@ -209,6 +215,13 @@ class Poltergeist.WebPage
 
   clearBlockedUrls: ->
     @_blockedUrls = []
+    return true
+
+  blockedRequests: ->
+    @_blockedRequests
+
+  clearBlockedRequests: ->
+    @_blockedRequests = {}
     return true
 
   openResourceRequests: ->

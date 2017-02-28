@@ -229,8 +229,8 @@ module Capybara::Poltergeist
       browser.scroll_to(left, top)
     end
 
-    def network_traffic
-      browser.network_traffic
+    def network_traffic(type = nil)
+      browser.network_traffic(type)
     end
 
     def clear_network_traffic
