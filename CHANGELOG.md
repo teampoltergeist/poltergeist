@@ -1,3 +1,12 @@
+### Edge ###
+
+#### Features ####
+*   Driver#network_traffic will return blocked page requests if passed :blocked (Kyle Rippey)
+*   Driver#evaluate_script can return page elements from JS (Thomas Walpole)
+
+#### Bug Fixes ####
+*   Node#== takes page_id into account
+
 ### 1.13.0 ###
 
 #### Features ####
