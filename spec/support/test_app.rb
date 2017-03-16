@@ -41,6 +41,10 @@ class TestApp
     render_view 'with_different_resources'
   end
 
+  get '/poltergeist/redirect_to_headers' do
+    redirect '/poltergeist/headers'
+  end
+
   get '/poltergeist/redirect' do
     redirect '/poltergeist/with_different_resources'
   end

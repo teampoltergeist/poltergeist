@@ -401,6 +401,20 @@ module Capybara::Poltergeist
         expect(ajax_request).to_not include('REFERER: http://google.com')
         expect(ajax_request).to_not include('TEMPA: a')
       end
+
+      it 'keeps added headers on redirects by default' do
+        @driver.add_header('X-Custom-Header', '1', :permanent => false)
+        @session.visit('/poltergeist/redirect_to_headers')
+        expect(@driver.body).to include('X_CUSTOM_HEADER: 1')
+      end
+
+      it 'does not keep added headers on redirect when ' \
+         'permanent is no_redirect' do
+        @driver.add_header('X-Custom-Header', '1', :permanent => :no_redirect)
+
+        @session.visit('/poltergeist/redirect_to_headers')
+        expect(@driver.body).not_to include('X_CUSTOM_HEADER: 1')
+      end
     end
 
     it 'supports clicking precise coordinates' do
