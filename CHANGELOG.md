@@ -1,4 +1,4 @@
-### Edge ###
+### 1.14.0 ###
 
 #### Features ####
 *   Driver#network_traffic will return blocked page requests if passed :blocked (Kyle Rippey)

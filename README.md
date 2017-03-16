@@ -193,10 +193,9 @@ visit(login_path)
 page.driver.headers # => { "User-Agent" => "Poltergeist" }
 ```
 
-This way your temporary headers will be sent only for the initial request, all
-subsequent request will only contain your permanent headers.
-However the temporary headers will still be sent on 30x redirects. If the
-headers should not be sent on redirects, specify `permanent: :no_redirect`.
+This way your temporary headers will be sent only for the initial request, and related 30x redirects. All
+subsequent request will only contain your permanent headers. If the temporary
+headers should not be sent on related 30x redirects, specify `permanent: :no_redirect`.
 
 ### Inspecting network traffic ###
 
