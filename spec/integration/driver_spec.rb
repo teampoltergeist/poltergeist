@@ -465,19 +465,33 @@ module Capybara::Poltergeist
         )
       end
 
+      after do
+        @extended_driver.quit
+      end
+
       it 'supports extending the phantomjs world' do
+        @extended_driver.visit session_url('/poltergeist/requiring_custom_extension')
+        expect(@extended_driver.body).
+          to include(%Q%Location: <span id="location">1,-1</span>%)
+        expect(
+          @extended_driver.evaluate_script("document.getElementById('location').innerHTML")
+        ).to eq('1,-1')
+        expect(
+          @extended_driver.evaluate_script('navigator.geolocation')
+        ).to_not eq(nil)
+      end
+
+      it 'errors when extension is unavailable' do
         begin
-          @extended_driver.visit session_url('/poltergeist/requiring_custom_extension')
-          expect(@extended_driver.body).
-            to include(%Q%Location: <span id="location">1,-1</span>%)
-          expect(
-            @extended_driver.evaluate_script("document.getElementById('location').innerHTML")
-          ).to eq('1,-1')
-          expect(
-            @extended_driver.evaluate_script('navigator.geolocation')
-          ).to_not eq(nil)
+          @failing_driver = Capybara::Poltergeist::Driver.new(
+            @session.app,
+            logger: TestSessions.logger,
+            inspector: ENV['DEBUG'] != nil,
+            extensions: %W% #{File.expand_path '../../support/non_existent.js', __FILE__} %
+          )
+          expect { @failing_driver.visit '/' }.to raise_error(Capybara::Poltergeist::BrowserError, /Unable to load extension: .*non_existent\.js/)
         ensure
-          @extended_driver.quit
+          @failing_driver.quit
         end
       end
     end

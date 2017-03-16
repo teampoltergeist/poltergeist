@@ -8,6 +8,7 @@
 
 #### Bug Fixes ####
 *   Node#== takes page_id into account
+*   Error raised if an extension fails to load
 
 ### 1.13.0 ###
 
