@@ -443,10 +443,10 @@ class Poltergeist.Browser
       allHeaders[name] = value
     this.set_headers(allHeaders)
 
-  add_header: (header, permanent, for_followed_redirect) ->
-    @currentPage.addTempHeader(header) unless permanent
-    unless for_followed_redirect
-      @currentPage.addTempHeaderToRemoveOnRedirect(header)
+  add_header: (header, { permanent = true }) ->
+    unless permanent == true
+      @currentPage.addTempHeader(header)
+      @currentPage.addTempHeaderToRemoveOnRedirect(header) if permanent == "no_redirect"
     this.add_headers(header)
 
   response_headers: ->

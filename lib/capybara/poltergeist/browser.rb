@@ -297,8 +297,8 @@ module Capybara::Poltergeist
       command 'add_headers', headers
     end
 
-    def add_header(header, permanent, for_followed_redirect)
-      command 'add_header', header, permanent, for_followed_redirect
+    def add_header(header, options={})
+      command 'add_header', header, options
     end
 
     def response_headers
