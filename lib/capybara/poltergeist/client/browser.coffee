@@ -75,8 +75,10 @@ class Poltergeist.Browser
     return
 
   add_extension: (extension) ->
-    @currentPage.injectExtension extension
-    @current_command.sendResponse 'success'
+    if @currentPage.injectExtension extension
+      @current_command.sendResponse 'success'
+    else
+      @current_command.sendError(new Poltergeist.BrowserError("Unable to load extension: #{extension}"))
 
   node: (page_id, id) ->
     if @currentPage.id == page_id
