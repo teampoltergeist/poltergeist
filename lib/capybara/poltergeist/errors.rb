@@ -154,6 +154,12 @@ module Capybara
       end
     end
 
+    class KeyError < ::ArgumentError
+      def initialize(response)
+        super(response["args"].first)
+      end
+    end
+
     class TimeoutError < Error
       def initialize(message)
         @message = message

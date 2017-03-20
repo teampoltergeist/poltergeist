@@ -11,7 +11,8 @@ module Capybara::Poltergeist
       'Poltergeist.InvalidSelector' => InvalidSelector,
       'Poltergeist.StatusFailError' => StatusFailError,
       'Poltergeist.NoSuchWindowError' => NoSuchWindowError,
-      'Poltergeist.UnsupportedFeature' => UnsupportedFeature
+      'Poltergeist.UnsupportedFeature' => UnsupportedFeature,
+      'Poltergeist.KeyError' => KeyError,
     }
 
     attr_reader :server, :client, :logger
@@ -442,15 +443,15 @@ module Capybara::Poltergeist
     }
 
     def normalize_keys(keys)
-      keys.map do |key|
-        case key
+      keys.map do |key_desc|
+        case key_desc
         when Array
-          # [:Shift, "s"] => { modifier: "shift", key: "S" }
-          # [:Shift, "string"] => { modifier: "shift", key: "STRING" }
-          # [:Ctrl, :Left] => { modifier: "ctrl", key: :Left }
-          # [:Ctrl, :Shift, :Left] => { modifier: "ctrl,shift", key: :Left }
+          # [:Shift, "s"] => { modifier: "shift", keys: "S" }
+          # [:Shift, "string"] => { modifier: "shift", keys: "STRING" }
+          # [:Ctrl, :Left] => { modifier: "ctrl", key: 'Left' }
+          # [:Ctrl, :Shift, :Left] => { modifier: "ctrl,shift", key: 'Left' }
           # [:Ctrl, :Left, :Left] => { modifier: "ctrl", key: [:Left, :Left] }
-          _keys = key.chunk {|k| k.is_a?(Symbol) && %w(shift ctrl control alt meta command).include?(k.to_s.downcase) }
+          _keys = key_desc.chunk {|k| k.is_a?(Symbol) && %w(shift ctrl control alt meta command).include?(k.to_s.downcase) }
           modifiers = if _keys.peek[0]
             _keys.next[1].map do |k|
               k = k.to_s.downcase
@@ -461,19 +462,19 @@ module Capybara::Poltergeist
           else
             ''
           end
-          letter = normalize_keys(_keys.next[1].map {|k| k.is_a?(String) ? k.upcase : k })
-          { modifier: modifiers, key: letter }
+          letters = normalize_keys(_keys.next[1].map {|k| k.is_a?(String) ? k.upcase : k })
+          { modifier: modifiers, keys: letters }
         when Symbol
           # Return a known sequence for PhantomJS
-          key = KEY_ALIASES.fetch(key, key)
+          key = KEY_ALIASES.fetch(key_desc, key_desc)
           if match = key.to_s.match(/numpad(.)/)
-            res = { key: match[1], modifier: 'keypad' }
+            res = { keys: match[1], modifier: 'keypad' }
           elsif key !~ /^[A-Z]/
-            key = key.to_s.split('_').map{|e| e.capitalize}.join
+            key = key.to_s.split('_').map{ |e| e.capitalize }.join
           end
           res || { key: key }
         when String
-          key # Plain string, nothing to do
+          key_desc # Plain string, nothing to do
         end
       end
     end
