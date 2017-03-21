@@ -88,8 +88,9 @@ was 1.0.2, so you should use that if you still need Ruby 1.8 support.
 There are no special steps to take. You don't need Xvfb or any running X
 server at all.
 
-[Travis CI](https://travis-ci.org/), [CircleCI](https://circleci.com/)
-and [Codeship](https://codeship.com/) has PhantomJS pre-installed.
+[Travis CI](https://travis-ci.org/), [CircleCI](https://circleci.com/), 
+[Codeship](https://codeship.com/) and [Semaphore](https://semaphoreci.com/) 
+have PhantomJS pre-installed.
 
 Depending on your tests, one thing that you may need is some fonts. If
 you're getting errors on a CI that don't occur during development then
