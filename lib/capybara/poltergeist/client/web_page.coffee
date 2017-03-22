@@ -162,25 +162,26 @@ class Poltergeist.WebPage
       name = name.charAt(0).toUpperCase() + name.substring(1)
       this.keyCode(name)
 
-  _waitState_until: (state, callback, timeout, timeout_callback) ->
-    if (@state == state)
-      callback.call(this)
+  _waitState_until: (states, callback, timeout, timeout_callback) ->
+    if (@state in states)
+      callback.call(this, @state)
     else
       if new Date().getTime() > timeout
         timeout_callback.call(this)
       else
-        setTimeout (=> @_waitState_until(state, callback, timeout, timeout_callback)), 100
+        setTimeout (=> @_waitState_until(states, callback, timeout, timeout_callback)), 100
 
-  waitState: (state, callback, max_wait=0, timeout_callback) ->
+  waitState: (states, callback, max_wait=0, timeout_callback) ->
     # callback and timeout_callback will be called with this == the current page
-    if @state == state
-      callback.call(this)
+    states = [].concat(states)
+    if @state in states
+      callback.call(this, @state)
     else
       if max_wait != 0
         timeout = new Date().getTime() + (max_wait*1000)
-        setTimeout (=> @_waitState_until(state, callback, timeout, timeout_callback)), 100
+        setTimeout (=> @_waitState_until(states, callback, timeout, timeout_callback)), 100
       else
-        setTimeout (=> @waitState(state, callback)), 100
+        setTimeout (=> @waitState(states, callback)), 100
 
   setHttpAuth: (user, password) ->
     this.native().settings.userName = user

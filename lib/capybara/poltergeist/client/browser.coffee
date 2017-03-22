@@ -503,24 +503,20 @@ class Poltergeist.Browser
     throw new Error('zomg')
 
   go_back: ->
-    command = @current_command
     if @currentPage.canGoBack
-      @currentPage.state = 'loading'
+      @currentPage.state = 'wait_for_loading'
       @currentPage.goBack()
-      @currentPage.waitState 'default', ->
-        command.sendResponse(true)
+      @_waitForHistoryChange()
     else
-      command.sendResponse(false)
+      @current_command.sendResponse(false)
 
   go_forward: ->
-    command = @current_command
     if @currentPage.canGoForward
-      @currentPage.state = 'loading'
+      @currentPage.state = 'wait_for_loading'
       @currentPage.goForward()
-      @currentPage.waitState 'default', ->
-        command.sendResponse(true)
+      @_waitForHistoryChange()
     else
-      command.sendResponse(false)
+      @current_command.sendResponse(false)
 
   set_url_whitelist: (wildcards...)->
     @currentPage.urlWhitelist = (@_wildcardToRegexp(wc) for wc in wildcards)
@@ -544,6 +540,21 @@ class Poltergeist.Browser
   clear_memory_cache: ->
     @currentPage.clearMemoryCache()
     @current_command.sendResponse(true)
+
+  _waitForHistoryChange: ->
+    command = @current_command
+    @currentPage.waitState ['loading','default'], (cur_state) ->
+      if cur_state == 'loading'
+        # loading has started, wait for completion
+        @waitState 'default', ->
+          command.sendResponse(true)
+      else
+        # page has loaded
+        command.sendResponse(true)
+    , 0.5, ->
+      # if haven't moved to loading/default in time assume history API state change
+      @state = 'default'
+      command.sendResponse(true)
 
   _wildcardToRegexp: (wildcard)->
     wildcard = wildcard.replace(/[\-\[\]\/\{\}\(\)\+\.\\\^\$\|]/g, "\\$&")
