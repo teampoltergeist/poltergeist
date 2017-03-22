@@ -853,10 +853,10 @@ describe Capybara::Session do
     end
 
     it 'should submit form' do
-        @session.visit('/poltergeist/send_keys')
-        @session.find(:css, '#without_submit_button').trigger('submit')
-        expect(@session.find(:css, '#without_submit_button input').value).to eq('Submitted')
-      end
+      @session.visit('/poltergeist/send_keys')
+      @session.find(:css, '#without_submit_button').trigger('submit')
+      expect(@session.find(:css, '#without_submit_button input').value).to eq('Submitted')
+    end
 
     context 'whitespace stripping tests' do
       before do
@@ -954,6 +954,25 @@ describe Capybara::Session do
         }.not_to raise_error
         expect(@session).to have_xpath("//a[@id='open-twice' and @confirmed='false']")
       end
+    end
+
+    it "can go back when history state has been pushed" do
+      @session.visit('/')
+      @session.execute_script('window.history.pushState({foo: "bar"}, "title", "bar2.html");')
+      expect(@session).to have_current_path('/bar2.html')
+      expect{@session.go_back}.not_to raise_error
+      expect(@session).to have_current_path('/')
+    end
+
+    it "can go forward when history state is used" do
+      @session.visit('/')
+      @session.execute_script('window.history.pushState({foo: "bar"}, "title", "bar2.html");')
+      expect(@session).to have_current_path('/bar2.html')
+      #don't use #go_back here to isolate the test
+      @session.execute_script('window.history.go(-1);')
+      expect(@session).to have_current_path('/')
+      expect{@session.go_forward}.not_to raise_error
+      expect(@session).to have_current_path('/bar2.html')
     end
   end
 end
