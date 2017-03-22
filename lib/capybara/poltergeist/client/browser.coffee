@@ -356,10 +356,14 @@ class Poltergeist.Browser
 
   _send_keys_with_modifiers: (keys, current_modifier_code = 0) ->
     for sequence in keys
-      key = if sequence.key?
-        @currentPage.keyCode(sequence.key) || sequence.key
+      if sequence.key?
+        if !(key=@currentPage.keyCode(sequence.key))
+          @current_command.sendError(new Poltergeist.KeyError("Unknown key: #{sequence.key}"))
+          return
+      else if sequence.keys?
+        key=sequence.keys
       else
-        sequence
+        key=sequence
 
       if sequence.modifier?
         modifier_keys = @currentPage.keyModifierKeys(sequence.modifier)
@@ -369,6 +373,7 @@ class Poltergeist.Browser
         @currentPage.sendEvent('keyup', modifier_key) for modifier_key in modifier_keys
       else
         @currentPage.sendEvent('keypress', key, null, null, current_modifier_code)
+    return true
 
   render_base64: (format, { full = false, selector = null } = {})->
     window_scroll_position = @currentPage.native().evaluate("function(){ return [window.pageXOffset, window.pageYOffset] }")

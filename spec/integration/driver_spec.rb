@@ -1332,6 +1332,13 @@ module Capybara::Poltergeist
         input.send_keys(:numpad2, :numpad8, :divide, :decimal)
         expect(@session.find(:css, '#key-events-output')).to have_text("keydown:98 keydown:104 keydown:111 keydown:110")
       end
+
+      it 'raises error for unknown keys' do
+        input = @session.find(:css, '#empty_input')
+        expect {
+          input.send_keys('abc', :blah)
+        }.to raise_error Capybara::Poltergeist::KeyError, 'Unknown key: Blah'
+      end
     end
 
     context 'set' do

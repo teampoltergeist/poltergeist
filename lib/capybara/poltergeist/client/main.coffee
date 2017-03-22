@@ -50,6 +50,11 @@ class Poltergeist.MouseEventFailed extends Poltergeist.Error
   name: "Poltergeist.MouseEventFailed"
   args: -> [@eventName, @selector, @position]
 
+class Poltergeist.KeyError extends Poltergeist.Error
+  constructor: (@message) ->
+  name: "Poltergeist.KeyError"
+  args: -> [@message]
+
 class Poltergeist.JavascriptError extends Poltergeist.Error
   constructor: (@errors) ->
   name: "Poltergeist.JavascriptError"
