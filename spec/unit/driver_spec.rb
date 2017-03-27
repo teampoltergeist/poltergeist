@@ -112,7 +112,7 @@ module Capybara::Poltergeist
 
       it 'starts the server with the provided timeout' do
         server = double
-        expect(Server).to receive(:new).with(anything, 3).and_return(server)
+        expect(Server).to receive(:new).with(anything, 3, nil).and_return(server)
         expect(subject.server).to eq(server)
       end
     end

@@ -21,6 +21,12 @@ gemfile:
 env:
   global:
     - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+    - POLTERGEIST_TEST_HOST=poltergeist.test.com
+
+addons:
+  hosts:
+    # Used to test custom host driver feature
+    - poltergeist.test.com
 
 matrix:
   include:

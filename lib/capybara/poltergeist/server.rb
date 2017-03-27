@@ -1,10 +1,11 @@
 module Capybara::Poltergeist
   class Server
-    attr_reader :socket, :fixed_port, :timeout
+    attr_reader :socket, :fixed_port, :timeout, :custom_host
 
-    def initialize(fixed_port = nil, timeout = nil)
+    def initialize(fixed_port = nil, timeout = nil, custom_host = nil)
       @fixed_port = fixed_port
       @timeout    = timeout
+      @custom_host = custom_host
       start
     end
 
@@ -12,12 +13,16 @@ module Capybara::Poltergeist
       @socket.port
     end
 
+    def host
+      @socket.host
+    end
+
     def timeout=(sec)
       @timeout = @socket.timeout = sec
     end
 
     def start
-      @socket = WebSocketServer.new(fixed_port, timeout)
+      @socket = WebSocketServer.new(fixed_port, timeout, custom_host)
     end
 
     def stop

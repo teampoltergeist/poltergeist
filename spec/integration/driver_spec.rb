@@ -860,6 +860,25 @@ module Capybara::Poltergeist
       end
     end
 
+    it 'allows the driver to have a custom host' do
+      begin
+        # Use custom host "pointing" to localhost, specified by POLTERGEIST_TEST_HOST env var.
+        # Use /etc/hosts or iptables for this: https://superuser.com/questions/516208/how-to-change-ip-address-to-point-to-localhost
+        # A custom host and corresponding env var for Travis is specified in .travis.yml
+        # If var is unspecified, skip test
+        host = ENV['POLTERGEIST_TEST_HOST']
+
+        skip if host.nil?
+
+        driver = Capybara::Poltergeist::Driver.new(@driver.app, host: host, port: 12345)
+        driver.visit session_url('/')
+
+        expect { TCPServer.new(host, 12345) }.to raise_error(Errno::EADDRINUSE)
+      ensure
+        driver.quit if driver
+      end
+    end
+
     it 'lists the open windows' do
       @session.visit '/'
 
