@@ -117,6 +117,8 @@ class Poltergeist.Browser
         resources = @openResourceRequests()
         msg = if resources.length
           "Timed out with the following resources still waiting #{resources.join(',')}"
+        else
+          "Timed out with no open resource requests"
         command.sendError(new Poltergeist.StatusFailError(url,msg))
       return
 
