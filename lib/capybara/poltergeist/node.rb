@@ -95,6 +95,8 @@ module Capybara::Poltergeist
       elsif self[:isContentEditable]
         command :delete_text
         send_keys(value.to_s)
+      else
+        command :set, value.to_s
       end
     end
 

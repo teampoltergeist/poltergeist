@@ -220,6 +220,8 @@ class PoltergeistAgent.Node
     this.trigger('focus')
     @element.value = ''
 
+    if @element.tagName == 'SELECT'
+      this.select(value)
     if @element.type == 'number'
       @element.value = value
     else

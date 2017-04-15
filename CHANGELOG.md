@@ -182,6 +182,7 @@
 *   Fix JRuby support when PhantomJS quits first  [Issue #382, #404]
 *   Fix ability to pass element to `within_frame`  [Issue #414]
 *   Fix setting negatives in number inputs (John Hawthorn)
+*   Allow value to be set in select elements
 
 ### 1.4.1 ###
 
