@@ -37,7 +37,10 @@ module Capybara::Poltergeist
     end
 
     def current_url
-      command 'current_url'
+      url = command 'current_url'
+      url.split('#', 2).compact.map do |part|
+        URI::escape(URI::unescape(part))
+      end.join('#')
     end
 
     def status_code
