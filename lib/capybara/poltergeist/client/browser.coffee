@@ -155,6 +155,9 @@ class Poltergeist.Browser
   property: (page_id, id, name) ->
     @current_command.sendResponse this.node(page_id, id).getProperty(name)
 
+  property: (page_id, id, name) ->
+    this.sendResponse this.node(page_id, id).getProperty(name)
+
   attribute: (page_id, id, name) ->
     @current_command.sendResponse this.node(page_id, id).getAttribute(name)
 
