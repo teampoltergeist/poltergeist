@@ -833,6 +833,13 @@ describe Capybara::Session do
       @session.attach_file 'file', __FILE__
     end
 
+    it 'handles file uploads' do
+      @session.visit '/poltergeist/attach_file2'
+      @session.attach_file 'file', __FILE__
+      @session.click_button("submit")
+      expect(@session.body).to include("file uploaded")
+    end
+
     it 'logs mouse event co-ordinates' do
       @session.visit('/')
       @session.find(:css, 'a').click
