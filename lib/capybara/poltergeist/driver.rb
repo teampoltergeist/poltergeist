@@ -37,7 +37,7 @@ module Capybara::Poltergeist
     end
 
     def server
-      @server ||= Server.new(options[:port], options.fetch(:timeout) { DEFAULT_TIMEOUT })
+      @server ||= Server.new(options[:port], options.fetch(:timeout) { DEFAULT_TIMEOUT }, options[:host])
     end
 
     def client

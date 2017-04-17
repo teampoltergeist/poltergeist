@@ -1,3 +1,8 @@
+### 1.15.0 ###
+
+#### Features ####
+*   Driver now supports specifying a custom IP address (host) with the :host option (Arturo Castro)
+
 ### 1.14.0 ###
 
 #### Features ####

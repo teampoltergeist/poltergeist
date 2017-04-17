@@ -18,21 +18,22 @@ module Capybara::Poltergeist
 
     HOST = '127.0.0.1'
 
-    attr_reader :port, :driver, :socket, :server
+    attr_reader :port, :driver, :socket, :server, :host
     attr_accessor :timeout
 
-    def initialize(port = nil, timeout = nil)
+    def initialize(port = nil, timeout = nil, custom_host = nil)
       @timeout = timeout
-      @server  = start_server(port)
+      @server  = start_server(port, custom_host)
       @receive_mutex = Mutex.new
     end
 
-    def start_server(port)
+    def start_server(port, custom_host)
       time = Time.now
 
       begin
-        TCPServer.open(HOST, port || 0).tap do |server|
+        TCPServer.open(custom_host || HOST, port || 0).tap do |server|
           @port = server.addr[1]
+          @host = server.addr[2]
         end
       rescue Errno::EADDRINUSE
         if (Time.now - time) < BIND_TIMEOUT

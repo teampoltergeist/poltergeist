@@ -281,8 +281,8 @@ end
     to be passed to PhantomJS, e.g. `['--load-images=no', '--ignore-ssl-errors=yes']`
 *   `:extensions` (Array) - An array of JS files to be preloaded into
     the phantomjs browser. Useful for faking unsupported APIs.
-*   `:port` (Fixnum) - The port which should be used to communicate
-    with the PhantomJS process. Defaults to a random open port.
+*   `:port` (Fixnum) - The port which should be used to communicate with the PhantomJS process. Defaults to a random open port.
+*   `:host` (String) - The name or IP of the PhantomJS host. Default is '127.0.0.1'.
 *   `:url_blacklist` (Array) - Default session url blacklist - expressed as an array of strings to match against requested URLs.
 *   `:url_whitelist` (Array) - Default session url whitelist - expressed as an array of strings to match against requested URLs.
 
