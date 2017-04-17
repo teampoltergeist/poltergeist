@@ -80,6 +80,7 @@ module Capybara::Poltergeist
     def quit
       server.stop
       client.stop
+      phantomjs_logger.close if phantomjs_logger.respond_to?(:close)
     end
 
     # logger should be an object that responds to puts, or nil
