@@ -45,6 +45,9 @@ detail](https://github.com/jnicklas/capybara/blob/master/README.md#transactions-
 You need at least PhantomJS 1.8.1.  There are *no other external
 dependencies* (you don't need Qt, or a running X server, etc.)
 
+**Note**: Poltergeist doesn't currently support PhantomJS 2, which is a
+big rewrite of PhantomJS 1.x.
+
 ### Mac ###
 
 * *Homebrew*: `brew install phantomjs`
