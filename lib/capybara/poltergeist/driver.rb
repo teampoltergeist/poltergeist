@@ -272,7 +272,7 @@ module Capybara::Poltergeist
         if @started
           URI.parse(browser.current_url).host
         else
-          URI.parse(Capybara.app_host || '').host || "127.0.0.1"
+          URI.parse(default_cookie_host).host || "127.0.0.1"
         end
       end
 
@@ -394,7 +394,7 @@ module Capybara::Poltergeist
 
     def find_modal(options)
       start_time    = Time.now
-      timeout_sec   = options[:wait] || begin Capybara.default_max_wait_time rescue Capybara.default_wait_time end
+      timeout_sec   = options.fetch(:wait) { session_wait_time }
       expect_text   = options[:text]
       expect_regexp = expect_text.is_a?(Regexp) ? expect_text : Regexp.escape(expect_text.to_s)
       not_found_msg = 'Unable to find modal dialog'
@@ -409,6 +409,22 @@ module Capybara::Poltergeist
         retry
       end
       modal_text
+    end
+
+    def session_wait_time
+      if respond_to?(:session_options)
+        session_options.default_max_wait_time
+      else
+        begin Capybara.default_max_wait_time rescue Capybara.default_wait_time end
+      end
+    end
+
+    def default_cookie_host
+      if respond_to?(:session_options)
+        session_options.app_host
+      else
+        Capybara.app_host
+      end || ''
     end
 
     def unwrap_script_result(arg)

@@ -974,5 +974,22 @@ describe Capybara::Session do
       expect{@session.go_forward}.not_to raise_error
       expect(@session).to have_current_path('/bar2.html')
     end
+
+    context "in threadsafe mode" do
+      before do
+        skip "No threadsafe mode in this version" unless Capybara.respond_to?(:threadsafe)
+        Capybara::SpecHelper.reset_threadsafe(true, @session) if Capybara.respond_to?(:threadsafe)
+      end
+
+      after do
+        Capybara::SpecHelper.reset_threadsafe(false, @session) if Capybara.respond_to?(:threadsafe)
+      end
+
+      it "uses per session wait setting" do
+        Capybara.default_max_wait_time = 1
+        @session.config.default_max_wait_time = 2
+        expect(@session.driver.send(:session_wait_time)).to eq 2
+      end
+    end
   end
 end
