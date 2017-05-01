@@ -2,6 +2,11 @@
 
 #### Features ####
 *   Driver now supports specifying a custom IP address (host) with the :host option (Arturo Castro)
+*   Support for Capybara's "threadsafe" mode introduced in Capybara 2.14.0 (Thomas Walpole)
+
+#### Bug Fixes ####
+*   Make STDOUT redirection threadsafe on MRI (Tony Novak)
+*   Fixed hang when go_back/forward triggered history state changes rather than page loads (Thomas Walpole)
 
 ### 1.14.0 ###
 
