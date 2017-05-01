@@ -9,7 +9,7 @@ provided by [PhantomJS](http://phantomjs.org/).
 **If you're viewing this at https://github.com/teampoltergeist/poltergeist,
 you're reading the documentation for the master branch.
 [View documentation for the latest release
-(1.13.0).](https://github.com/teampoltergeist/poltergeist/tree/v1.13.0)**
+(1.15.0).](https://github.com/teampoltergeist/poltergeist/tree/v1.15.0)**
 
 ## Getting help ##
 
@@ -88,8 +88,8 @@ was 1.0.2, so you should use that if you still need Ruby 1.8 support.
 There are no special steps to take. You don't need Xvfb or any running X
 server at all.
 
-[Travis CI](https://travis-ci.org/), [CircleCI](https://circleci.com/), 
-[Codeship](https://codeship.com/) and [Semaphore](https://semaphoreci.com/) 
+[Travis CI](https://travis-ci.org/), [CircleCI](https://circleci.com/),
+[Codeship](https://codeship.com/) and [Semaphore](https://semaphoreci.com/)
 have PhantomJS pre-installed.
 
 Depending on your tests, one thing that you may need is some fonts. If
