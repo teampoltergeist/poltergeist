@@ -16,19 +16,23 @@ as well as the steps you've taken to isolate the issue so far.
 
 # Add a Feature; fix a Bug
 
+All pull requests must contain
+[good commit messages](https://github.com/blog/926-shiny-new-commit-styles).
+
 All pull requests which add a feature or fix a bug must have the
-following things:
+following extra things:
 
 * Integration test(s). These generally go into
   `spec/integration/session_spec.rb`, unless it's something specific to
   the driver, in which case it goes in `spec/integration/driver_spec.rb`.
   (So a test for `page.driver.resize` goes in `driver_spec.rb` but a test
   for `page.execute_script` goes in `session_spec.rb`.)
-* A [good commit
-  message](https://github.com/blog/926-shiny-new-commit-styles)
 * An entry into the changelog. Reference the Github issue number if there is an
   associated bug report. Feel free to add your name if you want to be
   credited.
+
+Documentation-only pull requests must include [ci skip] in their commit
+messages.
 
 # Keep in mind:
 
