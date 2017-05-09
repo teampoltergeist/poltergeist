@@ -142,7 +142,7 @@ any valid CSS element selector to make a screenshot bounded by that element
 If you need for some reasons base64 encoded screenshot you can simply call
 `render_base64` that will return you encoded image. Additional options are the
 same as for `save_screenshot` except the first argument which is format (:png by
-default, acceptable :png, :gif, :jpeg).
+default, acceptable :png, :gif, :jpeg and :pdf).
 
 ### Clicking precise coordinates ###
 
