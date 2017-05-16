@@ -19,7 +19,7 @@ class Poltergeist.Browser
     if @page?
       unless @page.closed
         @page.clearLocalStorage() if @page.currentUrl() != 'about:blank'
-        @page.release()
+        @page.close()
       phantom.clearCookies()
 
     @page = @currentPage = new Poltergeist.WebPage
@@ -280,7 +280,7 @@ class Poltergeist.Browser
   close_window: (handle) ->
     page = @getPageByHandle(handle)
     if page
-      page.release()
+      page.close()
       @current_command.sendResponse(true)
     else
       @current_command.sendResponse(false)
