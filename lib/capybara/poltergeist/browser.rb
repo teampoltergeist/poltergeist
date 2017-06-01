@@ -62,7 +62,11 @@ module Capybara::Poltergeist
 
     def find(method, selector)
       result = command('find', method, selector)
-      result['ids'].map { |id| [result['page_id'], id] }
+      if result.respond_to?(:[]) #If we reset the driver before it connects, we may not get an array
+        result['ids'].map { |id| [result['page_id'], id] }
+      else
+        []
+      end
     end
 
     def find_within(page_id, id, method, selector)
