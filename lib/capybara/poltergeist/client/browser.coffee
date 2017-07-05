@@ -520,6 +520,11 @@ class Poltergeist.Browser
     else
       @current_command.sendResponse(false)
 
+  refresh: ->
+    @currentPage.state = 'wait_for_loading'
+    @currentPage.reload()
+    @_waitForHistoryChange()
+
   set_url_whitelist: (wildcards...)->
     @currentPage.urlWhitelist = (@_wildcardToRegexp(wc) for wc in wildcards)
     @current_command.sendResponse(true)

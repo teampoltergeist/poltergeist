@@ -361,6 +361,10 @@ module Capybara::Poltergeist
       browser.go_forward
     end
 
+    def refresh
+      browser.refresh
+    end
+
     def accept_modal(type, options = {})
       case type
       when :confirm
