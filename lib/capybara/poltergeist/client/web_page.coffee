@@ -6,7 +6,7 @@ class Poltergeist.WebPage
                 'onClosing']
 
   @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'render', 'close',
-                'renderBase64', 'goBack', 'goForward']
+                'renderBase64', 'goBack', 'goForward', 'reload']
 
   @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'documentSize',
                 'beforeUpload', 'afterUpload', 'clearLocalStorage']
