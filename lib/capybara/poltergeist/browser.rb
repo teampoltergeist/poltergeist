@@ -439,7 +439,7 @@ module Capybara::Poltergeist
       equals:    :Equal,
       Control:   :Ctrl,
       control:   :Ctrl,
-      mulitply:  'numpad*',
+      multiply:  'numpad*',
       add:       'numpad+',
       divide:    'numpad/',
       subtract:  'numpad-',
