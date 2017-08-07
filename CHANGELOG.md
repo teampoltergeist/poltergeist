@@ -1,3 +1,12 @@
+### 1.16.0 ###
+
+#### Features ####
+*  Support Capybara Session#refresh (Thomas Walpole)
+
+#### Bug Fixes ####
+*  Fixed key alias spelling for "multiply"
+*  Fix hangs while waiting for PhantomJS to die (Thomas Walpole)[Issue #747]
+
 ### 1.15.0 ###
 
 #### Features ####

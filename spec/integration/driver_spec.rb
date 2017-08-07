@@ -890,7 +890,7 @@ module Capybara::Poltergeist
         # If var is unspecified, skip test
         host = ENV['POLTERGEIST_TEST_HOST']
 
-        skip if host.nil?
+        skip "POLTERGEIST_TEST_HOST not set" if host.nil?
 
         driver = Capybara::Poltergeist::Driver.new(@driver.app, host: host, port: 12345)
         driver.visit session_url('/')
