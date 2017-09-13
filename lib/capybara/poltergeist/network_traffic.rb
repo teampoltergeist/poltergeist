@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Capybara::Poltergeist
   module NetworkTraffic
     require 'capybara/poltergeist/network_traffic/request'

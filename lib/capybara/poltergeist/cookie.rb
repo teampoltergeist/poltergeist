@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Capybara::Poltergeist
   class Cookie
     def initialize(attributes)

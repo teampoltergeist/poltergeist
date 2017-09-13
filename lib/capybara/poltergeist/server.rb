@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Capybara::Poltergeist
   class Server
     attr_reader :socket, :fixed_port, :timeout, :custom_host

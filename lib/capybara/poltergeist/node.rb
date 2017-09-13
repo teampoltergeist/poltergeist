@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Capybara::Poltergeist
   class Node < Capybara::Driver::Node
     attr_reader :page_id, :id
