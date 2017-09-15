@@ -1,6 +1,7 @@
+# coding: utf-8
+
 # frozen_string_literal: true
 
-# coding: utf-8
 require 'spec_helper'
 
 skip = []
