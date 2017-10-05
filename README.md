@@ -87,6 +87,10 @@ platforms.
 Ruby 1.8 is no longer supported. The last release to support Ruby 1.8
 was 1.0.2, so you should use that if you still need Ruby 1.8 support.
 
+PhantomJS does not support ES6 features at the time of writing this
+document. Setting `js_errors` to `true` can help determine if failing
+tests require Polyfills.
+
 ## Running on a CI ##
 
 There are no special steps to take. You don't need Xvfb or any running X
