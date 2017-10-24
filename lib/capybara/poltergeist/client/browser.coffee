@@ -208,6 +208,18 @@ class Poltergeist.Browser
       throw new Poltergeist.ObsoleteNode if arg["ELEMENT"]["page_id"] != @currentPage.id
     @current_command.sendResponse @currentPage.evaluate("function() { return #{script} }", args...)
 
+  evaluate_async: (script, max_wait, args...) ->
+    for arg in args when @_isElementArgument(arg)
+      throw new Poltergeist.ObsoleteNode if arg["ELEMENT"]["page_id"] != @currentPage.id
+    command = @current_command
+    cb = (result)=>
+      command.sendResponse(result)
+    @currentPage.evaluate_async("function() { #{script} }", cb, args...)
+    setTimeout(=>
+      command.sendError(new Poltergeist.ScriptTimeoutError)
+    , max_wait*1000)
+
+
   execute: (script, args...) ->
     for arg in args when @_isElementArgument(arg)
       throw new Poltergeist.ObsoleteNode if arg["ELEMENT"]["page_id"] != @currentPage.id

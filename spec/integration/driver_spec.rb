@@ -1424,5 +1424,24 @@ module Capybara::Poltergeist
         })
       end
     end
+
+    context 'evaluate_async_script' do
+      it 'handles evaluate_async_script value properly' do
+        @session.using_wait_time(5) do
+          expect(@session.driver.evaluate_async_script('arguments[0](null)')).to be_nil
+          expect(@session.driver.evaluate_async_script('arguments[0](false)')).to be false
+          expect(@session.driver.evaluate_async_script('arguments[0](true)')).to be true
+          expect(@session.driver.evaluate_async_script("arguments[0]({foo: 'bar'})")).to eq({'foo' => 'bar'})
+        end
+      end
+
+      it 'will timeout' do
+        @session.using_wait_time(1) do
+          expect {
+            @session.driver.evaluate_async_script('var callback=arguments[0]; setTimeout(function(){callback(true)}, 4000)')
+          }.to raise_error Capybara::Poltergeist::ScriptTimeoutError
+        end
+      end
+    end
   end
 end

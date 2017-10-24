@@ -11,6 +11,7 @@ module Capybara::Poltergeist
       'Poltergeist.InvalidSelector' => InvalidSelector,
       'Poltergeist.StatusFailError' => StatusFailError,
       'Poltergeist.NoSuchWindowError' => NoSuchWindowError,
+      'Poltergeist.ScriptTimeoutError' => ScriptTimeoutError,
       'Poltergeist.UnsupportedFeature' => UnsupportedFeature,
       'Poltergeist.KeyError' => KeyError,
     }
@@ -123,6 +124,10 @@ module Capybara::Poltergeist
 
     def evaluate(script, *args)
       command 'evaluate', script, *args
+    end
+
+    def evaluate_async(script, wait_time, *args)
+      command 'evaluate_async', script, wait_time, *args
     end
 
     def execute(script, *args)
