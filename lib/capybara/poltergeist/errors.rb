@@ -174,6 +174,13 @@ module Capybara
       end
     end
 
+    class ScriptTimeoutError < Error
+      def message
+        "Timed out waiting for evaluated script to resturn a value"
+      end
+    end
+
+
     class DeadClient < Error
       def initialize(message)
         @message = message

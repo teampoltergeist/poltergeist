@@ -3,7 +3,7 @@ class Poltergeist.WebPage
                 'onLoadFinished', 'onInitialized', 'onLoadStarted',
                 'onResourceRequested', 'onResourceReceived', 'onResourceError',
                 'onNavigationRequested', 'onUrlChanged', 'onPageCreated',
-                'onClosing']
+                'onClosing', 'onCallback']
 
   @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'render', 'close',
                 'renderBase64', 'goBack', 'goForward', 'reload']
@@ -29,6 +29,8 @@ class Poltergeist.WebPage
     @_requestedResources = {}
     @_responseHeaders = []
     @_tempHeadersToRemoveOnRedirect = {}
+    @_asyncResults = {}
+    @_asyncEvaluationId = 0
 
     for callback in WebPage.CALLBACKS
       this.bindCallback(callback)
@@ -84,6 +86,10 @@ class Poltergeist.WebPage
 
     @errors.push(message: message, stack: stackString)
     return true
+
+  onCallbackNative: (data) ->
+    @_asyncResults[data['command_id']] = data['command_result']
+    true
 
   onResourceRequestedNative: (request, net) ->
     @_networkTraffic[request.id] = {
@@ -369,6 +375,32 @@ class Poltergeist.WebPage
       return window.__poltergeist.wrapResults(_result, page_id); }", @id, args...)
     result
 
+  evaluate_async: (fn, callback, args...) ->
+    command_id = ++@_asyncEvaluationId
+    cb = callback
+    this.injectAgent()
+    this.native().evaluate("function(){
+      var page_id = arguments[0];
+      var args = [];
+      for(var i=1; i < arguments.length; i++){
+        if ((typeof(arguments[i]) == 'object') && (typeof(arguments[i]['ELEMENT']) == 'object')){
+          args.push(window.__poltergeist.get(arguments[i]['ELEMENT']['id']).element);
+        } else {
+          args.push(arguments[i])
+        }
+      }
+      args.push(function(result){
+        result = window.__poltergeist.wrapResults(result, page_id);
+        window.callPhantom( { command_id: #{command_id}, command_result: result } );
+      });
+      #{this.stringifyCall(fn, "args")};
+      return}", @id, args...)
+
+    setTimeout( =>
+      @_checkForAsyncResult(command_id, cb)
+    , 10)
+    return
+
   execute: (fn, args...) ->
     this.native().evaluate("function() {
       for(var i=0; i < arguments.length; i++){
@@ -425,6 +457,16 @@ class Poltergeist.WebPage
       clearMemoryCache()
     else
       throw new Poltergeist.UnsupportedFeature("clearMemoryCache is supported since PhantomJS 2.0.0")
+
+  _checkForAsyncResult: (command_id, callback)=>
+    if @_asyncResults.hasOwnProperty(command_id)
+      callback(@_asyncResults[command_id])
+      delete @_asyncResults[command_id]
+    else
+      setTimeout(=>
+        @_checkForAsyncResult(command_id, callback)
+      , 50)
+    return
 
   _blockRequest: (url) ->
     useWhitelist = @urlWhitelist.length > 0

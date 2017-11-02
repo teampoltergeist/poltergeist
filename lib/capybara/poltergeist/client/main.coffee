@@ -74,6 +74,10 @@ class Poltergeist.NoSuchWindowError extends Poltergeist.Error
   name: "Poltergeist.NoSuchWindowError"
   args: -> []
 
+class Poltergeist.ScriptTimeoutError extends Poltergeist.Error
+  name: "Poltergeist.ScriptTimeoutError"
+  args: -> []
+
 class Poltergeist.UnsupportedFeature extends Poltergeist.Error
   constructor: (@message) ->
   name: "Poltergeist.UnsupportedFeature"

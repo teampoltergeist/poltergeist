@@ -139,6 +139,11 @@ module Capybara::Poltergeist
       unwrap_script_result(result)
     end
 
+    def evaluate_async_script(script, *args)
+      result = browser.evaluate_async(script, session_wait_time, *args.map { |arg| arg.is_a?(Capybara::Poltergeist::Node) ?  arg.native : arg})
+      unwrap_script_result(result)
+    end
+
     def execute_script(script, *args)
       browser.execute(script, *args.map { |arg| arg.is_a?(Capybara::Poltergeist::Node) ?  arg.native : arg})
       nil
