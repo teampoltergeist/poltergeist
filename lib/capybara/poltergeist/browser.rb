@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "capybara/poltergeist/errors"
 require "capybara/poltergeist/command"
 require 'json'

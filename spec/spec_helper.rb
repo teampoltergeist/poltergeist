@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 POLTERGEIST_ROOT = File.expand_path('../..', __FILE__)
 $:.unshift(POLTERGEIST_ROOT + '/lib')
 
