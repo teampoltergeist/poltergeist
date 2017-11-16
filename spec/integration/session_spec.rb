@@ -616,8 +616,8 @@ describe Capybara::Session do
 
         @session.within_window(popup) do
           expect(@session.html).to include('slow page')
-          @session.execute_script('window.close()')
         end
+        popup.close
       end
 
       it 'can access a second window of the same name' do
@@ -631,8 +631,8 @@ describe Capybara::Session do
 
         @session.within_window(popup) do
           expect(@session.html).to include('Test')
-          @session.execute_script('window.close()')
         end
+        popup.close
 
         another_popup = @session.window_opened_by do
           @session.execute_script <<-JS
@@ -642,8 +642,8 @@ describe Capybara::Session do
 
         @session.within_window(another_popup) do
           expect(@session.html).to include('Test')
-          @session.execute_script('window.close()')
         end
+        another_popup.close
       end
     end
 
@@ -973,8 +973,8 @@ describe Capybara::Session do
             end
             expect(@session).to have_xpath("//a[@id='open-match' and @confirmed='true']")
           }.not_to raise_error
-          @session.execute_script('window.close()')
         end
+        popup.close
       end
     end
 
