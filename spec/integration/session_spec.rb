@@ -616,8 +616,8 @@ describe Capybara::Session do
 
         @session.within_window(popup) do
           expect(@session.html).to include('slow page')
-          @session.execute_script('window.close()')
         end
+        popup.close
       end
 
       it 'can access a second window of the same name' do
@@ -631,8 +631,8 @@ describe Capybara::Session do
 
         @session.within_window(popup) do
           expect(@session.html).to include('Test')
-          @session.execute_script('window.close()')
         end
+        popup.close
 
         another_popup = @session.window_opened_by do
           @session.execute_script <<-JS
@@ -643,6 +643,7 @@ describe Capybara::Session do
         @session.within_window(another_popup) do
           expect(@session.html).to include('Test')
         end
+        another_popup.close
       end
     end
 
@@ -924,11 +925,8 @@ describe Capybara::Session do
     end
 
     context 'modals' do
-      before do
-        @session.visit '/poltergeist/with_js'
-      end
-
       it 'matches on partial strings' do
+        @session.visit '/poltergeist/with_js'
         expect {
           @session.accept_confirm '[reg.exp] (chara©+er$)' do
             @session.click_link('Open for match')
@@ -938,6 +936,7 @@ describe Capybara::Session do
       end
 
       it 'matches on regular expressions' do
+        @session.visit '/poltergeist/with_js'
         expect {
           @session.accept_confirm(/^.t.ext.*\[\w{3}\.\w{3}\]/i) do
             @session.click_link('Open for match')
@@ -947,6 +946,7 @@ describe Capybara::Session do
       end
 
       it 'works with nested modals' do
+        @session.visit '/poltergeist/with_js'
         expect {
           @session.dismiss_confirm 'Are you really sure?' do
             @session.accept_confirm 'Are you sure?' do
@@ -955,6 +955,26 @@ describe Capybara::Session do
           end
         }.not_to raise_error
         expect(@session).to have_xpath("//a[@id='open-twice' and @confirmed='false']")
+      end
+
+      it 'works with second window' do
+        @session.visit '/'
+
+        popup = @session.window_opened_by do
+          @session.execute_script <<-JS
+            window.open('/poltergeist/with_js', 'popup')
+          JS
+        end
+
+        @session.within_window(popup) do
+          expect {
+            @session.accept_confirm do
+              @session.click_link('Open for match')
+            end
+            expect(@session).to have_xpath("//a[@id='open-match' and @confirmed='true']")
+          }.not_to raise_error
+        end
+        popup.close
       end
     end
 

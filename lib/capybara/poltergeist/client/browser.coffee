@@ -31,31 +31,36 @@ class Poltergeist.Browser
     @confirm_processes = []
     @prompt_responses = []
 
+    @setupPageHandlers(@page)
 
-    @page.native().onAlert = (msg) =>
+    return
+
+  setupPageHandlers: (page) ->
+    page.native().onAlert = (msg) =>
       @setModalMessage msg
       return
 
-    @page.native().onConfirm = (msg) =>
+    page.native().onConfirm = (msg) =>
       process = @confirm_processes.pop()
       process = true if process == undefined
       @setModalMessage msg
       return process
 
-    @page.native().onPrompt = (msg, defaultVal) =>
+    page.native().onPrompt = (msg, defaultVal) =>
       response = @prompt_responses.pop()
       response = defaultVal if (response == undefined || response == false)
 
       @setModalMessage msg
       return response
 
-    @page.onPageCreated = (newPage) =>
-      page = new Poltergeist.WebPage(newPage)
-      page.handle = "#{@_counter++}"
-      page.urlBlacklist = @page.urlBlacklist
-      page.urlWhitelist = @page.urlWhitelist
-      page.setViewportSize(@page.viewportSize())
-      @pages.push(page)
+    page.onPageCreated = (newPage) =>
+      _page = new Poltergeist.WebPage(newPage)
+      _page.handle = "#{@_counter++}"
+      _page.urlBlacklist = page.urlBlacklist
+      _page.urlWhitelist = page.urlWhitelist
+      _page.setViewportSize(page.viewportSize())
+      @setupPageHandlers(_page)
+      @pages.push(_page)
 
     return
 
