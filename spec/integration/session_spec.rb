@@ -1013,5 +1013,46 @@ describe Capybara::Session do
         expect(@session.driver.send(:session_wait_time)).to eq 2
       end
     end
+
+    if Capybara::Poltergeist.mri? && !Capybara::Poltergeist.windows?
+      require 'pty'
+      require 'timeout'
+
+      context 'with pty' do
+        before do
+          Tempfile.open(%w(test rb)) do |file|
+            file.print(script)
+            file.flush
+
+            Timeout.timeout(10) do
+              PTY.spawn("bundle exec ruby #{file.path}") do |read, write, pid|
+                sleep 0.1 until read.readline.chomp == 'Please type enter'
+                write.puts
+                sleep 0.1 until status = PTY.check(pid)
+                @status = status
+              end
+            end
+          end
+        end
+
+        let(:script) {
+          <<-RUBY
+            require 'capybara/poltergeist'
+
+            server = Capybara::Poltergeist::Server.new(nil, 3, nil)
+            client = Capybara::Poltergeist::Client.start(server)
+            browser = Capybara::Poltergeist::Browser.new(server, client)
+            browser.visit('http://example.com')
+            puts 'Please type enter'
+            sleep 1
+            browser.current_url
+          RUBY
+        }
+
+        it do
+          expect(@status).to be_success
+        end
+      end
+    end
   end
 end
