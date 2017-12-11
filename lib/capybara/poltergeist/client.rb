@@ -67,7 +67,7 @@ module Capybara::Poltergeist
         end
       }
 
-      process_options = {}
+      process_options = {in: File::NULL}
       process_options[:pgroup] = true unless Capybara::Poltergeist.windows?
       process_options[:out] = @write_io if Capybara::Poltergeist.mri?
 
