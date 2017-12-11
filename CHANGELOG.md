@@ -1,3 +1,13 @@
+### Master ###
+
+#### Features ####
+*  Support Capybara Session#evaluate_async_script (Thomas Walpole)
+
+#### Bug Fixes ####
+
+*  Fixed system modals in a second window (Shunichi Ikegami)
+*  Fixed hang due to stdin input being processed by Poltergeist::Client (Fumiaki Matsushima)
+
 ### 1.16.0 ###
 
 #### Features ####
