@@ -9,7 +9,7 @@ provided by [PhantomJS](http://phantomjs.org/).
 **If you're viewing this at https://github.com/teampoltergeist/poltergeist,
 you're reading the documentation for the master branch.
 [View documentation for the latest release
-(1.16.0).](https://github.com/teampoltergeist/poltergeist/tree/v1.16.0)**
+(1.17.0).](https://github.com/teampoltergeist/poltergeist/tree/v1.17.0)**
 
 ## Getting help ##
 
@@ -80,7 +80,7 @@ guide](http://phantomjs.org/build.html).)
 
 ## Compatibility ##
 
-Poltergeist runs on MRI 1.9, JRuby 1.9 and Rubinius 1.9. Poltergeist
+Poltergeist runs on MRI 1.9+, JRuby 1.9+ and Rubinius 1.9+. Poltergeist
 and PhantomJS are currently supported on Mac OS X, Linux, and Windows
 platforms.
 
@@ -89,7 +89,8 @@ was 1.0.2, so you should use that if you still need Ruby 1.8 support.
 
 PhantomJS does not support ES6 features at the time of writing this
 document. Setting `js_errors` to `true` can help determine if failing
-tests require Polyfills.
+tests require Polyfills, although a bug in PhantomJS can cause silent
+failures if using ES6 features like `let`, `const`, etc.
 
 ## Running on a CI ##
 

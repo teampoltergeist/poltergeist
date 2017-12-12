@@ -1,4 +1,4 @@
-### Master ###
+### 1.17.0 ###
 
 #### Features ####
 *  Support Capybara Session#evaluate_async_script (Thomas Walpole)
