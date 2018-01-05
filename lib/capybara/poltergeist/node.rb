@@ -129,16 +129,16 @@ module Capybara::Poltergeist
       command :disabled?
     end
 
-    def click
-      command :click
+    def click(keys=[], offset={})
+      command :click, keys, offset
     end
 
-    def right_click
-      command :right_click
+    def right_click(keys=[], offset={})
+      command :right_click, keys, offset
     end
 
-    def double_click
-      command :double_click
+    def double_click(keys=[], offset={})
+      command :double_click, keys, offset
     end
 
     def hover

@@ -4,6 +4,7 @@ gemspec :path => '..'
 
 gem 'capybara', github: 'jnicklas/capybara'
 gem 'listen'
+gem 'puma'
 
 platforms :rbx do
   gem 'rubysl'

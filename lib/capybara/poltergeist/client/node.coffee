@@ -17,7 +17,7 @@ class Poltergeist.Node
       this.prototype[name] = (args...) ->
         @page.nodeCall(@id, name, args)
 
-  mouseEventPosition: ->
+  mouseEventPosition: (offset = {})->
     viewport = @page.viewportSize()
 
     if image = @_getAreaImage()
@@ -34,25 +34,44 @@ class Poltergeist.Node
     middle = (start, end, size) ->
       start + ((Math.min(end, size) - start) / 2)
 
-    res = {
+    if offset['x']? && offset['y']?
+      x: pos.left + offset['x'],
+      y: pos.top + offset['y']
+    else
       x: middle(pos.left, pos.right,  viewport.width),
       y: middle(pos.top,  pos.bottom, viewport.height)
-    }
 
 
-  mouseEvent: (name) ->
+  mouseEvent: (name, keys, offset) ->
     if area_image = @_getAreaImage()
       area_image.scrollIntoView()
     else
       @scrollIntoView()
-    pos = this.mouseEventPosition()
+    pos = this.mouseEventPosition(offset)
     test = this.mouseEventTest(pos.x, pos.y)
     if test.status == 'success'
+      modifier_keys = (keys || []).join(',').replace('control', 'ctrl')
+      modifiers_code = @page.keyModifierCode(modifier_keys)
       if name == 'rightclick'
-        @page.mouseEvent('click', pos.x, pos.y, 'right')
-        this.trigger('contextmenu')
+        @page.mouseEvent('click', pos.x, pos.y, 'right', modifiers_code)
+        if phantom.version.major == 2 && phantom.version.minor >= 1
+           @page.sendEvent('contextmenu', pos.x, pos.y, 'right', modifiers_code)
+        else
+          scroll_pos = @page.scrollPosition()
+          @trigger('contextmenu',
+            screenX: pos.x
+            screenY: pos.y
+            clientX: pos.x + scroll_pos['left']
+            clientY: pos.y + scroll_pos['top']
+            ctrlKey: modifier_keys.indexOf('ctrl') != -1
+            altKey: modifier_keys.indexOf('alt') != -1
+            metaKey: modifier_keys.indexOf('meta') != -1
+            shiftKey: modifier_keys.indexOf('shift') != -1
+            button: 2
+          )
       else
-        @page.mouseEvent(name, pos.x, pos.y)
+        @page.mouseEvent(name, pos.x, pos.y, 'left', modifiers_code)
+
       pos
     else
       throw new Poltergeist.MouseEventFailed(name, test.selector, pos)

@@ -354,9 +354,9 @@ class Poltergeist.WebPage
 
   # Before each mouse event we make sure that the mouse is moved to where the
   # event will take place. This deals with e.g. :hover changes.
-  mouseEvent: (name, x, y, button = 'left') ->
+  mouseEvent: (name, x, y, button = 'left', modifiers = 0) ->
     this.sendEvent('mousemove', x, y)
-    this.sendEvent(name, x, y, button)
+    this.sendEvent(name, x, y, button, modifiers)
 
   evaluate: (fn, args...) ->
     this.injectAgent()
