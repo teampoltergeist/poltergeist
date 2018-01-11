@@ -196,16 +196,16 @@ module Capybara::Poltergeist
       switch_to_window(original)
     end
 
-    def click(page_id, id)
-      command 'click', page_id, id
+    def click(page_id, id, keys=[], offset={})
+      command 'click', page_id, id, keys, offset
     end
 
-    def right_click(page_id, id)
-      command 'right_click', page_id, id
+    def right_click(page_id, id, keys=[], offset={})
+      command 'right_click', page_id, id, keys, offset
     end
 
-    def double_click(page_id, id)
-      command 'double_click', page_id, id
+    def double_click(page_id, id, keys=[], offset={})
+      command 'double_click', page_id, id, keys, offset
     end
 
     def hover(page_id, id)

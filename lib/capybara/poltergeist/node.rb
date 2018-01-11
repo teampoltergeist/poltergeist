@@ -79,7 +79,9 @@ module Capybara::Poltergeist
       command :value
     end
 
-    def set(value)
+    def set(value, options = {})
+      warn "Options passed to Node#set but Poltergeist doesn't currently support any - ignoring" unless options.empty?
+
       if tag_name == 'input'
         case self[:type]
         when 'radio'
@@ -129,16 +131,16 @@ module Capybara::Poltergeist
       command :disabled?
     end
 
-    def click
-      command :click
+    def click(keys=[], offset={})
+      command :click, keys, offset
     end
 
-    def right_click
-      command :right_click
+    def right_click(keys=[], offset={})
+      command :right_click, keys, offset
     end
 
-    def double_click
-      command :double_click
+    def double_click(keys=[], offset={})
+      command :double_click, keys, offset
     end
 
     def hover

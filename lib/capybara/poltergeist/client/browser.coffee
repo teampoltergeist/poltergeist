@@ -302,14 +302,14 @@ class Poltergeist.Browser
     else
       @current_command.sendResponse(false)
 
-  mouse_event: (page_id, id, name) ->
+  mouse_event: (page_id, id, name, keys=[], offset={}) ->
     # Get the node before changing state, in case there is an exception
     node = this.node(page_id, id)
     # If the event triggers onNavigationRequested, we will transition to the 'loading'
     # state and wait for onLoadFinished before sending a response.
     @currentPage.state = 'mouse_event'
 
-    last_mouse_event = node.mouseEvent(name)
+    last_mouse_event = node.mouseEvent(name, keys, offset)
     event_page = @currentPage
     command = @current_command
 
@@ -323,14 +323,14 @@ class Poltergeist.Browser
           command.sendResponse(position: last_mouse_event)
     , 5
 
-  click: (page_id, id) ->
-    this.mouse_event page_id, id, 'click'
+  click: (page_id, id, keys, offset) ->
+    this.mouse_event page_id, id, 'click', keys, offset
 
-  right_click: (page_id, id) ->
-    this.mouse_event page_id, id, 'rightclick'
+  right_click: (page_id, id, keys, offset) ->
+    this.mouse_event page_id, id, 'rightclick', keys, offset
 
-  double_click: (page_id, id) ->
-    this.mouse_event page_id, id, 'doubleclick'
+  double_click: (page_id, id, keys, offset) ->
+    this.mouse_event page_id, id, 'doubleclick', keys, offset
 
   hover: (page_id, id) ->
     this.mouse_event page_id, id, 'mousemove'

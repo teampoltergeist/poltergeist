@@ -250,12 +250,12 @@ class PoltergeistAgent.Node
     else if value == false && !@element.parentNode.multiple
       false
     else
-      this.trigger('focus', @element.parentNode)
+      this.trigger('focus', {}, @element.parentNode)
 
       @element.selected = value
       this.changed()
 
-      this.trigger('blur', @element.parentNode)
+      this.trigger('blur', {}, @element.parentNode)
       true
 
   tagName: ->
@@ -326,7 +326,7 @@ class PoltergeistAgent.Node
     offset
 
   position: ->
-    # Elements inside an SVG return underfined for getClientRects???
+    # Elements inside an SVG return undefined for getClientRects???
     rect = @element.getClientRects()[0] || @element.getBoundingClientRect()
     throw new PoltergeistAgent.ObsoleteNode unless rect
     frameOffset = this.frameOffset()
@@ -342,12 +342,18 @@ class PoltergeistAgent.Node
 
     pos
 
-  trigger: (name, element = @element) ->
+  trigger: (name, options = {}, element = @element) ->
     if Node.EVENTS.MOUSE.indexOf(name) != -1
       event = document.createEvent('MouseEvent')
       event.initMouseEvent(
-        name, true, true, window, 0, 0, 0, 0, 0,
-        false, false, false, false, 0, null
+        name, true, true, window, 0,
+        options['screenX'] || 0, options['screenY'] || 0,
+        options['clientX'] || 0, options['clientY'] || 0,
+        options['ctrlKey'] || false,
+        options['altKey'] || false,
+        options['shiftKey'] || false,
+        options['metaKey'] || false,
+        options['button'] || 0, null
       )
     else if Node.EVENTS.FOCUS.indexOf(name) != -1
       event = this.obtainEvent(name)
