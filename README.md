@@ -207,6 +207,10 @@ This way your temporary headers will be sent only for the initial request, and r
 subsequent request will only contain your permanent headers. If the temporary
 headers should not be sent on related 30x redirects, specify `permanent: :no_redirect`.
 
+Headers set with any of these methods will be set within all windows in the
+session, with the exception of temporary headers, which are only set within the
+current window.
+
 ### Inspecting network traffic ###
 
 You can inspect the network traffic (i.e. what resources have been
