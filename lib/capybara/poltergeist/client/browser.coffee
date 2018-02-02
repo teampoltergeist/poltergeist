@@ -59,6 +59,8 @@ class Poltergeist.Browser
       _page.urlBlacklist = page.urlBlacklist
       _page.urlWhitelist = page.urlWhitelist
       _page.setViewportSize(page.viewportSize())
+      _page.setUserAgent(page.getUserAgent())
+      _page.setCustomHeaders(page.getCustomHeaders())
       @setupPageHandlers(_page)
       @pages.push(_page)
 

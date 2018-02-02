@@ -275,6 +275,9 @@ class Poltergeist.WebPage
       , selector
     )
 
+  getUserAgent: ->
+    this.native().settings.userAgent
+
   setUserAgent: (userAgent) ->
     this.native().settings.userAgent = userAgent
 

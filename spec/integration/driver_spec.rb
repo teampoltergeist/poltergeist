@@ -439,6 +439,20 @@ module Capybara::Poltergeist
         @session.visit('/poltergeist/redirect_to_headers')
         expect(@driver.body).not_to include('X_CUSTOM_HEADER: 1')
       end
+
+      it 'persists headers across popup windows' do
+        @driver.headers = {
+          'Cookie' => 'foo=bar',
+          'Host' => 'foo.com',
+          'User-Agent' => 'foo'
+        }
+        @session.visit('/poltergeist/popup_headers')
+        @session.click_link 'pop up'
+        @session.switch_to_window @session.windows.last
+        expect(@driver.body).to include('USER_AGENT: foo')
+        expect(@driver.body).to include('COOKIE: foo=bar')
+        expect(@driver.body).to include('HOST: foo.com')
+      end
     end
 
     it 'supports clicking precise coordinates' do
