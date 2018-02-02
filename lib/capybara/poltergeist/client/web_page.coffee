@@ -284,6 +284,14 @@ class Poltergeist.WebPage
   getCustomHeaders: ->
     this.native().customHeaders
 
+  getPermanentCustomHeaders: ->
+    allHeaders = @getCustomHeaders()
+    for name, value of @_tempHeaders
+      delete allHeaders[name]
+    for name, value of @_tempHeadersToRemoveOnRedirect
+      delete allHeaders[name]
+    allHeaders
+
   setCustomHeaders: (headers) ->
     this.native().customHeaders = headers
 

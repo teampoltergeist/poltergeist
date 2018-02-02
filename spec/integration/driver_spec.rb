@@ -502,6 +502,20 @@ module Capybara::Poltergeist
           expect(@driver.body).to include('HOST: foo.com')
           expect(@driver.body).to include('X_CUSTOM_HEADER: 1')
         end
+
+        it 'does not propagate temporary headers to new windows' do
+          @session.visit '/'
+          @driver.add_header('X-Custom-Header', '1', :permanent => false)
+          @session.open_new_window
+
+          @session.switch_to_window @session.windows.last
+          @session.visit('/poltergeist/headers')
+          expect(@driver.body).not_to include('X_CUSTOM_HEADER: 1')
+
+          @session.switch_to_window @session.windows.first
+          @session.visit('/poltergeist/headers')
+          expect(@driver.body).to include('X_CUSTOM_HEADER: 1')
+        end
       end
     end
 
