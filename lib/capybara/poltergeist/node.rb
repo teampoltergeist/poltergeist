@@ -49,7 +49,15 @@ module Capybara::Poltergeist
     end
 
     def visible_text
-      filter_text command(:visible_text)
+      if Capybara::VERSION.to_f < 3.0
+        filter_text command(:visible_text)
+      else
+        command(:visible_text).to_s
+                              .gsub(/\A[[:space:]&&[^\u00a0]]+/, "")
+                              .gsub(/[[:space:]&&[^\u00a0]]+\z/, "")
+                              .gsub(/\n+/, "\n")
+                              .tr("\u00a0", ' ')
+      end
     end
 
     def property(name)
@@ -184,8 +192,16 @@ module Capybara::Poltergeist
 
     private
 
-    def filter_text(text)
-      Capybara::Helpers.normalize_whitespace(text.to_s)
+    def filter_text(text, visible = true)
+      if Capybara::VERSION.to_f < 3
+        Capybara::Helpers.normalize_whitespace(text.to_s)
+      else
+        text.gsub(/[\u200b\u200e\u200f]/, '')
+            .gsub(/[\ \n\f\t\v\u2028\u2029]+/, ' ')
+            .gsub(/\A[[:space:]&&[^\u00a0]]+/, "")
+            .gsub(/[[:space:]&&[^\u00a0]]+\z/, "")
+            .tr("\u00a0", ' ')
+      end
     end
   end
 end
