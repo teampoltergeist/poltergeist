@@ -443,3 +443,4 @@ document.addEventListener(
   'DOMContentLoaded',
   -> console.log('__DOMContentLoaded')
 )
+console.log('__DOMContentLoaded') if document.readyState == 'complete'
