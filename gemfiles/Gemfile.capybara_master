@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gemspec :path => '..'
 
-gem 'capybara', github: 'teamcapybara/capybara'
+gem 'capybara', github: 'teamcapybara/capybara', branch: 'title_changes'
 gem 'listen'
 gem 'puma'
 

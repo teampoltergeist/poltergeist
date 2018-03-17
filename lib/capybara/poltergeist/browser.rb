@@ -43,6 +43,10 @@ module Capybara::Poltergeist
       command 'current_url'
     end
 
+    def frame_url
+      command 'frame_url'
+    end
+
     def status_code
       command 'status_code'
     end

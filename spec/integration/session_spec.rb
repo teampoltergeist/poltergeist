@@ -659,7 +659,7 @@ describe Capybara::Session do
         @session.visit '/poltergeist/frames'
 
         @session.within_frame 0 do
-          expect(@session.current_path).to eq('/poltergeist/slow')
+          expect(@session.driver.frame_url).to end_with('/poltergeist/slow')
         end
       end
 
@@ -668,7 +668,7 @@ describe Capybara::Session do
         frame = @session.find(:css, 'iframe[name]')
 
         @session.within_frame(frame) do
-          expect(@session.current_path).to eq('/poltergeist/slow')
+          expect(@session.driver.frame_url).to end_with('/poltergeist/slow')
         end
       end
 
@@ -677,7 +677,7 @@ describe Capybara::Session do
         frame = @session.find(:css, 'iframe:not([name]):not([id])')
 
         @session.within_frame(frame) do
-          expect(@session.current_path).to eq('/poltergeist/headers')
+          expect(@session.driver.frame_url).to end_with('/poltergeist/headers')
         end
       end
 
@@ -686,7 +686,7 @@ describe Capybara::Session do
         frame = @session.find(:css, 'iframe[id]:not([name])')
 
         @session.within_frame(frame) do
-          expect(@session.current_path).to eq('/poltergeist/get_cookie')
+          expect(@session.driver.frame_url).to end_with('/poltergeist/get_cookie')
         end
       end
 
@@ -698,11 +698,10 @@ describe Capybara::Session do
         JS
 
         @session.within_frame 'frame' do
-          expect(@session.current_path).to eq('/poltergeist/slow')
+          expect(@session.driver.frame_url).to end_with('/poltergeist/slow')
           expect(@session.html).to include('slow page')
         end
-
-        expect(@session.current_path).to eq('/')
+        expect(URI.parse(@session.driver.frame_url).path).to eq('/')
       end
 
       it 'waits for the cross-domain frame to load' do
@@ -710,11 +709,11 @@ describe Capybara::Session do
         expect(@session.current_path).to eq('/poltergeist/frames')
 
         @session.within_frame 'frame' do
-          expect(@session.current_path).to eq('/poltergeist/slow')
+          expect(@session.driver.frame_url).to end_with('/poltergeist/slow')
           expect(@session.body).to include('slow page')
         end
 
-        expect(@session.current_path).to eq('/poltergeist/frames')
+        expect(@session.driver.frame_url).to end_with('/poltergeist/frames')
       end
 
       context "with src == about:blank" do

@@ -18,7 +18,8 @@ class Poltergeist.Browser
 
     if @page?
       unless @page.closed
-        @page.clearLocalStorage() if @page.currentUrl() != 'about:blank'
+        # @page.clearLocalStorage() if @page.currentUrl() != 'about:blank'
+        @page.clearLocalStorage() if @page.frameUrl() != 'about:blank'
         @page.close()
       phantom.clearCookies()
 
@@ -129,6 +130,9 @@ class Poltergeist.Browser
   current_url: ->
     @current_command.sendResponse @currentPage.currentUrl()
 
+  frame_url: ->
+    @current_command.sendResponse @currentPage.frameUrl()
+
   status_code: ->
     @current_command.sendResponse @currentPage.statusCode
 
@@ -140,6 +144,9 @@ class Poltergeist.Browser
 
   title: ->
     @current_command.sendResponse @currentPage.title()
+
+  frame_title: ->
+    @current_command.sendResponse @currentPage.frameTitle()
 
   find: (method, selector) ->
     @current_command.sendResponse(page_id: @currentPage.id, ids: @currentPage.find(method, selector))
@@ -230,8 +237,8 @@ class Poltergeist.Browser
     @currentPage.execute("function() { #{script} }", args...)
     @current_command.sendResponse(true)
 
-  frameUrl: (frame_name) ->
-    @currentPage.frameUrl(frame_name)
+  frameUrlFor: (frame_name) ->
+    @currentPage.frameUrlFor(frame_name)
 
   pushFrame: (command, name, timeout) ->
     if Array.isArray(name)
@@ -241,11 +248,12 @@ class Poltergeist.Browser
         frame.setAttribute('name', "_random_name_#{new Date().getTime()}")
         name = frame.getAttribute('name')
 
-    frame_url = @frameUrl(name)
+    frame_url = @frameUrlFor(name)
     if frame_url in @currentPage.blockedUrls()
       command.sendResponse(true)
     else if @currentPage.pushFrame(name)
-      if frame_url && (frame_url != 'about:blank') && (@currentPage.currentUrl() == 'about:blank')
+      # if frame_url && (frame_url != 'about:blank') && (@currentPage.currentUrl() == 'about:blank')
+      if frame_url && (frame_url != 'about:blank') && (@currentPage.frameUrl() == 'about:blank')
         @currentPage.state = 'awaiting_frame_load'
         @currentPage.waitState 'default', ->
           command.sendResponse(true)

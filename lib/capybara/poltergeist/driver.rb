@@ -100,7 +100,15 @@ module Capybara::Poltergeist
     end
 
     def current_url
-      browser.current_url
+      if Capybara::VERSION.to_f < 3.0
+        frame_url
+      else
+        browser.current_url
+      end
+    end
+
+    def frame_url
+      browser.frame_url
     end
 
     def status_code
