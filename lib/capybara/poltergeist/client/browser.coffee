@@ -18,7 +18,6 @@ class Poltergeist.Browser
 
     if @page?
       unless @page.closed
-        # @page.clearLocalStorage() if @page.currentUrl() != 'about:blank'
         @page.clearLocalStorage() if @page.frameUrl() != 'about:blank'
         @page.close()
       phantom.clearCookies()

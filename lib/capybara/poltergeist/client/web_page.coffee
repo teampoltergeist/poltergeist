@@ -231,7 +231,10 @@ class Poltergeist.WebPage
     @native().url
 
   frameUrl: ->
-    @native().frameUrl
+    if phantom.version.major > 2 || (phantom.version.major == 2 && phantom.version.minor >= 1)
+      @native().frameUrl
+    else
+      @runCommand('frameUrl')
 
   frameUrlFor: (frameNameOrId) ->
     query = (frameNameOrId) ->

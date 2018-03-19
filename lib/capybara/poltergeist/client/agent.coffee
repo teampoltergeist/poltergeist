@@ -13,8 +13,8 @@ class PoltergeistAgent
   # Somehow PhantomJS returns all characters(brackets, etc) properly encoded
   # except whitespace character in pathname part of the location. This hack
   # is intended to fix this up.
-  # currentUrl: ->
-  #   window.location.href.replace(/\ /g, '%20')
+  frameUrl: ->
+    window.location.href
 
   find: (method, selector, within = document) ->
     try

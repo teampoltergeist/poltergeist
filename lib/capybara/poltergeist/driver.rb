@@ -103,12 +103,12 @@ module Capybara::Poltergeist
       if Capybara::VERSION.to_f < 3.0
         frame_url
       else
-        browser.current_url
+        browser.current_url.gsub(' ', '%20') # PhantomJS < 2.1 doesn't escape spaces
       end
     end
 
     def frame_url
-      browser.frame_url
+      browser.frame_url.gsub(' ', '%20') # PhantomJS < 2.1 doesn't escape spaces
     end
 
     def status_code
@@ -125,7 +125,15 @@ module Capybara::Poltergeist
     end
 
     def title
-      browser.title
+      if Capybara::VERSION.to_f < 3.0
+        frame_title
+      else
+        browser.title
+      end
+    end
+
+    def frame_title
+      browser.frame_title
     end
 
     def find(method, selector)

@@ -63,6 +63,10 @@ module Capybara::Poltergeist
       command 'title'
     end
 
+    def frame_title
+      command 'frame_title'
+    end
+
     def parents(page_id, id)
       command 'parents', page_id, id
     end
