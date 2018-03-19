@@ -14,9 +14,11 @@ cache:
     - $PWD/travis-phantomjs21
 
 rvm:
-  - 2.3.3
-  - 2.2.2
-  - 2.1.6
+  - 2.5.0
+  - 2.4.3
+  - 2.3.6
+  - 2.2.9
+  - 2.1.10
   - rbx-3
 gemfile:
   - Gemfile
@@ -38,19 +40,22 @@ matrix:
       gemfile: gemfiles/Gemfile.1_9_3
     - rvm: 2.0.0
       gemfile: gemfiles/Gemfile.2_0_0
-    - rvm: 2.2.2
+    - rvm: 2.2.9
       gemfile: Gemfile
       env: PHANTOMJS=$PWD/travis-phantomjs2/phantomjs
-    - rvm: 2.4.1
+    - rvm: 2.4.3
       gemfile: Gemfile
       env: PHANTOMJS=$PWD/travis-phantomjs21/phantomjs
-    - rvm: 2.3.3
+    - rvm: 2.5.0
+      gemfile: Gemfile
+      env: PHANTOMJS=$PWD/travis-phantomjs21/phantomjs
+    - rvm: 2.3.6
       gemfile: gemfiles/Gemfile.capybara_master
       env: PHANTOMJS=$PWD/travis-phantomjs21/phantomjs
-    - rvm: jruby-9.1.7.0
+    - rvm: jruby-9.1.16.0
       gemfile: Gemfile
       env: PHANTOMJS=$PWD/travis-phantomjs21/phantomjs
   allow_failures:
     - gemfile: gemfiles/Gemfile.capybara_master
-    - rvm: jruby-9.1.7.0
+    - rvm: jruby-9.1.16.0
     - rvm: rbx-3
