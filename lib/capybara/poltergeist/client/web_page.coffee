@@ -5,10 +5,11 @@ class Poltergeist.WebPage
                 'onNavigationRequested', 'onUrlChanged', 'onPageCreated',
                 'onClosing', 'onCallback']
 
-  @DELEGATES = ['open', 'sendEvent', 'uploadFile', 'render', 'close',
+  @DELEGATES = ['url', 'open', 'sendEvent', 'uploadFile', 'render', 'close',
                 'renderBase64', 'goBack', 'goForward', 'reload']
 
-  @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'documentSize',
+  # @COMMANDS  = ['currentUrl', 'find', 'nodeCall', 'documentSize',
+  @COMMANDS  = ['find', 'nodeCall', 'documentSize',
                 'beforeUpload', 'afterUpload', 'clearLocalStorage']
 
   @EXTENSIONS = []
@@ -221,9 +222,21 @@ class Poltergeist.WebPage
     this.native().frameContent
 
   title: ->
+    this.native().title
+
+  frameTitle: ->
     this.native().frameTitle
 
-  frameUrl: (frameNameOrId) ->
+  currentUrl: ->
+    @native().url
+
+  frameUrl: ->
+    if phantom.version.major > 2 || (phantom.version.major == 2 && phantom.version.minor >= 1)
+      @native().frameUrl
+    else
+      @runCommand('frameUrl')
+
+  frameUrlFor: (frameNameOrId) ->
     query = (frameNameOrId) ->
       document.querySelector("iframe[name='#{frameNameOrId}'], iframe[id='#{frameNameOrId}']")?.src
     this.evaluate(query, frameNameOrId)

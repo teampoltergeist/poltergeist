@@ -1445,5 +1445,23 @@ module Capybara::Poltergeist
         end
       end
     end
+
+    context 'URL' do
+      it 'can get the frames url' do
+        @session.visit '/poltergeist/frames'
+
+        @session.within_frame 0 do
+          expect(@session.driver.frame_url).to end_with('/poltergeist/slow')
+          if Capybara::VERSION.to_f < 3.0
+            expect(@session.driver.current_url).to end_with('/poltergeist/slow')
+          else
+            # current_url is required to return the top level browsing context in Capybara 3
+            expect(@session.driver.current_url).to end_with('/poltergeist/frames')
+          end
+        end
+        expect(@session.driver.frame_url).to end_with('/poltergeist/frames')
+        expect(@session.driver.current_url).to end_with('/poltergeist/frames')
+      end
+    end
   end
 end

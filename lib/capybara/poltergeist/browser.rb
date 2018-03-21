@@ -43,6 +43,10 @@ module Capybara::Poltergeist
       command 'current_url'
     end
 
+    def frame_url
+      command 'frame_url'
+    end
+
     def status_code
       command 'status_code'
     end
@@ -57,6 +61,10 @@ module Capybara::Poltergeist
 
     def title
       command 'title'
+    end
+
+    def frame_title
+      command 'frame_title'
     end
 
     def parents(page_id, id)
