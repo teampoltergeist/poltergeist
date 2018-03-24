@@ -60,8 +60,9 @@ module Capybara::Poltergeist
       # Moreover, TLSv1 is interpreted in phantomjs as TLS1.0 (not TLSv1.0 or newer),
       # so in some websites which uses only TLS1.1 or newer
       # cannot be accessed by TLSv1.
-      
+
       list += ["--ignore-ssl-errors=yes"] unless list.grep(/ignore-ssl-errors/).any?
+      list += ["--ssl-protocol=default"] unless list.grep(/ssl-protocol/).any?
       list += ["--remote-debugger-port=#{inspector.port}", "--remote-debugger-autorun=yes"] if inspector
       list
     end
