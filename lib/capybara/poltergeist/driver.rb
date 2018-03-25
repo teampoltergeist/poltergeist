@@ -54,12 +54,9 @@ module Capybara::Poltergeist
     def phantomjs_options
       list = options[:phantomjs_options] || []
 
-      # Since 4 years ago, phantomjs ssl protocol default was changed
-      # from SSLv3 into TLS1.0 or newer versions such as 1.1 and 1.2,
-      # so there is no meaning setting protocol as TLSv1.
-      # Moreover, TLSv1 is interpreted in phantomjs as TLS1.0 (not TLSv1.0 or newer),
-      # so in some websites which uses only TLS1.1 or newer
-      # cannot be accessed by TLSv1.
+      # TLSv1 is interpreted in phantomjs as TLS1.0 (not TLSv1.0 or newer),
+      # and nowadays TLSv1.0's vulnerbility is sometimes pointed out.
+      # So in most websites, which uses only TLS1.1 or newer, cannot be accessed by "TLSv1".
 
       list += ["--ignore-ssl-errors=yes"] unless list.grep(/ignore-ssl-errors/).any?
       list += ["--ssl-protocol=TLSv1.1"] unless list.grep(/ssl-protocol/).any?
