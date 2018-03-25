@@ -54,11 +54,12 @@ module Capybara::Poltergeist
     def phantomjs_options
       list = options[:phantomjs_options] || []
 
-      # PhantomJS defaults to only using SSLv3, which since POODLE (Oct 2014)
-      # many sites have dropped from their supported protocols (eg PayPal,
-      # Braintree).
+      # TLSv1 is interpreted in phantomjs as TLS1.0 (not TLSv1.0 or newer),
+      # and nowadays TLSv1.0's vulnerbility is sometimes pointed out.
+      # So in most websites, which uses only TLS1.1 or newer, cannot be accessed by "TLSv1".
+
       list += ["--ignore-ssl-errors=yes"] unless list.grep(/ignore-ssl-errors/).any?
-      list += ["--ssl-protocol=TLSv1"] unless list.grep(/ssl-protocol/).any?
+      list += ["--ssl-protocol=TLSv1.1"] unless list.grep(/ssl-protocol/).any?
       list += ["--remote-debugger-port=#{inspector.port}", "--remote-debugger-autorun=yes"] if inspector
       list
     end
