@@ -40,6 +40,8 @@ matrix:
       gemfile: gemfiles/Gemfile.1_9_3
     - rvm: 2.0.0
       gemfile: gemfiles/Gemfile.2_0_0
+    - rvm: 2.5.0
+      gemfile: gemfiles/Gemfile.capy2
     - rvm: 2.2.9
       gemfile: Gemfile
       env: PHANTOMJS=$PWD/travis-phantomjs2/phantomjs
