@@ -5,21 +5,19 @@ before_script: ${PHANTOMJS:-phantomjs} --version
 before_install:
    - mkdir -p travis-phantomjs2 travis-phantomjs21
    - if [ ! -f $PWD/travis-phantomjs2/phantomjs ]; then wget https://github.com/Pyppe/phantomjs2.0-ubuntu14.04x64/raw/master/bin/phantomjs -O $PWD/travis-phantomjs2/phantomjs; fi
-   - if [ ! -f $PWD/travis-phantomjs21/phantomjs ]; then wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2 -O $PWD/phantomjs-2.1-linux-x86_64.tar.bz2; tar -xvf $PWD/phantomjs-2.1-linux-x86_64.tar.bz2 -C $PWD/travis-phantomjs21 --strip-components 2 phantomjs-2.1.1-linux-x86_64/bin/phantomjs; fi
-   - chmod +x $PWD/travis-phantomjs2/phantomjs $PWD/travis-phantomjs21/phantomjs
+   - chmod +x $PWD/travis-phantomjs2/phantomjs
    - gem update bundler
 cache:
   directories:
     - $PWD/travis-phantomjs2
-    - $PWD/travis-phantomjs21
 
 rvm:
-  - 2.5.0
-  - 2.4.3
-  - 2.3.6
-  - 2.2.9
+  - 2.5.1
+  - 2.4.4
+  - 2.3.7
+  - 2.2.10
   - 2.1.10
-  - rbx-3
+  - jruby-9.1.16.0
 gemfile:
   - Gemfile
 env:
@@ -40,24 +38,13 @@ matrix:
       gemfile: gemfiles/Gemfile.1_9_3
     - rvm: 2.0.0
       gemfile: gemfiles/Gemfile.2_0_0
-    - rvm: 2.5.0
+    - rvm: 2.5.1
       gemfile: gemfiles/Gemfile.capy2
     - rvm: 2.2.9
       gemfile: Gemfile
       env: PHANTOMJS=$PWD/travis-phantomjs2/phantomjs
-    - rvm: 2.4.3
-      gemfile: Gemfile
-      env: PHANTOMJS=$PWD/travis-phantomjs21/phantomjs
-    - rvm: 2.5.0
-      gemfile: Gemfile
-      env: PHANTOMJS=$PWD/travis-phantomjs21/phantomjs
     - rvm: 2.3.6
       gemfile: gemfiles/Gemfile.capybara_master
-      env: PHANTOMJS=$PWD/travis-phantomjs21/phantomjs
-    - rvm: jruby-9.1.16.0
-      gemfile: Gemfile
-      env: PHANTOMJS=$PWD/travis-phantomjs21/phantomjs
   allow_failures:
     - gemfile: gemfiles/Gemfile.capybara_master
     - rvm: jruby-9.1.16.0
-    - rvm: rbx-3
