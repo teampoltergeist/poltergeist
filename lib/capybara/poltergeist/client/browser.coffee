@@ -59,6 +59,8 @@ class Poltergeist.Browser
       _page.urlBlacklist = page.urlBlacklist
       _page.urlWhitelist = page.urlWhitelist
       _page.setViewportSize(page.viewportSize())
+      _page.setUserAgent(page.getUserAgent())
+      _page.setCustomHeaders(page.getPermanentCustomHeaders())
       @setupPageHandlers(_page)
       @pages.push(_page)
 
@@ -464,22 +466,23 @@ class Poltergeist.Browser
     @current_command.sendResponse(@currentPage.getCustomHeaders())
 
   set_headers: (headers) ->
-    # Workaround for https://code.google.com/p/phantomjs/issues/detail?id=745
-    @currentPage.setUserAgent(headers['User-Agent']) if headers['User-Agent']
-    @currentPage.setCustomHeaders(headers)
-    @current_command.sendResponse(true)
+    this.add_headers(headers, false, false)
 
-  add_headers: (headers) ->
-    allHeaders = @currentPage.getCustomHeaders()
-    for name, value of headers
-      allHeaders[name] = value
-    this.set_headers(allHeaders)
+  add_headers: (headers, local = false, keepExisting = true) ->
+    pages = if local then [@currentPage] else @pages
+    pages.forEach (page) =>
+      allHeaders = if keepExisting then page.getCustomHeaders() else {}
+      for name, value of headers
+        allHeaders[name] = value
+      page.setUserAgent(allHeaders['User-Agent']) if allHeaders['User-Agent']
+      page.setCustomHeaders(allHeaders)
+    @current_command.sendResponse(true)
 
   add_header: (header, { permanent = true }) ->
     unless permanent == true
       @currentPage.addTempHeader(header)
       @currentPage.addTempHeaderToRemoveOnRedirect(header) if permanent == "no_redirect"
-    this.add_headers(header)
+    this.add_headers(header, permanent != true)
 
   response_headers: ->
     @current_command.sendResponse(@currentPage.responseHeaders())

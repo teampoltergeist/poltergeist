@@ -288,11 +288,22 @@ class Poltergeist.WebPage
       , selector
     )
 
+  getUserAgent: ->
+    this.native().settings.userAgent
+
   setUserAgent: (userAgent) ->
     this.native().settings.userAgent = userAgent
 
   getCustomHeaders: ->
     this.native().customHeaders
+
+  getPermanentCustomHeaders: ->
+    allHeaders = @getCustomHeaders()
+    for name, value of @_tempHeaders
+      delete allHeaders[name]
+    for name, value of @_tempHeadersToRemoveOnRedirect
+      delete allHeaders[name]
+    allHeaders
 
   setCustomHeaders: (headers) ->
     this.native().customHeaders = headers

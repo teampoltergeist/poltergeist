@@ -439,6 +439,84 @@ module Capybara::Poltergeist
         @session.visit('/poltergeist/redirect_to_headers')
         expect(@driver.body).not_to include('X_CUSTOM_HEADER: 1')
       end
+
+      context 'multiple windows' do
+        it 'persists headers across popup windows' do
+          @driver.headers = {
+            'Cookie' => 'foo=bar',
+            'Host' => 'foo.com',
+            'User-Agent' => 'foo'
+          }
+          @session.visit('/poltergeist/popup_headers')
+          @session.click_link 'pop up'
+          @session.switch_to_window @session.windows.last
+          expect(@driver.body).to include('USER_AGENT: foo')
+          expect(@driver.body).to include('COOKIE: foo=bar')
+          expect(@driver.body).to include('HOST: foo.com')
+        end
+
+        it 'sets headers in existing windows' do
+          @session.open_new_window
+          @driver.headers = {
+            'Cookie' => 'foo=bar',
+            'Host' => 'foo.com',
+            'User-Agent' => 'foo'
+          }
+          @session.visit('/poltergeist/headers')
+          expect(@driver.body).to include('USER_AGENT: foo')
+          expect(@driver.body).to include('COOKIE: foo=bar')
+          expect(@driver.body).to include('HOST: foo.com')
+
+          @session.switch_to_window @session.windows.last
+          @session.visit('/poltergeist/headers')
+          expect(@driver.body).to include('USER_AGENT: foo')
+          expect(@driver.body).to include('COOKIE: foo=bar')
+          expect(@driver.body).to include('HOST: foo.com')
+        end
+
+        it 'keeps temporary headers local to the current window' do
+          @session.open_new_window
+          @driver.add_header('X-Custom-Header', '1', :permanent => false)
+
+          @session.switch_to_window @session.windows.last
+          @session.visit('/poltergeist/headers')
+          expect(@driver.body).not_to include('X_CUSTOM_HEADER: 1')
+
+          @session.switch_to_window @session.windows.first
+          @session.visit('/poltergeist/headers')
+          expect(@driver.body).to include('X_CUSTOM_HEADER: 1')
+        end
+
+        it 'does not mix temporary headers with permanent ones when propagating to other windows' do
+          @session.open_new_window
+          @driver.add_header('X-Custom-Header', '1', :permanent => false)
+          @driver.add_header('Host', 'foo.com')
+
+          @session.switch_to_window @session.windows.last
+          @session.visit('/poltergeist/headers')
+          expect(@driver.body).to include('HOST: foo.com')
+          expect(@driver.body).not_to include('X_CUSTOM_HEADER: 1')
+
+          @session.switch_to_window @session.windows.first
+          @session.visit('/poltergeist/headers')
+          expect(@driver.body).to include('HOST: foo.com')
+          expect(@driver.body).to include('X_CUSTOM_HEADER: 1')
+        end
+
+        it 'does not propagate temporary headers to new windows' do
+          @session.visit '/'
+          @driver.add_header('X-Custom-Header', '1', :permanent => false)
+          @session.open_new_window
+
+          @session.switch_to_window @session.windows.last
+          @session.visit('/poltergeist/headers')
+          expect(@driver.body).not_to include('X_CUSTOM_HEADER: 1')
+
+          @session.switch_to_window @session.windows.first
+          @session.visit('/poltergeist/headers')
+          expect(@driver.body).to include('X_CUSTOM_HEADER: 1')
+        end
+      end
     end
 
     it 'supports clicking precise coordinates' do
