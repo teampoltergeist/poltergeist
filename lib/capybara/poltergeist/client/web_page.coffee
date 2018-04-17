@@ -1,7 +1,7 @@
 class Poltergeist.WebPage
   @CALLBACKS = ['onConsoleMessage','onError',
                 'onLoadFinished', 'onInitialized', 'onLoadStarted',
-                'onResourceRequested', 'onResourceReceived', 'onResourceError',
+                'onResourceRequested', 'onResourceReceived', 'onResourceError', 'onResourceTimeout',
                 'onNavigationRequested', 'onUrlChanged', 'onPageCreated',
                 'onClosing', 'onCallback']
 
@@ -14,7 +14,7 @@ class Poltergeist.WebPage
 
   @EXTENSIONS = []
 
-  constructor: (@_native) ->
+  constructor: (@_native, settings) ->
     @_native or= require('webpage').create()
 
     @id              = 0
@@ -33,6 +33,8 @@ class Poltergeist.WebPage
     @_asyncResults = {}
     @_asyncEvaluationId = 0
 
+    @setSettings(settings)
+
     for callback in WebPage.CALLBACKS
       this.bindCallback(callback)
 
@@ -48,6 +50,9 @@ class Poltergeist.WebPage
     do (delegate) =>
       this.prototype[delegate] =
         -> @_native[delegate].apply(@_native, arguments)
+
+  setSettings: (settings = {})->
+    @_native.settings[setting] = value for setting, value of settings
 
   onInitializedNative: ->
     @id += 1
@@ -134,6 +139,9 @@ class Poltergeist.WebPage
     @_networkTraffic[errorResponse.id]?.error = errorResponse
     delete @_requestedResources[errorResponse.id]
     return true
+
+  onResourceTimeoutNative: (request) ->
+    console.log "Resource request timed out for #{request.url}"
 
   injectAgent: ->
     if this.native().evaluate(-> typeof __poltergeist) == "undefined"

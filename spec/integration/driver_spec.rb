@@ -662,6 +662,32 @@ module Capybara::Poltergeist
           driver.quit if driver
         end
       end
+
+      context 'PhantomJS page settings' do
+        it 'can override defaults' do
+          begin
+            driver = Capybara::Poltergeist::Driver.new(@session.app, page_settings: { userAgent: 'PageSettingsOverride' }, logger: TestSessions.logger)
+            driver.visit session_url('/poltergeist/headers')
+            expect(driver.body).to include('USER_AGENT: PageSettingsOverride')
+          ensure
+            driver.quit if driver
+          end
+        end
+
+        it 'can set resource timeout' do
+          begin
+            # If PJS resource timeout is less than drivers timeout it should ignore resources not loading in time
+            driver = Capybara::Poltergeist::Driver.new(@session.app, page_settings: { resourceTimeout: 1000 }, logger: TestSessions.logger)
+            driver.timeout = 3
+            start = Time.now
+            expect{
+              driver.visit session_url('/poltergeist/visit_timeout')
+            }.not_to raise_error
+          ensure
+            driver.quit if driver
+          end
+        end
+      end
     end
 
     context "phantomjs {'status': 'fail'} responses" do
