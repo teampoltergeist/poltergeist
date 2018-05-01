@@ -1,3 +1,14 @@
+### 1.18.0 ###
+
+#### Features ####
+*  User agent and other headers persist across windows (Tony Novak)[Issue #915]
+*  Capybara 3 support (Thomas Walpole)
+*  Support configuring PhantomJS page setting when initializing driver (Thomas Walpole)
+*  Support for mouse click with offset and button presses (Thomas Walpole)
+
+#### Bug Fixes ####
+* Fixed page source potentially blank based on page load timing (Thomas Walpole)
+
 ### 1.17.0 ###
 
 #### Features ####
