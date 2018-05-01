@@ -6,6 +6,7 @@ class Poltergeist.Browser
     @js_errors  = true
     @_debug     = false
     @_counter   = 0
+    @_page_settings = null
 
     @processed_modal_messages = []
     @confirm_processes = []
@@ -22,7 +23,7 @@ class Poltergeist.Browser
         @page.close()
       phantom.clearCookies()
 
-    @page = @currentPage = new Poltergeist.WebPage
+    @page = @currentPage = new Poltergeist.WebPage(null, @_page_settings)
     @page.setViewportSize(width: @width, height: @height)
     @page.handle = "#{@_counter++}"
     @pages.push(@page)
@@ -54,7 +55,7 @@ class Poltergeist.Browser
       return response
 
     page.onPageCreated = (newPage) =>
-      _page = new Poltergeist.WebPage(newPage)
+      _page = new Poltergeist.WebPage(newPage, @_page_settings)
       _page.handle = "#{@_counter++}"
       _page.urlBlacklist = page.urlBlacklist
       _page.urlWhitelist = page.urlWhitelist
@@ -518,6 +519,11 @@ class Poltergeist.Browser
 
   set_debug: (value) ->
     @_debug = value
+    @current_command.sendResponse(true)
+
+  set_page_settings: (settings)->
+    @_page_settings = settings
+    @page.setSettings(@_page_settings)
     @current_command.sendResponse(true)
 
   exit: ->

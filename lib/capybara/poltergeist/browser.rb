@@ -354,6 +354,10 @@ module Capybara::Poltergeist
       command 'set_js_errors', !!val
     end
 
+    def page_settings=(settings)
+      command 'set_page_settings', settings
+    end
+
     def extensions=(names)
       @extensions = names
       Array(names).each do |name|

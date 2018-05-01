@@ -30,6 +30,7 @@ module Capybara::Poltergeist
         browser.debug      = true if options[:debug]
         browser.url_blacklist = options[:url_blacklist] if options.key?(:url_blacklist)
         browser.url_whitelist = options[:url_whitelist] if options.key?(:url_whitelist)
+        browser.page_settings = options[:page_settings] if options.key?(:page_settings)
         browser
       end
     end

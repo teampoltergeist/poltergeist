@@ -298,6 +298,7 @@ end
 *   `:host` (String) - The name or IP of the PhantomJS host. Default is '127.0.0.1'.
 *   `:url_blacklist` (Array) - Default session url blacklist - expressed as an array of strings to match against requested URLs.
 *   `:url_whitelist` (Array) - Default session url whitelist - expressed as an array of strings to match against requested URLs.
+*   `:page_settings` (Hash) - PhantomJS web page settings (http://phantomjs.org/api/webpage/property/settings.html).
 
 ### URL Blacklisting & Whitelisting ###
 Poltergeist supports URL blacklisting, which allows you
