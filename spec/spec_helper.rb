@@ -65,8 +65,12 @@ RSpec.configure do |config|
   Capybara::SpecHelper.configure(config)
 
   config.filter_run_excluding :full_description => lambda { |description, metadata|
-    #test is marked pending in Capybara but Poltergeist passes - disable here - have our own test in driver spec
-    description =~ /Capybara::Session Poltergeist node #set should allow me to change the contents of a contenteditable elements child/
+    [
+      # test is marked pending in Capybara but Poltergeist passes - disable here - have our own test in driver spec
+      /Capybara::Session Poltergeist node #set should allow me to change the contents of a contenteditable elements child/,
+      # should not pass because PhantomJS doesn't support datalist
+      /Capybara::Session Poltergeist #select input with datalist/
+    ].any? { |desc| description =~ desc }
   }
 
   config.before(:each) do
