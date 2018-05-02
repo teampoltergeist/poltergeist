@@ -58,7 +58,7 @@ or [64 bit](https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linu
 binary.
 * Extract the tarball and copy `bin/phantomjs` into your `PATH`
 
-_DO NOT_ use `phantomjs` from the official Ubuntu repositories, since it doesn't
+_DO NOT_ use `phantomjs` from the official Debian/Ubuntu repositories, since it doesn't
 work well with `poltergeist`. More information
 [here](https://github.com/teampoltergeist/poltergeist/issues/866).
 
