@@ -15,8 +15,6 @@ rvm:
   - 2.5.1
   - 2.4.4
   - 2.3.7
-  - 2.2.10
-  - 2.1.10
   - jruby-9.1.16.0
 gemfile:
   - Gemfile
@@ -32,18 +30,12 @@ addons:
 
 matrix:
   include:
-    - rvm: 1.9.3
-      gemfile: gemfiles/Gemfile.1_9_3
-    - rvm: jruby-19mode
-      gemfile: gemfiles/Gemfile.1_9_3
-    - rvm: 2.0.0
-      gemfile: gemfiles/Gemfile.2_0_0
     - rvm: 2.5.1
       gemfile: gemfiles/Gemfile.capy2
-    - rvm: 2.2.9
+    - rvm: 2.3.7
       gemfile: Gemfile
       env: PHANTOMJS=$PWD/travis-phantomjs2/phantomjs
-    - rvm: 2.3.6
+    - rvm: 2.5.1
       gemfile: gemfiles/Gemfile.capybara_master
   allow_failures:
     - gemfile: gemfiles/Gemfile.capybara_master
