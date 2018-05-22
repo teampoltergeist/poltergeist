@@ -4,10 +4,10 @@ require 'capybara/spec/test_app'
 
 class TestApp
   configure do
-    set :protection, :except => :frame_options
+    set :protection, except: :frame_options
   end
-  POLTERGEIST_VIEWS  = File.dirname(__FILE__) + "/views"
-  POLTERGEIST_PUBLIC = File.dirname(__FILE__) + "/public"
+  POLTERGEIST_VIEWS  = File.dirname(__FILE__) + '/views'
+  POLTERGEIST_PUBLIC = File.dirname(__FILE__) + '/public'
 
   helpers do
     def requires_credentials(login, password)
@@ -17,8 +17,8 @@ class TestApp
     end
 
     def authorized?(login, password)
-      @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-      @auth.provided? and @auth.basic? and @auth.credentials and @auth.credentials == [login, password]
+      @auth ||= Rack::Auth::Basic::Request.new(request.env)
+      @auth.provided? && @auth.basic? && @auth.credentials && (@auth.credentials == [login, password])
     end
   end
 
@@ -57,12 +57,12 @@ class TestApp
 
   get '/poltergeist/slow' do
     sleep 0.2
-    "slow page"
+    'slow page'
   end
 
   get '/poltergeist/really_slow' do
     sleep 3
-    "really slow page"
+    'really slow page'
   end
 
   get '/poltergeist/basic_auth' do
@@ -77,7 +77,7 @@ class TestApp
 
   get '/poltergeist/cacheable' do
     cache_control :public, max_age: 60
-    etag "deadbeef"
+    etag 'deadbeef'
     'Cacheable request'
   end
 

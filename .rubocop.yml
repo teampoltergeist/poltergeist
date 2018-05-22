@@ -1,0 +1,102 @@
+AllCops:
+  DisabledByDefault: false
+  TargetRubyVersion: 2.3.0
+
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyleAlignWith, AutoCorrect, Severity.
+# SupportedStylesAlignWith: keyword, variable, start_of_line
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
+
+# Offense count: 2
+Lint/HandleExceptions:
+  Exclude:
+    - 'lib/capybara/poltergeist/client.rb'
+    - 'lib/capybara/poltergeist/driver.rb'
+
+# Offense count: 8
+Metrics/AbcSize:
+  Max: 36
+
+# Configuration parameters: CountComments, ExcludedMethods.
+Metrics/BlockLength:
+  Max: 1217
+
+# Configuration parameters: CountComments.
+Metrics/ClassLength:
+  Max: 383
+
+Metrics/CyclomaticComplexity:
+  Max: 12
+
+# Configuration parameters: CountComments.
+Metrics/MethodLength:
+  Max: 28
+
+# Configuration parameters: CountComments.
+Metrics/ModuleLength:
+  Max: 1219
+
+Metrics/PerceivedComplexity:
+  Max: 12
+
+# Configuration parameters: AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
+# URISchemes: http, https
+Metrics/LineLength:
+  Max: 172
+
+Naming/AccessorMethodName:
+  Exclude:
+    - 'lib/capybara/poltergeist/browser.rb'
+    - 'spec/**/*'
+
+Naming/MemoizedInstanceVariableName:
+  Exclude:
+    - 'lib/capybara/poltergeist/inspector.rb'
+
+Naming/UncommunicativeMethodParamName:
+  AllowedNames: io, id, to, by, on, in, at, x, y, ip
+
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: prefer_alias, prefer_alias_method
+Style/Alias:
+  Exclude:
+    - 'lib/capybara/poltergeist/driver.rb'
+    - 'lib/capybara/poltergeist/node.rb'
+
+# Cop supports --auto-correct.
+# Configuration parameters: AutoCorrect, EnforcedStyle.
+# SupportedStyles: nested, compact
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/DoubleNegation:
+  Exclude:
+    - 'lib/capybara/poltergeist/browser.rb'
+    - 'lib/capybara/poltergeist/node.rb'
+
+# Cop supports --auto-correct.
+# Configuration parameters: Strict.
+Style/NumericLiterals:
+  MinDigits: 6
+
+# Cop supports --auto-correct.
+Style/RescueModifier:
+  Exclude:
+    - 'lib/capybara/poltergeist/driver.rb'
+    - 'spec/**/*'
+
+# Cop supports --auto-correct.
+# Configuration parameters: AllowAsExpressionSeparator.
+Style/Semicolon:
+  AllowAsExpressionSeparator: true
+
+# Cop supports --auto-correct.
+# Configuration parameters: .
+# SupportedStyles: use_perl_names, use_english_names
+Style/SpecialGlobalVars:
+  Enabled: false

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require "capybara/poltergeist/errors"
-require "capybara/poltergeist/command"
+require 'capybara/poltergeist/errors'
+require 'capybara/poltergeist/command'
 require 'json'
 require 'time'
 
@@ -15,8 +15,8 @@ module Capybara::Poltergeist
       'Poltergeist.NoSuchWindowError' => NoSuchWindowError,
       'Poltergeist.ScriptTimeoutError' => ScriptTimeoutError,
       'Poltergeist.UnsupportedFeature' => UnsupportedFeature,
-      'Poltergeist.KeyError' => KeyError,
-    }
+      'Poltergeist.KeyError' => KeyError
+    }.freeze
 
     attr_reader :server, :client, :logger
 
@@ -144,7 +144,7 @@ module Capybara::Poltergeist
       command 'execute', script, *args
     end
 
-    def within_frame(handle, &block)
+    def within_frame(handle)
       if handle.is_a?(Capybara::Node::Base)
         command 'push_frame', [handle.native.page_id, handle.native.id]
       else
@@ -192,10 +192,10 @@ module Capybara::Poltergeist
 
       handle = command 'window_handle', locator
       raise NoSuchWindowError unless handle
-      return handle
+      handle
     end
 
-    def within_window(locator, &block)
+    def within_window(locator)
       original = window_handle
       handle = find_window_handle(locator)
       switch_to_window(handle)
@@ -204,15 +204,15 @@ module Capybara::Poltergeist
       switch_to_window(original)
     end
 
-    def click(page_id, id, keys=[], offset={})
+    def click(page_id, id, keys = [], offset = {})
       command 'click', page_id, id, keys, offset
     end
 
-    def right_click(page_id, id, keys=[], offset={})
+    def right_click(page_id, id, keys = [], offset = {})
       command 'right_click', page_id, id, keys, offset
     end
 
-    def double_click(page_id, id, keys=[], offset={})
+    def double_click(page_id, id, keys = [], offset = {})
       command 'double_click', page_id, id, keys, offset
     end
 
@@ -313,7 +313,7 @@ module Capybara::Poltergeist
       command 'add_headers', headers
     end
 
-    def add_header(header, options={})
+    def add_header(header, options = {})
       command 'add_header', header, options
     end
 
@@ -326,10 +326,7 @@ module Capybara::Poltergeist
     end
 
     def set_cookie(cookie)
-      if cookie[:expires]
-        cookie[:expires] = cookie[:expires].to_i * 1000
-      end
-
+      cookie[:expires] = cookie[:expires].to_i * 1000 if cookie[:expires]
       command 'set_cookie', cookie
     end
 
@@ -389,11 +386,11 @@ module Capybara::Poltergeist
       response = server.send(cmd)
       log response
 
-      json = JSON.load(response)
+      json = JSON.parse(response)
 
       if json['error']
         klass = ERROR_MAPPINGS[json['error']['name']] || BrowserError
-        raise klass.new(json['error'])
+        raise klass, json['error']
       else
         json['response']
       end
@@ -443,14 +440,13 @@ module Capybara::Poltergeist
     private
 
     def log(message)
-      logger.puts message if logger
+      logger&.puts message
     end
 
     def check_render_options!(options)
-      if !!options[:full] && options.has_key?(:selector)
-        warn "Ignoring :selector in #render since :full => true was given at #{caller.first}"
-        options.delete(:selector)
-      end
+      return unless options[:full] && options.key?(:selector)
+      warn "Ignoring :selector in #render since :full => true was given at #{caller(1..1).first}"
+      options.delete(:selector)
     end
 
     KEY_ALIASES = {
@@ -463,7 +459,7 @@ module Capybara::Poltergeist
       divide:    'numpad/',
       subtract:  'numpad-',
       decimal:   'numpad.'
-    }
+    }.freeze
 
     def normalize_keys(keys)
       keys.map do |key_desc|
@@ -474,9 +470,9 @@ module Capybara::Poltergeist
           # [:Ctrl, :Left] => { modifier: "ctrl", key: 'Left' }
           # [:Ctrl, :Shift, :Left] => { modifier: "ctrl,shift", key: 'Left' }
           # [:Ctrl, :Left, :Left] => { modifier: "ctrl", key: [:Left, :Left] }
-          _keys = key_desc.chunk {|k| k.is_a?(Symbol) && %w(shift ctrl control alt meta command).include?(k.to_s.downcase) }
-          modifiers = if _keys.peek[0]
-            _keys.next[1].map do |k|
+          chunked_keys = key_desc.chunk { |k| k.is_a?(Symbol) && %w[shift ctrl control alt meta command].include?(k.to_s.downcase) }
+          modifiers = if chunked_keys.peek[0]
+            chunked_keys.next[1].map do |k|
               k = k.to_s.downcase
               k = 'ctrl' if k == 'control'
               k = 'meta' if k == 'command'
@@ -485,15 +481,15 @@ module Capybara::Poltergeist
           else
             ''
           end
-          letters = normalize_keys(_keys.next[1].map {|k| k.is_a?(String) ? k.upcase : k })
+          letters = normalize_keys(chunked_keys.next[1].map { |k| k.is_a?(String) ? k.upcase : k })
           { modifier: modifiers, keys: letters }
         when Symbol
           # Return a known sequence for PhantomJS
           key = KEY_ALIASES.fetch(key_desc, key_desc)
-          if match = key.to_s.match(/numpad(.)/)
+          if (match = key.to_s.match(/numpad(.)/))
             res = { keys: match[1], modifier: 'keypad' }
           elsif key !~ /^[A-Z]/
-            key = key.to_s.split('_').map{ |e| e.capitalize }.join
+            key = key.to_s.split('_').map(&:capitalize).join
           end
           res || { key: key }
         when String

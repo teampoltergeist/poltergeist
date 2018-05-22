@@ -15,7 +15,7 @@ module Capybara::Poltergeist
     end
 
     def message
-      JSON.dump({ 'id' => @id, 'name' => @name, 'args' => @args })
+      JSON.dump('id' => @id, 'name' => @name, 'args' => @args)
     end
   end
 end

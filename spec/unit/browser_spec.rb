@@ -19,7 +19,7 @@ module Capybara::Poltergeist
         subject.command('where is', 'the love?')
 
         expect(logger.string).to include('"name":"where is","args":["the love?"]')
-        expect(logger.string).to include("#{response}")
+        expect(logger.string).to include(response)
       end
     end
   end

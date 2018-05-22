@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-POLTERGEIST_ROOT = File.expand_path('../..', __FILE__)
+POLTERGEIST_ROOT = File.expand_path('..', __dir__)
 $:.unshift(POLTERGEIST_ROOT + '/lib')
 
 require 'bundler/setup'
@@ -40,7 +40,7 @@ module Poltergeist
     class << self
       def set_capybara_wait_time(t)
         Capybara.default_max_wait_time = t
-      rescue
+      rescue StandardError
         Capybara.default_wait_time = t
       end
     end
@@ -64,7 +64,7 @@ RSpec.configure do |config|
 
   Capybara::SpecHelper.configure(config)
 
-  config.filter_run_excluding :full_description => lambda { |description, metadata|
+  config.filter_run_excluding full_description: lambda { |description, _metadata|
     [
       # test is marked pending in Capybara but Poltergeist passes - disable here - have our own test in driver spec
       /Capybara::Session Poltergeist node #set should allow me to change the contents of a contenteditable elements child/,
@@ -77,8 +77,8 @@ RSpec.configure do |config|
     Poltergeist::SpecHelper.set_capybara_wait_time(0)
   end
 
-  [:js, :modals, :windows].each do |cond|
-    config.before(:each, :requires => cond) do
+  %i[js modals windows].each do |cond|
+    config.before(:each, requires: cond) do
       Poltergeist::SpecHelper.set_capybara_wait_time(1)
     end
   end
@@ -87,4 +87,3 @@ end
 def phantom_version_is?(ver_spec, driver)
   Cliver.detect(driver.options[:phantomjs] || Capybara::Poltergeist::Client::PHANTOMJS_NAME, ver_spec)
 end
-

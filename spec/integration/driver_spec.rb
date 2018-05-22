@@ -39,7 +39,7 @@ module Capybara::Poltergeist
 
         expect(File.exist?(file)).to be true
       ensure
-        driver.quit if driver
+        driver&.quit
       end
     end
 
@@ -63,20 +63,20 @@ module Capybara::Poltergeist
       end
 
       it 'is threadsafe in how it captures console.log' do
-        pending("JRuby and Rubinius do not support the :out parameter to Process.spawn, so there is no threadsafe way to redirect output") unless Capybara::Poltergeist.mri?
+        pending('JRuby and Rubinius do not support the :out parameter to Process.spawn, so there is no threadsafe way to redirect output') unless Capybara::Poltergeist.mri?
 
         # Write something to STDOUT right before Process.spawn is called
-        allow(Process).to receive(:spawn).and_wrap_original do |m,*args|
-          STDOUT.puts "1"
-          $stdout.puts "2"
+        allow(Process).to receive(:spawn).and_wrap_original do |m, *args|
+          STDOUT.puts '1'
+          $stdout.puts '2'
           m.call(*args)
         end
 
-        expect {
+        expect do
           session.visit('/poltergeist/console_log')
-        }.to output("1\n2\n").to_stdout_from_any_process
+        end.to output("1\n2\n").to_stdout_from_any_process
 
-        expect(logger.string).not_to match /\d/
+        expect(logger.string).not_to match(/\d/)
       end
     end
 
@@ -118,7 +118,7 @@ module Capybara::Poltergeist
         @session.visit('/')
         @session.current_window.maximize
         expect(@session.current_window.size).to eq([1600, 1200])
-     ensure
+      ensure
         @driver.options.delete(:screen_size)
       end
     end
@@ -142,12 +142,12 @@ module Capybara::Poltergeist
           )
         end
         driver = Capybara::Session.new(:poltergeist_with_custom_window_size, TestApp).driver
-        driver.visit(session_url '/')
+        driver.visit(session_url('/'))
         expect(
           driver.evaluate_script('[window.innerWidth, window.innerHeight]')
         ).to eq([800, 600])
       ensure
-        driver.quit if driver
+        driver&.quit
       end
     end
 
@@ -187,13 +187,13 @@ module Capybara::Poltergeist
         create_screenshot file, selector: '#penultimate'
 
         File.open(file, 'rb') do |f|
-          size = @driver.evaluate_script <<-EOS
+          size = @driver.evaluate_script <<-JS
             function() {
               var ele  = document.getElementById('penultimate');
               var rect = ele.getBoundingClientRect();
               return [rect.width, rect.height];
             }();
-          EOS
+          JS
           expect(ImageSize.new(f.read).size).to eq(size)
         end
       end
@@ -214,7 +214,7 @@ module Capybara::Poltergeist
       it 'resets element positions after' do
         @session.visit('poltergeist/long_page')
         el = @session.find(:css, '#middleish')
-        #make the page scroll an element into view
+        # make the page scroll an element into view
         el.click
         position_script = 'document.querySelector("#middleish").getBoundingClientRect()'
         offset = @session.evaluate_script(position_script)
@@ -251,7 +251,7 @@ module Capybara::Poltergeist
 
       it 'supports rendering the page to file without extension when format is specified' do
         begin
-          file = POLTERGEIST_ROOT + "/spec/tmp/screenshot"
+          file = POLTERGEIST_ROOT + '/spec/tmp/screenshot'
           FileUtils.rm_f file
           @session.visit('/')
 
@@ -286,8 +286,8 @@ module Capybara::Poltergeist
         it 'changes image dimensions' do
           @session.visit('/poltergeist/zoom_test')
 
-          black_pixels_count = ->(file) {
-            File.read(file).to_s[/{.*}/m][1...-1].split(/\W/).map{|n| n.hex.to_s(2).count('1')}.reduce(:+)
+          black_pixels_count = lambda { |file|
+            File.read(file).to_s[/{.*}/m][1...-1].split(/\W/).map { |n| n.hex.to_s(2).count('1') }.reduce(:+)
           }
           @driver.save_screenshot(file)
           before = black_pixels_count[file]
@@ -296,7 +296,7 @@ module Capybara::Poltergeist
           @driver.save_screenshot(file)
           after = black_pixels_count[file]
 
-          expect(after.to_f/before.to_f).to eq(zoom_factor**2)
+          expect(after.to_f / before.to_f).to eq(zoom_factor**2)
         end
       end
 
@@ -408,8 +408,8 @@ module Capybara::Poltergeist
       it 'sets headers on the initial request' do
         @driver.headers = { 'PermanentA' => 'a' }
         @driver.add_headers('PermanentB' => 'b')
-        @driver.add_header('Referer', 'http://google.com', :permanent => false)
-        @driver.add_header('TempA', 'a', :permanent => false)
+        @driver.add_header('Referer', 'http://google.com', permanent: false)
+        @driver.add_header('TempA', 'a', permanent: false)
 
         @session.visit('/poltergeist/headers_with_ajax')
         initial_request = @session.find(:css, '#initial_request').text
@@ -427,14 +427,14 @@ module Capybara::Poltergeist
       end
 
       it 'keeps added headers on redirects by default' do
-        @driver.add_header('X-Custom-Header', '1', :permanent => false)
+        @driver.add_header('X-Custom-Header', '1', permanent: false)
         @session.visit('/poltergeist/redirect_to_headers')
         expect(@driver.body).to include('X_CUSTOM_HEADER: 1')
       end
 
       it 'does not keep added headers on redirect when ' \
          'permanent is no_redirect' do
-        @driver.add_header('X-Custom-Header', '1', :permanent => :no_redirect)
+        @driver.add_header('X-Custom-Header', '1', permanent: :no_redirect)
 
         @session.visit('/poltergeist/redirect_to_headers')
         expect(@driver.body).not_to include('X_CUSTOM_HEADER: 1')
@@ -476,7 +476,7 @@ module Capybara::Poltergeist
 
         it 'keeps temporary headers local to the current window' do
           @session.open_new_window
-          @driver.add_header('X-Custom-Header', '1', :permanent => false)
+          @driver.add_header('X-Custom-Header', '1', permanent: false)
 
           @session.switch_to_window @session.windows.last
           @session.visit('/poltergeist/headers')
@@ -489,7 +489,7 @@ module Capybara::Poltergeist
 
         it 'does not mix temporary headers with permanent ones when propagating to other windows' do
           @session.open_new_window
-          @driver.add_header('X-Custom-Header', '1', :permanent => false)
+          @driver.add_header('X-Custom-Header', '1', permanent: false)
           @driver.add_header('Host', 'foo.com')
 
           @session.switch_to_window @session.windows.last
@@ -505,7 +505,7 @@ module Capybara::Poltergeist
 
         it 'does not propagate temporary headers to new windows' do
           @session.visit '/'
-          @driver.add_header('X-Custom-Header', '1', :permanent => false)
+          @driver.add_header('X-Custom-Header', '1', permanent: false)
           @session.open_new_window
 
           @session.switch_to_window @session.windows.last
@@ -562,8 +562,8 @@ module Capybara::Poltergeist
         @extended_driver = Capybara::Poltergeist::Driver.new(
           @session.app,
           logger: TestSessions.logger,
-          inspector: ENV['DEBUG'] != nil,
-          extensions: %W% #{File.expand_path '../../support/geolocation.js', __FILE__ } %
+          inspector: !ENV['DEBUG'].nil?,
+          extensions: %W[#{File.expand_path '../support/geolocation.js', __dir__}]
         )
       end
 
@@ -573,8 +573,9 @@ module Capybara::Poltergeist
 
       it 'supports extending the phantomjs world' do
         @extended_driver.visit session_url('/poltergeist/requiring_custom_extension')
-        expect(@extended_driver.body).
-          to include(%Q%Location: <span id="location">1,-1</span>%)
+        expect(
+          @extended_driver.body
+        ).to include(%(Location: <span id="location">1,-1</span>))
         expect(
           @extended_driver.evaluate_script("document.getElementById('location').innerHTML")
         ).to eq('1,-1')
@@ -588,8 +589,8 @@ module Capybara::Poltergeist
           @failing_driver = Capybara::Poltergeist::Driver.new(
             @session.app,
             logger: TestSessions.logger,
-            inspector: ENV['DEBUG'] != nil,
-            extensions: %W% #{File.expand_path '../../support/non_existent.js', __FILE__} %
+            inspector: !ENV['DEBUG'].nil?,
+            extensions: %W[#{File.expand_path '../support/non_existent.js', __dir__}]
           )
           expect { @failing_driver.visit '/' }.to raise_error(Capybara::Poltergeist::BrowserError, /Unable to load extension: .*non_existent\.js/)
         ensure
@@ -600,9 +601,9 @@ module Capybara::Poltergeist
 
     context 'javascript errors' do
       it 'propagates a Javascript error inside Poltergeist to a ruby exception' do
-        expect {
+        expect do
           @driver.browser.command 'browser_error'
-        }.to raise_error(BrowserError) { |e|
+        end.to raise_error(BrowserError) { |e|
           expect(e.message).to include('Error: zomg')
           # PhantomJS 2.1 refers to files as being in code subdirectory
           expect(e.message).to include('compiled/browser.js').or include('code/browser.js')
@@ -610,25 +611,25 @@ module Capybara::Poltergeist
       end
 
       it 'propagates an asynchronous Javascript error on the page to a ruby exception' do
-        expect {
+        expect do
           @driver.execute_script 'setTimeout(function() { omg }, 0)'
           sleep 0.01
           @driver.execute_script ''
-        }.to raise_error(JavascriptError, /ReferenceError.*omg/)
+        end.to raise_error(JavascriptError, /ReferenceError.*omg/)
       end
 
       it 'propagates a synchronous Javascript error on the page to a ruby exception' do
-        expect {
+        expect do
           @driver.execute_script 'omg'
-        }.to raise_error(JavascriptError, /ReferenceError.*omg/)
+        end.to raise_error(JavascriptError, /ReferenceError.*omg/)
       end
 
       it 'does not re-raise a Javascript error if it is rescued' do
-        expect {
+        expect do
           @driver.execute_script 'setTimeout(function() { omg }, 0)'
           sleep 0.01
           @driver.execute_script ''
-        }.to raise_error(JavascriptError)
+        end.to raise_error(JavascriptError)
 
         # should not raise again
         expect(@driver.evaluate_script('1+1')).to eq(2)
@@ -646,7 +647,7 @@ module Capybara::Poltergeist
           sleep 0.1
           expect(driver.body).to include('hello')
         ensure
-          driver.quit if driver
+          driver&.quit
         end
       end
 
@@ -659,7 +660,7 @@ module Capybara::Poltergeist
           sleep 0.1
           expect(driver.body).to include('hello')
         ensure
-          driver.quit if driver
+          driver&.quit
         end
       end
 
@@ -670,7 +671,7 @@ module Capybara::Poltergeist
             driver.visit session_url('/poltergeist/headers')
             expect(driver.body).to include('USER_AGENT: PageSettingsOverride')
           ensure
-            driver.quit if driver
+            driver&.quit
           end
         end
 
@@ -679,12 +680,11 @@ module Capybara::Poltergeist
             # If PJS resource timeout is less than drivers timeout it should ignore resources not loading in time
             driver = Capybara::Poltergeist::Driver.new(@session.app, page_settings: { resourceTimeout: 1000 }, logger: TestSessions.logger)
             driver.timeout = 3
-            start = Time.now
-            expect{
+            expect do
               driver.visit session_url('/poltergeist/visit_timeout')
-            }.not_to raise_error
+            end.not_to raise_error
           ensure
-            driver.quit if driver
+            driver&.quit
           end
         end
       end
@@ -703,18 +703,18 @@ module Capybara::Poltergeist
 
       it 'has a descriptive message when DNS incorrect' do
         url = "http://nope:#{@port}/"
-        expect {
+        expect do
           @session.visit(url)
-        }.to raise_error(StatusFailError, "Request to '#{url}' failed to reach server, check DNS and/or server status")
+        end.to raise_error(StatusFailError, "Request to '#{url}' failed to reach server, check DNS and/or server status")
       end
 
       it 'reports open resource requests' do
         old_timeout = @session.driver.timeout
         begin
           @session.driver.timeout = 2
-          expect{
+          expect do
             @session.visit('/poltergeist/visit_timeout')
-          }.to raise_error(StatusFailError, /resources still waiting http:\/\/.*\/poltergeist\/really_slow/)
+          end.to raise_error(StatusFailError, %r{resources still waiting http://.*/poltergeist/really_slow})
         ensure
           @session.driver.timeout = old_timeout
         end
@@ -724,9 +724,9 @@ module Capybara::Poltergeist
         old_timeout = @session.driver.timeout
         begin
           @session.driver.timeout = 2
-          expect{
+          expect do
             @session.visit('/poltergeist/really_slow')
-          }.to raise_error(StatusFailError) {|error|
+          end.to raise_error(StatusFailError) { |error|
             expect(error.message).not_to include('resources still waiting')
           }
         ensure
@@ -814,14 +814,13 @@ module Capybara::Poltergeist
       end
     end
 
-    context "memory cache clearing" do
-
+    context 'memory cache clearing' do
       before do
         @driver.restart
       end
 
-      it "can clear memory cache when supported (phantomjs >=2.0.0)" do
-        skip "clear_memory_cache is not supported by tested PhantomJS" unless phantom_version_is? ">= 2.0.0", @driver
+      it 'can clear memory cache when supported (phantomjs >=2.0.0)' do
+        skip 'clear_memory_cache is not supported by tested PhantomJS' unless phantom_version_is? '>= 2.0.0', @driver
 
         @driver.clear_memory_cache
 
@@ -841,15 +840,15 @@ module Capybara::Poltergeist
         expect(another_request.response_parts.last.status).to eq(200)
       end
 
-      it "raises error when it is unsupported (phantomjs <2.0.0)" do
-        skip "clear_memory_cache is supported by tested PhantomJS" if phantom_version_is? ">= 2.0.0", @driver
+      it 'raises error when it is unsupported (phantomjs <2.0.0)' do
+        skip 'clear_memory_cache is supported by tested PhantomJS' if phantom_version_is? '>= 2.0.0', @driver
 
         @session.visit('/poltergeist/cacheable')
         first_request = @driver.network_traffic.last
         expect(@driver.network_traffic.length).to eq(1)
         expect(first_request.response_parts.last.status).to eq(200)
 
-        expect{@driver.clear_memory_cache}.to raise_error(Capybara::Poltergeist::UnsupportedFeature)
+        expect { @driver.clear_memory_cache }.to raise_error(Capybara::Poltergeist::UnsupportedFeature)
 
         @session.visit('/poltergeist/cacheable')
         expect(@driver.network_traffic.length).to eq(2)
@@ -996,14 +995,14 @@ module Capybara::Poltergeist
         # If var is unspecified, skip test
         host = ENV['POLTERGEIST_TEST_HOST']
 
-        skip "POLTERGEIST_TEST_HOST not set" if host.nil?
+        skip 'POLTERGEIST_TEST_HOST not set' if host.nil?
 
         driver = Capybara::Poltergeist::Driver.new(@driver.app, host: host, port: 12345)
         driver.visit session_url('/')
 
         expect { TCPServer.new(host, 12345) }.to raise_error(Errno::EADDRINUSE)
       ensure
-        driver.quit if driver
+        driver&.quit
       end
     end
 
@@ -1014,7 +1013,7 @@ module Capybara::Poltergeist
         window.open('/poltergeist/simple', 'popup')
       JS
 
-      expect(@driver.window_handles).to eq(['0', '1'])
+      expect(@driver.window_handles).to eq(%w[0 1])
 
       popup2 = @session.window_opened_by do
         @session.execute_script <<-JS
@@ -1022,24 +1021,24 @@ module Capybara::Poltergeist
         JS
       end
 
-      expect(@driver.window_handles).to eq(['0', '1', '2'])
+      expect(@driver.window_handles).to eq(%w[0 1 2])
 
       @session.within_window(popup2) do
         expect(@session.html).to include('Test')
         @session.execute_script('window.close()')
       end
 
-      sleep 0.1;
+      sleep 0.1
 
-      expect(@driver.window_handles).to eq(['0', '1'])
+      expect(@driver.window_handles).to eq(%w[0 1])
     end
 
     context 'a new window inherits settings' do
       it 'inherits size' do
         @session.visit '/'
-        @session.current_window.resize_to(1200,800)
+        @session.current_window.resize_to(1200, 800)
         new_tab = @session.open_new_window
-        expect(new_tab.size).to eq [1200,800]
+        expect(new_tab.size).to eq [1200, 800]
       end
 
       it 'inherits url_blacklist' do
@@ -1067,13 +1066,12 @@ module Capybara::Poltergeist
             expect(@session).to have_content('We should see this.')
           end
           @session.within_frame 'unwantedframe' do
-            #make sure non whitelisted urls are blocked
+            # make sure non whitelisted urls are blocked
             expect(@session).not_to have_content("We shouldn't see this.")
           end
         end
       end
     end
-
 
     it 'resizes windows' do
       @session.visit '/'
@@ -1090,11 +1088,11 @@ module Capybara::Poltergeist
         JS
       end
 
-      popup1.resize_to(100,200)
-      popup2.resize_to(200,100)
+      popup1.resize_to(100, 200)
+      popup2.resize_to(200, 100)
 
-      expect(popup1.size).to eq([100,200])
-      expect(popup2.size).to eq([200,100])
+      expect(popup1.size).to eq([100, 200])
+      expect(popup2.size).to eq([200, 100])
     end
 
     it 'clears local storage between tests' do
@@ -1282,7 +1280,7 @@ module Capybara::Poltergeist
         end
 
         session.within_frame 'unwantedframe' do
-          #make sure non whitelisted urls are blocked
+          # make sure non whitelisted urls are blocked
           expect(session).not_to have_content("We shouldn't see this.")
         end
 
@@ -1294,12 +1292,11 @@ module Capybara::Poltergeist
           expect(session).to have_content('We should see this.')
         end
         session.within_frame 'unwantedframe' do
-          #make sure non whitelisted urls are blocked
+          # make sure non whitelisted urls are blocked
           expect(session).not_to have_content("We shouldn't see this.")
         end
       end
     end
-
 
     context 'has ability to send keys' do
       before { @session.visit('/poltergeist/send_keys') }
@@ -1389,7 +1386,7 @@ module Capybara::Poltergeist
       it 'sends sequences with modifiers and symbols' do
         input = @session.find(:css, '#empty_input')
 
-        input.native.send_keys('t', 'r', 'i', 'n', 'g', [:Ctrl, :Left], 's')
+        input.native.send_keys('t', 'r', 'i', 'n', 'g', %i[Ctrl Left], 's')
 
         expect(input.value).to eq('string')
       end
@@ -1397,7 +1394,7 @@ module Capybara::Poltergeist
       it 'sends sequences with multiple modifiers and symbols' do
         input = @session.find(:css, '#empty_input')
 
-        input.native.send_keys('t', 'r', 'i', 'n', 'g', [:Ctrl, :Shift, :Left], 's')
+        input.native.send_keys('t', 'r', 'i', 'n', 'g', %i[Ctrl Shift Left], 's')
 
         expect(input.value).to eq('s')
       end
@@ -1413,7 +1410,7 @@ module Capybara::Poltergeist
       it 'sends modifiers with multiple keys' do
         input = @session.find(:css, '#empty_input')
 
-        input.native.send_keys('poltre', [:Shift, :Left, :Left], 'ergeist')
+        input.native.send_keys('poltre', %i[Shift Left Left], 'ergeist')
 
         expect(input.value).to eq('poltergeist')
       end
@@ -1431,38 +1428,38 @@ module Capybara::Poltergeist
 
         input.send_keys([:shift, '.'], [:shift, 't'])
 
-        expect(@session.find(:css, '#key-events-output')).to have_text("keydown:16 keydown:190 keydown:16 keydown:84")
+        expect(@session.find(:css, '#key-events-output')).to have_text('keydown:16 keydown:190 keydown:16 keydown:84')
       end
 
       it 'suuports snake_case sepcified keys (Capybara standard)' do
         input = @session.find(:css, '#empty_input')
         input.send_keys(:PageUp, :page_up)
-        expect(@session.find(:css, '#key-events-output')).to have_text("keydown:33", count: 2)
+        expect(@session.find(:css, '#key-events-output')).to have_text('keydown:33', count: 2)
       end
 
       it 'supports :control alias for :Ctrl' do
         input = @session.find(:css, '#empty_input')
         input.send_keys([:Ctrl, 'a'], [:control, 'a'])
-        expect(@session.find(:css, '#key-events-output')).to have_text("keydown:17 keydown:65", count: 2)
+        expect(@session.find(:css, '#key-events-output')).to have_text('keydown:17 keydown:65', count: 2)
       end
 
       it 'supports :command alias for :Meta' do
         input = @session.find(:css, '#empty_input')
         input.send_keys([:Meta, 'z'], [:command, 'z'])
-        expect(@session.find(:css, '#key-events-output')).to have_text("keydown:91 keydown:90", count: 2)
+        expect(@session.find(:css, '#key-events-output')).to have_text('keydown:91 keydown:90', count: 2)
       end
 
       it 'supports Capybara specified numpad keys' do
         input = @session.find(:css, '#empty_input')
         input.send_keys(:numpad2, :numpad8, :divide, :decimal)
-        expect(@session.find(:css, '#key-events-output')).to have_text("keydown:98 keydown:104 keydown:111 keydown:110")
+        expect(@session.find(:css, '#key-events-output')).to have_text('keydown:98 keydown:104 keydown:111 keydown:110')
       end
 
       it 'raises error for unknown keys' do
         input = @session.find(:css, '#empty_input')
-        expect {
+        expect do
           input.send_keys('abc', :blah)
-        }.to raise_error Capybara::Poltergeist::KeyError, 'Unknown key: Blah'
+        end.to raise_error Capybara::Poltergeist::KeyError, 'Unknown key: Blah'
       end
     end
 
@@ -1487,10 +1484,10 @@ module Capybara::Poltergeist
         expect(input.text).to eq('replacement text')
       end
 
-      it "sets a content editable childs content" do
+      it 'sets a content editable childs content' do
         @session.visit('/with_js')
-        @session.find(:css,'#existing_content_editable_child').set('WYSIWYG')
-        expect(@session.find(:css,'#existing_content_editable_child').text).to eq('WYSIWYG')
+        @session.find(:css, '#existing_content_editable_child').set('WYSIWYG')
+        expect(@session.find(:css, '#existing_content_editable_child').text).to eq('WYSIWYG')
       end
     end
 
@@ -1512,22 +1509,22 @@ module Capybara::Poltergeist
       end
     end
 
-    context 'evaluate_script'do
+    context 'evaluate_script' do
       it 'can return an element' do
         @session.visit('/poltergeist/send_keys')
         element = @session.driver.evaluate_script('document.getElementById("empty_input")')
         expect(element).to eq(@session.find(:id, 'empty_input').native)
       end
 
-      it 'can return structures with elements'  do
+      it 'can return structures with elements' do
         @session.visit('/poltergeist/send_keys')
         result = @session.driver.evaluate_script('{ a: document.getElementById("empty_input"), b: { c: document.querySelectorAll("#empty_textarea, #filled_textarea") } }')
-        expect(result).to eq({
+        expect(result).to eq(
           'a' => @session.driver.find_css('#empty_input').first,
           'b' => {
             'c' => @session.driver.find_css('#empty_textarea, #filled_textarea')
           }
-        })
+        )
       end
     end
 
@@ -1537,15 +1534,15 @@ module Capybara::Poltergeist
           expect(@session.driver.evaluate_async_script('arguments[0](null)')).to be_nil
           expect(@session.driver.evaluate_async_script('arguments[0](false)')).to be false
           expect(@session.driver.evaluate_async_script('arguments[0](true)')).to be true
-          expect(@session.driver.evaluate_async_script("arguments[0]({foo: 'bar'})")).to eq({'foo' => 'bar'})
+          expect(@session.driver.evaluate_async_script("arguments[0]({foo: 'bar'})")).to eq('foo' => 'bar')
         end
       end
 
       it 'will timeout' do
         @session.using_wait_time(1) do
-          expect {
+          expect do
             @session.driver.evaluate_async_script('var callback=arguments[0]; setTimeout(function(){callback(true)}, 4000)')
-          }.to raise_error Capybara::Poltergeist::ScriptTimeoutError
+          end.to raise_error Capybara::Poltergeist::ScriptTimeoutError
         end
       end
     end

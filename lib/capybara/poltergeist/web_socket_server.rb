@@ -38,12 +38,9 @@ module Capybara::Poltergeist
           @host = server.addr[2]
         end
       rescue Errno::EADDRINUSE
-        if (Time.now - time) < BIND_TIMEOUT
-          sleep(0.01)
-          retry
-        else
-          raise
-        end
+        raise if (Time.now - time) >= BIND_TIMEOUT
+        sleep(0.01)
+        retry
       end
     end
 
@@ -58,9 +55,9 @@ module Capybara::Poltergeist
       @messages = {}
 
       @driver = ::WebSocket::Driver.server(self)
-      @driver.on(:connect) { |event| @driver.start }
+      @driver.on(:connect) { |_event| @driver.start }
       @driver.on(:message) do |event|
-        command_id = JSON.load(event.data)['command_id']
+        command_id = JSON.parse(event.data)['command_id']
         @messages[command_id] = event.data
       end
     end
@@ -71,15 +68,15 @@ module Capybara::Poltergeist
 
     # Block until the next message is available from the Web Socket.
     # Raises Errno::EWOULDBLOCK if timeout is reached.
-    def receive(cmd_id, receive_timeout=nil)
+    def receive(cmd_id, receive_timeout = nil)
       receive_timeout ||= timeout
       start = Time.now
 
-      until @messages.has_key?(cmd_id)
+      until @messages.key?(cmd_id)
         raise Errno::EWOULDBLOCK if (Time.now - start) >= receive_timeout
         if @receive_mutex.try_lock
           begin
-            IO.select([socket], [], [], receive_timeout) or raise Errno::EWOULDBLOCK
+            IO.select([socket], [], [], receive_timeout) || raise(Errno::EWOULDBLOCK)
             data = socket.recv(RECV_SIZE)
             break if data.empty?
             driver.parse(data)
@@ -94,12 +91,12 @@ module Capybara::Poltergeist
     end
 
     # Send a message and block until there is a response
-    def send(cmd_id, message, accept_timeout=nil)
+    def send(cmd_id, message, accept_timeout = nil)
       accept unless connected?
       driver.text(message)
       receive(cmd_id, accept_timeout)
     rescue Errno::EWOULDBLOCK
-      raise TimeoutError.new(message)
+      raise TimeoutError, message
     end
 
     # Closing sockets separately as `close_read`, `close_write`

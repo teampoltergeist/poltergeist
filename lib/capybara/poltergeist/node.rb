@@ -53,8 +53,8 @@ module Capybara::Poltergeist
         filter_text command(:visible_text)
       else
         command(:visible_text).to_s
-                              .gsub(/\A[[:space:]&&[^\u00a0]]+/, "")
-                              .gsub(/[[:space:]&&[^\u00a0]]+\z/, "")
+                              .gsub(/\A[[:space:]&&[^\u00a0]]+/, '')
+                              .gsub(/[[:space:]&&[^\u00a0]]+\z/, '')
                               .gsub(/\n+/, "\n")
                               .tr("\u00a0", ' ')
       end
@@ -67,10 +67,9 @@ module Capybara::Poltergeist
     def [](name)
       # Although the attribute matters, the property is consistent. Return that in
       # preference to the attribute for links and images.
-      if (tag_name == 'img' and name == 'src') or (tag_name == 'a' and name == 'href' )
-         #if attribute exists get the property
-         value = command(:attribute, name) && command(:property, name)
-         return value
+      if ((tag_name == 'img') && (name == 'src')) || ((tag_name == 'a') && (name == 'href'))
+        # if attribute exists get the property
+        return command(:attribute, name) && command(:property, name)
       end
 
       value = property(name)
@@ -115,8 +114,8 @@ module Capybara::Poltergeist
     end
 
     def unselect_option
-      command(:select, false) or
-      raise(Capybara::UnselectNotAllowed, "Cannot unselect option from single select box.")
+      command(:select, false) ||
+        raise(Capybara::UnselectNotAllowed, 'Cannot unselect option from single select box.')
     end
 
     def tag_name
@@ -139,15 +138,15 @@ module Capybara::Poltergeist
       command :disabled?
     end
 
-    def click(keys=[], offset={})
+    def click(keys = [], offset = {})
       command :click, keys, offset
     end
 
-    def right_click(keys=[], offset={})
+    def right_click(keys = [], offset = {})
       command :right_click, keys, offset
     end
 
-    def double_click(keys=[], offset={})
+    def double_click(keys = [], offset = {})
       command :double_click, keys, offset
     end
 
@@ -187,19 +186,19 @@ module Capybara::Poltergeist
 
     # @api private
     def as_json(*)
-      { ELEMENT: {page_id: @page_id, id: @id} }
+      { ELEMENT: { page_id: @page_id, id: @id } }
     end
 
     private
 
-    def filter_text(text, visible = true)
+    def filter_text(text)
       if Capybara::VERSION.to_f < 3
         Capybara::Helpers.normalize_whitespace(text.to_s)
       else
         text.gsub(/[\u200b\u200e\u200f]/, '')
             .gsub(/[\ \n\f\t\v\u2028\u2029]+/, ' ')
-            .gsub(/\A[[:space:]&&[^\u00a0]]+/, "")
-            .gsub(/[[:space:]&&[^\u00a0]]+\z/, "")
+            .gsub(/\A[[:space:]&&[^\u00a0]]+/, '')
+            .gsub(/[[:space:]&&[^\u00a0]]+\z/, '')
             .tr("\u00a0", ' ')
       end
     end
