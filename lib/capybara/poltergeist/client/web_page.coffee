@@ -236,11 +236,13 @@ class Poltergeist.WebPage
     this.native().frameTitle
 
   currentUrl: ->
-    @native().url
+    # native url doesn't return anything when about:blank
+    # in that case get the frame url which will be main window
+    @native().url || @runCommand('frameUrl')
 
   frameUrl: ->
     if phantom.version.major > 2 || (phantom.version.major == 2 && phantom.version.minor >= 1)
-      @native().frameUrl
+      @native().frameUrl || @runCommand('frameUrl')
     else
       @runCommand('frameUrl')
 
