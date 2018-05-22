@@ -579,6 +579,11 @@ describe Capybara::Session do
         @session.visit "/poltergeist/arbitrary_path/200/foo?a=%20%5B%5D%3A%2F%2B%26%3D"
         expect(request_uri).to eq('/poltergeist/arbitrary_path/200/foo?a=%20%5B%5D%3A%2F%2B%26%3D')
       end
+
+      it 'returns about:blank when on about:blank' do
+        @session.visit 'about:blank'
+        expect(@session.current_url).to eq('about:blank')
+      end
     end
 
     context 'dragging support' do
