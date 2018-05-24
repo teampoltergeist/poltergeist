@@ -1,3 +1,8 @@
+### 1.18.1 ###
+
+#### Bug Fixes ####
+*  Fixed `#current_url` should return correct url when on 'about:blank' (Thomas Walpole)[Issue #927]
+
 ### 1.18.0 ###
 
 #### Features ####
