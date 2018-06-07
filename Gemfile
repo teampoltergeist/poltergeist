@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 gemspec
@@ -5,7 +7,7 @@ gemspec
 gem 'puma'
 
 platforms :rbx do
-  gem 'rubysl'
-  gem 'racc'
   gem 'json'
+  gem 'racc'
+  gem 'rubysl'
 end

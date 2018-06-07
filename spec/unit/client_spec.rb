@@ -4,7 +4,7 @@ require 'spec_helper'
 
 module Capybara::Poltergeist
   describe Client do
-    let(:server) { double(port: 6000, host: "127.0.0.1") }
+    let(:server) { double(port: 6000, host: '127.0.0.1') }
     let(:client_params) { {} }
     subject { Client.new(server, client_params) }
 

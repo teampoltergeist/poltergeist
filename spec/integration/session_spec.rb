@@ -1,4 +1,3 @@
-# coding: utf-8
 # frozen_string_literal: true
 
 require 'spec_helper'
@@ -57,11 +56,11 @@ describe Capybara::Session do
       context 'when someone (*cough* prototype *cough*) messes with Array#toJSON' do
         before do
           @session.visit('/poltergeist/index')
-          array_munge = <<-EOS
+          array_munge = <<-JS
           Array.prototype.toJSON = function() {
             return "ohai";
           }
-          EOS
+          JS
           @session.execute_script array_munge
         end
 
@@ -193,7 +192,7 @@ describe Capybara::Session do
 
       it 'accepts negatives in a number field' do
         element = @session.find(:css, '#change_me_number')
-        element.set -100
+        element.set(-100)
         expect(element.value).to eq('-100')
       end
 
@@ -290,13 +289,13 @@ describe Capybara::Session do
       end
 
       it 'gets innerHTML' do
-        expect(@session.find(:css,'.some_other_class')['innerHTML']).to eq '<p>foobar</p>'
+        expect(@session.find(:css, '.some_other_class')['innerHTML']).to eq '<p>foobar</p>'
       end
 
       it 'gets attribute' do
         link = @session.find(:link, 'Loop')
         expect(link['data-random']).to eq '42'
-        expect(link['onclick']).to eq "return false;"
+        expect(link['onclick']).to eq 'return false;'
       end
 
       it 'gets boolean attributes as booleans' do
@@ -355,7 +354,7 @@ describe Capybara::Session do
       expect(@session.evaluate_script('null')).to be_nil
       expect(@session.evaluate_script('false')).to be false
       expect(@session.evaluate_script('true')).to be true
-      expect(@session.evaluate_script("{foo: 'bar'}")).to eq({'foo' => 'bar'})
+      expect(@session.evaluate_script("{foo: 'bar'}")).to eq('foo' => 'bar')
     end
 
     it 'can evaluate a statement ending with a semicolon' do
@@ -382,8 +381,8 @@ describe Capybara::Session do
         @session.driver.resize(200, 200)
         log = @session.find(:css, '#log')
 
-        instructions = %w(one four one two three)
-        instructions.each do |instruction, i|
+        instructions = %w[one four one two three]
+        instructions.each do |instruction|
           @session.find(:css, "##{instruction}").click
           expect(log.text).to eq(instruction)
         end
@@ -411,18 +410,18 @@ describe Capybara::Session do
         end
 
         it 'detects if an element is obscured when clicking' do
-          expect {
+          expect do
             @session.find(:css, '#one').click
-          }.to raise_error(Capybara::Poltergeist::MouseEventFailed) { |error|
+          end.to raise_error(Capybara::Poltergeist::MouseEventFailed) { |error|
             expect(error.selector).to eq('html body div#two.box')
             expect(error.message).to include('[200, 200]')
           }
         end
 
         it 'clicks in the centre of an element' do
-          expect {
+          expect do
             @session.find(:css, '#one').click
-          }.to raise_error(Capybara::Poltergeist::MouseEventFailed) { |error|
+          end.to raise_error(Capybara::Poltergeist::MouseEventFailed) { |error|
             expect(error.position).to eq([200, 200])
           }
         end
@@ -430,9 +429,9 @@ describe Capybara::Session do
         it 'clicks in the centre of an element within the viewport, if part is outside the viewport' do
           @session.driver.resize(200, 200)
 
-          expect {
+          expect do
             @session.find(:css, '#one').click
-          }.to raise_error(Capybara::Poltergeist::MouseEventFailed) { |error|
+          end.to raise_error(Capybara::Poltergeist::MouseEventFailed) { |error|
             expect(error.position.first).to eq(150)
           }
         end
@@ -449,16 +448,16 @@ describe Capybara::Session do
         end
 
         it 'detects if an element is obscured when clicking' do
-          expect {
+          expect do
             @session.find(:css, '#one').click
-          }.to raise_error(Capybara::Poltergeist::MouseEventFailed) { |error|
+          end.to raise_error(Capybara::Poltergeist::MouseEventFailed) { |error|
             expect(error.selector).to eq('html body svg#svg.box')
             expect(error.message).to include('[200, 200]')
           }
         end
       end
 
-      context "with image maps" do
+      context 'with image maps' do
         before do
           @session.visit('/poltergeist/image_map')
         end
@@ -471,12 +470,12 @@ describe Capybara::Session do
         end
 
         it "doesn't click if the associated img is hidden" do
-          expect {
+          expect do
             @session.find(:css, 'map[name=testmap2] area[shape=circle]').click
-          }.to raise_error(Capybara::ElementNotFound)
-          expect {
+          end.to raise_error(Capybara::ElementNotFound)
+          expect do
             @session.find(:css, 'map[name=testmap2] area[shape=circle]', visible: false).click
-          }.to raise_error(Capybara::Poltergeist::MouseEventFailed)
+          end.to raise_error(Capybara::Poltergeist::MouseEventFailed)
         end
       end
     end
@@ -490,8 +489,8 @@ describe Capybara::Session do
         @session.driver.resize(200, 200)
         log = @session.find(:css, '#log')
 
-        instructions = %w(one four one two three)
-        instructions.each do |instruction, i|
+        instructions = %w[one four one two three]
+        instructions.each do |instruction|
           @session.find(:css, "##{instruction}").base.double_click
           expect(log.text).to eq(instruction)
         end
@@ -531,7 +530,7 @@ describe Capybara::Session do
           return a;
         })()
       JS
-      expect(@session.evaluate_script(code)).to eq({"a"=>"(cyclic structure)", "b"=>{}, "c"=>{"a"=>"(cyclic structure)"}})
+      expect(@session.evaluate_script(code)).to eq('a' => '(cyclic structure)', 'b' => {}, 'c' => { 'a' => '(cyclic structure)' })
     end
 
     if Capybara::VERSION.to_f < 3.0
@@ -548,12 +547,12 @@ describe Capybara::Session do
 
     it 'handles hash changes' do
       @session.visit '/#omg'
-      expect(@session.current_url).to match(/\/#omg$/)
+      expect(@session.current_url).to match(%r{/#omg$})
       @session.execute_script <<-JS
         window.onhashchange = function() { window.last_hashchange = window.location.hash }
       JS
       @session.visit '/#foo'
-      expect(@session.current_url).to match(/\/#foo$/)
+      expect(@session.current_url).to match(%r{/#foo$})
       expect(@session.evaluate_script('window.last_hashchange')).to eq('#foo')
     end
 
@@ -571,12 +570,12 @@ describe Capybara::Session do
       end
 
       it 'supports url in parameter' do
-        @session.visit "/poltergeist/arbitrary_path/200/foo%20asd?a=http://example.com/asd%20asd"
+        @session.visit '/poltergeist/arbitrary_path/200/foo%20asd?a=http://example.com/asd%20asd'
         expect(request_uri).to eq('/poltergeist/arbitrary_path/200/foo%20asd?a=http://example.com/asd%20asd')
       end
 
       it 'supports restricted characters " []:/+&="' do
-        @session.visit "/poltergeist/arbitrary_path/200/foo?a=%20%5B%5D%3A%2F%2B%26%3D"
+        @session.visit '/poltergeist/arbitrary_path/200/foo?a=%20%5B%5D%3A%2F%2B%26%3D'
         expect(request_uri).to eq('/poltergeist/arbitrary_path/200/foo?a=%20%5B%5D%3A%2F%2B%26%3D')
       end
 
@@ -596,7 +595,7 @@ describe Capybara::Session do
         droppable = @session.find(:css, '#drag_to #droppable')
 
         draggable.drag_to(droppable)
-        expect( droppable ).to have_content( "Dropped" )
+        expect(droppable).to have_content('Dropped')
       end
 
       it 'supports drag_by on native element' do
@@ -610,10 +609,9 @@ describe Capybara::Session do
         top_after = @session.evaluate_script('$("#drag_by .draggable").position().top')
         left_after = @session.evaluate_script('$("#drag_by .draggable").position().left')
 
-        expect( top_after ).to eq( top_before + 15 )
-        expect( left_after ).to eq( left_before + 15 )
+        expect(top_after).to eq(top_before + 15)
+        expect(left_after).to eq(left_before + 15)
       end
-
     end
 
     context 'window switching support' do
@@ -721,7 +719,7 @@ describe Capybara::Session do
         expect(@session.driver.frame_url).to end_with('/poltergeist/frames')
       end
 
-      context "with src == about:blank" do
+      context 'with src == about:blank' do
         it "doesn't hang if no document created" do
           @session.visit '/'
           @session.execute_script <<-JS
@@ -749,9 +747,9 @@ describe Capybara::Session do
         end
       end
 
-      context "with no src attribute" do
+      context 'with no src attribute' do
         it "doesn't hang if the srcdoc attribute is used" do
-          skip "srcdoc attribute not supported by tested PhantomJS version" unless phantom_version_is? ">= 2.0.0", @session.driver
+          skip 'srcdoc attribute not supported by tested PhantomJS version' unless phantom_version_is? '>= 2.0.0', @session.driver
           @session.visit '/'
           @session.execute_script <<-JS
             document.body.innerHTML += '<iframe srcdoc="<p>Hello Frame</p>" name="frame">'
@@ -833,11 +831,11 @@ describe Capybara::Session do
       it 'does not wait forever for the frame to load' do
         @session.visit '/'
 
-        expect {
-          @session.within_frame('omg') { }
-        }.to raise_error { |e|
+        expect do
+          @session.within_frame('omg') {}
+        end.to(raise_error do |e|
           expect(e).to be_a(Capybara::Poltergeist::FrameNotFound).or be_a(Capybara::ElementNotFound)
-        }
+        end)
       end
     end
 
@@ -851,7 +849,7 @@ describe Capybara::Session do
       @session.visit('/')
       @session.find(:css, 'a').click
 
-      position = JSON.load(TestSessions.logger.messages.last)['response']['position']
+      position = JSON.parse(TestSessions.logger.messages.last)['response']['position']
       expect(position['x']).to_not be_nil
       expect(position['y']).to_not be_nil
     end
@@ -910,21 +908,21 @@ describe Capybara::Session do
       end
 
       it 'gets property innerHTML' do
-        expect(@session.find(:css,'.some_other_class').native.property('innerHTML')).to eq '<p>foobar</p>'
+        expect(@session.find(:css, '.some_other_class').native.property('innerHTML')).to eq '<p>foobar</p>'
       end
 
       it 'gets property outerHTML' do
-        expect(@session.find(:css,'.some_other_class').native.property('outerHTML')).to eq '<div class="some_other_class"><p>foobar</p></div>'
+        expect(@session.find(:css, '.some_other_class').native.property('outerHTML')).to eq '<div class="some_other_class"><p>foobar</p></div>'
       end
 
       it 'gets non existent property' do
-        expect(@session.find(:css,'.some_other_class').native.property('does_not_exist')).to eq nil
+        expect(@session.find(:css, '.some_other_class').native.property('does_not_exist')).to eq nil
       end
     end
 
     it 'allows access to element attributes' do
       @session.visit '/poltergeist/attributes_properties'
-      expect(@session.find(:css,'#my_link').native.attributes).to eq(
+      expect(@session.find(:css, '#my_link').native.attributes).to eq(
         'href' => '#', 'id' => 'my_link', 'class' => 'some_class', 'data' => 'rah!'
       )
     end
@@ -932,7 +930,7 @@ describe Capybara::Session do
     it 'knows about its parents' do
       @session.visit '/poltergeist/simple'
       parents = @session.find(:css, '#nav').native.parents
-      expect(parents.map(&:tag_name)).to eq ['li','ul','body','html']
+      expect(parents.map(&:tag_name)).to eq %w[li ul body html]
     end
 
     context 'SVG tests' do
@@ -948,33 +946,33 @@ describe Capybara::Session do
     context 'modals' do
       it 'matches on partial strings' do
         @session.visit '/poltergeist/with_js'
-        expect {
+        expect do
           @session.accept_confirm '[reg.exp] (chara©+er$)' do
             @session.click_link('Open for match')
           end
-        }.not_to raise_error
+        end.not_to raise_error
         expect(@session).to have_xpath("//a[@id='open-match' and @confirmed='true']")
       end
 
       it 'matches on regular expressions' do
         @session.visit '/poltergeist/with_js'
-        expect {
+        expect do
           @session.accept_confirm(/^.t.ext.*\[\w{3}\.\w{3}\]/i) do
             @session.click_link('Open for match')
           end
-        }.not_to raise_error
+        end.not_to raise_error
         expect(@session).to have_xpath("//a[@id='open-match' and @confirmed='true']")
       end
 
       it 'works with nested modals' do
         @session.visit '/poltergeist/with_js'
-        expect {
+        expect do
           @session.dismiss_confirm 'Are you really sure?' do
             @session.accept_confirm 'Are you sure?' do
               @session.click_link('Open check twice')
             end
           end
-        }.not_to raise_error
+        end.not_to raise_error
         expect(@session).to have_xpath("//a[@id='open-twice' and @confirmed='false']")
       end
 
@@ -988,39 +986,39 @@ describe Capybara::Session do
         end
 
         @session.within_window(popup) do
-          expect {
+          expect do
             @session.accept_confirm do
               @session.click_link('Open for match')
             end
             expect(@session).to have_xpath("//a[@id='open-match' and @confirmed='true']")
-          }.not_to raise_error
+          end.not_to raise_error
         end
         popup.close
       end
     end
 
-    it "can go back when history state has been pushed" do
+    it 'can go back when history state has been pushed' do
       @session.visit('/')
       @session.execute_script('window.history.pushState({foo: "bar"}, "title", "bar2.html");')
       expect(@session).to have_current_path('/bar2.html')
-      expect{@session.go_back}.not_to raise_error
+      expect { @session.go_back }.not_to raise_error
       expect(@session).to have_current_path('/')
     end
 
-    it "can go forward when history state is used" do
+    it 'can go forward when history state is used' do
       @session.visit('/')
       @session.execute_script('window.history.pushState({foo: "bar"}, "title", "bar2.html");')
       expect(@session).to have_current_path('/bar2.html')
-      #don't use #go_back here to isolate the test
+      # don't use #go_back here to isolate the test
       @session.execute_script('window.history.go(-1);')
       expect(@session).to have_current_path('/')
-      expect{@session.go_forward}.not_to raise_error
+      expect { @session.go_forward }.not_to raise_error
       expect(@session).to have_current_path('/bar2.html')
     end
 
-    context "in threadsafe mode" do
+    context 'in threadsafe mode' do
       before do
-        skip "No threadsafe mode in this version" unless Capybara.respond_to?(:threadsafe)
+        skip 'No threadsafe mode in this version' unless Capybara.respond_to?(:threadsafe)
         Capybara::SpecHelper.reset_threadsafe(true, @session) if Capybara.respond_to?(:threadsafe)
       end
 
@@ -1028,7 +1026,7 @@ describe Capybara::Session do
         Capybara::SpecHelper.reset_threadsafe(false, @session) if Capybara.respond_to?(:threadsafe)
       end
 
-      it "uses per session wait setting" do
+      it 'uses per session wait setting' do
         Capybara.default_max_wait_time = 1
         @session.config.default_max_wait_time = 2
         expect(@session.driver.send(:session_wait_time)).to eq 2
@@ -1041,7 +1039,7 @@ describe Capybara::Session do
 
       context 'with pty' do
         before do
-          Tempfile.open(%w(test rb)) do |file|
+          Tempfile.open(%w[test rb]) do |file|
             file.print(script)
             file.flush
 
@@ -1049,14 +1047,14 @@ describe Capybara::Session do
               PTY.spawn("bundle exec ruby #{file.path}") do |read, write, pid|
                 sleep 0.1 until read.readline.chomp == 'Please type enter'
                 write.puts
-                sleep 0.1 until status = PTY.check(pid)
+                sleep 0.1 until (status = PTY.check(pid))
                 @status = status
               end
             end
           end
         end
 
-        let(:script) {
+        let(:script) do
           <<-RUBY
             require 'capybara/poltergeist'
 
@@ -1068,7 +1066,7 @@ describe Capybara::Session do
             sleep 1
             browser.current_url
           RUBY
-        }
+        end
 
         it do
           expect(@status).to be_success

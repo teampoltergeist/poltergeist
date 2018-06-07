@@ -39,4 +39,3 @@ module Capybara::Poltergeist::NetworkTraffic
     end
   end
 end
-

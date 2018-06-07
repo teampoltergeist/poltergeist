@@ -1,13 +1,12 @@
 # frozen_string_literal: true
 
-require "timeout"
-require "capybara/poltergeist/utility"
+require 'capybara/poltergeist/utility'
 require 'cliver'
 
 module Capybara::Poltergeist
   class Client
-    PHANTOMJS_SCRIPT  = File.expand_path('../client/compiled/main.js', __FILE__)
-    PHANTOMJS_VERSION = ['>= 1.8.1', '< 3.0']
+    PHANTOMJS_SCRIPT  = File.expand_path('client/compiled/main.js', __dir__)
+    PHANTOMJS_VERSION = ['>= 1.8.1', '< 3.0'].freeze
     PHANTOMJS_NAME    = 'phantomjs'
 
     KILL_TIMEOUT = 2 # seconds
@@ -32,11 +31,10 @@ module Capybara::Poltergeist
             start = Time.now
             while Process.wait(pid, Process::WNOHANG).nil?
               sleep 0.05
-              if (Time.now - start) > KILL_TIMEOUT
-                Process.kill('KILL', pid)
-                Process.wait(pid)
-                break
-              end
+              next unless (Time.now - start) > KILL_TIMEOUT
+              Process.kill('KILL', pid)
+              Process.wait(pid)
+              break
             end
           end
         rescue Errno::ESRCH, Errno::ECHILD
@@ -49,8 +47,8 @@ module Capybara::Poltergeist
 
     def initialize(server, options = {})
       @server            = server
-      @path              = Cliver::detect((options[:path] || PHANTOMJS_NAME), *['>=2.1.0', '< 3.0'])
-      @path            ||= Cliver::detect!((options[:path] || PHANTOMJS_NAME), *PHANTOMJS_VERSION).tap do
+      @path              = Cliver.detect((options[:path] || PHANTOMJS_NAME), '>=2.1.0', '< 3.0')
+      @path            ||= Cliver.detect!((options[:path] || PHANTOMJS_NAME), *PHANTOMJS_VERSION).tap do
         warn "You're running an old version of PhantomJS, update to >= 2.1.1 for a better experience."
       end
 
@@ -61,13 +59,13 @@ module Capybara::Poltergeist
 
     def start
       @read_io, @write_io = IO.pipe
-      @out_thread = Thread.new {
-        while !@read_io.eof? && data = @read_io.readpartial(1024)
+      @out_thread = Thread.new do
+        while !@read_io.eof? && (data = @read_io.readpartial(1024))
           @phantomjs_logger.write(data)
         end
-      }
+      end
 
-      process_options = {in: File::NULL}
+      process_options = { in: File::NULL }
       process_options[:pgroup] = true unless Capybara::Poltergeist.windows?
       process_options[:out] = @write_io if Capybara::Poltergeist.mri?
 
@@ -78,12 +76,11 @@ module Capybara::Poltergeist
     end
 
     def stop
-      if pid
-        kill_phantomjs
-        @out_thread.kill
-        close_io
-        ObjectSpace.undefine_finalizer(self)
-      end
+      return unless pid
+      kill_phantomjs
+      @out_thread.kill
+      close_io
+      ObjectSpace.undefine_finalizer(self)
     end
 
     def restart

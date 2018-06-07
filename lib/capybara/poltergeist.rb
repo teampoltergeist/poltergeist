@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-if RUBY_VERSION < "1.9.2"
-  raise "This version of Capybara/Poltergeist does not support Ruby versions " \
-        "less than 1.9.2."
-end
-
 require 'capybara'
 
 module Capybara

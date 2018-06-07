@@ -23,22 +23,22 @@ module Capybara::Poltergeist
     end
 
     context 'with a phantomjs_options option' do
-      subject { Driver.new(nil, phantomjs_options: %w{--hello})}
+      subject { Driver.new(nil, phantomjs_options: %w[--hello]) }
 
-      it "is a combination of ssl settings and the provided options" do
-        expect(subject.phantomjs_options).to eq(%w{--hello --ignore-ssl-errors=yes --ssl-protocol=TLSv1})
+      it 'is a combination of ssl settings and the provided options' do
+        expect(subject.phantomjs_options).to eq(%w[--hello --ignore-ssl-errors=yes --ssl-protocol=TLSv1])
       end
     end
 
     context 'with phantomjs_options containing ssl-protocol settings' do
-      subject { Driver.new(nil, phantomjs_options: %w{--ssl-protocol=any --ignore-ssl-errors=no})}
+      subject { Driver.new(nil, phantomjs_options: %w[--ssl-protocol=any --ignore-ssl-errors=no]) }
 
-      it "uses the provided ssl-protocol" do
+      it 'uses the provided ssl-protocol' do
         expect(subject.phantomjs_options).to include('--ssl-protocol=any')
         expect(subject.phantomjs_options).not_to include('--ssl-protocol=TLSv1')
       end
 
-      it "uses the provided ssl-errors" do
+      it 'uses the provided ssl-errors' do
         expect(subject.phantomjs_options).to include('--ignore-ssl-errors=no')
         expect(subject.phantomjs_options).not_to include('--ignore-ssl-errors=yes')
       end
@@ -78,11 +78,11 @@ module Capybara::Poltergeist
       end
 
       it 'can pause indefinitely' do
-        expect {
-          Timeout::timeout(3) do
+        expect do
+          Timeout.timeout(3) do
             subject.pause
           end
-        }.to raise_error(Timeout::Error)
+        end.to raise_error(Timeout::Error)
       end
 
       it 'can pause and resume with keyboard input' do
@@ -91,7 +91,7 @@ module Capybara::Poltergeist
           write_io.write "\n"
 
           begin
-            Timeout::timeout(3) do
+            Timeout.timeout(3) do
               subject.pause
             end
           ensure
@@ -102,11 +102,10 @@ module Capybara::Poltergeist
 
       it 'can pause and resume with signal' do
         Thread.new { sleep(2); Process.kill('CONT', Process.pid); }
-        Timeout::timeout(4) do
+        Timeout.timeout(4) do
           subject.pause
         end
       end
-
     end
 
     context 'with a :timeout option' do

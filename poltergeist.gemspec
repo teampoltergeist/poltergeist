@@ -1,4 +1,6 @@
-lib = File.expand_path('../lib/', __FILE__)
+# frozen_string_literal: true
+
+lib = File.expand_path('lib', __dir__)
 $:.unshift lib unless $:.include?(lib)
 
 require 'capybara/poltergeist/version'
@@ -16,23 +18,23 @@ Gem::Specification.new do |s|
                     'PhantomJS.'
   s.license       = 'MIT'
   s.require_paths = ['lib']
-  s.files         = Dir.glob('{lib}/**/*') + %w(LICENSE README.md)
+  s.files         = Dir.glob('{lib}/**/*') + %w[LICENSE README.md]
 
-  s.required_ruby_version = '>= 1.9.3'
+  s.required_ruby_version = '>= 2.3.0'
 
   s.add_runtime_dependency 'capybara',         '>= 2.1', '< 4'
-  s.add_runtime_dependency 'websocket-driver', '>= 0.2.0'
   s.add_runtime_dependency 'cliver',           '~> 0.3.1'
+  s.add_runtime_dependency 'websocket-driver', '>= 0.2.0'
 
+  s.add_development_dependency 'coffee-script', '~> 2.2'
+  s.add_development_dependency 'coffee-script-source', '~>1.12.2'
+  s.add_development_dependency 'erubi' # required by rbx
+  s.add_development_dependency 'guard-coffeescript', '~> 2.0.0'
+  s.add_development_dependency 'image_size',         '~> 1.0'
   s.add_development_dependency 'launchy',            '~> 2.0'
+  s.add_development_dependency 'listen', '~> 3.0.6' # listen is required by guard and listen 3.1.0 requires ruby 2.2+
+  s.add_development_dependency 'pdf-reader', '< 3.0', '>= 1.3.3'
+  s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec',              '~> 3.7'
   s.add_development_dependency 'sinatra',            '<= 3.0'
-  s.add_development_dependency 'rake'
-  s.add_development_dependency 'image_size',         '~> 1.0'
-  s.add_development_dependency 'pdf-reader',         '< 3.0', '>= 1.3.3'
-  s.add_development_dependency 'coffee-script',      '~> 2.2'
-  s.add_development_dependency 'guard-coffeescript', '~> 2.0.0'
-  s.add_development_dependency 'coffee-script-source', '~>1.12.2'
-  s.add_development_dependency 'listen', '~> 3.0.6'  # listen is required by guard and listen 3.1.0 requires ruby 2.2+
-  s.add_development_dependency 'erubi'  # required by rbx
 end

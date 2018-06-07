@@ -2,6 +2,6 @@
 
 module Capybara
   module Poltergeist
-    VERSION = "1.18.1"
+    VERSION = '1.18.1'
   end
 end

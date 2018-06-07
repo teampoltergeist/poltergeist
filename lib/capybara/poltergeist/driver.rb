@@ -45,11 +45,10 @@ module Capybara::Poltergeist
 
     def client
       @client ||= Client.start(server,
-        :path              => options[:phantomjs],
-        :window_size       => options[:window_size],
-        :phantomjs_options => phantomjs_options,
-        :phantomjs_logger  => phantomjs_logger
-      )
+                               path:              options[:phantomjs],
+                               window_size:       options[:window_size],
+                               phantomjs_options: phantomjs_options,
+                               phantomjs_logger:  phantomjs_logger)
     end
 
     def phantomjs_options
@@ -58,9 +57,9 @@ module Capybara::Poltergeist
       # PhantomJS defaults to only using SSLv3, which since POODLE (Oct 2014)
       # many sites have dropped from their supported protocols (eg PayPal,
       # Braintree).
-      list += ["--ignore-ssl-errors=yes"] unless list.grep(/ignore-ssl-errors/).any?
-      list += ["--ssl-protocol=TLSv1"] unless list.grep(/ssl-protocol/).any?
-      list += ["--remote-debugger-port=#{inspector.port}", "--remote-debugger-autorun=yes"] if inspector
+      list += ['--ignore-ssl-errors=yes'] unless list.grep(/ignore-ssl-errors/).any?
+      list += ['--ssl-protocol=TLSv1'] unless list.grep(/ssl-protocol/).any?
+      list += ["--remote-debugger-port=#{inspector.port}", '--remote-debugger-autorun=yes'] if inspector
       list
     end
 
@@ -154,17 +153,17 @@ module Capybara::Poltergeist
     end
 
     def evaluate_script(script, *args)
-      result = browser.evaluate(script, *args.map { |arg| arg.is_a?(Capybara::Poltergeist::Node) ?  arg.native : arg})
+      result = browser.evaluate(script, *native_args(args))
       unwrap_script_result(result)
     end
 
     def evaluate_async_script(script, *args)
-      result = browser.evaluate_async(script, session_wait_time, *args.map { |arg| arg.is_a?(Capybara::Poltergeist::Node) ?  arg.native : arg})
+      result = browser.evaluate_async(script, session_wait_time, *native_args(args))
       unwrap_script_result(result)
     end
 
     def execute_script(script, *args)
-      browser.execute(script, *args.map { |arg| arg.is_a?(Capybara::Poltergeist::Node) ?  arg.native : arg})
+      browser.execute(script, *native_args(args))
       nil
     end
 
@@ -261,7 +260,7 @@ module Capybara::Poltergeist
       browser.clear_network_traffic
     end
 
-    def set_proxy(ip, port, type = "http", user = nil, password = nil)
+    def set_proxy(ip, port, type = 'http', user = nil, password = nil)
       browser.set_proxy(ip, port, type, user, password)
     end
 
@@ -296,7 +295,7 @@ module Capybara::Poltergeist
         if @started
           URI.parse(browser.current_url).host
         else
-          URI.parse(default_cookie_host).host || "127.0.0.1"
+          URI.parse(default_cookie_host).host || '127.0.0.1'
         end
       end
 
@@ -338,8 +337,8 @@ module Capybara::Poltergeist
         inspector.open(scheme)
         pause
       else
-        raise Error, "To use the remote debugging, you have to launch the driver " \
-                     "with `:inspector => true` configuration option"
+        raise Error, 'To use the remote debugging, you have to launch the driver ' \
+                     'with `:inspector => true` configuration option'
       end
     end
 
@@ -358,12 +357,13 @@ module Capybara::Poltergeist
       old_trap = trap('SIGCONT') { signal = true; STDERR.puts "\nSignal SIGCONT received" }
       keyboard = IO.select([read], nil, nil, 1) until keyboard || signal # wait for data on STDIN or signal SIGCONT received
 
-      begin
-        input = read.read_nonblock(80) # clear out the read buffer
-        puts unless input && input =~ /\n\z/
-      rescue EOFError, IO::WaitReadable # Ignore problems reading from STDIN.
-      end unless signal
-
+      unless signal
+        begin
+          input = read.read_nonblock(80) # clear out the read buffer
+          puts unless input&.end_with?("\n")
+        rescue EOFError, IO::WaitReadable # Ignore problems reading from STDIN.
+        end
+      end
     ensure
       trap('SIGCONT', old_trap) # Restore the previous signal handler, if there was one.
       STDERR.puts 'Continuing'
@@ -416,8 +416,12 @@ module Capybara::Poltergeist
 
     private
 
+    def native_args(args)
+      args.map { |arg| arg.is_a?(Capybara::Poltergeist::Node) ? arg.native : arg }
+    end
+
     def screen_size
-      options[:screen_size] || [1366,768]
+      options[:screen_size] || [1366, 768]
     end
 
     def find_modal(options)

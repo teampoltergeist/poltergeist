@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bundler/setup'
 require 'rspec/core/rake_task'
 
@@ -5,7 +7,7 @@ require 'capybara/poltergeist/version'
 require 'coffee-script'
 
 RSpec::Core::RakeTask.new('test')
-task default: [:compile, :test]
+task default: %i[compile test]
 
 task(:autocompile) { system 'guard' }
 

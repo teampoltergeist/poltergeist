@@ -2,7 +2,7 @@
 
 module Capybara::Poltergeist
   class Inspector
-    BROWSERS     = %w(chromium chromium-browser google-chrome open)
+    BROWSERS     = %w[chromium chromium-browser google-chrome open].freeze
     DEFAULT_PORT = 9664
 
     def self.detect_browser
@@ -30,19 +30,19 @@ module Capybara::Poltergeist
       else
         raise Error, "Could not find a browser executable to open #{url(scheme)}. " \
                      "You can specify one manually using e.g. `:inspector => 'chromium'` " \
-                     "as a configuration option for Poltergeist."
+                     'as a configuration option for Poltergeist.'
       end
     end
 
     def self.browser_binary_exists?(browser)
       exts = ENV['PATHEXT'] ? ENV['PATHEXT'].split(';') : ['']
       ENV['PATH'].split(File::PATH_SEPARATOR).each do |path|
-        exts.each { |ext|
+        exts.each do |ext|
           exe = "#{path}#{File::SEPARATOR}#{browser}#{ext}"
           return exe if File.executable? exe
-        }
+        end
       end
-      return nil
+      nil
     end
   end
 end
