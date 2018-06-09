@@ -12,7 +12,7 @@ class Poltergeist.Browser
     @confirm_processes = []
     @prompt_responses = []
 
-    this.resetPage()
+    @resetPage()
 
   resetPage: ->
     [@_counter, @pages] = [0, []]
@@ -154,41 +154,41 @@ class Poltergeist.Browser
     @current_command.sendResponse(page_id: @currentPage.id, ids: @currentPage.find(method, selector))
 
   find_within: (page_id, id, method, selector) ->
-    @current_command.sendResponse this.node(page_id, id).find(method, selector)
+    @current_command.sendResponse @node(page_id, id).find(method, selector)
 
   all_text: (page_id, id) ->
-    @current_command.sendResponse this.node(page_id, id).allText()
+    @current_command.sendResponse @node(page_id, id).allText()
 
   visible_text: (page_id, id) ->
-    @current_command.sendResponse this.node(page_id, id).visibleText()
+    @current_command.sendResponse @node(page_id, id).visibleText()
 
   delete_text: (page_id, id) ->
-    @current_command.sendResponse this.node(page_id, id).deleteText()
+    @current_command.sendResponse @node(page_id, id).deleteText()
 
   property: (page_id, id, name) ->
-    @current_command.sendResponse this.node(page_id, id).getProperty(name)
+    @current_command.sendResponse @node(page_id, id).getProperty(name)
 
   attribute: (page_id, id, name) ->
-    @current_command.sendResponse this.node(page_id, id).getAttribute(name)
+    @current_command.sendResponse @node(page_id, id).getAttribute(name)
 
   attributes: (page_id, id, name) ->
-    @current_command.sendResponse this.node(page_id, id).getAttributes()
+    @current_command.sendResponse @node(page_id, id).getAttributes()
 
   parents: (page_id, id) ->
-    @current_command.sendResponse this.node(page_id, id).parentIds()
+    @current_command.sendResponse @node(page_id, id).parentIds()
 
   value: (page_id, id) ->
-    @current_command.sendResponse this.node(page_id, id).value()
+    @current_command.sendResponse @node(page_id, id).value()
 
   set: (page_id, id, value) ->
-    this.node(page_id, id).set(value)
+    @node(page_id, id).set(value)
     @current_command.sendResponse(true)
 
   # PhantomJS only allows us to reference the element by CSS selector, not XPath,
   # so we have to add an attribute to the element to identify it, then remove it
   # afterwards.
   select_file: (page_id, id, value) ->
-    node = this.node(page_id, id)
+    node = @node(page_id, id)
 
     @currentPage.beforeUpload(node.id)
     @currentPage.uploadFile('[_poltergeist_selected]', value)
@@ -202,19 +202,19 @@ class Poltergeist.Browser
       @current_command.sendResponse(true)
 
   select: (page_id, id, value) ->
-    @current_command.sendResponse this.node(page_id, id).select(value)
+    @current_command.sendResponse @node(page_id, id).select(value)
 
   tag_name: (page_id, id) ->
-    @current_command.sendResponse this.node(page_id, id).tagName()
+    @current_command.sendResponse @node(page_id, id).tagName()
 
   visible: (page_id, id) ->
-    @current_command.sendResponse this.node(page_id, id).isVisible()
+    @current_command.sendResponse @node(page_id, id).isVisible()
 
   disabled: (page_id, id) ->
-    @current_command.sendResponse this.node(page_id, id).isDisabled()
+    @current_command.sendResponse @node(page_id, id).isDisabled()
 
   path: (page_id, id) ->
-    @current_command.sendResponse this.node(page_id, id).path()
+    @current_command.sendResponse @node(page_id, id).path()
 
   evaluate: (script, args...) ->
     for arg in args when @_isElementArgument(arg)
@@ -244,7 +244,7 @@ class Poltergeist.Browser
 
   pushFrame: (command, name, timeout) ->
     if Array.isArray(name)
-      frame = this.node(name...)
+      frame = @node(name...)
       name = frame.getAttribute('name') || frame.getAttribute('id')
       unless name
         frame.setAttribute('name', "_random_name_#{new Date().getTime()}")
@@ -300,7 +300,7 @@ class Poltergeist.Browser
       throw new Poltergeist.NoSuchWindowError
 
   open_new_window: ->
-    this.execute 'window.open()'
+    @execute 'window.open()'
     @current_command.sendResponse(true)
 
   close_window: (handle) ->
@@ -313,7 +313,7 @@ class Poltergeist.Browser
 
   mouse_event: (page_id, id, name, keys=[], offset={}) ->
     # Get the node before changing state, in case there is an exception
-    node = this.node(page_id, id)
+    node = @node(page_id, id)
     # If the event triggers onNavigationRequested, we will transition to the 'loading'
     # state and wait for onLoadFinished before sending a response.
     @currentPage.state = 'mouse_event'
@@ -333,38 +333,38 @@ class Poltergeist.Browser
     , 5
 
   click: (page_id, id, keys, offset) ->
-    this.mouse_event page_id, id, 'click', keys, offset
+    @mouse_event page_id, id, 'click', keys, offset
 
   right_click: (page_id, id, keys, offset) ->
-    this.mouse_event page_id, id, 'rightclick', keys, offset
+    @mouse_event page_id, id, 'rightclick', keys, offset
 
   double_click: (page_id, id, keys, offset) ->
-    this.mouse_event page_id, id, 'doubleclick', keys, offset
+    @mouse_event page_id, id, 'doubleclick', keys, offset
 
   hover: (page_id, id) ->
-    this.mouse_event page_id, id, 'mousemove'
+    @mouse_event page_id, id, 'mousemove'
 
   click_coordinates: (x, y) ->
     @currentPage.sendEvent('click', x, y)
     @current_command.sendResponse(click: { x: x, y: y })
 
   drag: (page_id, id, other_id) ->
-    this.node(page_id, id).dragTo this.node(page_id, other_id)
+    @node(page_id, id).dragTo @node(page_id, other_id)
     @current_command.sendResponse(true)
 
   drag_by: (page_id, id, x, y) ->
-    this.node(page_id, id).dragBy(x, y)
+    @node(page_id, id).dragBy(x, y)
     @current_command.sendResponse(true)
 
   trigger: (page_id, id, event) ->
-    this.node(page_id, id).trigger(event)
+    @node(page_id, id).trigger(event)
     @current_command.sendResponse(event)
 
   equals: (page_id, id, other_id) ->
-    @current_command.sendResponse this.node(page_id, id).isEqual(this.node(page_id, other_id))
+    @current_command.sendResponse @node(page_id, id).isEqual(@node(page_id, other_id))
 
   reset: ->
-    this.resetPage()
+    @resetPage()
     @current_command.sendResponse(true)
 
   scroll_to: (left, top) ->
@@ -372,7 +372,7 @@ class Poltergeist.Browser
     @current_command.sendResponse(true)
 
   send_keys: (page_id, id, keys) ->
-    target = this.node(page_id, id)
+    target = @node(page_id, id)
 
     # Programmatically generated focus doesn't work for `sendKeys`.
     # That's why we need something more realistic like user behavior.
@@ -405,7 +405,7 @@ class Poltergeist.Browser
 
   render_base64: (format, { full = false, selector = null } = {})->
     window_scroll_position = @currentPage.native().evaluate("function(){ return [window.pageXOffset, window.pageYOffset] }")
-    dimensions = this.set_clip_rect(full, selector)
+    dimensions = @set_clip_rect(full, selector)
     encoded_image = @currentPage.renderBase64(format)
     @currentPage.setScrollPosition(left: dimensions.left, top: dimensions.top)
     @currentPage.native().evaluate("window.scrollTo", window_scroll_position...)
@@ -414,7 +414,7 @@ class Poltergeist.Browser
 
   render: (path, { full = false, selector = null, format = null, quality = null } = {} ) ->
     window_scroll_position = @currentPage.native().evaluate("function(){ return [window.pageXOffset, window.pageYOffset] }")
-    dimensions = this.set_clip_rect(full, selector)
+    dimensions = @set_clip_rect(full, selector)
     options = {}
     options["format"] = format if format?
     options["quality"] = quality if quality?
@@ -467,7 +467,7 @@ class Poltergeist.Browser
     @current_command.sendResponse(@currentPage.getCustomHeaders())
 
   set_headers: (headers) ->
-    this.add_headers(headers, false, false)
+    @add_headers(headers, false, false)
 
   add_headers: (headers, local = false, keepExisting = true) ->
     pages = if local then [@currentPage] else @pages
@@ -483,7 +483,7 @@ class Poltergeist.Browser
     unless permanent == true
       @currentPage.addTempHeader(header)
       @currentPage.addTempHeaderToRemoveOnRedirect(header) if permanent == "no_redirect"
-    this.add_headers(header, permanent != true)
+    @add_headers(header, permanent != true)
 
   response_headers: ->
     @current_command.sendResponse(@currentPage.responseHeaders())

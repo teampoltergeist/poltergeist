@@ -36,19 +36,19 @@ class Poltergeist.WebPage
     @setSettings(settings)
 
     for callback in WebPage.CALLBACKS
-      this.bindCallback(callback)
+      @bindCallback(callback)
 
     if phantom.version.major < 2
-      @._overrideNativeEvaluate()
+      @_overrideNativeEvaluate()
 
   for command in @COMMANDS
     do (command) =>
-      this.prototype[command] =
-        (args...) -> this.runCommand(command, args)
+      @prototype[command] =
+        (args...) -> @runCommand(command, args)
 
   for delegate in @DELEGATES
     do (delegate) =>
-      this.prototype[delegate] =
+      @prototype[delegate] =
         -> @_native[delegate].apply(@_native, arguments)
 
   setSettings: (settings = {})->
@@ -144,16 +144,16 @@ class Poltergeist.WebPage
     console.log "Resource request timed out for #{request.url}"
 
   injectAgent: ->
-    if this.native().evaluate(-> typeof __poltergeist) == "undefined"
-      this.native().injectJs "#{phantom.libraryPath}/agent.js"
+    if @native().evaluate(-> typeof __poltergeist) == "undefined"
+      @native().injectJs "#{phantom.libraryPath}/agent.js"
       for extension in WebPage.EXTENSIONS
-        this.native().injectJs extension
+        @native().injectJs extension
       return true
     return false
 
   injectExtension: (file) ->
     WebPage.EXTENSIONS.push file
-    this.native().injectJs file
+    @native().injectJs file
 
   native: ->
     if @closed
@@ -162,20 +162,20 @@ class Poltergeist.WebPage
       @_native
 
   windowName: ->
-    this.native().windowName
+    @native().windowName
 
   keyCode: (name) ->
     name = "Control" if name == "Ctrl"
-    this.native().event.key[name]
+    @native().event.key[name]
 
   keyModifierCode: (names) ->
-    modifiers = this.native().event.modifier
+    modifiers = @native().event.modifier
     names.split(',').map((name) -> modifiers[name]).reduce((n1,n2) -> n1 | n2)
 
   keyModifierKeys: (names) ->
     for name in names.split(',') when name isnt 'keypad'
       name = name.charAt(0).toUpperCase() + name.substring(1)
-      this.keyCode(name)
+      @keyCode(name)
 
   _waitState_until: (states, callback, timeout, timeout_callback) ->
     if (@state in states)
@@ -199,8 +199,8 @@ class Poltergeist.WebPage
         setTimeout (=> @waitState(states, callback)), 100
 
   setHttpAuth: (user, password) ->
-    this.native().settings.userName = user
-    this.native().settings.password = password
+    @native().settings.userName = user
+    @native().settings.password = password
     return true
 
   networkTraffic: (type) ->
@@ -227,13 +227,13 @@ class Poltergeist.WebPage
     url for own id, url of @_requestedResources
 
   content: ->
-    this.native().frameContent
+    @native().frameContent
 
   title: ->
-    this.native().title
+    @native().title
 
   frameTitle: ->
-    this.native().frameTitle
+    @native().frameTitle
 
   currentUrl: ->
     # native url doesn't return anything when about:blank
@@ -249,7 +249,7 @@ class Poltergeist.WebPage
   frameUrlFor: (frameNameOrId) ->
     query = (frameNameOrId) ->
       document.querySelector("iframe[name='#{frameNameOrId}'], iframe[id='#{frameNameOrId}']")?.src
-    this.evaluate(query, frameNameOrId)
+    @evaluate(query, frameNameOrId)
 
   clearErrors: ->
     @errors = []
@@ -262,50 +262,50 @@ class Poltergeist.WebPage
     headers
 
   cookies: ->
-    this.native().cookies
+    @native().cookies
 
   deleteCookie: (name) ->
-    this.native().deleteCookie(name)
+    @native().deleteCookie(name)
 
   viewportSize: ->
-    this.native().viewportSize
+    @native().viewportSize
 
   setViewportSize: (size) ->
-    this.native().viewportSize = size
+    @native().viewportSize = size
 
   setZoomFactor: (zoom_factor) ->
-    this.native().zoomFactor = zoom_factor
+    @native().zoomFactor = zoom_factor
 
   setPaperSize: (size) ->
-    this.native().paperSize = size
+    @native().paperSize = size
 
   scrollPosition: ->
-    this.native().scrollPosition
+    @native().scrollPosition
 
   setScrollPosition: (pos) ->
-    this.native().scrollPosition = pos
+    @native().scrollPosition = pos
 
   clipRect: ->
-    this.native().clipRect
+    @native().clipRect
 
   setClipRect: (rect) ->
-    this.native().clipRect = rect
+    @native().clipRect = rect
 
   elementBounds: (selector) ->
-    this.native().evaluate(
+    @native().evaluate(
       (selector) ->
         document.querySelector(selector).getBoundingClientRect()
       , selector
     )
 
   getUserAgent: ->
-    this.native().settings.userAgent
+    @native().settings.userAgent
 
   setUserAgent: (userAgent) ->
-    this.native().settings.userAgent = userAgent
+    @native().settings.userAgent = userAgent
 
   getCustomHeaders: ->
-    this.native().customHeaders
+    @native().customHeaders
 
   getPermanentCustomHeaders: ->
     allHeaders = @getCustomHeaders()
@@ -316,7 +316,7 @@ class Poltergeist.WebPage
     allHeaders
 
   setCustomHeaders: (headers) ->
-    this.native().customHeaders = headers
+    @native().customHeaders = headers
 
   addTempHeader: (header) ->
     for name, value of header
@@ -341,34 +341,34 @@ class Poltergeist.WebPage
     @setCustomHeaders(allHeaders)
 
   pushFrame: (name) ->
-    return true if this.native().switchToFrame(name)
+    return true if @native().switchToFrame(name)
 
     # if switch by name fails - find index and try again
-    frame_no = this.native().evaluate(
+    frame_no = @native().evaluate(
       (frame_name) ->
         frames = document.querySelectorAll("iframe, frame")
         (idx for f, idx in frames when f?['name'] == frame_name or f?['id'] == frame_name)[0]
       , name)
-    frame_no? and this.native().switchToFrame(frame_no)
+    frame_no? and @native().switchToFrame(frame_no)
 
   popFrame: (pop_all = false)->
     if pop_all
-      this.native().switchToMainFrame()
+      @native().switchToMainFrame()
     else
-      this.native().switchToParentFrame()
+      @native().switchToParentFrame()
 
   dimensions: ->
-    scroll   = this.scrollPosition()
-    viewport = this.viewportSize()
+    scroll   = @scrollPosition()
+    viewport = @viewportSize()
 
     top:    scroll.top,  bottom: scroll.top  + viewport.height,
     left:   scroll.left, right:  scroll.left + viewport.width,
     viewport: viewport
-    document: this.documentSize()
+    document: @documentSize()
 
   # A work around for http://code.google.com/p/phantomjs/issues/detail?id=277
   validatedDimensions: ->
-    dimensions = this.dimensions()
+    dimensions = @dimensions()
     document   = dimensions.document
 
     if dimensions.right > document.width
@@ -379,7 +379,7 @@ class Poltergeist.WebPage
       dimensions.top    = Math.max(0, dimensions.top - (dimensions.bottom - document.height))
       dimensions.bottom = document.height
 
-    this.setScrollPosition(left: dimensions.left, top: dimensions.top)
+    @setScrollPosition(left: dimensions.left, top: dimensions.top)
 
     dimensions
 
@@ -389,12 +389,12 @@ class Poltergeist.WebPage
   # Before each mouse event we make sure that the mouse is moved to where the
   # event will take place. This deals with e.g. :hover changes.
   mouseEvent: (name, x, y, button = 'left', modifiers = 0) ->
-    this.sendEvent('mousemove', x, y)
-    this.sendEvent(name, x, y, button, modifiers)
+    @sendEvent('mousemove', x, y)
+    @sendEvent(name, x, y, button, modifiers)
 
   evaluate: (fn, args...) ->
-    this.injectAgent()
-    result = this.native().evaluate("function() {
+    @injectAgent()
+    result = @native().evaluate("function() {
       var page_id = arguments[0];
       var args = [];
 
@@ -405,15 +405,15 @@ class Poltergeist.WebPage
           args.push(arguments[i])
         }
       }
-      var _result = #{this.stringifyCall(fn, "args")};
+      var _result = #{@stringifyCall(fn, "args")};
       return window.__poltergeist.wrapResults(_result, page_id); }", @id, args...)
     result
 
   evaluate_async: (fn, callback, args...) ->
     command_id = ++@_asyncEvaluationId
     cb = callback
-    this.injectAgent()
-    this.native().evaluate("function(){
+    @injectAgent()
+    @native().evaluate("function(){
       var page_id = arguments[0];
       var args = [];
       for(var i=1; i < arguments.length; i++){
@@ -427,7 +427,7 @@ class Poltergeist.WebPage
         result = window.__poltergeist.wrapResults(result, page_id);
         window.callPhantom( { command_id: #{command_id}, command_result: result } );
       });
-      #{this.stringifyCall(fn, "args")};
+      #{@stringifyCall(fn, "args")};
       return}", @id, args...)
 
     setTimeout( =>
@@ -436,13 +436,13 @@ class Poltergeist.WebPage
     return
 
   execute: (fn, args...) ->
-    this.native().evaluate("function() {
+    @native().evaluate("function() {
       for(var i=0; i < arguments.length; i++){
         if ((typeof(arguments[i]) == 'object') && (typeof(arguments[i]['ELEMENT']) == 'object')){
           arguments[i] = window.__poltergeist.get(arguments[i]['ELEMENT']['id']).element;
         }
       }
-      #{this.stringifyCall(fn)} }", args...)
+      #{@stringifyCall(fn)} }", args...)
 
   stringifyCall: (fn, args_name = "arguments") ->
     "(#{fn.toString()}).apply(this, #{args_name})"
@@ -457,7 +457,7 @@ class Poltergeist.WebPage
   # phantom.onError. If result is null, that means there was an error
   # inside the agent.
   runCommand: (name, args) ->
-    result = this.evaluate(
+    result = @evaluate(
       (name, args) -> __poltergeist.externalCall(name, args),
       name, args
     )
@@ -475,10 +475,10 @@ class Poltergeist.WebPage
       result?.value
 
   canGoBack: ->
-    this.native().canGoBack
+    @native().canGoBack
 
   canGoForward: ->
-    this.native().canGoForward
+    @native().canGoForward
 
   normalizeURL: (url) ->
     parser = document.createElement('a')
@@ -486,7 +486,7 @@ class Poltergeist.WebPage
     return parser.href
 
   clearMemoryCache: ->
-    clearMemoryCache = this.native().clearMemoryCache
+    clearMemoryCache = @native().clearMemoryCache
     if typeof clearMemoryCache == "function"
       clearMemoryCache()
     else
