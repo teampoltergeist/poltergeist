@@ -4,6 +4,7 @@ require 'spec_helper'
 
 skip = []
 skip << :windows if ENV['TRAVIS']
+skip << :download # PhantomJS doesn't support downloading files
 Capybara::SpecHelper.run_specs TestSessions::Poltergeist, 'Poltergeist', capybara_skip: skip
 
 describe Capybara::Session do
