@@ -68,6 +68,8 @@ RSpec.configure do |config|
       metadata[:pending] = "PhantomJS doesn't support datalist"
     when /^Capybara::Session Poltergeist #click_button should follow permanent redirects that maintain method/
       metadata[:pending] = "PhantomJS doesn't support 308 HTTP response code"
+    when /^apybara::Session Poltergeist Capybara::Window#fullscreen should be able to fullscreen the window/
+      metadata[:pending] = "Poltergeist doesn't support fullscreen"
     end
   end
 

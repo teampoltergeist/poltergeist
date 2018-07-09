@@ -6,3 +6,4 @@
 /rspec.failures
 /vendor
 /.bundle
+/save_path_tmp/
