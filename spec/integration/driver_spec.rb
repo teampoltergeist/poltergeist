@@ -1362,7 +1362,7 @@ module Capybara::Poltergeist
       it 'sends sequences' do
         input = @session.find(:css, '#empty_input')
 
-        input.native.send_keys(:Shift, 'S', :Alt, 't', 'r', 'i', 'g', :Left, 'n')
+        input.native.send_keys([:Shift], 'S', [:Alt], 't', 'r', 'i', 'g', :Left, 'n')
 
         expect(input.value).to eq('String')
       end
@@ -1377,7 +1377,6 @@ module Capybara::Poltergeist
 
       it 'sends sequences with modifiers and letters' do
         input = @session.find(:css, '#empty_input')
-
         input.native.send_keys([:Shift, 's'], 't', 'r', 'i', 'n', 'g')
 
         expect(input.value).to eq('String')

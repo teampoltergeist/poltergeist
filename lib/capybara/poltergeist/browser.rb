@@ -273,7 +273,7 @@ module Capybara::Poltergeist
     end
 
     def send_keys(page_id, id, keys)
-      command 'send_keys', page_id, id, normalize_keys(keys)
+      command 'send_keys', page_id, id, normalize_keys(Array(keys))
     end
 
     def path(page_id, id)
@@ -465,39 +465,54 @@ module Capybara::Poltergeist
       decimal:   'numpad.'
     }.freeze
 
-    def normalize_keys(keys)
-      keys.map do |key_desc|
-        case key_desc
-        when Array
-          # [:Shift, "s"] => { modifier: "shift", keys: "S" }
-          # [:Shift, "string"] => { modifier: "shift", keys: "STRING" }
-          # [:Ctrl, :Left] => { modifier: "ctrl", key: 'Left' }
-          # [:Ctrl, :Shift, :Left] => { modifier: "ctrl,shift", key: 'Left' }
-          # [:Ctrl, :Left, :Left] => { modifier: "ctrl", key: [:Left, :Left] }
-          chunked_keys = key_desc.chunk { |k| k.is_a?(Symbol) && %w[shift ctrl control alt meta command].include?(k.to_s.downcase) }
-          modifiers = if chunked_keys.peek[0]
-            chunked_keys.next[1].map do |k|
-              k = k.to_s.downcase
-              k = 'ctrl' if k == 'control'
-              k = 'meta' if k == 'command'
-              k
-            end.join(',')
-          else
-            ''
-          end
-          letters = normalize_keys(chunked_keys.next[1].map { |k| k.is_a?(String) ? k.upcase : k })
-          { modifier: modifiers, keys: letters }
-        when Symbol
+    def combine_strings(keys)
+      keys.chunk { |k| k.is_a? String }.map { |string, k| string ? [k.reduce(&:+)] : k }.reduce(&:+)
+    end
+
+    def is_modifier(key)
+      return false unless %i[shift ctrl control alt meta command].include?(key.downcase)
+      case key = key.to_s.downcase
+      when 'control' then 'ctrl'
+      when 'command' then 'meta'
+      else key
+      end
+    end
+
+    def key_descriptor(key)
+      key = KEY_ALIASES.fetch(key, key)
+      res = if (match = key.to_s.match(/numpad(.)/))
+        { keys: match[1], modifier: 'keypad' }
+      else
+        key = key.to_s.split('_').map(&:capitalize).join if key !~ /^[A-Z]/
+        { key: key }
+      end
+    end
+
+    def normalize_keys(keys, pressed_keys = [], memo = [])
+      case keys
+      when Array
+        pressed_keys.push []
+        memo += combine_strings(keys).map { |k| normalize_keys(k, pressed_keys, memo) }
+        pressed_keys.pop
+        memo.flatten.compact
+      when Symbol
+        if (key_desc = is_modifier(keys))
+          pressed_keys.last.push key_desc
+          nil
+        else
           # Return a known sequence for PhantomJS
-          key = KEY_ALIASES.fetch(key_desc, key_desc)
-          if (match = key.to_s.match(/numpad(.)/))
-            res = { keys: match[1], modifier: 'keypad' }
-          elsif key !~ /^[A-Z]/
-            key = key.to_s.split('_').map(&:capitalize).join
-          end
-          res || { key: key }
-        when String
-          key_desc # Plain string, nothing to do
+          key = key_descriptor(keys)
+          modifiers = Array(key[:modifier])
+          modifiers.concat(pressed_keys.flatten)
+          key[:modifier] = modifiers.join(',') unless modifiers.empty?
+          key
+        end
+      when String
+        modifiers = pressed_keys.flatten
+        if modifiers.empty?
+          keys # Plain string, nothing to do
+        else
+          { modifier: modifiers.join(','), keys: keys.upcase }
         end
       end
     end
