@@ -97,6 +97,10 @@ class Poltergeist.Node
     @page.mouseEvent('mousedown', position.x, position.y)
     @page.mouseEvent('mouseup', final_pos.x, final_pos.y)
 
+  isClickable: (offset = {}) ->
+    pos = @mouseEventPosition()
+    test = @mouseEventTest(pos.x, pos.y)
+    test.status == 'success'
 
   isEqual: (other) ->
     @page == other.page && @isDOMEqual(other.id)

@@ -124,6 +124,10 @@ module Capybara::Poltergeist
       command 'visible', page_id, id
     end
 
+    def clickable?(page_id, id)
+      command 'clickable', page_id, id
+    end
+
     def disabled?(page_id, id)
       command 'disabled', page_id, id
     end
