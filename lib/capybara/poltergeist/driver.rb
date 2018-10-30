@@ -242,6 +242,14 @@ module Capybara::Poltergeist
       resize_window_to(handle, *screen_size)
     end
 
+    def get_screen_resolution_height
+      browser.execute('return screen.height')
+    end
+
+    def get_screen_resolution_width
+      browser.execute('return screen.width')
+    end
+
     def window_size(handle)
       within_window(handle) do
         evaluate_script('[window.innerWidth, window.innerHeight]')
