@@ -70,6 +70,8 @@ RSpec.configure do |config|
       metadata[:pending] = "PhantomJS doesn't support 308 HTTP response code"
     when /^Capybara::Session Poltergeist Capybara::Window#fullscreen should be able to fullscreen the window/
       metadata[:pending] = "Poltergeist doesn't support fullscreen"
+    when /^Capybara::Session Poltergeist #has_css\? should support case insensitive :class and :id options/
+      metadata[:pending] = "PhantomJS doesn't support case insensitive CSS"
     end
   end
 

@@ -210,6 +210,9 @@ class Poltergeist.Browser
   visible: (page_id, id) ->
     @current_command.sendResponse @node(page_id, id).isVisible()
 
+  clickable: (page_id, id) ->
+    @current_command.sendResponse @node(page_id, id).isClickable()
+
   disabled: (page_id, id) ->
     @current_command.sendResponse @node(page_id, id).isDisabled()
 

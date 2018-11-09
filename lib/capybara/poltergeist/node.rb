@@ -126,6 +126,10 @@ module Capybara::Poltergeist
       command :visible?
     end
 
+    def clickable?
+      command :clickable?
+    end
+
     def checked?
       self[:checked]
     end
