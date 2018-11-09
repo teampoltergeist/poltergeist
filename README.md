@@ -47,7 +47,7 @@ dependencies* (you don't need Qt, or a running X server, etc.)
 
 ### Mac ###
 
-* *Homebrew*: `brew install phantomjs`
+* *Homebrew*: `brew tap homebrew/cask && brew cask install phantomjs`
 * *MacPorts*: `sudo port install phantomjs`
 * *Manual install*: [Download this](https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-macosx.zip)
 
