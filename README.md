@@ -3,8 +3,7 @@
 [![Build Status](https://secure.travis-ci.org/teampoltergeist/poltergeist.svg)](http://travis-ci.org/teampoltergeist/poltergeist)
 
 Poltergeist is a driver for [Capybara](https://github.com/jnicklas/capybara). It allows you to
-run your Capybara tests on a headless [WebKit](http://webkit.org) browser,
-provided by [PhantomJS](http://phantomjs.org/).
+run your Capybara tests on a headless PhantomJS browser. If you would like to run your tests on headless Chrome there's another project [Cuprite](https://github.com/machinio/cuprite) claims to be compatible with Poltergeist.
 
 **If you're viewing this at https://github.com/teampoltergeist/poltergeist,
 you're reading the documentation for the master branch.
