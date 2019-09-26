@@ -21,9 +21,14 @@ module Capybara::Poltergeist
     attr_reader :server, :client, :logger
 
     def initialize(server, client, logger = nil)
+      @start = monotonic_time
       @server = server
       @client = client
       @logger = logger
+    end
+
+    def monotonic_time
+      Process.clock_gettime(Process::CLOCK_MONOTONIC)
     end
 
     def restart
@@ -444,7 +449,7 @@ module Capybara::Poltergeist
     private
 
     def log(message)
-      logger&.puts message
+      logger&.puts "#{monotonic_time - @start} #{message}"
     end
 
     def check_render_options!(options)
